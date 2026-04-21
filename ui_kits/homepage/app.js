@@ -7,9 +7,9 @@ const root = document.getElementById('root');
 const nav = [['works','/'],['writing','/writing'],['manifesto','/manifesto'],['source','https://github.com/AnEntrypoint']];
 
 function Header() {
-    return h('header', { style: 'position:sticky;top:0;z-index:100;background:rgba(239,233,221,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--ink);padding:14px 32px;display:flex;justify-content:space-between;align-items:baseline;gap:16px' },
+    return h('header', { style: 'position:sticky;top:0;z-index:100;background:rgba(239,233,221,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:14px 32px;display:flex;justify-content:space-between;align-items:baseline;gap:16px' },
         h('div', { class: 't-label' }, '247420 // AN ENTRYPOINT'),
-        h('div', { class: 't-micro', style: 'flex:1;border-bottom:1px dotted var(--ink);align-self:center;margin:0 16px' }),
+        h('div', { class: 't-micro', style: 'flex:1;align-self:center;margin:0 16px' }),
         h('nav', { style: 'display:flex;gap:24px', class: 't-label' },
             ...nav.map(([label, href]) =>
                 h('a', {
@@ -24,7 +24,7 @@ function Header() {
 }
 
 function Hero() {
-    return h('section', { style: 'padding:96px 32px 48px 32px;border-bottom:1px solid var(--ink)' },
+    return h('section', { style: 'padding:96px 32px 48px 32px' },
         h('div', { style: 'display:flex;justify-content:space-between;align-items:flex-end;gap:48px;flex-wrap:wrap' },
             h('div', {},
                 h('div', { class: 't-label', style: 'margin-bottom:24px' }, '// est. some time ago · still here · still weird'),
@@ -67,7 +67,7 @@ function Works() {
         ),
         h('div', {}, ...works.map((w, i) => {
             const isOpen = state.opened === i;
-            const btnStyle = `width:100%;text-align:left;background:${isOpen?'var(--ink)':'transparent'};color:${isOpen?'var(--paper)':'var(--ink)'};cursor:pointer;border:0;border-top:1px solid var(--ink);${i===works.length-1?'border-bottom:1px solid var(--ink);':''}display:grid;grid-template-columns:80px 1fr auto;gap:24px;padding:20px 0;align-items:baseline`;
+            const btnStyle = `width:100%;text-align:left;background:${isOpen?'var(--ink)':'transparent'};color:${isOpen?'var(--paper)':'var(--ink)'};cursor:pointer;display:grid;grid-template-columns:80px 1fr auto;gap:24px;padding:20px 0;align-items:baseline`;
             return h('div', { key: i },
                 h('button', {
                     onclick: () => { state.opened = isOpen ? null : i; render(); },
@@ -81,11 +81,11 @@ function Works() {
                     ),
                     h('span', { class: 'row-meta', style: `color:${isOpen?'#A9A396':'var(--fg-3)'}` }, w.meta + ' ' + (isOpen?'—':'+'))
                 ),
-                isOpen ? h('div', { style: 'background:var(--ink);color:var(--paper);padding:0 32px 32px 112px;border-bottom:1px solid var(--ink)' },
+                isOpen ? h('div', { style: 'background:var(--ink);color:var(--paper);padding:0 32px 32px 112px' },
                     h('p', { class: 't-prose', style: 'font-family:var(--ff-serif);font-size:22px;line-height:1.5;max-width:60ch;margin:0;padding-bottom:24px;color:var(--paper)' }, w.body),
                     h('div', { style: 'display:flex;gap:12px;flex-wrap:wrap' },
                         h('a', { class: 'btn-stamp acid', style: 'text-decoration:none', href: '#' }, 'open ↗'),
-                        h('a', { class: 'btn', style: 'color:var(--paper);border-color:var(--paper);text-decoration:none', href: '#' }, 'source')
+                        h('a', { class: 'btn', style: 'color:var(--paper);text-decoration:none', href: '#' }, 'source')
                     )
                 ) : null
             );
@@ -107,7 +107,7 @@ function Writing() {
             h('a', {
                 key: i,
                 href: '#',
-                style: `display:grid;grid-template-columns:110px 1fr 80px;gap:24px;padding:14px 0;border-top:1px solid var(--ink);${i===posts.length-1?'border-bottom:1px solid var(--ink);':''}align-items:baseline;color:var(--ink);text-decoration:none`,
+                style: `display:grid;grid-template-columns:110px 1fr 80px;gap:24px;padding:14px 0;align-items:baseline;color:var(--ink);text-decoration:none`,
                 onmouseenter: (e) => { e.currentTarget.style.background = 'var(--acid)'; },
                 onmouseleave: (e) => { e.currentTarget.style.background = 'transparent'; }
             },
@@ -136,7 +136,7 @@ function Manifesto() {
 }
 
 function Footer() {
-    return h('footer', { style: 'padding:32px;border-top:1px solid var(--ink)' },
+    return h('footer', { style: 'padding:32px' },
         h('div', { class: 'dateline' },
             h('span', {}, '247420 / MMXXVI'),
             h('span', {}, 'BUILT IN PUBLIC'),

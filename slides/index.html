@@ -8,25 +8,25 @@
   section{background:var(--paper);color:var(--ink);padding:96px;display:flex;flex-direction:column;justify-content:space-between;}
   section.ink{background:var(--ink);color:var(--paper);}
   section.acid{background:var(--acid);color:var(--acid-ink);}
-  .s-dateline{display:flex;justify-content:space-between;align-items:baseline;gap:24px;font-family:var(--ff-mono);font-size:18px;text-transform:uppercase;letter-spacing:0.14em;padding-bottom:12px;border-bottom:1px solid currentColor;}
-  .s-dateline .spread{flex:1;border-bottom:1px dotted currentColor;align-self:center;}
+  .s-dateline{display:flex;justify-content:space-between;align-items:baseline;gap:24px;font-family:var(--ff-mono);font-size:18px;text-transform:uppercase;letter-spacing:0.14em;padding-bottom:12px;}
+  .s-dateline .spread{flex:1;align-self:center;}
   .s-hero{font-family:var(--ff-display);font-size:240px;line-height:0.95;letter-spacing:-0.03em;}
   .s-h1{font-family:var(--ff-display);font-size:160px;line-height:1;letter-spacing:-0.02em;}
   .s-h2{font-family:var(--ff-mono);font-size:42px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;}
   .s-label{font-family:var(--ff-mono);font-size:22px;text-transform:uppercase;letter-spacing:0.14em;}
   .s-body{font-family:var(--ff-serif);font-size:40px;line-height:1.4;max-width:26ch;}
-  .s-footer{font-family:var(--ff-mono);font-size:18px;text-transform:uppercase;letter-spacing:0.14em;display:flex;justify-content:space-between;border-top:1px solid currentColor;padding-top:12px;}
+  .s-footer{font-family:var(--ff-mono);font-size:18px;text-transform:uppercase;letter-spacing:0.14em;display:flex;justify-content:space-between;padding-top:12px;}
   .s-quote{font-family:var(--ff-display);font-size:120px;line-height:1.05;font-style:italic;max-width:22ch;letter-spacing:-0.02em;}
-  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid currentColor;min-height:640px;}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:640px;}
   .cmp > div{padding:48px;}
-  .cmp > div:first-child{border-right:1px solid currentColor;}
+  .cmp > div:first-child{}
   .cmp .cmp-l{font-family:var(--ff-mono);font-size:22px;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:24px;}
   .cmp .cmp-h{font-family:var(--ff-display);font-size:96px;line-height:1;letter-spacing:-0.02em;margin-bottom:16px;}
   .cmp .cmp-p{font-family:var(--ff-serif);font-size:28px;line-height:1.45;}
   .receipt{font-family:var(--ff-mono);font-size:28px;max-width:900px;}
   .receipt-row{display:flex;gap:16px;padding:10px 0;align-items:baseline;}
   .receipt-row > span:nth-child(1){text-transform:uppercase;letter-spacing:0.14em;font-size:22px;width:320px;flex-shrink:0;}
-  .receipt-row > span:nth-child(2){flex:1;border-bottom:1px dotted currentColor;align-self:center;}
+  .receipt-row > span:nth-child(2){flex:1;align-self:center;}
 </style>
 </head>
 <body>
@@ -35,9 +35,9 @@
 <section class="ink" data-label="Title">
   <div class="s-dateline"><span>247420 // AN ENTRYPOINT</span><span class="spread"></span><span>APR 20 · 2026 · LIVE</span></div>
   <div>
-    <div class="s-label" style="margin-bottom:24px;color:var(--acid);">// INTERNAL · DO NOT CIRCULATE</div>
+    <div class="s-label" style="margin-bottom:24px;color:var(--acid)">// INTERNAL · DO NOT CIRCULATE</div>
     <div class="s-hero">we fart in its<br/>general direction.</div>
-    <div style="font-family:var(--ff-serif);font-size:36px;font-style:italic;margin-top:32px;max-width:28ch;color:#A9A396;">a short presentation about what comes next, delivered at 4:20 sharp.</div>
+    <div style="font-family:var(--ff-serif);font-size:36px;font-style:italic;margin-top:32px;max-width:28ch;color:#A9A396">a short presentation about what comes next, delivered at 4:20 sharp.</div>
   </div>
   <div class="s-footer"><span>deck 001</span><span>247420 / mmxxvi</span></div>
 </section>
@@ -45,7 +45,7 @@
 <section data-label="Section Intro">
   <div class="s-dateline"><span>247420</span><span>§ 01</span><span class="spread"></span><span>OF 05</span></div>
   <div>
-    <div class="s-label" style="margin-bottom:32px;">CHAPTER ONE</div>
+    <div class="s-label" style="margin-bottom:32px">CHAPTER ONE</div>
     <div class="s-h1">the problem<br/>with everything.</div>
   </div>
   <div class="s-footer"><span>chapter</span><span>the problem</span></div>
@@ -53,20 +53,20 @@
 
 <section data-label="Big Quote">
   <div class="s-dateline"><span>247420</span><span>§ QUOTE</span><span class="spread"></span><span>OVERHEARD · 2am</span></div>
-  <div style="display:flex;align-items:center;height:100%;">
+  <div style="display:flex;align-items:center;height:100%">
     <div>
-      <div style="font-family:var(--ff-display);font-size:240px;line-height:0.8;margin-bottom:-40px;">&ldquo;</div>
+      <div style="font-family:var(--ff-display);font-size:240px;line-height:0.8;margin-bottom:-40px">&ldquo;</div>
       <div class="s-quote">we make things. some of them work. a few become the future.</div>
-      <div class="s-label" style="margin-top:48px;color:var(--ink-3);">— the collective, probably</div>
+      <div class="s-label" style="margin-top:48px;color:var(--ink-3)">— the collective, probably</div>
     </div>
   </div>
   <div class="s-footer"><span>quote</span><span>the collective</span></div>
 </section>
 
 <section class="ink" data-label="Receipt">
-  <div class="s-dateline" style="color:var(--paper);"><span>247420</span><span>§ RECEIPT · GM V0.4.1</span><span class="spread"></span><span>LIVE</span></div>
+  <div class="s-dateline" style="color:var(--paper)"><span>247420</span><span>§ RECEIPT · GM V0.4.1</span><span class="spread"></span><span>LIVE</span></div>
   <div>
-    <div class="s-label" style="margin-bottom:32px;color:var(--acid);">// BY THE NUMBERS</div>
+    <div class="s-label" style="margin-bottom:32px;color:var(--acid)">// BY THE NUMBERS</div>
     <div class="receipt">
       <div class="receipt-row"><span>STARS</span><span></span><span>3,124</span></div>
       <div class="receipt-row"><span>WEEKLY DOWNLOADS</span><span></span><span>47k</span></div>
@@ -76,7 +76,7 @@
       <div class="receipt-row"><span>PEOPLE WHO GET IT</span><span></span><span>enough</span></div>
     </div>
   </div>
-  <div class="s-footer" style="color:var(--paper);"><span>receipt</span><span>gm</span></div>
+  <div class="s-footer" style="color:var(--paper)"><span>receipt</span><span>gm</span></div>
 </section>
 
 <section data-label="Comparison">
@@ -84,11 +84,11 @@
   <div>
     <div class="cmp">
       <div>
-        <div class="cmp-l" style="color:var(--fg-3);">before</div>
-        <div class="cmp-h" style="color:var(--fg-3);text-decoration:line-through;">gradient ripple-ui demo</div>
-        <div class="cmp-p" style="color:var(--fg-3);">purple to blue. glass cards. emoji rows. a "supercharge your workflow" somewhere in the fold.</div>
+        <div class="cmp-l" style="color:var(--fg-3)">before</div>
+        <div class="cmp-h" style="color:var(--fg-3);text-decoration:line-through">gradient ripple-ui demo</div>
+        <div class="cmp-p" style="color:var(--fg-3)">purple to blue. glass cards. emoji rows. a "supercharge your workflow" somewhere in the fold.</div>
       </div>
-      <div style="background:var(--acid);">
+      <div style="background:var(--acid)">
         <div class="cmp-l">after</div>
         <div class="cmp-h">strict grid.<br/>loud content.</div>
         <div class="cmp-p">mono chassis. display headlines. hairline rules. one stamp. you can read it on a phone in direct sunlight.</div>
@@ -99,14 +99,14 @@
 </section>
 
 <section class="acid" data-label="End">
-  <div class="s-dateline" style="color:var(--acid-ink);"><span>247420 // AN ENTRYPOINT</span><span class="spread"></span><span>END · Q&amp;A</span></div>
-  <div style="display:flex;align-items:center;height:100%;">
+  <div class="s-dateline" style="color:var(--acid-ink)"><span>247420 // AN ENTRYPOINT</span><span class="spread"></span><span>END · Q&amp;A</span></div>
+  <div style="display:flex;align-items:center;height:100%">
     <div>
-      <div class="s-hero" style="font-size:280px;">gm.</div>
-      <div style="font-family:var(--ff-mono);font-size:32px;margin-top:32px;">// questions? open a pr.</div>
+      <div class="s-hero" style="font-size:280px">gm.</div>
+      <div style="font-family:var(--ff-mono);font-size:32px;margin-top:32px">// questions? open a pr.</div>
     </div>
   </div>
-  <div class="s-footer" style="color:var(--acid-ink);"><span>fin</span><span>247420 / mmxxvi</span></div>
+  <div class="s-footer" style="color:var(--acid-ink)"><span>fin</span><span>247420 / mmxxvi</span></div>
 </section>
 
 </deck-stage>

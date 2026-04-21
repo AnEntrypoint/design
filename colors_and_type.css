@@ -142,6 +142,36 @@
 
   /* --- Content measure --- */
   --measure:   72ch;
+
+  /* --- Surfaces (dark layered panels, no borders) --- */
+  --panel-0:      #1e1e1e;   /* editor base */
+  --panel-1:      #252526;   /* panel */
+  --panel-2:      #2d2d30;   /* elevated */
+  --panel-3:      #333333;   /* deepest */
+  --panel-hover:  #2a2d2e;
+  --panel-select: #37373d;
+  --panel-text:   #cccccc;
+  --panel-text-2: #858585;
+  --panel-text-3: #6a6a6a;
+
+  /* Light-mode equivalents */
+  --panel-l-0:      #ffffff;
+  --panel-l-1:      #f3f3f3;
+  --panel-l-2:      #ececec;
+  --panel-l-3:      #e4e4e4;
+  --panel-l-hover:  #e8e8e8;
+  --panel-l-select: #e4e6f1;
+  --panel-l-text:   #333333;
+  --panel-l-text-2: #616161;
+
+  --surface-0: var(--panel-l-0);
+  --surface-1: var(--panel-l-1);
+  --surface-2: var(--panel-l-2);
+  --surface-3: var(--panel-l-hover);
+  --surface-ink-0: var(--panel-0);
+  --surface-ink-1: var(--panel-1);
+  --surface-ink-2: var(--panel-2);
+  --surface-ink-3: var(--panel-3);
 }
 
 /* --- Ink (dark) mode --- */
@@ -184,8 +214,40 @@
    Base elements
    ============================================================ */
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; border: 0; outline: 0; }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
 html, body { margin: 0; padding: 0; }
+
+/* ============================================================
+   Surface bands — tonal section separation (no borders)
+   ============================================================ */
+section { padding: clamp(64px, 9vw, 128px) clamp(24px, 4vw, 48px); background: var(--surface-0); }
+main > section:nth-of-type(even),
+body > section:nth-of-type(even) { background: var(--surface-1); }
+main > section:nth-of-type(3n),
+body > section:nth-of-type(3n)  { background: var(--surface-2); }
+
+[data-theme="ink"] section,
+.theme-ink section { background: var(--surface-ink-0); }
+[data-theme="ink"] main > section:nth-of-type(even),
+[data-theme="ink"] body > section:nth-of-type(even),
+.theme-ink main > section:nth-of-type(even) { background: var(--surface-ink-1); }
+[data-theme="ink"] main > section:nth-of-type(3n),
+[data-theme="ink"] body > section:nth-of-type(3n),
+.theme-ink main > section:nth-of-type(3n)  { background: var(--surface-ink-2); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="paper"]) section { background: var(--surface-ink-0); }
+  :root:not([data-theme="paper"]) main > section:nth-of-type(even),
+  :root:not([data-theme="paper"]) body > section:nth-of-type(even) { background: var(--surface-ink-1); }
+  :root:not([data-theme="paper"]) main > section:nth-of-type(3n),
+  :root:not([data-theme="paper"]) body > section:nth-of-type(3n)  { background: var(--surface-ink-2); }
+}
+
+/* Rows: no separators, hover surface tint instead */
+.row { background: transparent; transition: background var(--dur-snap) var(--ease); }
+.row:hover { background: var(--surface-2); }
+[data-theme="ink"] .row:hover { background: var(--surface-ink-2); }
 
 body {
   background: var(--bg);
@@ -311,7 +373,7 @@ code, .t-code {
   font-size: 0.9em;
   background: var(--bg-2);
   padding: 0.15em 0.5em;
-  border: var(--bw-hair) solid var(--border);
+  
   border-radius: var(--r-1);
 }
 
@@ -365,18 +427,18 @@ code, .t-code {
    Primitives — rules, stamps, buttons
    ============================================================ */
 
-.rule       { border: 0; border-top: var(--bw-hair) solid var(--border); margin: 0; }
-.rule-double{ border: 0; border-top: var(--bw-hair) solid var(--border); border-bottom: var(--bw-hair) solid var(--border); height: var(--bw-rule); margin: 0; }
-.rule-dotted{ border: 0; border-top: var(--bw-hair) dotted var(--border); margin: 0; }
-.rule-green { border: 0; border-top: var(--bw-rule) solid var(--green); margin: 0; }
-.rule-purple{ border: 0; border-top: var(--bw-rule) solid var(--purple); margin: 0; }
-.rule-mascot{ border: 0; border-top: var(--bw-rule) solid var(--mascot); margin: 0; }
+.rule       {   margin: 0; }
+.rule-double{    height: var(--bw-rule); margin: 0; }
+.rule-dotted{   margin: 0; }
+.rule-green {   margin: 0; }
+.rule-purple{   margin: 0; }
+.rule-mascot{   margin: 0; }
 
 /* The 247420 stamp */
 .stamp {
   display: inline-block;
   padding: var(--space-1) var(--space-3);
-  border: var(--bw-hair) solid var(--fg);
+  
   border-radius: var(--r-pill);
   color: var(--fg);
   background: transparent;
@@ -388,14 +450,14 @@ code, .t-code {
   transform: rotate(-2deg);
 }
 .stamp.ink     { background: var(--fg);     color: var(--bg); }
-.stamp.green   { background: var(--green);  color: var(--green-fg);  border-color: var(--green-fg); }
-.stamp.purple  { background: var(--purple); color: var(--purple-fg); border-color: var(--purple-fg); }
-.stamp.mascot  { background: var(--mascot); color: var(--mascot-fg); border-color: var(--mascot-fg); }
-.stamp.sun     { background: var(--sun);    color: var(--ink);       border-color: var(--ink); }
-.stamp.flame   { background: var(--flame);  color: var(--paper);     border-color: var(--paper); }
+.stamp.green   { background: var(--green);  color: var(--green-fg);   }
+.stamp.purple  { background: var(--purple); color: var(--purple-fg);  }
+.stamp.mascot  { background: var(--mascot); color: var(--mascot-fg);  }
+.stamp.sun     { background: var(--sun);    color: var(--ink);        }
+.stamp.flame   { background: var(--flame);  color: var(--paper);      }
 
 /* Legacy alias — .stamp.acid now means green */
-.stamp.acid    { background: var(--green);  color: var(--green-fg);  border-color: var(--green-fg); }
+.stamp.acid    { background: var(--green);  color: var(--green-fg);   }
 
 /* The "stamp button" */
 .btn-stamp {
@@ -405,7 +467,7 @@ code, .t-code {
   padding: var(--space-3) var(--space-4);
   background: var(--fg);
   color: var(--bg);
-  border: var(--bw-hair) solid var(--fg);
+  
   border-radius: var(--r-2);
   box-shadow: 4px 4px 0 var(--fg);
   font-family: var(--ff-mono);
@@ -420,12 +482,12 @@ code, .t-code {
 .btn-stamp:hover  { transform: translate(1px, 1px); box-shadow: 3px 3px 0 var(--fg); }
 .btn-stamp:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--fg); }
 
-.btn-stamp.green  { background: var(--green);  color: var(--green-fg);  border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.btn-stamp.purple { background: var(--purple); color: var(--purple-fg); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.btn-stamp.mascot { background: var(--mascot); color: var(--mascot-fg); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.btn-stamp.sun    { background: var(--sun);    color: var(--ink);       border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.btn-stamp.flame  { background: var(--flame);  color: var(--paper);     border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.btn-stamp.acid   { background: var(--green);  color: var(--green-fg);  border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); } /* legacy */
+.btn-stamp.green  { background: var(--green);  color: var(--green-fg);   box-shadow: 4px 4px 0 var(--ink); }
+.btn-stamp.purple { background: var(--purple); color: var(--purple-fg);  box-shadow: 4px 4px 0 var(--ink); }
+.btn-stamp.mascot { background: var(--mascot); color: var(--mascot-fg);  box-shadow: 4px 4px 0 var(--ink); }
+.btn-stamp.sun    { background: var(--sun);    color: var(--ink);        box-shadow: 4px 4px 0 var(--ink); }
+.btn-stamp.flame  { background: var(--flame);  color: var(--paper);      box-shadow: 4px 4px 0 var(--ink); }
+.btn-stamp.acid   { background: var(--green);  color: var(--green-fg);   box-shadow: 4px 4px 0 var(--ink); } /* legacy */
 
 /* Plain button — default */
 .btn {
@@ -435,7 +497,7 @@ code, .t-code {
   padding: var(--space-3) var(--space-4);
   background: transparent;
   color: var(--fg);
-  border: var(--bw-hair) solid var(--fg);
+  
   border-radius: var(--r-2);
   font-family: var(--ff-mono);
   font-weight: 500;
@@ -447,12 +509,12 @@ code, .t-code {
   transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
 }
 .btn:hover  { background: var(--fg); color: var(--bg); }
-.btn:active { background: var(--green); color: var(--green-fg); border-color: var(--green); }
+.btn:active { background: var(--green); color: var(--green-fg);  }
 
 /* Ghost/link button */
 .btn-ghost {
   background: transparent;
-  border: none;
+  
   color: var(--fg);
   font-family: var(--ff-mono);
   font-size: var(--fs-sm);
@@ -469,17 +531,17 @@ code, .t-code {
 .input {
   width: 100%;
   background: var(--bg);
-  border: var(--bw-hair) solid var(--border);
+  
   border-radius: var(--r-2);
   padding: var(--space-3) var(--space-3);
   font-family: var(--ff-mono);
   font-size: var(--fs-body);
   color: var(--fg);
-  outline: none;
+  
   transition: border-color var(--dur-snap) var(--ease), box-shadow var(--dur-snap) var(--ease);
 }
 .input:focus {
-  border-color: var(--green);
+  
   box-shadow: 0 0 0 4px color-mix(in oklab, var(--green) 25%, transparent);
 }
 .input::placeholder { color: var(--fg-3); }
@@ -496,14 +558,14 @@ code, .t-code {
   align-items: baseline;
   gap: var(--space-4);
   padding-bottom: var(--space-2);
-  border-bottom: var(--bw-hair) solid var(--border);
+  
   font-family: var(--ff-mono);
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: var(--tr-label);
 }
 .dateline > * { white-space: nowrap; }
-.dateline .spread { flex: 1; border-bottom: var(--bw-hair) dotted var(--border); align-self: center; }
+.dateline .spread { flex: 1;  align-self: center; }
 
 /* Index-card row — soft card with breathing room */
 .row {
@@ -511,7 +573,7 @@ code, .t-code {
   grid-template-columns: 80px 1fr auto;
   gap: var(--space-4);
   padding: var(--space-4);
-  border: var(--bw-hair) solid var(--border);
+  
   border-radius: var(--r-3);
   background: var(--bg);
   align-items: baseline;
@@ -528,12 +590,12 @@ code, .t-code {
 
 /* Soft card — the generic container */
 .card {
-  border: var(--bw-hair) solid var(--border);
+  
   border-radius: var(--r-3);
   background: var(--bg);
   padding: var(--space-5);
 }
-.card.chunk { border-width: var(--bw-chunk); }
+.card.chunk {  }
 
 /* ============================================================
    Selection
