@@ -1,0 +1,83 @@
+<!doctype html>
+<html data-theme="ink"><head><meta charset="utf-8">
+<title>docs // gm // 247420</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  body{background:var(--ink);color:var(--paper);display:grid;grid-template-columns:240px 1fr;min-height:100vh;}
+  aside{border-right:1px solid var(--paper);padding:24px 16px;position:sticky;top:0;height:100vh;overflow:auto;}
+  aside a{display:block;padding:4px 8px;color:var(--paper);text-decoration:none;font-family:var(--ff-mono);font-size:13px;}
+  aside a.active{background:var(--acid);color:var(--acid-ink);}
+  aside a:hover:not(.active){background:var(--paper);color:var(--ink);}
+  .section-head{font-family:var(--ff-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:#A9A396;padding:16px 8px 6px 8px;}
+  main{padding:48px 64px;max-width:820px;}
+  main h1{font-family:var(--ff-display);font-size:72px;line-height:1;margin:0 0 8px 0;color:var(--paper);letter-spacing:-0.02em;}
+  main h2{font-family:var(--ff-mono);font-size:22px;font-weight:500;margin:48px 0 12px 0;color:var(--paper);padding-top:24px;border-top:1px solid var(--paper);}
+  main h3{font-family:var(--ff-mono);font-size:16px;font-weight:500;margin:32px 0 8px 0;color:var(--acid);text-transform:uppercase;letter-spacing:0.1em;}
+  main p{font-family:var(--ff-serif);font-size:18px;line-height:1.65;color:var(--paper);max-width:72ch;text-wrap:pretty;}
+  main code{background:transparent;border:1px solid var(--paper);padding:0.1em 0.35em;color:var(--acid);font-size:0.9em;}
+  pre{background:transparent;border:1px solid var(--paper);padding:16px;font-family:var(--ff-mono);font-size:13px;color:var(--paper);overflow-x:auto;line-height:1.6;}
+  pre .k{color:var(--acid);}
+  pre .s{color:#FFE66D;}
+  pre .c{color:#A9A396;}
+  kbd{font-family:var(--ff-mono);font-size:11px;border:1px solid var(--paper);padding:1px 6px;background:transparent;color:var(--paper);}
+  .callout{border:1px solid var(--paper);padding:16px 20px;margin:24px 0;font-family:var(--ff-mono);font-size:14px;line-height:1.5;}
+  .callout.acid{border-color:var(--acid);color:var(--acid);}
+  .crumb{font-family:var(--ff-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#A9A396;margin-bottom:24px;}
+</style>
+</head>
+<body data-theme="ink" data-screen-label="03 Docs">
+<aside>
+  <div style="font-family:var(--ff-mono);font-size:14px;font-weight:500;padding:0 8px 16px;border-bottom:1px solid var(--paper);">// gm · v0.4.1</div>
+  <div class="section-head">START</div>
+  <a href="#" class="active">introduction</a>
+  <a href="#">install</a>
+  <a href="#">quickstart</a>
+  <div class="section-head">CONCEPTS</div>
+  <a href="#">states &amp; transitions</a>
+  <a href="#">the loop</a>
+  <a href="#">tools</a>
+  <div class="section-head">REFERENCE</div>
+  <a href="#">executenodejs</a>
+  <a href="#">executedeno</a>
+  <a href="#">astgrep_*</a>
+  <a href="#">batch_execute</a>
+  <div class="section-head">MISC</div>
+  <a href="#">philosophy</a>
+  <a href="#">changelog ↗</a>
+  <a href="#">source ↗</a>
+</aside>
+<main>
+  <div class="crumb">247420 // GM // DOCS // INTRODUCTION</div>
+  <h1>introduction</h1>
+  <p style="font-family:var(--ff-display);font-size:32px;font-style:italic;line-height:1.2;margin:16px 0 32px 0;max-width:28ch;">a state machine for coding agents. it thinks, so you don't have to (as much).</p>
+
+  <p>gm is what happens when you stop trying to make an llm "smart" and start giving it a scaffolding to be useful inside of. it's a small, deterministic runtime that says: <em>here is where you are, here are the transitions available, pick one.</em> that's the whole idea.</p>
+
+  <p>the rest of this document explains how to install it, how to wire it up, and how to stay out of its way.</p>
+
+  <h2>install</h2>
+  <p>one command. you've probably seen this kind of thing before.</p>
+  <pre><span class="c"># via claude code plugin marketplace</span>
+<span class="k">claude</span> plugin marketplace add AnEntrypoint/gm-cc
+<span class="k">claude</span> plugin install -s user gm@gm-cc</pre>
+
+  <div class="callout acid">
+    ※ if you're running <code>gm</code> without claude code, see <a href="#" style="color:var(--acid);">reference / executenodejs</a>. you'll want bun 1.1+.
+  </div>
+
+  <h2>quickstart</h2>
+  <h3>the 30-second version</h3>
+  <p>start the repl, ask it to do something, watch it work. press <kbd>Ctrl</kbd>+<kbd>C</kbd> if it goes somewhere you didn't mean.</p>
+  <pre><span class="k">gm</span> start
+<span class="c">→ state: idle</span>
+<span class="c">→ tools available: 19</span>
+&gt; fix the failing test in src/router.ts
+<span class="c">→ state: reading</span>
+<span class="c">→ state: editing</span>
+<span class="c">→ state: verifying</span>
+<span class="c">→ state: done</span></pre>
+
+  <h2>philosophy</h2>
+  <p>there is no philosophy. read the source.</p>
+</main>
+</body></html>

@@ -1,0 +1,49 @@
+## 🎯 247420 / AnEntrypoint Design System > we fart in its general direction.
+
+# 3f 854L 40fn 1cls cx1.1
+*Legend: f=files L=lines fn=functions cls=classes cx=avg-complexity | file:line:name(NL)=location Np=params | ↑N=imports-from ↓N=imported-by (N)=occurrences (+N)=more | 🔄circular 🏝️isolated 🔥complex 📋duplicated 📁large*
+
+**Langs:** JS:100%
+
+## 🛠️ Tech Stack
+
+**Patterns:** this._go(15), document.createElement(10), overlay.querySelector(5), this._flashOverlay(4), e.preventDefault(4), this._fit(3)
+**Top IDs:** style(80), div(61), span(53), className(38), color(32), key(21)
+
+## ⚡ Code Patterns
+
+**Errors:** try/catch(4)
+**Internal calls:** this._go(15), document.createElement(10), overlay.querySelector(5), e.preventDefault(4), this._flashOverlay(4), this._fit(3), clearTimeout(3), slide.setAttribute(3)
+
+## 🔗 I/O & Integration
+
+**Storage:** SQL(2), files(1), JSON(1)
+**Events:** emit(0), listen(9)
+
+## 📊 Code Organization
+
+**Large files:** slides/deck-stage.js:621L
+**Long funcs:** slides/deck-stage.js:325:_render(62L)
+**Classes:** slides/deck-stage.js:0:DeckStage
+
+## 🔌 API Surface
+
+**Classes:** DeckStage
+
+## 🚨 Issues
+
+- 📁 Large files: slides/deck-stage.js:621L
+- 📋 2 duplicated groups
+
+## 🧹 Dead Code & Tests
+
+**Orphaned:** components.jsx, deck-stage.js, components.jsx
+**Tests:** 0/3 (0%)
+
+## 📄 File Index
+
+**slides/deck-stage.js** 621L fn: observedAttributes, constructor, designWidth, designHeight (+25)
+**ui_kits/homepage/components.jsx** 171L fn: Dateline, Header, Hero, Works (+3)
+**ui_kits/project_page/components.jsx** 62L fn: ProjectHero, Receipt, Install, Changelog
+
+Conv[JS]: 4-space, single quotes, kebab-case files

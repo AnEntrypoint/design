@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>247420 // AnEntrypoint Design System</title>
+<link rel="stylesheet" href="./vendor/rippleui-1.12.1.css">
+<link rel="stylesheet" href="./colors_and_type.css">
+<style>
+  body{padding:0;margin:0;background:var(--paper);color:var(--ink);}
+  main{max-width:960px;margin:0 auto;padding:48px 32px 96px 32px;}
+  h1{font-family:var(--ff-display);font-size:clamp(64px,10vw,128px);line-height:1;letter-spacing:-0.02em;margin:0 0 8px 0;}
+  .lede{font-family:var(--ff-display);font-size:28px;font-style:italic;line-height:1.3;margin:0 0 48px 0;max-width:28ch;color:var(--ink-2);}
+  section{border-top:1px solid var(--ink);padding:24px 0;}
+  section h2{font-family:var(--ff-mono);font-size:14px;text-transform:uppercase;letter-spacing:0.14em;font-weight:500;margin:0 0 16px 0;}
+  ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;}
+  li{border-top:1px solid var(--ink);}
+  li:first-child,li:nth-child(-n+4){border-top:0;}
+  a.kit{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:14px 0;align-items:baseline;color:var(--ink);text-decoration:none;}
+  a.kit:hover{background:var(--acid);}
+  a.kit .code{font-family:var(--ff-mono);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-3);}
+  a.kit .name{font-family:var(--ff-display);font-size:24px;line-height:1.1;}
+</style>
+</head>
+<body data-screen-label="00 Index">
+<header style="position:sticky;top:0;z-index:100;background:rgba(239,233,221,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--ink);padding:14px 32px;display:flex;justify-content:space-between;align-items:baseline;gap:16px;">
+  <span class="t-label">247420 // AN ENTRYPOINT // DESIGN SYSTEM</span>
+  <span class="t-micro" style="flex:1;border-bottom:1px dotted var(--ink);align-self:center;margin:0 16px;"></span>
+  <a href="https://github.com/AnEntrypoint/design" class="t-label" style="color:var(--ink);">source ↗</a>
+</header>
+<main>
+  <h1>design.</h1>
+  <p class="lede">strict grid. loud content. a coherent visual paradigm for the creative department of the internet.</p>
+
+  <section>
+    <h2>// ui kits</h2>
+    <ul>
+      <li><a class="kit" href="./ui_kits/homepage/"><span class="code">// 01</span><span class="name">homepage</span></a></li>
+      <li><a class="kit" href="./ui_kits/project_page/"><span class="code">// 02</span><span class="name">project page</span></a></li>
+      <li><a class="kit" href="./ui_kits/docs/"><span class="code">// 03</span><span class="name">docs</span></a></li>
+      <li><a class="kit" href="./ui_kits/blog/"><span class="code">// 04</span><span class="name">blog</span></a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>// slides</h2>
+    <ul>
+      <li><a class="kit" href="./slides/"><span class="code">deck 001</span><span class="name">deck template</span></a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>// preview cards</h2>
+    <ul id="previews"></ul>
+  </section>
+
+  <section>
+    <h2>// reference</h2>
+    <ul>
+      <li><a class="kit" href="./README.md"><span class="code">§ readme</span><span class="name">README.md</span></a></li>
+      <li><a class="kit" href="./SKILL.md"><span class="code">§ skill</span><span class="name">SKILL.md</span></a></li>
+      <li><a class="kit" href="./colors_and_type.css"><span class="code">§ tokens</span><span class="name">tokens</span></a></li>
+    </ul>
+  </section>
+</main>
+
+<script type="importmap">
+{
+  "imports": {
+    "webjsx": "./vendor/webjsx/index.js",
+    "webjsx/": "./vendor/webjsx/"
+  }
+}
+</script>
+<script type="module">
+import * as webjsx from 'webjsx';
+const h = webjsx.createElement;
+const previews = [
+  'buttons','colors-core','colors-lore','colors-semantic','dateline','header','icons-unicode',
+  'index-row','inputs','manifesto','rules','spacing','stamps','stamps-lore','theme-ink',
+  'type-display','type-mono','type-prose','type-scale','wordmarks'
+];
+const ul = document.getElementById('previews');
+const nodes = previews.map((name, i) => h('li', { key: name },
+  h('a', { class: 'kit', href: `./preview/${name}.html` },
+    h('span', { class: 'code' }, '§ ' + String(i+1).padStart(2,'0')),
+    h('span', { class: 'name' }, name.replace(/-/g,' '))
+  )
+));
+webjsx.applyDiff(ul, nodes);
+</script>
+</body></html>

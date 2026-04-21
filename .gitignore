@@ -1,0 +1,5 @@
+.gm-stop-verified
+.tmp/
+.gm/
+node_modules/
+.plugkit-browser-profile/
