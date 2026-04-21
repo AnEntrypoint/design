@@ -19,7 +19,7 @@ function ProjectHero({ mark, tagline, version, status }) {
     return h('section', { style: 'padding:80px 48px' },
         h('div', { style: 'display:flex;gap:16px;align-items:center;margin-bottom:28px;font-family:var(--ff-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase' },
             h('span', { style: 'color:var(--panel-text-2)' }, 'project'),
-            h('span', { style: 'color:var(--green-2)' }, '● ' + status),
+            h('span', { style: 'color:var(--panel-accent)' }, '● ' + status),
             h('span', { style: 'color:var(--panel-text-2)' }, version)
         ),
         h('div', { style: 'font-family:var(--ff-mono);font-size:clamp(96px,18vw,220px);line-height:0.95;letter-spacing:-0.04em;color:var(--panel-text);font-weight:500' }, mark),
@@ -43,7 +43,7 @@ function Install({ cmd }) {
     return h('section', { style: 'padding:72px 48px' },
         h('div', { style: 'font-family:var(--ff-mono);font-size:11px;color:var(--panel-text-2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:20px' }, 'install'),
         h('div', { style: 'display:flex;align-items:stretch;max-width:720px;background:var(--panel-1)' },
-            h('span', { style: 'font-family:var(--ff-mono);padding:16px 18px;color:var(--green-2);font-size:14px' }, '$'),
+            h('span', { style: 'font-family:var(--ff-mono);padding:16px 18px;color:var(--panel-accent);font-size:14px' }, '$'),
             h('code', { style: 'flex:1;font-family:var(--ff-mono);font-size:14px;padding:16px 0;color:var(--panel-text);background:transparent' }, cmd),
             h('button', {
                 onclick: () => { navigator.clipboard?.writeText(cmd); state.copied = true; render(); setTimeout(() => { state.copied = false; render(); }, 1200); },
@@ -59,7 +59,7 @@ function Changelog({ entries }) {
         h('div', { style: 'background:var(--panel-1);max-width:900px' }, ...entries.map((e, i) =>
             h('div', { key: i, style: `display:grid;grid-template-columns:110px 80px 1fr;gap:20px;padding:14px 24px;color:var(--panel-text);align-items:baseline;background:${i%2?'var(--panel-2)':'transparent'}` },
                 h('span', { style: 'font-family:var(--ff-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--panel-text-2)' }, e.date),
-                h('span', { style: 'font-family:var(--ff-mono);font-size:13px;color:var(--green-2)' }, e.ver),
+                h('span', { style: 'font-family:var(--ff-mono);font-size:13px;color:var(--panel-accent)' }, e.ver),
                 h('span', { style: 'font-family:var(--ff-body);font-size:15px;line-height:1.5' }, e.msg)
             )
         ))

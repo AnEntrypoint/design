@@ -32,14 +32,14 @@ function Hero() {
                 ),
                 h('p', { style: 'font-family:var(--ff-body);font-size:18px;line-height:1.55;color:var(--panel-text-2);margin-top:32px;max-width:46ch' },
                     '247420 is a creative collective. we ship fast, break things on purpose, and tow the front line of what the internet can be. ',
-                    h('span', { style: 'color:var(--green-2);font-weight:500' }, 'always open.')
+                    h('span', { style: 'color:var(--panel-accent);font-weight:500' }, 'always open.')
                 )
             ),
             h('div', { style: 'display:flex;flex-direction:column;gap:14px;align-items:flex-end;min-width:220px;background:var(--panel-1);padding:20px 24px' },
                 h('div', { style: 'font-family:var(--ff-mono);font-size:11px;color:var(--panel-text-2);letter-spacing:0.14em;text-transform:uppercase' }, 'currently shipping'),
                 h('div', { style: 'font-family:var(--ff-mono);font-size:15px;line-height:1.8;text-align:right;color:var(--panel-text)' },
-                    h('div', {}, h('span', { style: 'color:var(--green-2)' }, '● '), 'gm v0.4.1'),
-                    h('div', {}, h('span', { style: 'color:var(--green-2)' }, '● '), 'zellous'),
+                    h('div', {}, h('span', { style: 'color:var(--panel-accent)' }, '● '), 'gm v0.4.1'),
+                    h('div', {}, h('span', { style: 'color:var(--panel-accent)' }, '● '), 'zellous'),
                     h('div', { style: 'color:var(--panel-text-3)' }, h('span', {}, '○ '), 'thebird (soon)')
                 )
             )
@@ -62,7 +62,7 @@ function Works() {
     return h('section', { style: 'padding:80px 48px' },
         h('div', { style: 'display:flex;justify-content:space-between;align-items:baseline;margin-bottom:28px;max-width:1200px' },
             h('div', { style: 'font-family:var(--ff-mono);font-size:11px;color:var(--panel-text-2);letter-spacing:0.14em;text-transform:uppercase' }, 'the works · 08 of ~61'),
-            h('a', { href: 'https://github.com/AnEntrypoint', style: 'font-family:var(--ff-mono);font-size:11px;color:var(--green-2);letter-spacing:0.14em;text-transform:uppercase;text-decoration:none' }, 'all repos ↗')
+            h('a', { href: 'https://github.com/AnEntrypoint', style: 'font-family:var(--ff-mono);font-size:11px;color:var(--panel-accent);letter-spacing:0.14em;text-transform:uppercase;text-decoration:none' }, 'all repos ↗')
         ),
         h('div', { style: 'background:var(--panel-1);max-width:1200px' }, ...works.map((w, i) => {
             const isOpen = state.opened === i;
@@ -113,7 +113,7 @@ function Writing() {
                 },
                     h('span', { style: 'font-family:var(--ff-mono);font-size:12px;color:var(--panel-text-2)' }, p.date),
                     h('span', { style: 'font-family:var(--ff-body);font-size:17px;line-height:1.4;color:var(--panel-text)' }, p.title),
-                    h('span', { style: 'font-family:var(--ff-mono);font-size:11px;color:var(--green-2);text-align:right;letter-spacing:0.08em' }, '§ ' + p.tag)
+                    h('span', { style: 'font-family:var(--ff-mono);font-size:11px;color:var(--panel-accent);text-align:right;letter-spacing:0.08em' }, '§ ' + p.tag)
                 )
             )
         )
@@ -125,7 +125,7 @@ function Manifesto() {
         h('div', { style: 'font-family:var(--ff-mono);font-size:11px;color:var(--panel-text-2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:36px' }, 'manifesto · rough draft · do not circulate'),
         h('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:56px;max-width:1100px' },
             h('p', { style: 'font-family:var(--ff-display);font-size:clamp(36px,5vw,60px);line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--panel-text);font-weight:700' },
-                'we make things.', h('br'), 'some of them work.', h('br'), 'a few become', h('br'), h('em', { style: 'color:var(--green-2)' }, 'the future.')
+                'we make things.', h('br'), 'some of them work.', h('br'), 'a few become', h('br'), h('em', { style: 'color:var(--panel-accent)' }, 'the future.')
             ),
             h('div', { style: 'font-family:var(--ff-body);font-size:16px;line-height:1.7;color:var(--panel-text-2);max-width:48ch' },
                 h('p', { style: 'margin:0 0 16px 0' }, 'we are the creative department of the internet. always open (24/7). always a little bit high on possibility (420).'),
@@ -140,7 +140,7 @@ function Footer() {
     return h('footer', { style: 'padding:24px 48px;background:var(--panel-2);color:var(--panel-text-2);font-family:var(--ff-mono);font-size:11px;letter-spacing:0.08em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px' },
         h('span', {}, '247420 / mmxxvi · built in public'),
         h('span', {}, 'no cookies · no analytics · no gradients'),
-        h('a', { href: 'https://github.com/AnEntrypoint', style: 'color:var(--green-2);text-decoration:none' }, 'source ↗')
+        h('a', { href: 'https://github.com/AnEntrypoint', style: 'color:var(--panel-accent);text-decoration:none' }, 'source ↗')
     );
 }
 

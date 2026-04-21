@@ -143,35 +143,50 @@
   /* --- Content measure --- */
   --measure:   72ch;
 
-  /* --- Surfaces (dark layered panels, no borders) --- */
-  --panel-0:      #1e1e1e;   /* editor base */
-  --panel-1:      #252526;   /* panel */
-  --panel-2:      #2d2d30;   /* elevated */
-  --panel-3:      #333333;   /* deepest */
-  --panel-hover:  #2a2d2e;
-  --panel-select: #37373d;
-  --panel-text:   #cccccc;
-  --panel-text-2: #858585;
-  --panel-text-3: #6a6a6a;
+  /* --- Surfaces (layered panels, light default; dark via OS/theme) --- */
+  /* Light mode — default */
+  --panel-0:       #ffffff;
+  --panel-1:       #f6f6f7;
+  --panel-2:       #eeeef0;
+  --panel-3:       #e4e4e7;
+  --panel-hover:   #ebebee;
+  --panel-select:  #dfe3ec;
+  --panel-text:    #1f2328;
+  --panel-text-2:  #59636e;
+  --panel-text-3:  #8b949e;
+  --panel-accent:  var(--green);       /* accent color */
+  --panel-accent-2:var(--green-deep);  /* accent text-on-surface */
+}
 
-  /* Light-mode equivalents */
-  --panel-l-0:      #ffffff;
-  --panel-l-1:      #f3f3f3;
-  --panel-l-2:      #ececec;
-  --panel-l-3:      #e4e4e4;
-  --panel-l-hover:  #e8e8e8;
-  --panel-l-select: #e4e6f1;
-  --panel-l-text:   #333333;
-  --panel-l-text-2: #616161;
+/* Dark-mode tokens — applied via OS preference or explicit theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --panel-0:       #1e1e1e;
+    --panel-1:       #252526;
+    --panel-2:       #2d2d30;
+    --panel-3:       #333333;
+    --panel-hover:   #2a2d2e;
+    --panel-select:  #37373d;
+    --panel-text:    #d4d4d4;
+    --panel-text-2:  #9d9d9d;
+    --panel-text-3:  #6a6a6a;
+    --panel-accent:  var(--green-2);
+    --panel-accent-2:var(--green-2);
+  }
+}
 
-  --surface-0: var(--panel-l-0);
-  --surface-1: var(--panel-l-1);
-  --surface-2: var(--panel-l-2);
-  --surface-3: var(--panel-l-hover);
-  --surface-ink-0: var(--panel-0);
-  --surface-ink-1: var(--panel-1);
-  --surface-ink-2: var(--panel-2);
-  --surface-ink-3: var(--panel-3);
+[data-theme="dark"] {
+  --panel-0:       #1e1e1e;
+  --panel-1:       #252526;
+  --panel-2:       #2d2d30;
+  --panel-3:       #333333;
+  --panel-hover:   #2a2d2e;
+  --panel-select:  #37373d;
+  --panel-text:    #d4d4d4;
+  --panel-text-2:  #9d9d9d;
+  --panel-text-3:  #6a6a6a;
+  --panel-accent:  var(--green-2);
+  --panel-accent-2:var(--green-2);
 }
 
 /* --- Ink (dark) mode --- */
