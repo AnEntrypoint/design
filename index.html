@@ -1,74 +1,69 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>247420 // AnEntrypoint Design System</title>
+<title>247420 // design system</title>
 <link rel="stylesheet" href="./colors_and_type.css">
-<style>
-  body{background:var(--panel-0);color:var(--panel-text);margin:0;font-family:var(--ff-mono);font-size:14px}
-  header{background:var(--panel-2);padding:10px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:13px;position:sticky;top:0;z-index:100}
-  header .brand{font-weight:600;color:var(--panel-text)}
-  header a{color:var(--panel-accent);text-decoration:none}
-  main{max-width:1000px;margin:0 auto;padding:64px 48px 96px 48px}
-  h1{font-family:var(--ff-display);font-size:clamp(64px,10vw,128px);line-height:1;letter-spacing:-0.03em;margin:0 0 12px 0;color:var(--panel-text);font-weight:700}
-  .lede{font-family:var(--ff-body);font-size:20px;line-height:1.5;margin:0 0 64px 0;max-width:52ch;color:var(--panel-text-2)}
-  section{padding:40px 0 !important;background:transparent !important}
-  section h2{font-family:var(--ff-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.14em;font-weight:500;margin:0 0 16px 0;color:var(--panel-text-2)}
-  ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2px;background:var(--panel-1);padding:2px}
-  li{background:var(--panel-1)}
-  a.kit{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:14px 18px;align-items:baseline;color:var(--panel-text);text-decoration:none;background:var(--panel-0)}
-  a.kit:hover{background:var(--panel-hover)}
-  a.kit .code{font-family:var(--ff-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--panel-accent)}
-  a.kit .name{font-family:var(--ff-display);font-size:20px;line-height:1.1;font-weight:600}
-</style>
+<link rel="stylesheet" href="./app-shell.css">
 </head>
 <body data-screen-label="00 Index">
-<header>
-  <span class="brand">247420 / design system</span>
-  <a href="https://github.com/AnEntrypoint/design">source ↗</a>
-</header>
-<main>
-  <h1>design.</h1>
-  <p class="lede">a coherent visual paradigm for the creative department of the internet. layered surfaces. quiet chrome. loud content.</p>
+<div class="app">
+  <header class="app-topbar">
+    <span class="brand">247420<span class="slash"> / </span>design</span>
+    <nav>
+      <a href="#" class="active">index</a>
+      <a href="./ui_kits/homepage/">homepage</a>
+      <a href="./ui_kits/project_page/">project</a>
+      <a href="./ui_kits/docs/">docs</a>
+      <a href="./ui_kits/blog/">blog</a>
+      <a href="./slides/">slides</a>
+      <a href="https://github.com/AnEntrypoint/design">source ↗</a>
+    </nav>
+  </header>
+  <div class="app-crumb">
+    <span>design</span><span class="sep">›</span>
+    <span class="leaf">index</span>
+  </div>
+  <div class="app-body no-side">
+    <main class="app-main">
+      <h1>design system</h1>
+      <p class="lede">a coherent visual paradigm for the 247420 collective. layered surfaces, monospace labels, loud content inside quiet chrome.</p>
 
-  <section>
-    <h2>// ui kits</h2>
-    <ul>
-      <li><a class="kit" href="./ui_kits/homepage/"><span class="code">01</span><span class="name">homepage</span></a></li>
-      <li><a class="kit" href="./ui_kits/project_page/"><span class="code">02</span><span class="name">project page</span></a></li>
-      <li><a class="kit" href="./ui_kits/docs/"><span class="code">03</span><span class="name">docs</span></a></li>
-      <li><a class="kit" href="./ui_kits/blog/"><span class="code">04</span><span class="name">blog</span></a></li>
-    </ul>
-  </section>
+      <h3>ui kits</h3>
+      <div class="cards">
+        <a class="card-item" href="./ui_kits/homepage/"><span class="code">01</span><span class="name">homepage</span></a>
+        <a class="card-item" href="./ui_kits/project_page/"><span class="code">02</span><span class="name">project page</span></a>
+        <a class="card-item" href="./ui_kits/docs/"><span class="code">03</span><span class="name">docs</span></a>
+        <a class="card-item" href="./ui_kits/blog/"><span class="code">04</span><span class="name">blog</span></a>
+      </div>
 
-  <section>
-    <h2>// slides</h2>
-    <ul>
-      <li><a class="kit" href="./slides/"><span class="code">01</span><span class="name">deck template</span></a></li>
-    </ul>
-  </section>
+      <h3>slides</h3>
+      <div class="cards">
+        <a class="card-item" href="./slides/"><span class="code">01</span><span class="name">deck template</span></a>
+      </div>
 
-  <section>
-    <h2>// preview cards</h2>
-    <ul id="previews"></ul>
-  </section>
+      <h3>preview cards</h3>
+      <div class="cards" id="previews"></div>
 
-  <section>
-    <h2>// reference</h2>
-    <ul>
-      <li><a class="kit" href="./README.md"><span class="code">§</span><span class="name">README.md</span></a></li>
-      <li><a class="kit" href="./SKILL.md"><span class="code">§</span><span class="name">SKILL.md</span></a></li>
-      <li><a class="kit" href="./colors_and_type.css"><span class="code">§</span><span class="name">tokens</span></a></li>
-    </ul>
-  </section>
-</main>
+      <h3>reference</h3>
+      <div class="cards">
+        <a class="card-item" href="./README.md"><span class="code">§</span><span class="name">README.md</span></a>
+        <a class="card-item" href="./SKILL.md"><span class="code">§</span><span class="name">SKILL.md</span></a>
+        <a class="card-item" href="./colors_and_type.css"><span class="code">§</span><span class="name">tokens</span></a>
+      </div>
+    </main>
+  </div>
+  <footer class="app-status">
+    <span class="item">main</span>
+    <span class="item">• utf-8</span>
+    <span class="item">• lf</span>
+    <span class="spread"></span>
+    <span class="item">247420 / mmxxvi</span>
+    <span class="item">• probably emerging</span>
+  </footer>
+</div>
 
 <script type="importmap">
-{
-  "imports": {
-    "webjsx": "./vendor/webjsx/index.js",
-    "webjsx/": "./vendor/webjsx/"
-  }
-}
+{ "imports": { "webjsx": "./vendor/webjsx/index.js", "webjsx/": "./vendor/webjsx/" } }
 </script>
 <script type="module">
 import * as webjsx from 'webjsx';
@@ -79,11 +74,11 @@ const previews = [
   'type-display','type-mono','type-prose','type-scale','wordmarks'
 ];
 const ul = document.getElementById('previews');
-const nodes = previews.map((name, i) => h('li', { key: name },
-  h('a', { class: 'kit', href: `./preview/${name}.html` },
-    h('span', { class: 'code' }, String(i+1).padStart(2,'0')),
-    h('span', { class: 'name' }, name.replace(/-/g,' '))
-  )
+const nodes = previews.map((name, i) => h('a', {
+  key: name, class: 'card-item', href: `./preview/${name}.html`
+},
+  h('span', { class: 'code' }, String(i+1).padStart(2,'0')),
+  h('span', { class: 'name' }, name.replace(/-/g,' '))
 ));
 webjsx.applyDiff(ul, nodes);
 </script>
