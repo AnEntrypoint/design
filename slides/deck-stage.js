@@ -62,8 +62,8 @@
       position: fixed;
       inset: 0;
       display: block;
-      background: #000;
-      color: #fff;
+      background: var(--panel-0, #000);
+      color: var(--panel-text, #fff);
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       overflow: hidden;
     }
@@ -80,7 +80,7 @@
       position: relative;
       transform-origin: center center;
       flex-shrink: 0;
-      background: #fff;
+      background: var(--panel-1, #fff);
       will-change: transform;
     }
 
