@@ -214,35 +214,24 @@
    Base elements
    ============================================================ */
 
-* { box-sizing: border-box; border: 0; outline: 0; }
-:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+*, *::before, *::after { box-sizing: border-box; border: 0 !important; outline: 0 !important; box-shadow: none !important; }
+:focus-visible { outline: 2px solid var(--green) !important; outline-offset: 2px; }
 html, body { margin: 0; padding: 0; }
 
 /* ============================================================
    Surface bands — tonal section separation (no borders)
    ============================================================ */
-section { padding: clamp(64px, 9vw, 128px) clamp(24px, 4vw, 48px); background: var(--surface-0); }
-main > section:nth-of-type(even),
-body > section:nth-of-type(even) { background: var(--surface-1); }
-main > section:nth-of-type(3n),
-body > section:nth-of-type(3n)  { background: var(--surface-2); }
+body { background: var(--panel-0); color: var(--panel-text); }
+section { padding: clamp(56px, 8vw, 112px) clamp(24px, 4vw, 56px); background: var(--panel-0); }
+section:nth-of-type(even) { background: var(--panel-1); }
+section:nth-of-type(3n)   { background: var(--panel-2); }
+section:nth-of-type(5n)   { background: var(--panel-3); }
 
-[data-theme="ink"] section,
-.theme-ink section { background: var(--surface-ink-0); }
-[data-theme="ink"] main > section:nth-of-type(even),
-[data-theme="ink"] body > section:nth-of-type(even),
-.theme-ink main > section:nth-of-type(even) { background: var(--surface-ink-1); }
-[data-theme="ink"] main > section:nth-of-type(3n),
-[data-theme="ink"] body > section:nth-of-type(3n),
-.theme-ink main > section:nth-of-type(3n)  { background: var(--surface-ink-2); }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="paper"]) section { background: var(--surface-ink-0); }
-  :root:not([data-theme="paper"]) main > section:nth-of-type(even),
-  :root:not([data-theme="paper"]) body > section:nth-of-type(even) { background: var(--surface-ink-1); }
-  :root:not([data-theme="paper"]) main > section:nth-of-type(3n),
-  :root:not([data-theme="paper"]) body > section:nth-of-type(3n)  { background: var(--surface-ink-2); }
-}
+[data-theme="paper"] body { background: var(--panel-l-0); color: var(--panel-l-text); }
+[data-theme="paper"] section { background: var(--panel-l-0); }
+[data-theme="paper"] section:nth-of-type(even) { background: var(--panel-l-1); }
+[data-theme="paper"] section:nth-of-type(3n)   { background: var(--panel-l-2); }
+[data-theme="paper"] section:nth-of-type(5n)   { background: var(--panel-l-3); }
 
 /* Rows: no separators, hover surface tint instead */
 .row { background: transparent; transition: background var(--dur-snap) var(--ease); }
