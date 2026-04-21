@@ -1,4 +1,46 @@
+/* ============================================================
+   Design tokens — brand palette + type scale + motion
+   Loads before any consumer rule; all var(--*) refs resolve.
+   ============================================================ */
+:root {
+  --paper:        #EFE9DD;
+  --ink:          #0B0B09;
+  --acid:         #B8FF00;
+  --link:         #1F4DFF;
+  --warn:         #FF3B1F;
+  --live:         #00A86B;
 
+  --green:        #30A46C;
+  --green-2:      #92CEAC;
+  --green-deep:   #18794E;
+  --green-fg:     #FFFFFF;
+  --purple:       #8E4EC6;
+  --purple-fg:    #FFFFFF;
+  --mascot:       #FF7A00;
+  --mascot-fg:    #FFFFFF;
+  --sun:          #FFD100;
+
+  --ff-display:   'Archivo Black', 'Archivo', system-ui, sans-serif;
+  --ff-mono:      'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ff-prose:     'Instrument Serif', Georgia, serif;
+
+  --fs-hero:      120px;
+  --fs-h1:        64px;
+  --fs-h2:        32px;
+  --lh-tight:     1.05;
+  --lh-snug:      1.2;
+  --tr-tight:     -0.02em;
+
+  --dur-snap:     80ms;
+  --dur-base:     160ms;
+  --ease:         cubic-bezier(0.2, 0, 0, 1);
+
+  --surface-2:    rgba(0,0,0,0.04);
+  --surface-ink-2: rgba(255,255,255,0.06);
+
+  --r-1:          0;
+  --r-2:          0;
+}
 
 /* Rows: no separators, hover surface tint instead */
 .row { background: transparent; transition: background var(--dur-snap) var(--ease); }
