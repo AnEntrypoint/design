@@ -234,9 +234,9 @@ Every external dependency is downloaded once, committed under `vendor/`, and ref
 3. **Link-rot immunity.** Our sites must be legible in 10 years.
 4. **Reproducibility.** The repo is the source of truth.
 
-### The canonical HTML head
+### The canonical HTML head — **MANDATORY**
 
-Every 247420 page starts with this:
+Every 247420 page **must** ship with the full head block below. This is not optional. SEO, social-card discovery, theme-color sync, favicon, and canonical URL are all load-bearing — a page without them is considered broken and blocks merge.
 
 ```html
 <!doctype html>
@@ -244,11 +244,48 @@ Every 247420 page starts with this:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>…</title>
 
-  <link rel="stylesheet" href="/vendor/rippleui-1.12.1.css">
+  <!-- Theme / color scheme (auto light+dark) -->
+  <meta name="theme-color" content="#247420" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- SEO core -->
+  <title>{{ page title · 247420 }}</title>
+  <meta name="description" content="{{ one-sentence description, &lt;160 chars }}">
+  <meta name="author" content="247420 / AnEntrypoint">
+  <meta name="keywords" content="247420, anentrypoint, {{ project-specific terms }}">
+  <link rel="canonical" href="{{ absolute canonical url }}">
+  <meta name="robots" content="index, follow">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+
+  <!-- Open Graph (Facebook, LinkedIn, Discord, Slack, etc.) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ page title }}">
+  <meta property="og:description" content="{{ same as description }}">
+  <meta property="og:url" content="{{ canonical url }}">
+  <meta property="og:site_name" content="247420 / {{ surface name }}">
+  <meta property="og:image" content="{{ absolute og-card.png url, 1200x630 }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ descriptive alt }}">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page title }}">
+  <meta name="twitter:description" content="{{ same as description }}">
+  <meta name="twitter:image" content="{{ same og-card.png url }}">
+  <meta name="twitter:site" content="@AnEntrypoint">
+
+  <!-- Styles + shell (order matters: tokens before shell) -->
   <link rel="stylesheet" href="/colors_and_type.css">
+  <link rel="stylesheet" href="/app-shell.css">
 
+  <!-- Import map for webjsx + router (local, never CDN) -->
   <script type="importmap">
   {
     "imports": {
@@ -266,6 +303,21 @@ Every 247420 page starts with this:
 </body>
 </html>
 ```
+
+**Checklist — every surface ships with:**
+- [ ] `<title>` + `<meta name="description">` (unique per page, ≤160 chars)
+- [ ] `<link rel="canonical">` absolute URL
+- [ ] `theme-color` pair (light `#247420`, dark `#3A9A34`) + `color-scheme: light dark`
+- [ ] Favicon SVG + PNG fallback
+- [ ] Full `og:*` quintet (type, title, description, url, image) + image dimensions + alt + locale
+- [ ] Full `twitter:*` quartet (card, title, description, image) + `twitter:site`
+- [ ] `robots: index, follow` (or explicit `noindex` for preview/private)
+- [ ] `colors_and_type.css` loaded **before** `app-shell.css`
+- [ ] Import map pointing at `/vendor/` (never CDN — see *iron rule*)
+
+**Sitemap + robots at repo root.** A 247420 site without `/sitemap.xml` + `/robots.txt` is considered incomplete. Entries include every public surface with appropriate `changefreq` and `priority`.
+
+**OG card.** The `og-card.png` referenced above is a 1200×630 image rendered from the site's own typography and colors — never a stock template, never a gradient. It lives at repo root and is the one place a visual is baked for share-unfurls.
 
 ### Vendor layout
 
@@ -285,6 +337,35 @@ vendor/
 ```
 
 **CSS-only Ripple.** We use the compiled stylesheet directly — no Tailwind install needed. `.btn`, `.btn-primary`, `.input`, `.switch`, `.menu`, `.modal` etc. all work out of the box.
+
+### The app shell — **MANDATORY chrome**
+
+Every 247420 surface uses the shared shell primitives in `app-shell.css`. The visual identity is IDE-modern: layered surfaces, monospace labels, quiet chrome, loud content. **Do not roll your own header/sidebar/footer.** Compose with these classes:
+
+| Class | Purpose |
+|---|---|
+| `.app` | Root flex column — hosts topbar, body, status bar |
+| `.app-topbar` | Sticky 40px chrome with `.brand` + `<nav>`. Active link uses `.active` |
+| `.app-crumb` | Sticky path breadcrumb under topbar. Uses `<span>` + `.sep` + `.leaf` |
+| `.app-body` / `.app-body.no-side` | Grid of sidebar + main (or main only) |
+| `.app-side` | Left rail with `.group` headings and tree `<a>` links |
+| `.app-main` / `.app-main.narrow` / `.centered` | Scrollable content region with editorial type |
+| `.app-status` | Accent-colored 24px status bar with `.item` + `.spread` |
+| `.panel` / `.panel-head` / `.panel-body` | Grouped content block |
+| `.row` | Dense list item — grid `code / title / meta` |
+| `.cli` | `$ prompt cmd copy` install block |
+| `.kv` | Key-value receipt table |
+| `.chip` / `.chip.accent` / `.chip.dim` | Small status/label tags |
+| `.btn` / `.btn-primary` / `.btn-ghost` | Buttons |
+| `.card-item` / `.cards` | Landing-grid item + grid container |
+
+**Surface tokens** (consume from `colors_and_type.css` — auto light/dark):
+- `--panel-0` canvas · `--panel-1` elevated · `--panel-2` chrome · `--panel-3` deepest
+- `--panel-hover` · `--panel-select`
+- `--panel-text` · `--panel-text-2` · `--panel-text-3`
+- `--panel-accent` (semantic green) · `--panel-shadow`
+
+**Never use fixed hex colors in component markup.** Always token references — the palette flips with OS preference automatically.
 
 ### Writing a component (the pattern)
 

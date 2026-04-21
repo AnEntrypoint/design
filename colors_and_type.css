@@ -356,3 +356,77 @@ code, .t-code {
    Selection
    ============================================================ */
 ::selection { background: var(--mascot); color: var(--mascot-fg); }
+
+
+/* ============================================================
+   Panel surface tokens — VS-Code-inspired layered chrome
+   Light default. Dark via prefers-color-scheme or [data-theme="dark"].
+   ============================================================ */
+:root {
+  --panel-0:       #f4f5f7;   /* canvas */
+  --panel-1:       #ffffff;   /* elevated card */
+  --panel-2:       #e7e9ec;   /* chrome (topbar, tabbar) */
+  --panel-3:       #d8dbe0;   /* deepest */
+  --panel-hover:   #ecedf0;
+  --panel-select:  #dbe3f5;
+  --panel-text:    #1f2328;
+  --panel-text-2:  #59636e;
+  --panel-text-3:  #8b949e;
+  --panel-accent:  var(--green);
+  --panel-accent-2:var(--green-deep);
+  --panel-shadow:  0 1px 2px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.04);
+  --panel-shadow-top: 0 1px 0 rgba(0,0,0,0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --panel-0:       #181a1f;
+    --panel-1:       #21252b;
+    --panel-2:       #2c313a;
+    --panel-3:       #383e48;
+    --panel-hover:   #2a3038;
+    --panel-select:  #3a4050;
+    --panel-text:    #e4e6eb;
+    --panel-text-2:  #9aa3b2;
+    --panel-text-3:  #6d7685;
+    --panel-accent:  var(--green-2);
+    --panel-accent-2:var(--green-2);
+    --panel-shadow:  0 1px 2px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25);
+    --panel-shadow-top: 0 1px 0 rgba(255,255,255,0.04);
+  }
+}
+
+[data-theme="dark"] {
+  --panel-0:       #181a1f;
+  --panel-1:       #21252b;
+  --panel-2:       #2c313a;
+  --panel-3:       #383e48;
+  --panel-hover:   #2a3038;
+  --panel-select:  #3a4050;
+  --panel-text:    #e4e6eb;
+  --panel-text-2:  #9aa3b2;
+  --panel-text-3:  #6d7685;
+  --panel-accent:  var(--green-2);
+  --panel-accent-2:var(--green-2);
+  --panel-shadow:  0 1px 2px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25);
+  --panel-shadow-top: 0 1px 0 rgba(255,255,255,0.04);
+}
+
+[data-theme="light"] {
+  --panel-0:       #f4f5f7;
+  --panel-1:       #ffffff;
+  --panel-2:       #e7e9ec;
+  --panel-3:       #d8dbe0;
+  --panel-hover:   #ecedf0;
+  --panel-select:  #dbe3f5;
+  --panel-text:    #1f2328;
+  --panel-text-2:  #59636e;
+  --panel-text-3:  #8b949e;
+  --panel-accent:  var(--green);
+  --panel-accent-2:var(--green-deep);
+}
+
+/* Universal reset — no borders, no outlines except :focus-visible */
+*, *::before, *::after { box-sizing: border-box; border: 0 !important; outline: 0 !important; }
+:focus-visible { outline: 2px solid var(--panel-accent) !important; outline-offset: 2px; }
+html, body { margin: 0; padding: 0; }
