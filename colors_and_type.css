@@ -417,7 +417,7 @@ code, .t-code {
   --panel-accent:  var(--green);
   --panel-accent-2:var(--green-deep);
   --panel-shadow:  0 1px 2px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.04);
-  --panel-shadow-top: 0 1px 0 rgba(0,0,0,0.05);
+  --panel-shadow-top: none;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -434,7 +434,7 @@ code, .t-code {
     --panel-accent:  var(--green-2);
     --panel-accent-2:var(--green-2);
     --panel-shadow:  0 1px 2px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25);
-    --panel-shadow-top: 0 1px 0 rgba(255,255,255,0.04);
+    --panel-shadow-top: none;
   }
 }
 
