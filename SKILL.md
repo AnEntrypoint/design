@@ -19,6 +19,15 @@ If the user invokes this skill without any other guidance, ask them what they wa
 - **Primitives:** the dateline bar, the index-card row, the stamp, the hairline rule (single/double/dotted), hairline-bottom inputs.
 - **Motion:** 80ms snap, 160ms base, `cubic-bezier(0.2, 0, 0, 1)`. No bounces.
 
+## Stack (non-negotiable)
+
+- **Client:** [webjsx.org](https://webjsx.org) + customized [ripple-ui.com](https://ripple-ui.com) on top of **Tailwind**. That is the entire frontend, every project, forever. React/Vue/Svelte/Next/Nuxt are banned from the org.
+- **Build box:** **GitHub Actions** — always. Building on a laptop is banned. Pages deploy + Tailwind JIT + sitemap + og-card + flatspace aggregation all happen in CI. GH Actions is the preferred CI/CD for every repo.
+- **Vendored, never CDN.** Ripple UI, WebJSX, webjsx-router, fonts — all committed under `vendor/`.
+- **If it's a CMS** (blog, docs, portfolio, content-aggregated site) → use **flatspace**, as a **GitHub Actions step**. Never `bunx flatspace`, never `npx flatspace`.
+- **If it's not a CMS and it needs a database** → use **busybase** from npm. Not Supabase, not Firebase, not Planetscale.
+- **If it's neither** → static HTML + vendored JS, deployed via GitHub Pages. Default shape.
+
 ## Files
 - `README.md` — full paradigm, content + visual foundations, caveats, ask.
 - `colors_and_type.css` — all tokens + semantic classes + primitives.

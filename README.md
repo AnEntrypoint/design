@@ -212,16 +212,58 @@ The design doesn't coddle. Hover means "something will happen if you click." Bin
 
 ## Tech stack (mandatory, not a suggestion)
 
-247420 projects are **buildless**. No webpack, no vite, no npm run dev. You open `index.html`, it works. Every component in this system is designed for that reality.
+247420 projects are **buildless in the browser**. No webpack, no vite, no `npm run dev`. You open `index.html`, it works. Every component in this system is designed for that reality. Any necessary build (font subsetting, Tailwind JIT pass over our override layer, sitemap generation, content aggregation for a flatspace CMS site) happens in **CI/CD** — never on a contributor's laptop, never at runtime.
 
-### The two libraries
+### The stack — one sentence
 
-**[Ripple UI](https://ripple-ui.com)** (`rippleui@1.12.1`) — Tailwind-based component CSS. We use it for the primitives (buttons, inputs, switches, menus, modals, tables) so we don't rebuild what's already solved. We then **override** the visual identity on top of it using `colors_and_type.css`. Ripple gives us the behavior; our layer gives us the voice. A 247420 site must **never look like** the stock Ripple UI demo.
+> **[WebJSX](https://webjsx.org)** + **customized [Ripple UI](https://ripple-ui.com)** on top of **Tailwind** — that is the entire client stack, forever, for every 247420 surface. If a project uses a different frontend, it is not a 247420 project.
 
-**[WebJSX](https://webjsx.org)** (`webjsx@0.0.73`) — tiny JSX → DOM library designed for Web Components. Two functions: `createElement` and `applyDiff`. No virtual DOM framework, no hooks, no state manager. We write Custom Elements (`class X extends HTMLElement`) and use `applyDiff` inside their `render()` method.
+There are no alternatives. No "it depends." No "for this one we tried Svelte." React/Vue/Svelte/Solid/Next/Nuxt/SvelteKit/Remix are **banned from the org**, not discouraged. WebJSX + customized Ripple UI on Tailwind is the universal chassis — every repo links the same vendored bundle, every contributor knows what they're reading, every site looks like it came from here.
+
+### The three layers
+
+1. **[Tailwind](https://tailwindcss.com)** — the utility base. Sizing, spacing, flex/grid, responsive. We use the compiled stylesheet; no dev-time `tailwindcss` watcher on laptops. If the utility set needs extending, the JIT pass runs in CI and commits the output.
+2. **[Ripple UI](https://ripple-ui.com)** (`rippleui@1.12.1`, **customized**) — Tailwind-based component layer. We take the primitives (buttons, inputs, switches, menus, modals, tables) and **override them** with `colors_and_type.css` + `app-shell.css` to carry the 247420 voice. A 247420 site must **never look like** the stock Ripple UI demo. Ripple gives us the behavior; our override gives us the identity.
+3. **[WebJSX](https://webjsx.org)** (`webjsx@0.0.73`) — tiny JSX → DOM library designed for Web Components. Two functions: `createElement` and `applyDiff`. No virtual DOM framework, no hooks, no state manager. We write Custom Elements (`class X extends HTMLElement`) and use `applyDiff` inside their `render()` method.
 
 - **Routing:** `webjsx-router` (`match`, `goto`, `initRouter`).
 - **State:** plain properties + observed attributes. Plain `EventTarget` pub-sub or `localStorage` for anything more. No Redux/Zustand/signals.
+
+### CI/CD — GitHub Actions is the build box
+
+Building on a laptop is banned. The build box is **GitHub Actions**, always. Every repo ships a `.github/workflows/` that handles:
+
+- Tailwind JIT pass over our override layer (if utilities changed)
+- Font subsetting + vendor bundling
+- Sitemap + `robots.txt` generation
+- `og-card.png` render (from the site's own typography)
+- flatspace content aggregation (for CMS surfaces — see below)
+- GitHub Pages deploy (the default host — `pages-build-deployment` is the shipping signal)
+
+**Rules:**
+- CI is the **only** place builds run. A contributor never needs Node + Tailwind + PostCSS installed to ship.
+- **GitHub Actions is preferred** for everything — Pages deploy, build, test, release, scheduled content pulls. No CircleCI, no Travis, no Jenkins unless there is a specific, documented reason.
+- Secrets live in the repo's Actions secrets, never in `.env` committed anywhere.
+- CI failures block merge. Green CI = shippable.
+- The deploy artifact is exactly what lives in `docs/` (or `dist/`) after the workflow runs — no hand-edits on the deployed site.
+
+### Content & data — pick the right tool, there are only two
+
+247420 surfaces fall into one of two shapes. The tool is prescribed, not selected.
+
+**If it's a CMS** (blog, docs, portfolio, anything where content is primarily markdown/mdx aggregated into pages):
+
+> Use **flatspace**. Always. Never `bunx`, never `npx`, never a SaaS headless CMS.
+
+flatspace pulls content (markdown, json, frontmatter) from sibling repos / folders at **GitHub Actions build time** and bakes it flat into the site. The deployed site is static HTML + our vendored JS — no runtime CMS, no server, no API to call from the browser. `bunx flatspace` and `npx flatspace` are both wrong — flatspace runs as a GitHub Action step in the project's workflow, pinned to a version, reproducible.
+
+**If it's not a CMS and it needs a database:**
+
+> Use **busybase** from npm. Always. Not Supabase, not Firebase, not Planetscale, not a custom Postgres.
+
+busybase is the org's standard data layer — installed as an npm dependency, accessed from the client or from a thin edge function, authenticated against our own identity. If a project reaches for "what database should I use?", the answer is busybase and the question is closed.
+
+**If it's neither a CMS nor data-backed** (landing pages, ui kits, slides, the design system itself) — static HTML + our vendored JS, deployed via GitHub Pages, no build beyond the CI steps above. This is the default and most common shape.
 
 ### The iron rule: localize imports
 
@@ -400,13 +442,18 @@ Verbose, yes. Zero toolchain, yes. That's the trade.
 
 | Allowed | Banned |
 |---|---|
-| Ripple UI classes (`.btn`, `.input`, `.menu`, `.modal`, `.switch`, etc.) | React, Vue, Svelte, Solid, Preact |
-| WebJSX + Custom Elements | Next.js, Nuxt, SvelteKit, Remix |
-| Plain CSS / our override CSS | `<script src="https://cdn...">` anywhere |
-| Import maps pointing at `/vendor/` | `<script src="https://unpkg.com/...">` |
-| Native `fetch`, `EventTarget`, `localStorage` | Redux / Zustand / Jotai / Recoil |
-| Hand-written `createElement` calls | Webpack / Vite / Parcel / Turbopack |
-| Dropping in a single-file vendored lib (e.g. `htm`) | Anything requiring a dev server |
+| **WebJSX + customized Ripple UI on Tailwind** (the stack, no exceptions) | React, Vue, Svelte, Solid, Preact |
+| Ripple UI classes (`.btn`, `.input`, `.menu`, `.modal`, `.switch`, etc.) | Next.js, Nuxt, SvelteKit, Remix |
+| Tailwind utilities (compiled via CI) | Any other component framework on top of Tailwind |
+| WebJSX + Custom Elements | `<script src="https://cdn...">` / `unpkg` / any CDN at runtime |
+| Plain CSS / our override CSS | Redux / Zustand / Jotai / Recoil |
+| Import maps pointing at `/vendor/` | Webpack / Vite / Parcel / Turbopack (on laptops) |
+| Native `fetch`, `EventTarget`, `localStorage` | Anything requiring a contributor-side dev server |
+| Hand-written `createElement` calls | Running `bunx flatspace` or `npx flatspace` (flatspace is a GH Actions step) |
+| **flatspace** for CMS surfaces (as a GH Actions step) | Contentful / Sanity / Strapi / Ghost / Notion-as-CMS |
+| **busybase** from npm for non-CMS data | Supabase / Firebase / Planetscale / custom Postgres |
+| **GitHub Actions** for build, test, deploy | CircleCI / Travis / Jenkins (absent explicit justification) |
+| Dropping in a single-file vendored lib (e.g. `htm`) | Building on a laptop and committing the output manually |
 
 ---
 
