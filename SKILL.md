@@ -19,6 +19,13 @@ If the user invokes this skill without any other guidance, ask them what they wa
 - **Primitives:** the dateline bar, the index-card row, the stamp, the hairline rule (single/double/dotted), hairline-bottom inputs.
 - **Motion:** 80ms snap, 160ms base, `cubic-bezier(0.2, 0, 0, 1)`. No bounces.
 
+## Dark/light — mandatory on every surface
+
+- Every page ships **light and dark**, validated in both before merge. One-theme-only is a broken page.
+- **Token-first, always.** Never hardcode hex in markup. Use `var(--panel-*)` / `var(--panel-accent)` / `var(--panel-accent-fg)` / `var(--fg)` / `var(--bg)`. The tokens swap on `[data-theme]` + `prefers-color-scheme`.
+- **Every accent bg has a paired `-fg` token.** On `--panel-accent` → use `--panel-accent-fg`. On `--acid`/`--lime` → use `--ink`. On `--sun` → use `--ink`. Never `#ffffff` on lime/mint/acid — that's the "invisible light grey" bug we've hit repeatedly.
+- The app-shell primitives (`.app-topbar`, `.app-status`, `.chip.accent`, `.btn-primary`, etc.) are theme-aware already. Compose with them — don't re-roll with literal colors.
+
 ## Stack (non-negotiable)
 
 - **Client:** [webjsx.org](https://webjsx.org) + customized [ripple-ui.com](https://ripple-ui.com) on top of **Tailwind**. That is the entire frontend, every project, forever. React/Vue/Svelte/Next/Nuxt are banned from the org.

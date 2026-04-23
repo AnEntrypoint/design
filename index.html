@@ -56,6 +56,9 @@
       <h1>design system</h1>
       <p class="lede">a coherent visual paradigm for the 247420 collective. layered surfaces, monospace labels, loud content inside quiet chrome.</p>
 
+      <h3>dark / light</h3>
+      <p>every surface ships <strong>light and dark, validated in both</strong>. token-first, never literal hex in components. every accent background has a paired <code>--*-fg</code> token — never hardcode <code>#ffffff</code> on mint / lime / acid (that's the "invisible light grey" bug, now closed at the token level).</p>
+
       <h3>stack</h3>
       <p><strong>webjsx.org</strong> + <strong>customized ripple-ui.com</strong> on top of <strong>tailwind</strong>. buildless in the browser, vendored not cdn'd. build box is <strong>github actions</strong> (preferred for everything — build, test, deploy). cms surfaces use <strong>flatspace</strong> as a gh actions step (never <code>bunx</code> / <code>npx</code>). non-cms surfaces that need data use <strong>busybase</strong> from npm (not supabase, not firebase).</p>
 

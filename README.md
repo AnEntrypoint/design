@@ -136,6 +136,35 @@ The palette is load-bearing lore, not aesthetics-first.
 
 **Default theme: follows the user's OS** via `@media (prefers-color-scheme: dark)`. Cream is the paper; ink is the plate.
 
+### Dark / light is mandatory — not a feature, a baseline
+
+Every 247420 surface ships **light and dark, validated in both, on every build**. Shipping a page that only looks right in one theme is a broken page. The rule is absolute:
+
+- **Token-first, always.** No hard-coded hex in component markup. Colors come from `var(--panel-*)`, `var(--panel-accent)`, `var(--panel-accent-fg)`, `var(--fg)`, `var(--bg)`. The token set swaps on `[data-theme]` / `prefers-color-scheme` — components don't need to know which theme is active.
+- **Every accent background has a paired foreground token.** `--panel-accent` is green in light theme and mint in dark theme. `--panel-accent-fg` is the correct text color to use *on top of* the accent — white in light theme, ink in dark. **Never hardcode `#ffffff` on an accent/lime/acid surface.** That's the bug that gave us "invisible light grey on lime" more than once. It is now caught at the token level.
+- **Test in both themes before you merge.** Flip OS dark mode. Toggle `[data-theme="dark"]`. Every primary/accent surface, every chip, every status bar, every active nav item, every hover state — readable in both. If it isn't, the token pairing is wrong, not the component.
+- **CI checks the pair.** Any rule that sets `color:` to a literal hex on top of `background: var(--panel-accent|--acid|--green|--lime|...)` fails the contrast lint.
+- **The shell is theme-aware by default.** Using `.app`, `.app-topbar`, `.app-main`, `.panel`, `.row`, `.cli`, `.kv`, `.chip`, `.btn-primary`, `.app-status` gives you dark/light for free. If you're writing a component and reaching for a literal color, stop — add a token instead.
+
+### Text visibility — hard rule (repeatedly violated in the past, now closed)
+
+> **Never put a near-white foreground on a near-white accent (mint, lime, acid, pastel).** Never put a near-black foreground on a near-black accent. Always use the paired `--*-fg` token.
+
+The paired tokens are:
+
+| Background token | Foreground token | Notes |
+|---|---|---|
+| `--panel-accent` | `--panel-accent-fg` | white on deep green (light), ink on mint (dark) |
+| `--acid` / `--lime` | `--ink` | acid is too light for white text, always |
+| `--green` | `--green-fg` | white |
+| `--purple` | `--purple-fg` | white |
+| `--mascot` | `--mascot-fg` | white |
+| `--sun` | `--ink` | yellow needs ink, never white |
+| `--paper` | `--ink` | cream surface |
+| `--ink` | `--paper` | inverse surface |
+
+If you find yourself typing `color: #ffffff` or `color: #fff` in a component, **stop**. Use the paired token. If no token exists, add one before you merge.
+
 ### Type
 Three families, no more:
 - **Display — `Redaction` / `Redaction 50`** (or closest available). Editorial, decaying-ink feel. For headlines, project titles, quotes. Fallback: `Times New Roman` (not a joke; the default Times is better than most web serifs).

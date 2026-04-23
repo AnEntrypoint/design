@@ -45,14 +45,16 @@
   /* Variant: elevated surface — deeper on light, lighter on dark */
   section.s-elev { background: var(--panel-2); }
   section.s-canvas { background: var(--panel-0); }
-  /* Variant: accent-filled slide — green background, white text (always readable) */
+  /* Variant: accent-filled slide — pairs bg with its contrast token
+     so light-theme (deep green) gets white text and dark-theme (mint)
+     gets ink text. Never hardcode #fff here — mint + white is invisible. */
   section.s-accent {
     background: var(--panel-accent);
-    color: #ffffff;
+    color: var(--panel-accent-fg);
   }
   section.s-accent .s-label,
   section.s-accent .s-footer,
-  section.s-accent .s-dateline { color: #ffffff; }
+  section.s-accent .s-dateline { color: var(--panel-accent-fg); }
 
   .s-dateline {
     display: flex;
@@ -132,7 +134,7 @@
     box-shadow: var(--panel-shadow);
   }
   .cmp .cmp-before { background: var(--panel-2); }
-  .cmp .cmp-after { background: var(--panel-accent); color: #ffffff; }
+  .cmp .cmp-after { background: var(--panel-accent); color: var(--panel-accent-fg); }
   .cmp .cmp-l {
     font-family: var(--ff-mono);
     font-size: 22px;
@@ -141,7 +143,7 @@
     margin-bottom: 24px;
     color: var(--panel-text-3);
   }
-  .cmp .cmp-after .cmp-l { color: rgba(255,255,255,0.8); }
+  .cmp .cmp-after .cmp-l { color: var(--panel-accent-fg); opacity: 0.8; }
   .cmp .cmp-h {
     font-family: var(--ff-display);
     font-size: 96px;
@@ -151,14 +153,14 @@
     color: var(--panel-text-3);
     font-weight: 700;
   }
-  .cmp .cmp-after .cmp-h { color: #ffffff; }
+  .cmp .cmp-after .cmp-h { color: var(--panel-accent-fg); }
   .cmp .cmp-p {
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 28px;
     line-height: 1.45;
     color: var(--panel-text-3);
   }
-  .cmp .cmp-after .cmp-p { color: rgba(255,255,255,0.92); }
+  .cmp .cmp-after .cmp-p { color: var(--panel-accent-fg); opacity: 0.92; }
 
   .receipt {
     font-family: var(--ff-mono);
@@ -264,8 +266,8 @@
   <div class="s-dateline"><span>247420 // an entrypoint</span><span class="spread"></span><span>end · q&amp;a</span></div>
   <div style="display:flex;align-items:center;height:100%">
     <div>
-      <div class="s-hero" style="font-size:280px;color:#ffffff">gm.</div>
-      <div style="font-family:var(--ff-mono);font-size:32px;margin-top:32px;color:rgba(255,255,255,0.85)">// questions? open a pr.</div>
+      <div class="s-hero" style="font-size:280px;color:var(--panel-accent-fg)">gm.</div>
+      <div style="font-family:var(--ff-mono);font-size:32px;margin-top:32px;color:var(--panel-accent-fg);opacity:0.85">// questions? open a pr.</div>
     </div>
   </div>
   <div class="s-footer"><span>fin</span><span>247420 / mmxxvi</span></div>
