@@ -7,7 +7,7 @@
 html, body {
     background: var(--panel-0);
     color: var(--panel-text);
-    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family: var(--ff-mono);
     font-size: 13px;
     line-height: 1.5;
 }

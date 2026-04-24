@@ -10,13 +10,13 @@
   --warn:         #FF3B1F;
   --live:         #00A86B;
 
-  --green:        #30A46C;
+  --green:        #247420;
   --green-2:      #92CEAC;
-  --green-deep:   #18794E;
+  --green-deep:   #1c5a19;
   --green-fg:     #FFFFFF;
-  --purple:       #8E4EC6;
+  --purple:       #420247;
   --purple-fg:    #FFFFFF;
-  --mascot:       #FF7A00;
+  --mascot:       #E84B8A;
   --mascot-fg:    #FFFFFF;
   --sun:          #FFD100;
 
@@ -40,6 +40,66 @@
 
   --r-1:          0;
   --r-2:          0;
+  --r-3:          0;
+  --r-pill:       9999px;
+
+  /* Extended brand palette */
+  --flame:        #FF5C1A;
+  --sky:          #3B82F6;
+
+  /* Foreground / background aliases — resolved after panel tokens are set;
+     these are reset below once panel tokens exist, but raw defaults here
+     ensure no unsatisfied var() at parse time if panel tokens are absent. */
+  --fg:           #0B0B09;
+  --fg-3:         #6d675b;
+  --bg:           #EFE9DD;
+  --bg-2:         #ece5d8;
+
+  /* Colorful-mono palette — canonical hue per slot */
+  --mono-1:       var(--green);
+  --mono-2:       var(--purple);
+  --mono-3:       var(--mascot);
+  --mono-4:       var(--sun);
+  --mono-5:       var(--flame);
+  --mono-6:       var(--sky);
+
+  /* Spacing scale (4px base) */
+  --space-1:      4px;
+  --space-2:      8px;
+  --space-3:      12px;
+  --space-4:      16px;
+  --space-5:      24px;
+  --space-6:      32px;
+  --space-7:      48px;
+  --space-8:      64px;
+
+  /* Border widths */
+  --bw-hair:      1px;
+  --bw-rule:      2px;
+
+  /* Measure */
+  --measure:      72ch;
+
+  /* Extended type scale */
+  --fs-body:      13px;
+  --fs-lg:        14px;
+  --fs-sm:        12px;
+  --fs-xs:        11px;
+  --fs-tiny:      11px;
+  --fs-micro:     9px;
+  --fs-h3:        14px;
+  --fs-h4:        13px;
+
+  /* Extended line heights */
+  --lh-base:      1.5;
+  --lh-long:      1.6;
+
+  /* Extended letter spacing */
+  --tr-label:     0.08em;
+  --tr-caps:      0.05em;
+
+  /* Font body alias */
+  --ff-body:      var(--ff-prose);
 }
 
 /* Rows: no separators, hover surface tint instead */
@@ -50,7 +110,7 @@
 body {
   background: var(--panel-0);
   color: var(--panel-text);
-  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: var(--ff-mono);
   font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -401,80 +461,95 @@ code, .t-code {
 
 
 /* ============================================================
-   Panel surface tokens — VS-Code-inspired layered chrome
+   Panel surface tokens — brand-bible parchment palette
    Light default. Dark via prefers-color-scheme or [data-theme="dark"].
    ============================================================ */
 :root {
-  --panel-0:       #f4f5f7;   /* canvas */
-  --panel-1:       #ffffff;   /* elevated card */
-  --panel-2:       #e7e9ec;   /* chrome (topbar, tabbar) */
-  --panel-3:       #d8dbe0;   /* deepest */
-  --panel-hover:   #ecedf0;
-  --panel-select:  #dbe3f5;
-  --panel-text:    #1f2328;
-  --panel-text-2:  #59636e;
-  --panel-text-3:  #8b949e;
+  --panel-0:       var(--paper);  /* #EFE9DD canvas */
+  --panel-1:       #f6f1e7;
+  --panel-2:       #ece5d8;
+  --panel-3:       #ddd4c3;
+  --panel-hover:   #e6dece;
+  --panel-select:  #d8eed6;
+  --panel-text:    var(--ink);    /* #0B0B09 */
+  --panel-text-2:  #4a473f;
+  --panel-text-3:  #6d675b;
   --panel-accent:    var(--green);
   --panel-accent-2:  var(--green-deep);
-  /* Contrast pair — text to use ON --panel-accent. Light theme:
-     deep green bg → white text. Dark theme: light-mint bg → ink text.
-     NEVER hardcode #fff on accent backgrounds — mint is too light for
-     white text (a prior bug made "invisible light grey on lime"). */
   --panel-accent-fg: #ffffff;
-  --panel-shadow:  0 1px 2px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.04);
+  --panel-shadow:  none;
   --panel-shadow-top: none;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --panel-0:       #181a1f;
-    --panel-1:       #21252b;
-    --panel-2:       #2c313a;
-    --panel-3:       #383e48;
-    --panel-hover:   #2a3038;
-    --panel-select:  #3a4050;
-    --panel-text:    #e4e6eb;
-    --panel-text-2:  #9aa3b2;
-    --panel-text-3:  #6d7685;
+    --panel-0:       #0B0B09;
+    --panel-1:       #141411;
+    --panel-2:       #1f1f1a;
+    --panel-3:       #2a2a23;
+    --panel-hover:   #24241f;
+    --panel-select:  #1f3520;
+    --panel-text:    #EFE9DD;
+    --panel-text-2:  #d2cab9;
+    --panel-text-3:  #afa797;
     --panel-accent:    var(--green-2);
     --panel-accent-2:  var(--green-2);
     --panel-accent-fg: var(--ink);
-    --panel-shadow:  0 1px 2px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25);
+    --panel-shadow:  none;
     --panel-shadow-top: none;
   }
 }
 
 [data-theme="dark"] {
-  --panel-0:       #181a1f;
-  --panel-1:       #21252b;
-  --panel-2:       #2c313a;
-  --panel-3:       #383e48;
-  --panel-hover:   #2a3038;
-  --panel-select:  #3a4050;
-  --panel-text:    #e4e6eb;
-  --panel-text-2:  #9aa3b2;
-  --panel-text-3:  #6d7685;
+  --panel-0:       #0B0B09;
+  --panel-1:       #141411;
+  --panel-2:       #1f1f1a;
+  --panel-3:       #2a2a23;
+  --panel-hover:   #24241f;
+  --panel-select:  #1f3520;
+  --panel-text:    #EFE9DD;
+  --panel-text-2:  #d2cab9;
+  --panel-text-3:  #afa797;
   --panel-accent:    var(--green-2);
   --panel-accent-2:  var(--green-2);
   --panel-accent-fg: var(--ink);
-  --panel-shadow:  0 1px 2px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.25);
-  --panel-shadow-top: 0 1px 0 rgba(255,255,255,0.04);
+  --panel-shadow:  none;
+  --panel-shadow-top: none;
 }
 
 [data-theme="light"] {
-  --panel-0:       #f4f5f7;
-  --panel-1:       #ffffff;
-  --panel-2:       #e7e9ec;
-  --panel-3:       #d8dbe0;
-  --panel-hover:   #ecedf0;
-  --panel-select:  #dbe3f5;
-  --panel-text:    #1f2328;
-  --panel-text-2:  #59636e;
-  --panel-text-3:  #8b949e;
+  --panel-0:       var(--paper);
+  --panel-1:       #f6f1e7;
+  --panel-2:       #ece5d8;
+  --panel-3:       #ddd4c3;
+  --panel-hover:   #e6dece;
+  --panel-select:  #d8eed6;
+  --panel-text:    var(--ink);
+  --panel-text-2:  #4a473f;
+  --panel-text-3:  #6d675b;
   --panel-accent:    var(--green);
   --panel-accent-2:  var(--green-deep);
   --panel-accent-fg: #ffffff;
+  --panel-shadow:  none;
 }
+
+/* Foreground / background aliases derived from panel tokens */
+:root {
+  --fg:   var(--panel-text);
+  --fg-3: var(--panel-text-3);
+  --bg:   var(--panel-0);
+  --bg-2: var(--panel-2);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg:   var(--panel-text);
+    --fg-3: var(--panel-text-3);
+    --bg:   var(--panel-0);
+    --bg-2: var(--panel-2);
+  }
+}
+[data-theme="dark"]  { --fg: var(--panel-text); --fg-3: var(--panel-text-3); --bg: var(--panel-0); --bg-2: var(--panel-2); }
+[data-theme="light"] { --fg: var(--panel-text); --fg-3: var(--panel-text-3); --bg: var(--panel-0); --bg-2: var(--panel-2); }
 
 /* Contrast safety on any acid/lime/mint surface — text must be ink,
    never light grey / white. Covers the --acid token and any hue that
