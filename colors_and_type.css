@@ -562,6 +562,20 @@ code, .t-code {
   color: inherit;
 }
 
+/* Hard guard: accent backgrounds must use --panel-accent-fg, not literal white.
+   In dark mode --panel-accent flips to a LIGHT mint; literal #fff text on top
+   becomes invisible. Catch any drift via attribute-style selectors and the
+   common chip/status/btn-primary/topbar-active patterns. */
+.chip.accent,
+.app-status,
+.app-status a,
+.app-topbar nav a.active,
+.btn-primary,
+[data-on-accent] {
+  color: var(--panel-accent-fg) !important;
+}
+[data-on-accent] { background: var(--panel-accent); }
+
 /* Universal reset — no borders, no outlines except :focus-visible */
 *, *::before, *::after { box-sizing: border-box; border: 0 !important; outline: 0 !important; }
 :focus-visible { outline: 2px solid var(--panel-accent) !important; outline-offset: 2px; }
