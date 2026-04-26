@@ -45,12 +45,55 @@ If the user invokes this skill without any other guidance, ask them what they wa
 ## Hard rules (violate at your peril)
 - No gradients. Ever.
 - No purple.
-- No rounded corners (0px).
+- No rounded corners (0px) on the editorial/zine surfaces. App-shell/dashboard surfaces may use `0.5rem` (see *gmail surface mode*).
 - No drop shadows (except the stamp-button offset shadow).
 - No emoji in UI elements. In prose: rare, intentional.
-- No system-ui / Inter / Roboto.
+- No system-ui / Inter / Roboto on editorial surfaces. Dashboard/app surfaces using *gmail surface mode* may use Roboto/Google Sans.
 - Lowercase by default. \`ALL CAPS\` for labels & project codes only.
 - One acid accent per page, max. One stamp per page, max.
+
+## Two surface modes — pick one per surface, never mix
+
+The system runs two parallel aesthetics. Both are first-class. Pick by surface type, not by mood.
+
+### Mode A — editorial / zine (default for marketing, slides, blog, docs, project pages)
+Strict grid, **1px hairlines**, no cards, no shadows. Index-card rows. ASCII dateline. Redaction + JetBrains Mono + Instrument Serif. This is everything the rest of this document describes by default.
+
+### Mode B — gmail surface (default for app shells, dashboards, internal tools, settings panes)
+**"Backgrounds over borders."** Visual separation comes from tonal background surfaces and gap, **not from lines**. Cards are flat surfaces with radius, separated by gutter. Tables are zebra (`nth-child(even)`), not ruled. Tabs are pill bg on active, no underline. Inputs are filled tonal bg, focus underline only. Material You / Gmail inbox aesthetic.
+
+Reference implementation: `c:\dev\hermes-theme\theme\clean.yaml` (light) + `clean-dark.yaml` (dark) — copy the token model and the zero-border policy verbatim when starting a new dashboard.
+
+**Token model** (in addition to existing 247420 lore tokens):
+\`\`\`
+/* light */
+--surface-bg:        #f6f8fc;   /* page canvas */
+--surface-1:         #ffffff;   /* card / row */
+--surface-2:         #f8f9fa;   /* zebra / sub-card */
+--surface-hover:     #f1f3f4;   /* hover, filled inputs */
+--surface-divider:   rgba(0,0,0,0.10);    /* hr/separator only */
+
+/* dark */
+--surface-bg:        #1f1f1f;
+--surface-1:         #2d2e30;
+--surface-2:         #35363a;
+--surface-hover:     #3c4043;
+--surface-divider:   rgba(255,255,255,0.08);
+\`\`\`
+
+**Zero-border policy.** In gmail surface mode:
+- `*, *::before, *::after { border-color: transparent; border-width: 0; }` is the baseline.
+- Layout chrome (cards, sections, tables, headers, asides, tabs) MUST NOT carry a border, divider, or box-shadow.
+- Dividers permitted only on `<hr>` / `[data-slot="separator"]` (1px tonal band, not a layout border).
+- Form controls permitted a hairline **on focus only** (e.g. 2px `border-bottom` underline).
+- Row separation = zebra (`tbody tr:nth-child(even) { background: var(--surface-2); }`) plus hover bg, never a line.
+- Cards = `background: var(--surface-1); border-radius: 0.5rem; gap: 12px` on parent grid. No border. No shadow.
+- Tabs active state = pill `background: var(--accent-light); color: var(--accent)`, no `border-bottom`.
+- Header bar = same bg as page, separated by spacing not by `border-bottom`.
+
+**When tempted to write `border:`, `border-bottom:`, or `box-shadow:` on layout chrome in gmail surface mode — stop.** Use a surface tone, gap, or hover bg instead.
+
+**Picking the mode.** Editorial copy / marketing pages / decks / writing → Mode A. Dashboards / settings / data tables / internal tools → Mode B. A single repo can host both — keep the surfaces separate, never mid-component.
 
 ---
 
@@ -231,7 +274,8 @@ Three families, no more:
 - Optional: **paper grain texture at 4% opacity** on cream backgrounds.
 - No repeating patterns. No SVG blobs. No "subtle gradient backgrounds."
 
-### Borders & rules
+### Borders & rules — **Mode A (editorial) only**
+*Mode B (gmail surface) inverts these rules — see "Two surface modes" above. The points below apply to editorial/zine surfaces.*
 - **Everything is separated by 1px hairlines**, not by spacing or cards.
 - Hairline color on cream: `#0B0B09` at 100%. On black: `#EFE9DD` at 100%. Assertive, not shy.
 - Double-hairline (1px + 3px gap + 1px) for major section breaks — "printed newspaper" motif.
