@@ -49,40 +49,97 @@
   </header>
   <div class="app-crumb">
     <span>design</span><span class="sep">›</span>
-    <span class="leaf">index</span>
+    <span class="leaf">inbox</span>
   </div>
-  <div class="app-body no-side">
+  <div class="app-body">
+    <aside class="app-side">
+      <a class="compose" href="./ui_kits/homepage/"><span class="icon">✎</span>compose</a>
+      <div class="group">surfaces</div>
+      <a href="#" class="active"><span class="glyph">▣</span>inbox<span class="count">22</span></a>
+      <a href="./ui_kits/homepage/"><span class="glyph">◎</span>homepage</a>
+      <a href="./ui_kits/project_page/"><span class="glyph">◳</span>project</a>
+      <a href="./ui_kits/docs/"><span class="glyph">▤</span>docs</a>
+      <a href="./ui_kits/blog/"><span class="glyph">▥</span>blog</a>
+      <a href="./slides/"><span class="glyph">▰</span>slides</a>
+      <div class="group">reference</div>
+      <a href="./README.md"><span class="glyph">§</span>readme</a>
+      <a href="./SKILL.md"><span class="glyph">§</span>skill</a>
+      <a href="./colors_and_type.css"><span class="glyph">⌘</span>tokens</a>
+      <a href="https://github.com/AnEntrypoint/design"><span class="glyph">↗</span>source</a>
+    </aside>
     <main class="app-main">
-      <h1>design system</h1>
-      <p class="lede">a coherent visual paradigm for the 247420 collective. layered surfaces, monospace labels, loud content inside quiet chrome.</p>
+      <h1>inbox</h1>
+      <p class="lede">a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.</p>
 
-      <h3>dark / light</h3>
-      <p>every surface ships <strong>light and dark, validated in both</strong>. token-first, never literal hex in components. every accent background has a paired <code>--*-fg</code> token — never hardcode <code>#ffffff</code> on mint / lime / acid (that's the "invisible light grey" bug, now closed at the token level).</p>
-
-      <h3>stack</h3>
-      <p><strong>webjsx.org</strong> + <strong>customized ripple-ui.com</strong> on top of <strong>tailwind</strong>. buildless in the browser, vendored not cdn'd. build box is <strong>github actions</strong> (preferred for everything — build, test, deploy). cms surfaces use <strong>flatspace</strong> as a gh actions step (never <code>bunx</code> / <code>npx</code>). non-cms surfaces that need data use <strong>busybase</strong> from npm (not supabase, not firebase).</p>
-
-      <h3>ui kits</h3>
-      <div class="cards">
-        <a class="card-item" href="./ui_kits/homepage/"><span class="code">01</span><span class="name">homepage</span></a>
-        <a class="card-item" href="./ui_kits/project_page/"><span class="code">02</span><span class="name">project page</span></a>
-        <a class="card-item" href="./ui_kits/docs/"><span class="code">03</span><span class="name">docs</span></a>
-        <a class="card-item" href="./ui_kits/blog/"><span class="code">04</span><span class="name">blog</span></a>
+      <div class="panel">
+        <div class="panel-head"><span>ui kits</span><span>4 surfaces</span></div>
+        <div class="inbox">
+          <a class="inbox-row unread" href="./ui_kits/homepage/">
+            <span class="glyph">◎</span>
+            <span class="from">homepage</span>
+            <span class="subject">marquee + works grid<span class="preview">— editorial banner over a quiet IDE shell</span></span>
+            <span class="time">01</span>
+          </a>
+          <a class="inbox-row unread" href="./ui_kits/project_page/">
+            <span class="glyph">◳</span>
+            <span class="from">project page</span>
+            <span class="subject">hero · receipt · install · changelog<span class="preview">— shippable case-study template</span></span>
+            <span class="time">02</span>
+          </a>
+          <a class="inbox-row" href="./ui_kits/docs/">
+            <span class="glyph">▤</span>
+            <span class="from">docs</span>
+            <span class="subject">long-form prose chrome<span class="preview">— sidebar nav, mono headings, code blocks</span></span>
+            <span class="time">03</span>
+          </a>
+          <a class="inbox-row" href="./ui_kits/blog/">
+            <span class="glyph">▥</span>
+            <span class="from">blog</span>
+            <span class="subject">dated index + reading view<span class="preview">— typographic, no clutter</span></span>
+            <span class="time">04</span>
+          </a>
+        </div>
       </div>
 
-      <h3>slides</h3>
-      <div class="cards">
-        <a class="card-item" href="./slides/"><span class="code">01</span><span class="name">deck template</span></a>
+      <div class="panel">
+        <div class="panel-head"><span>slides</span><span>1 deck</span></div>
+        <div class="inbox">
+          <a class="inbox-row unread" href="./slides/">
+            <span class="glyph">▰</span>
+            <span class="from">deck template</span>
+            <span class="subject">16:9 stage with auto-fit<span class="preview">— title, lede, code, comparison, manifesto</span></span>
+            <span class="time">01</span>
+          </a>
+        </div>
       </div>
 
-      <h3>preview cards</h3>
-      <div class="cards" id="previews"></div>
+      <div class="panel">
+        <div class="panel-head"><span>previews</span><span id="previews-count">— components</span></div>
+        <div class="inbox" id="previews"></div>
+      </div>
 
-      <h3>reference</h3>
-      <div class="cards">
-        <a class="card-item" href="./README.md"><span class="code">§</span><span class="name">README.md</span></a>
-        <a class="card-item" href="./SKILL.md"><span class="code">§</span><span class="name">SKILL.md</span></a>
-        <a class="card-item" href="./colors_and_type.css"><span class="code">§</span><span class="name">tokens</span></a>
+      <div class="panel">
+        <div class="panel-head"><span>reference</span><span>3 docs</span></div>
+        <div class="inbox">
+          <a class="inbox-row" href="./README.md">
+            <span class="glyph">§</span>
+            <span class="from">README.md</span>
+            <span class="subject">overview, manifesto, conventions<span class="preview">— start here</span></span>
+            <span class="time">md</span>
+          </a>
+          <a class="inbox-row" href="./SKILL.md">
+            <span class="glyph">§</span>
+            <span class="from">SKILL.md</span>
+            <span class="subject">authoring rules for the agent<span class="preview">— editorial · zine · gmail modes</span></span>
+            <span class="time">md</span>
+          </a>
+          <a class="inbox-row" href="./colors_and_type.css">
+            <span class="glyph">§</span>
+            <span class="from">tokens</span>
+            <span class="subject">colors, type, panel surface tokens<span class="preview">— canonical source of truth</span></span>
+            <span class="time">css</span>
+          </a>
+        </div>
       </div>
     </main>
   </div>
@@ -108,11 +165,15 @@ const previews = [
   'type-display','type-mono','type-prose','type-scale','wordmarks'
 ];
 const ul = document.getElementById('previews');
+const countEl = document.getElementById('previews-count');
+if (countEl) countEl.textContent = `${previews.length} components`;
 const nodes = previews.map((name, i) => h('a', {
-  key: name, class: 'card-item', href: `./preview/${name}.html`
+  key: name, class: 'inbox-row', href: `./preview/${name}.html`
 },
-  h('span', { class: 'code' }, String(i+1).padStart(2,'0')),
-  h('span', { class: 'name' }, name.replace(/-/g,' '))
+  h('span', { class: 'glyph' }, '§'),
+  h('span', { class: 'from' }, name.replace(/-/g,' ')),
+  h('span', { class: 'subject' }, h('span', { class: 'preview' }, `preview · ${name}.html`)),
+  h('span', { class: 'time' }, String(i+1).padStart(2,'0'))
 ));
 webjsx.applyDiff(ul, nodes);
 </script>

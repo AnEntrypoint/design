@@ -246,6 +246,77 @@ html, body {
 .row .sub { color: var(--panel-text-2); font-size: 12px; margin-left: 8px; font-weight: 400; }
 .row .meta { color: var(--panel-text-2); font-size: 11px; text-align: right; font-family: var(--ff-mono); }
 
+/* Inbox — Gmail-style list. Use inside .panel for full effect. */
+.inbox { background: var(--panel-1); border-radius: 16px; overflow: hidden; margin: 12px 0; }
+.inbox-row {
+    display: grid;
+    grid-template-columns: 28px 160px 1fr 80px;
+    gap: 16px;
+    padding: 10px 20px;
+    align-items: center;
+    color: var(--panel-text);
+    text-decoration: none;
+    font-size: 13px;
+    cursor: pointer;
+    background: transparent;
+    transition: background 80ms ease;
+}
+.inbox-row + .inbox-row { margin-top: 0; }
+.inbox-row:nth-child(even) { background: var(--panel-2); }
+.inbox-row:hover { background: var(--panel-hover); }
+.inbox-row.unread { font-weight: 600; }
+.inbox-row.unread .from, .inbox-row.unread .subject { color: var(--panel-text); }
+.inbox-row .glyph {
+    color: var(--panel-text-3);
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    text-align: center;
+}
+.inbox-row .from { color: var(--panel-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inbox-row .subject {
+    color: var(--panel-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.inbox-row .subject .preview { color: var(--panel-text-2); font-weight: 400; margin-left: 6px; }
+.inbox-row .time {
+    color: var(--panel-text-2);
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    text-align: right;
+}
+.inbox-row.unread .time { color: var(--panel-text); font-weight: 600; }
+
+/* Compose — Gmail's primary CTA on the rail */
+.compose {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 16px 12px 16px;
+    padding: 12px 22px 12px 18px;
+    background: var(--panel-2);
+    color: var(--panel-text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 80ms ease;
+}
+.compose:hover { background: var(--panel-hover); }
+.compose .icon { font-family: var(--ff-mono); font-size: 16px; color: var(--panel-accent); }
+
+/* Sidebar count badge — Gmail unread counter */
+.app-side a .count {
+    margin-left: auto;
+    color: var(--panel-text-2);
+    font-family: var(--ff-mono);
+    font-size: 11px;
+}
+.app-side a.active .count { color: var(--panel-text); font-weight: 600; }
+
 /* CLI install block */
 .cli {
     display: flex;
