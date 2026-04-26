@@ -8,3 +8,4 @@ For Design System policy (zero-border aesthetic, panel-shadow source-strip, pill
 
 - 2026-04-26 (1): 5 items probed, 5 migrated to rs-learn (zero-border policy, row zebra, input focus, hermes-theme ref, surface tokens). 2 new non-obvious items added (box-shadow source-strip, pill radius scale).
 - 2026-04-26 (2): 5 items probed (gmail bg borders, pill radius scale, box-shadow stripped, hermes theme tokens, zero border aesthetic), all 5 returned accurate top hits — both remaining AGENTS.md caveats migrated to rs-learn. AGENTS.md drained to pure pointer.
+- 2026-04-26 (3): ingested 4 new project facts (no-serifs, dark-mode-neutral-grey, list-row-category-colors, density-tweaks). Re-probed 5 stable items (zero border, pill radius, hermes tokens, list-row primitives, fab/cta) — all returned accurate top hits. AGENTS.md held at pointer + vocabulary-ban only.
