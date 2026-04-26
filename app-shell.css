@@ -54,8 +54,10 @@ html, body {
     font-size: 13px;
     border-radius: 999px;
     line-height: 1;
+    transition: background 80ms ease, color 80ms ease;
 }
 .app-topbar nav a:hover { background: var(--panel-hover); color: var(--panel-text); }
+.app-topbar nav a.active:hover { filter: brightness(1.06); }
 .app-topbar nav a.active { color: var(--panel-accent-fg); background: var(--panel-accent); }
 
 /* Breadcrumb — under topbar */
@@ -111,9 +113,11 @@ html, body {
     text-decoration: none;
     font-size: 13px;
     border-radius: 999px;
+    transition: background 80ms ease;
 }
 .app-side a:hover { background: var(--panel-hover); }
 .app-side a.active { background: var(--panel-select); color: var(--panel-text); font-weight: 600; }
+.app-side a.active:hover { background: var(--panel-select); filter: brightness(0.97); }
 .app-side a .glyph { color: var(--panel-text-2); font-family: var(--ff-mono); width: 14px; flex-shrink: 0; }
 .app-side a.active .glyph { color: var(--panel-accent); }
 
@@ -231,6 +235,7 @@ html, body {
 .row:nth-child(even) { background: var(--panel-2); }
 .row:hover { background: var(--panel-hover); }
 .row.active { background: var(--panel-select); font-weight: 500; }
+.row.active:hover { background: var(--panel-select); filter: brightness(0.97); }
 .row .code {
     font-family: var(--ff-mono);
     font-size: 11px;
@@ -266,7 +271,7 @@ html, body {
     display: flex;
     align-items: center;
 }
-.cli .copy:hover { background: var(--panel-3); color: var(--panel-text); }
+.cli .copy:hover { background: var(--panel-hover); color: var(--panel-text); }
 
 /* Buttons */
 .btn {
@@ -284,8 +289,8 @@ html, body {
     text-decoration: none;
     transition: background 80ms ease;
 }
-.btn:hover { background: var(--panel-3); }
-.btn:active { background: var(--panel-hover); }
+.btn:hover { background: var(--panel-hover); }
+.btn:active { background: var(--panel-3); }
 
 .btn-primary {
     display: inline-flex;
@@ -300,9 +305,9 @@ html, body {
     border-radius: 999px;
     cursor: pointer;
     text-decoration: none;
-    transition: filter 80ms ease;
+    transition: background 80ms ease, filter 80ms ease;
 }
-.btn-primary:hover { filter: brightness(1.08); }
+.btn-primary:hover { background: var(--panel-accent-2); }
 .btn-primary:active { filter: brightness(0.94); }
 
 .btn-ghost {
@@ -364,6 +369,7 @@ html, body {
     margin: 12px 0;
 }
 .kv td { padding: 10px 20px; font-size: 13px; }
+.kv tr { transition: background 80ms ease; }
 .kv tr:nth-child(even) { background: var(--panel-2); }
 .kv tr:hover { background: var(--panel-hover); }
 .kv td:first-child {
