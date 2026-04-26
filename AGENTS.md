@@ -1,19 +1,11 @@
 ## Design System — Non-Obvious Caveats
 
-### Zero-Border Aesthetic (Gmail-like Surfaces)
+**Non-obvious**: `box-shadow: var(--panel-shadow)` declarations have been intentionally stripped from app-shell.css even though `--panel-shadow` resolves to `none`. Do not re-add the declaration "for safety" — its absence is the policy signal. Editorial/zine surfaces (`btn-stamp`, etc.) are a separate aesthetic mode and keep their stamp shadows; do not strip those.
 
-The Design System uses a zero-border visual hierarchy that deviates from typical Material Design / Bootstrap expectations. This is NOT a default; it requires intentional CSS resets and token-driven separation.
+**Non-obvious**: Pill radius (`border-radius: 999px`) is the canonical shape for ALL interactive chrome (topbar nav, sidebar items, .btn variants, .chip) — not the more conventional 6–8px. Containers use 16px, code/pre uses 12px. Sidebar items also need 8px horizontal margin so the active pill floats inside the rail (Gmail Compose pattern).
 
-**Caveat**: When editing design tokens, component styles, or layout CSS (slides/, ui_kits/, colors_and_type.css, app-shell.css, deck-stage.js), reaching for `border:`, `border-bottom:`, or divider lines on cards, sections, rows, or tables will violate the aesthetic. The canonical pattern is:
-- **Surface separation**: Use tonal background tokens (surface, surface-2) + gap/spacing instead of borders.
-- **Row emphasis**: Use nth-child(even) zebra + hover background, not grid lines.
-- **Input focus**: Only hairline (`border-bottom: 2px`) on focus; no resting border.
-- **Dividers**: Reserved for `<hr>` / separator slot only; transparent elsewhere.
-
-Reference: c:\dev\hermes-theme clean.yaml implements this via `*, *::before, *::after { border-color: transparent; border-width: 0; }` + surface tokens.
-
-**Why this matters**: Accidental borders or shadows on cards/panels will break the intended aesthetic. Code review should flag any `border:` or `box-shadow:` on layout chrome (non-input elements).
+For the broader Gmail-like / zero-border aesthetic policy, surface tokens, hermes-theme reference, and row/input rules — query rs-learn (e.g. "gmail bg borders", "zero border aesthetic", "hermes theme tokens").
 
 ## Learning audit
 
-(None yet — baseline established from user context.)
+- 2026-04-26: 5 items probed, 5 migrated to rs-learn (zero-border policy, row zebra, input focus, hermes-theme ref, surface tokens — all returned accurate top hits). 2 new non-obvious items added (box-shadow source-strip, pill radius scale). Net AGENTS.md size reduced.
