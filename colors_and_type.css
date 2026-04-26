@@ -469,8 +469,8 @@ code, .t-code {
   --panel-1:       #f6f1e7;
   --panel-2:       #ece5d8;
   --panel-3:       #ddd4c3;
-  --panel-hover:   #e6dece;
-  --panel-select:  #d8eed6;
+  --panel-hover:   #e3dccb;
+  --panel-select:  #c9e8c5;
   --panel-text:    var(--ink);    /* #0B0B09 */
   --panel-text-2:  #4a473f;
   --panel-text-3:  #6d675b;
@@ -487,8 +487,8 @@ code, .t-code {
     --panel-1:       #141411;
     --panel-2:       #1f1f1a;
     --panel-3:       #2a2a23;
-    --panel-hover:   #24241f;
-    --panel-select:  #1f3520;
+    --panel-hover:   #2a2a23;
+    --panel-select:  #2a4a2c;
     --panel-text:    #EFE9DD;
     --panel-text-2:  #d2cab9;
     --panel-text-3:  #afa797;
@@ -505,8 +505,8 @@ code, .t-code {
   --panel-1:       #141411;
   --panel-2:       #1f1f1a;
   --panel-3:       #2a2a23;
-  --panel-hover:   #24241f;
-  --panel-select:  #1f3520;
+  --panel-hover:   #2a2a23;
+  --panel-select:  #2a4a2c;
   --panel-text:    #EFE9DD;
   --panel-text-2:  #d2cab9;
   --panel-text-3:  #afa797;
@@ -522,8 +522,8 @@ code, .t-code {
   --panel-1:       #f6f1e7;
   --panel-2:       #ece5d8;
   --panel-3:       #ddd4c3;
-  --panel-hover:   #e6dece;
-  --panel-select:  #d8eed6;
+  --panel-hover:   #e3dccb;
+  --panel-select:  #c9e8c5;
   --panel-text:    var(--ink);
   --panel-text-2:  #4a473f;
   --panel-text-3:  #6d675b;

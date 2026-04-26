@@ -50,9 +50,9 @@ html, body {
 .app-topbar nav a {
     color: var(--panel-text-2);
     text-decoration: none;
-    padding: 7px 12px;
+    padding: 7px 14px;
     font-size: 13px;
-    border-radius: 6px;
+    border-radius: 999px;
     line-height: 1;
 }
 .app-topbar nav a:hover { background: var(--panel-hover); color: var(--panel-text); }
@@ -104,14 +104,16 @@ html, body {
 .app-side a {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 5px 16px 5px 24px;
+    gap: 10px;
+    margin: 1px 8px;
+    padding: 6px 12px 6px 16px;
     color: var(--panel-text);
     text-decoration: none;
     font-size: 13px;
+    border-radius: 999px;
 }
 .app-side a:hover { background: var(--panel-hover); }
-.app-side a.active { background: var(--panel-select); color: var(--panel-text); font-weight: 500; }
+.app-side a.active { background: var(--panel-select); color: var(--panel-text); font-weight: 600; }
 .app-side a .glyph { color: var(--panel-text-2); font-family: var(--ff-mono); width: 14px; flex-shrink: 0; }
 .app-side a.active .glyph { color: var(--panel-accent); }
 
@@ -169,11 +171,10 @@ html, body {
 .app-main code {
     font-family: var(--ff-mono);
     font-size: 12px;
-    background: var(--panel-1);
+    background: var(--panel-2);
     padding: 1px 6px;
-    border-radius: 6px;
+    border-radius: 4px;
     color: var(--panel-text);
-    box-shadow: var(--panel-shadow);
 }
 .app-main pre {
     background: var(--panel-1);
@@ -184,25 +185,23 @@ html, body {
     color: var(--panel-text);
     overflow-x: auto;
     margin: 12px 0;
-    border-radius: 8px;
-    box-shadow: var(--panel-shadow);
+    border-radius: 12px;
 }
-.app-main pre code { background: transparent; padding: 0; box-shadow: none; }
+.app-main pre code { background: transparent; padding: 0; }
 .app-main pre .c { color: var(--panel-text-2); }
 .app-main pre .k { color: var(--panel-accent); }
 .app-main pre .s { color: #ce9178; }
 
-/* Panel — grouped content block, elevated */
+/* Panel — grouped content block, flat tonal surface (Gmail card) */
 .panel {
     background: var(--panel-1);
-    border-radius: 8px;
+    border-radius: 16px;
     overflow: hidden;
-    margin: 12px 0;
-    box-shadow: var(--panel-shadow);
+    margin: 16px 0;
 }
 .panel-head {
-    padding: 10px 16px;
-    background: var(--panel-2);
+    padding: 12px 20px;
+    background: var(--panel-1);
     font-family: var(--ff-mono);
     font-size: 11px;
     text-transform: uppercase;
@@ -215,21 +214,23 @@ html, body {
 }
 .panel-body { padding: 0; background: var(--panel-1); }
 
-/* Row — dense list item */
+/* Row — Gmail-style airy list item, tonal hover/select */
 .row {
     display: grid;
     grid-template-columns: 80px 1fr auto;
     gap: 12px;
-    padding: 8px 16px;
+    padding: 10px 20px;
     align-items: baseline;
     color: var(--panel-text);
     text-decoration: none;
     font-size: 13px;
     cursor: pointer;
     background: transparent;
+    transition: background 80ms ease;
 }
+.row:nth-child(even) { background: var(--panel-2); }
 .row:hover { background: var(--panel-hover); }
-.row.active { background: var(--panel-select); }
+.row.active { background: var(--panel-select); font-weight: 500; }
 .row .code {
     font-family: var(--ff-mono);
     font-size: 11px;
@@ -245,13 +246,12 @@ html, body {
     display: flex;
     align-items: stretch;
     background: var(--panel-1);
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
     font-family: var(--ff-mono);
     font-size: 13px;
     max-width: 640px;
     margin: 12px 0;
-    box-shadow: var(--panel-shadow);
 }
 .cli .prompt { padding: 10px 14px; color: var(--panel-accent); font-weight: 600; }
 .cli .cmd { flex: 1; padding: 10px 0; color: var(--panel-text); }
@@ -273,17 +273,16 @@ html, body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 14px;
+    padding: 8px 18px;
     background: var(--panel-2);
     color: var(--panel-text);
     font-family: inherit;
     font-size: 13px;
     font-weight: 500;
-    border-radius: 6px;
+    border-radius: 999px;
     cursor: pointer;
     text-decoration: none;
     transition: background 80ms ease;
-    box-shadow: var(--panel-shadow);
 }
 .btn:hover { background: var(--panel-3); }
 .btn:active { background: var(--panel-hover); }
@@ -292,17 +291,16 @@ html, body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 14px;
+    padding: 8px 18px;
     background: var(--panel-accent);
     color: var(--panel-accent-fg);
     font-family: inherit;
     font-size: 13px;
     font-weight: 500;
-    border-radius: 6px;
+    border-radius: 999px;
     cursor: pointer;
     text-decoration: none;
     transition: filter 80ms ease;
-    box-shadow: var(--panel-shadow);
 }
 .btn-primary:hover { filter: brightness(1.08); }
 .btn-primary:active { filter: brightness(0.94); }
@@ -311,14 +309,14 @@ html, body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 14px;
+    padding: 8px 18px;
     background: transparent;
     color: var(--panel-text-2);
     font-family: inherit;
     font-size: 13px;
     cursor: pointer;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 999px;
     transition: background 80ms ease;
 }
 .btn-ghost:hover { background: var(--panel-hover); color: var(--panel-text); }
@@ -327,8 +325,8 @@ html, body {
 .chip {
     display: inline-flex;
     align-items: center;
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
     font-family: var(--ff-mono);
     font-size: 11px;
     font-weight: 500;
@@ -355,19 +353,19 @@ html, body {
 .app-status .item { display: flex; align-items: center; gap: 4px; }
 .app-status a { color: var(--panel-accent-fg); text-decoration: none; }
 
-/* Key-value table */
+/* Key-value table — Gmail-style zebra, no rules */
 .kv {
     width: 100%;
     max-width: 640px;
     background: var(--panel-1);
-    border-radius: 8px;
+    border-radius: 16px;
     overflow: hidden;
     border-collapse: collapse;
-    box-shadow: var(--panel-shadow);
     margin: 12px 0;
 }
-.kv td { padding: 8px 16px; font-size: 13px; }
+.kv td { padding: 10px 20px; font-size: 13px; }
 .kv tr:nth-child(even) { background: var(--panel-2); }
+.kv tr:hover { background: var(--panel-hover); }
 .kv td:first-child {
     color: var(--panel-text-2);
     font-family: var(--ff-mono);
@@ -389,16 +387,15 @@ html, body {
     display: grid;
     grid-template-columns: 44px 1fr;
     gap: 10px;
-    padding: 14px 16px;
+    padding: 16px 18px;
     background: var(--panel-1);
     color: var(--panel-text);
     text-decoration: none;
     align-items: baseline;
-    border-radius: 8px;
-    box-shadow: var(--panel-shadow);
-    transition: background 80ms ease, transform 80ms ease;
+    border-radius: 16px;
+    transition: background 80ms ease;
 }
-.card-item:hover { background: var(--panel-hover); transform: translateY(-1px); }
+.card-item:hover { background: var(--panel-hover); }
 .card-item .code {
     font-family: var(--ff-mono);
     font-size: 11px;
