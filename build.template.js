@@ -180,9 +180,8 @@ const baseTemplate = (content, pageTitle) => `<!DOCTYPE html>
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       }
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap');
       h1, h2, h3, h4, h5, h6 {
-        font-family: 'Playfair Display', serif;
+        font-family: 'Archivo Black', system-ui, sans-serif;
       }
     </style>
 </head>

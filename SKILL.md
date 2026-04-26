@@ -13,7 +13,7 @@ If the user invokes this skill without any other guidance, ask them what they wa
 - **Paradigm:** strict grid, loud content. Monospace chassis + display headlines + hairline rules. No gradients. No rounded corners. No emoji-in-UI.
 - **Voice:** lowercase internet-native, cryptic-when-it-wants, earnest-when-it-matters. \`we\` in first person.
 - **Palette (entire):** \`#EFE9DD\` paper, \`#0B0B09\` ink, \`#B8FF00\` acid (the one accent). Plus \`#1F4DFF\` link, \`#FF3B1F\` warn, \`#00A86B\` live.
-- **Type:** Redaction 50 (display), JetBrains Mono (UI/labels/code), Instrument Serif (long-form).
+- **Type:** Archivo Black (display), JetBrains Mono (UI/labels/code), Inter (long-form). All sans — no serifs anywhere in the system.
 - **Primitives:** the dateline bar, the index-card row, the stamp, the hairline rule (single/double/dotted), hairline-bottom inputs.
 - **Motion:** 80ms snap, 160ms base, \`cubic-bezier(0.2, 0, 0, 1)\`. No bounces.
 
@@ -57,7 +57,7 @@ If the user invokes this skill without any other guidance, ask them what they wa
 The system runs two parallel aesthetics. Both are first-class. Pick by surface type, not by mood.
 
 ### Mode A — editorial / zine (default for marketing, slides, blog, docs, project pages)
-Strict grid, **1px hairlines**, no cards, no shadows. Index-card rows. ASCII dateline. Redaction + JetBrains Mono + Instrument Serif. This is everything the rest of this document describes by default.
+Strict grid, **1px hairlines**, no cards, no shadows. Index-card rows. ASCII dateline. Archivo Black + JetBrains Mono + Inter. This is everything the rest of this document describes by default. All sans — no serifs anywhere.
 
 ### Mode B — gmail surface (default for app shells, dashboards, internal tools, settings panes)
 **"Backgrounds over borders."** Visual separation comes from tonal background surfaces and gap, **not from lines**. Cards are flat surfaces with radius, separated by gutter. Tables are zebra (`nth-child(even)`), not ruled. Tabs are pill bg on active, no underline. Inputs are filled tonal bg, focus underline only. Material You / Gmail inbox aesthetic.
@@ -263,10 +263,10 @@ The paired tokens are:
 If you find yourself typing `color: #ffffff` or `color: #fff` in a component, **stop**. Use the paired token. If no token exists, add one before you merge.
 
 ### Type
-Three families, no more:
-- **Display — `Redaction` / `Redaction 50`** (or closest available). Editorial, decaying-ink feel. For headlines, project titles, quotes. Fallback: `Times New Roman` (not a joke; the default Times is better than most web serifs).
+Three families, no more — and **all sans**. No serifs anywhere in the system.
+- **Display — `Archivo Black`**. Heavy editorial sans for headlines, project titles, quotes. Fallback: `system-ui`.
 - **Mono — `JetBrains Mono`** for labels, metadata, nav, code, receipts. Fallback: `ui-monospace, Menlo, Consolas`.
-- **Body — `Instrument Serif`** for long-form reading (blog, docs). Fallback: `Georgia`.
+- **Body — `Inter`** for long-form reading (blog, docs). Fallback: `Space Grotesk`, then `system-ui`.
 
 ### Backgrounds
 - No images behind text. Ever.
@@ -605,7 +605,7 @@ Verbose, yes. Zero toolchain, yes. That's the trade.
 - `SKILL.md` — Claude Code / Agent Skills manifest
 
 ### Folders
-- `fonts/` — webfonts (JetBrains Mono, Instrument Serif, Redaction when available)
+- `fonts/` — webfonts (Archivo Black, JetBrains Mono, Inter — all sans)
 - `assets/` — logos, wordmarks, textures, icons
 - `vendor/` — Ripple UI + WebJSX, localized (see Tech stack)
 - `preview/` — design system cards (one per concept) shown in the Design System tab
@@ -698,13 +698,13 @@ Base template for all projects using WebJSX web components with Ripple UI compon
 
 ### Typography
 
-Fonts: **Archivo Black** (display/headings) + **JetBrains Mono** (UI/body/code) + **Instrument Serif** (long-form prose)
+Fonts: **Archivo Black** (display/headings) + **JetBrains Mono** (UI/body/code) + **Inter** (long-form prose). All sans — no serifs anywhere in the system.
 
 ```css
-/* Google Fonts: Archivo Black + JetBrains Mono + Instrument Serif */
+/* Google Fonts: Archivo Black + JetBrains Mono + Inter */
 /* --ff-display  Archivo Black — hero, h1, h2, stamps, brand name */
 /* --ff-mono     JetBrains Mono — all UI text, labels, code, body */
-/* --ff-prose    Instrument Serif — .t-prose, .prose p only */
+/* --ff-prose    Inter — .t-prose, .prose p only */
 h1, h2, .t-hero {
   font-family: var(--ff-display);  /* Archivo Black */
   font-weight: 800;
@@ -713,7 +713,7 @@ h3, h4, body, .t-body {
   font-family: var(--ff-mono);     /* JetBrains Mono */
 }
 .t-prose, .prose p {
-  font-family: var(--ff-prose);    /* Instrument Serif */
+  font-family: var(--ff-prose);    /* Inter */
 }
 ```
 
