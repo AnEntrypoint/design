@@ -19,6 +19,7 @@ node_modules/
 # <<< gm managed
 
 
+
 .plugkit-browser-profile-*/
 .plugkit-agent-worktree/
 .code-search/
