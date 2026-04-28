@@ -1,0 +1,45 @@
+{
+  "name": "247420",
+  "version": "0.0.0",
+  "description": "247420 design system SDK — webjsx + modified ripple-ui, single-file ESM bundle for reproducible use of the AnEntrypoint design.",
+  "type": "module",
+  "main": "./dist/247420.js",
+  "module": "./dist/247420.js",
+  "exports": {
+    ".": {
+      "import": "./dist/247420.js",
+      "default": "./dist/247420.js"
+    },
+    "./app": "./dist/247420.app.js",
+    "./css": "./dist/247420.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnEntrypoint/Design.git"
+  },
+  "keywords": [
+    "247420",
+    "anentrypoint",
+    "design-system",
+    "webjsx",
+    "rippleui"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "postcss": "^8.4.49",
+    "postcss-prefix-selector": "^2.1.0"
+  }
+}

@@ -1,23 +1,77 @@
-# 247420 / AnEntrypoint Design System
+# 247420
 
-> we fart in its general direction.
+The 247420 / AnEntrypoint design system, packaged as a single-file ESM SDK.
 
-A coherent visual paradigm for the 247420 collective — the "creative department of the internet."
+Bundles **WebJSX** (vendored), a modified **Ripple UI**, **Tailwind v2** utility classes, the design tokens (`colors_and_type.css`), the app shell (`app-shell.css`), the brand fonts, the `<deck-stage>` web component, and an opinionated component library — into one optimized, scope-prefixed file.
 
-## Where the docs live
+## Install
 
-All instructional content (paradigm, voice, palette, type, components, contrast rules, stack, file layout, hard rules) lives in **`SKILL.md`**. That's the single source of truth — the agent skill reads it, humans read it, future authors update it.
+```bash
+npm install 247420
+```
 
-## Files in this repo
+## Use the SDK
 
-- `SKILL.md` — the full design system: paradigm, content fundamentals, visual fundamentals, components, dark/light contract, stack, hard rules.
-- `colors_and_type.css` — tokens + semantic classes + primitives.
-- `app-shell.css` — app-shell primitives (topbar, status, chips, buttons).
-- `index.html` — homepage template.
-- `preview/` — system cards (one concept per card).
-- `build.template.js` — flatspace build helper.
-- `favicon.svg`, `robots.txt` — site assets.
+```js
+import { h, mount, installStyles, components as C } from '247420';
 
-## Quick start
+installStyles();
+const root = document.getElementById('app');
+mount(root, () => C.AppShell({
+  topbar: C.Topbar({ brand: '247420', leaf: 'gm', items: [['works','#/works']] }),
+  main:   C.HomeView({ /* … */ }),
+  status: C.Status({ left: ['main'], right: ['live'] })
+}));
+```
 
-Drop `colors_and_type.css` and `app-shell.css` into a new project, vendor your fonts, and read `SKILL.md` for the rules. The design system is opinionated — follow the hard rules or you'll diverge fast.
+`mount` automatically adds the `.ds-247420` scope class to your root.
+
+## Use the unified app
+
+The package also ships a complete WebJSX single-page app at `247420/app` that consolidates the homepage, project page, writing index, and manifesto under one hash-routed shell:
+
+```html
+<div id="root" class="ds-247420"></div>
+<script type="module" src="https://unpkg.com/247420/dist/247420.app.js"></script>
+```
+
+`app.html` in this repo is the local consumer.
+
+## Components
+
+Primitives: `Brand`, `Chip`, `Btn`, `Glyph`, `Heading`, `Lede`.
+Chrome: `Topbar`, `Crumb`, `Side`, `Status`, `AppShell`.
+Surfaces: `Panel`, `Row`, `RowLink`, `Section`, `Install`, `Receipt`, `Changelog`.
+Pages: `Hero`, `WorksList`, `WritingList`, `Manifesto`, `HomeView`, `ProjectView`.
+
+All factories are pure: they take props, return a WebJSX tree.
+
+## DeckStage
+
+```js
+import { registerDeckStage } from '247420';
+await registerDeckStage();
+// <deck-stage width="1920" height="1080">…<section>…</section></deck-stage>
+```
+
+## Why scope-prefixed
+
+Every selector in the bundle is namespaced under `.ds-247420` via PostCSS. The bundle ships Tailwind, RippleUI, and the design tokens **without** colliding with whatever optimized bundle the host app already runs. Add the class to a root element to opt in.
+
+## CSS only
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/247420/dist/247420.css">
+<div class="ds-247420">…</div>
+```
+
+## Publishing
+
+Every push to `main` runs `.github/workflows/publish.yml`:
+
+1. Resolves max(local, remote) version, bumps **patch**.
+2. Builds with `scripts/build.mjs` (esbuild + postcss-prefix-selector).
+3. Publishes to npm with `NPM_TOKEN`.
+4. Commits the bump back to `main` and pushes a `vX.Y.Z` tag.
+
+Skip publish for any commit by including `[skip publish]` in the message; release commits use that automatically to prevent loops.
