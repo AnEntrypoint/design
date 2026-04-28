@@ -31,6 +31,10 @@ flatspace v1.0.17 switches behavior based on file presence: when `flatspace.conf
 
 247420.xyz aggregates per-project content via `scripts/fetch-showcase.mjs`, which scrapes `<script id="__site__">{site,nav,home}</script>` from each project's gh-pages URL into `lib/showcase.json`. Any project that emits this script tag (the standard flatspace theme contract from the Design SDK sweep) becomes auto-aggregable. Theme authors must keep emitting it — removing the tag silently downgrades the project's expo card to bare `p.body`/`p.install` fallback. Deploy uses `continue-on-error: true` so stale cache survives upstream outages.
 
+## anentrypoint-design SDK Consumer Pattern
+
+Static-site consumers (no bundler, no Node build) load the SDK from unpkg: `<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">` + `<script type="module">` importing from `https://unpkg.com/anentrypoint-design/dist/247420.js` to populate `window.ds`. The SDK exports: `h`, `applyDiff`, `components`, `mount`, `installStyles`, `scope`, `webjsx`, `registerDeckStage`, `getDeckStage`, `loadCss`. Render pattern: `ds.applyDiff(rootEl, viewFn())` where `viewFn` returns `ds.components.AppShell({topbar, crumb, side, main, status})`. **Non-obvious caveat**: must add `class="app247420"` to root element BEFORE calling `applyDiff` — without it, scoped styles don't apply. Confirmed working on AnEntrypoint/dispipe (gh-pages live at https://anentrypoint.github.io/dispipe/) and 247420.xyz portfolio (index.html + main.js + lib/router.js template).
+
 ## Learning audit
 
 - 2026-04-26 (1): 5 items probed, 5 migrated to rs-learn (zero-border policy, row zebra, input focus, hermes-theme ref, surface tokens). 2 new non-obvious items added (box-shadow source-strip, pill radius scale).
