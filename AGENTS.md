@@ -27,8 +27,13 @@ GitHub Actions Pages deploy requires both `build_type=workflow` AND branch prote
 
 flatspace v1.0.17 switches behavior based on file presence: when `flatspace.config.mjs` exists in cwd, it runs **theme mode** (calls `theme.render(ctx)` returning `Array<{path,html}>`, writes to `outDir` default `docs`, reads YAML from `contentDir` default `content`). When the config file is absent, it runs **legacy bun build mode**. The theme contract includes: `ctx.read('pages').docs`, `ctx.readGlobal(slug)`, `ctx.writeFile(rel, data)`. CI builds via `npx --yes flatspace@latest build` without requiring local node_modules.
 
+## Portfolio Aggregation Contract
+
+247420.xyz aggregates per-project content via `scripts/fetch-showcase.mjs`, which scrapes `<script id="__site__">{site,nav,home}</script>` from each project's gh-pages URL into `lib/showcase.json`. Any project that emits this script tag (the standard flatspace theme contract from the Design SDK sweep) becomes auto-aggregable. Theme authors must keep emitting it — removing the tag silently downgrades the project's expo card to bare `p.body`/`p.install` fallback. Deploy uses `continue-on-error: true` so stale cache survives upstream outages.
+
 ## Learning audit
 
 - 2026-04-26 (1): 5 items probed, 5 migrated to rs-learn (zero-border policy, row zebra, input focus, hermes-theme ref, surface tokens). 2 new non-obvious items added (box-shadow source-strip, pill radius scale).
 - 2026-04-26 (2): 5 items probed (gmail bg borders, pill radius scale, box-shadow stripped, hermes theme tokens, zero border aesthetic), all 5 returned accurate top hits — both remaining AGENTS.md caveats migrated to rs-learn. AGENTS.md drained to pure pointer.
 - 2026-04-26 (3): ingested 4 new project facts (no-serifs, dark-mode-neutral-grey, list-row-category-colors, density-tweaks). Re-probed 5 stable items (zero border, pill radius, hermes tokens, list-row primitives, fab/cta) — all returned accurate top hits. AGENTS.md held at pointer + vocabulary-ban only.
+- 2026-04-28: ingested 3 new project facts (247420-showcase-aggregator, 247420-showcase-runtime, site-script-contract). Added one new AGENTS.md caveat ("Portfolio Aggregation Contract") because the `<script id="__site__">` shape is a load-bearing cross-project convention. Probe attempted on 5 stable items but rs-learn recall returned empty across all queries — migration deferred, all existing AGENTS.md items retained as safe default.
