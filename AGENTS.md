@@ -15,6 +15,18 @@ For Design System policy (zero-border aesthetic, panel-shadow source-strip, pill
 
 - Vocabulary ban: never write the words `gmail`, `mailbox`, `inbox`, or `compose` in source (CSS classes, HTML copy, JS identifiers, comments, or commit messages). The aesthetic is encouraged but the words are forbidden — use visual-function names: `.list`, `.list-row`, `.tabs`, `.list-toolbar`, `.btn-fab`, `.app-search`, `.label`; sidebar bins are `everything / starred / shipped / drafts`. This is non-obvious because the aesthetic itself channels that inspiration; only the lexicon is scrubbed.
 
+## gm-* Plugin Ecosystem — Force-Push Pattern
+
+The gm-* plugin family (gm-cc, gm-oc, gm-vscode, gm-zed, gm-cursor, gm-codex, gm-jetbrains, gm-kilo, gm-qwen, gm-gc, gm-copilot-cli, gm-antigravity, gm-hermes) are **downstream-generated, not human-edited**. All are FORCE-PUSHED by the `gm` package's `publish.yml` workflow on every gm release. Never push directly to those repos — your changes will be wiped on the next gm release. To modify them: edit `C:/dev/gm/platforms/<name>.js` or `C:/dev/gm/lib/template-builder.js` (especially `getCliGenericFiles`, `generatePagesWorkflow`, `generateGitHubPage`) and push to gm. The `publish.yml` will regenerate and force-push to all downstream repos.
+
+## GitHub Actions Pages Deployment — Environment Branch Policy
+
+GitHub Actions Pages deploy requires both `build_type=workflow` AND branch protection policy. Set Pages config via `gh api repos/OWNER/REPO/pages -X POST/PUT -f build_type=workflow`. If the repo's github-pages environment has `protection_rules` with `custom_branch_policies`, you MUST add the deploying branch (e.g., main) via `gh api repos/OWNER/REPO/environments/github-pages/deployment-branch-policies -X POST -f name=main -f type=branch`. Without this step, the deploy job fails: "Branch X is not allowed to deploy to github-pages due to environment protection rules." This is non-obvious because the error only surfaces at deploy time, and the API endpoint is not discoverable from the UI.
+
+## flatspace v1.0.17 — Dual-Mode Build Pattern
+
+flatspace v1.0.17 switches behavior based on file presence: when `flatspace.config.mjs` exists in cwd, it runs **theme mode** (calls `theme.render(ctx)` returning `Array<{path,html}>`, writes to `outDir` default `docs`, reads YAML from `contentDir` default `content`). When the config file is absent, it runs **legacy bun build mode**. The theme contract includes: `ctx.read('pages').docs`, `ctx.readGlobal(slug)`, `ctx.writeFile(rel, data)`. CI builds via `npx --yes flatspace@latest build` without requiring local node_modules.
+
 ## Learning audit
 
 - 2026-04-26 (1): 5 items probed, 5 migrated to rs-learn (zero-border policy, row zebra, input focus, hermes-theme ref, surface tokens). 2 new non-obvious items added (box-shadow source-strip, pill radius scale).
