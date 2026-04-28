@@ -8,6 +8,7 @@ import prefixer from 'postcss-prefix-selector';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import zlib from 'node:zlib';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -66,11 +67,54 @@ const prefixed = (await postcss([
 fs.writeFileSync(path.join(dist, '247420.css'), prefixed);
 console.log('[247420] css scoped+bundled:', (prefixed.length / 1024).toFixed(1) + 'kb under', SCOPE);
 
-// Inject the scoped CSS into src/styles.js for the JS bundle, then restore.
+// gzip the scoped CSS once; ship as base64. The runtime decoder uses the
+// browser-native DecompressionStream (streaming, bounded RAM — never holds
+// more than one chunk at a time).
+const gz = zlib.gzipSync(Buffer.from(prefixed, 'utf8'), { level: 9 });
+const b64 = gz.toString('base64');
+console.log('[247420] css gzip+base64:', (b64.length / 1024).toFixed(1) + 'kb (raw',
+    (prefixed.length / 1024).toFixed(1) + 'kb, ratio',
+    (b64.length / prefixed.length * 100).toFixed(1) + '%)');
+
+// Inject the compressed payload into src/styles.js for the JS bundle, then
+// restore. Runtime decoder is small and library-free.
 const stylesPath = path.join(root, 'src/styles.js');
 const stylesOriginal = fs.readFileSync(stylesPath, 'utf8');
-fs.writeFileSync(stylesPath,
-    `export const css = ${JSON.stringify(prefixed)};\nexport const scope = ${JSON.stringify(SCOPE)};\n`);
+const decoderRuntime = `
+export const scope = ${JSON.stringify(SCOPE)};
+const cssGzB64 = ${JSON.stringify(b64)};
+
+function b64ToBytes(b64) {
+    if (typeof atob === 'function') {
+        const bin = atob(b64);
+        const out = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+        return out;
+    }
+    return Uint8Array.from(Buffer.from(b64, 'base64'));
+}
+
+let _cssPromise = null;
+export function loadCss() {
+    if (_cssPromise) return _cssPromise;
+    _cssPromise = (async () => {
+        const bytes = b64ToBytes(cssGzB64);
+        // DecompressionStream is browser-native and streaming — never holds
+        // more than one chunk, so RAM stays bounded regardless of CSS size.
+        const stream = new Response(
+            new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
+        );
+        return await stream.text();
+    })();
+    return _cssPromise;
+}
+
+// Lazy getter — kept for back-compat with code that read \`css\` directly.
+// Resolves to the decoded string after first \`loadCss()\` / \`installStyles()\`.
+export let css = '';
+loadCss().then(s => { css = s; });
+`;
+fs.writeFileSync(stylesPath, decoderRuntime);
 
 try {
     await build({
@@ -83,7 +127,7 @@ try {
         bundle: true,
         format: 'esm',
         platform: 'browser',
-        target: ['es2020'],
+        target: ['es2022'],
         minify: true,
         sourcemap: false,
         legalComments: 'none',

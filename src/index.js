@@ -1,11 +1,12 @@
 import * as webjsx from '../vendor/webjsx/index.js';
-import { css, scope } from './styles.js';
+import { loadCss, scope } from './styles.js';
 import { registerDeckStage, getDeckStage } from './deck-stage.js';
 import * as components from './components.js';
 
 let _installed = false;
-export function installStyles(target) {
+export async function installStyles(target) {
     if (_installed && !target) return;
+    const css = await loadCss();
     const root = target || document.head;
     const tag = document.createElement('style');
     tag.setAttribute('data-247420', '');
@@ -23,7 +24,7 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
     return render;
 }
 
-export { webjsx, css, scope, registerDeckStage, getDeckStage, components };
+export { webjsx, loadCss, scope, registerDeckStage, getDeckStage, components };
 export const h = webjsx.createElement;
 export const applyDiff = webjsx.applyDiff;
-export default { webjsx, css, scope, installStyles, mount, h, applyDiff, registerDeckStage, getDeckStage, components };
+export default { webjsx, loadCss, scope, installStyles, mount, h, applyDiff, registerDeckStage, getDeckStage, components };

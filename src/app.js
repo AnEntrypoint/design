@@ -126,6 +126,6 @@ function App() {
     });
 }
 
-installStyles();
+await installStyles();
 const root = document.getElementById('root');
 render = mount(root, App);
