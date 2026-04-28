@@ -1,5 +1,5 @@
 {
-  "name": "@anentrypoint/247420",
+  "name": "anentrypoint-design",
   "version": "0.0.0",
   "description": "247420 design system SDK — webjsx + modified ripple-ui, single-file ESM bundle for reproducible use of the AnEntrypoint design.",
   "type": "module",

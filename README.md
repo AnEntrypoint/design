@@ -7,13 +7,13 @@ Bundles **WebJSX** (vendored), a modified **Ripple UI**, **Tailwind v2** utility
 ## Install
 
 ```bash
-npm install @anentrypoint/247420
+npm install anentrypoint-design
 ```
 
 ## Use the SDK
 
 ```js
-import { h, mount, installStyles, components as C } from '@anentrypoint/247420';
+import { h, mount, installStyles, components as C } from 'anentrypoint-design';
 
 installStyles();
 const root = document.getElementById('app');
@@ -32,7 +32,7 @@ The package also ships a complete WebJSX single-page app at `247420/app` that co
 
 ```html
 <div id="root" class="ds-247420"></div>
-<script type="module" src="https://unpkg.com/@anentrypoint/247420/dist/247420.app.js"></script>
+<script type="module" src="https://unpkg.com/anentrypoint-design/dist/247420.app.js"></script>
 ```
 
 `app.html` in this repo is the local consumer.
@@ -49,7 +49,7 @@ All factories are pure: they take props, return a WebJSX tree.
 ## DeckStage
 
 ```js
-import { registerDeckStage } from '@anentrypoint/247420';
+import { registerDeckStage } from 'anentrypoint-design';
 await registerDeckStage();
 // <deck-stage width="1920" height="1080">…<section>…</section></deck-stage>
 ```
@@ -61,7 +61,7 @@ Every selector in the bundle is namespaced under `.ds-247420` via PostCSS. The b
 ## CSS only
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@anentrypoint/247420/dist/247420.css">
+<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">
 <div class="ds-247420">…</div>
 ```
 
