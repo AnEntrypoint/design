@@ -1,0 +1,23 @@
+id: home
+title: Home
+hero:
+  heading: "design"
+  subheading: "247420 design system"
+  body: "the visual paradigm. layered surfaces, monospace labels, loud content inside quiet chrome. consumed by every 247420 surface."
+  badges:
+    - { label: "design-system" }
+    - { label: "tokens" }
+    - { label: "web" }
+  ctas:
+    - { label: "GitHub", href: "https://github.com/AnEntrypoint/design", primary: true }
+    - { label: "247420", href: "https://247420.xyz" }
+features:
+  heading: "Why design"
+  items:
+    - { name: "design-system", desc: "flagship trait of design." }
+    - { name: "tokens", desc: "core capability of design." }
+quickstart:
+  heading: Quick start
+  lines:
+    - { kind: "cmt", text: "# source" }
+    - { kind: "cmd", text: "git clone https://github.com/AnEntrypoint/design.git" }

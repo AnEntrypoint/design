@@ -23,3 +23,5 @@ node_modules/
 .codeinsight
 *.stackdump
 rs-learn.db
+dist/
+.codeinsight/
