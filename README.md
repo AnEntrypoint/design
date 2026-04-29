@@ -19,9 +19,9 @@ npm install anentrypoint-design
 **unpkg** (when you don't, and you don't want one):
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">
+<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">
 <script type="importmap">
-  { "imports": { "anentrypoint-design": "https://unpkg.com/anentrypoint-design/dist/247420.js" } }
+  { "imports": { "anentrypoint-design": "https://unpkg.com/anentrypoint-design@latest/dist/247420.js" } }
 </script>
 ```
 
@@ -63,9 +63,9 @@ export default function render({ site, page }) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${page.title} — ${site.title}</title>
-  <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">
+  <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">
   <script type="importmap">
-    { "imports": { "anentrypoint-design": "https://unpkg.com/anentrypoint-design/dist/247420.js" } }
+    { "imports": { "anentrypoint-design": "https://unpkg.com/anentrypoint-design@latest/dist/247420.js" } }
   </script>
 </head>
 <body>
@@ -178,7 +178,7 @@ Every selector in the bundle is namespaced under `.ds-247420` via PostCSS. The b
 ## CSS only (no JS)
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">
+<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">
 <div class="ds-247420">…</div>
 ```
 

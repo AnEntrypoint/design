@@ -138,9 +138,9 @@ export default function render({ site, page }) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>\${page.title} — \${site.title}</title>
-  <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">
+  <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">
   <script type="importmap">
-    { "imports": { "anentrypoint-design": "https://unpkg.com/anentrypoint-design/dist/247420.js" } }
+    { "imports": { "anentrypoint-design": "https://unpkg.com/anentrypoint-design@latest/dist/247420.js" } }
   </script>
 </head>
 <body>
@@ -296,7 +296,7 @@ Set in JetBrains Mono so they share cap-height with rank numbers. No font-awesom
 ```html
 <html class="ds-247420" data-theme="light">
   <head>
-    <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">
+    <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">
   </head>
   <body><div id="app"></div></body>
 </html>
