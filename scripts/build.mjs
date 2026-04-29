@@ -55,8 +55,9 @@ const prefixed = (await postcss([
             // Map :root and html/body to the scope itself so design tokens land
             // on the consumer's wrapping element.
             if (/^:root\b/.test(selector)) return prefix;
+            // <html class="ds-247420"> — body is a child, needs descendant selector.
             if (/^html\b/.test(selector)) return selector.replace(/^html\b/, prefix);
-            if (/^body\b/.test(selector)) return selector.replace(/^body\b/, prefix);
+            if (/^body\b/.test(selector)) return selector.replace(/^body\b/, prefix + ' body');
             // Keep @keyframes, @font-face, ::-pseudo selectors untouched
             if (/^(from|to|\d+%)$/.test(selector)) return selector;
             return prefixedSelector;
