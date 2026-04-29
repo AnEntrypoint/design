@@ -16,6 +16,16 @@ features:
   items:
     - { name: "design-system", desc: "flagship trait of design." }
     - { name: "tokens", desc: "core capability of design." }
+examples:
+  heading: "Live examples"
+  items:
+    - { name: "index shell", desc: "full navigation shell with tabs, filters, and row interactions.", href: "./index.html", cta: "open index" }
+    - { name: "homepage kit", desc: "hero + works layout and updated readable type scale.", href: "./ui_kits/homepage/", cta: "open kit" }
+    - { name: "project page kit", desc: "overview, install, receipt, and changelog template.", href: "./ui_kits/project_page/", cta: "open kit" }
+    - { name: "docs kit", desc: "technical documentation layout with sidebar and prose.", href: "./ui_kits/docs/", cta: "open docs" }
+    - { name: "blog kit", desc: "long-form writing layout tuned for readability.", href: "./ui_kits/blog/", cta: "open writing" }
+    - { name: "slide deck", desc: "16:9 deck stage with improved presenter controls text.", href: "./slides/", cta: "open slides" }
+    - { name: "preview samples", desc: "design previews and component samples.", href: "./preview/buttons.html", cta: "open previews" }
 quickstart:
   heading: Quick start
   lines:

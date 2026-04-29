@@ -70,6 +70,26 @@ function Quickstart() {
   );
 }
 
+function Examples() {
+  if (!home.examples || !home.examples.items) return null;
+  return h('section', { class: 'section' },
+    h('h2', {}, home.examples.heading || 'Examples'),
+    h('div', { class: 'grid-cards examples-grid' },
+      ...home.examples.items.map((it, i) =>
+        h('a', {
+          key: i,
+          class: 'card card-link',
+          href: it.href || '#'
+        },
+          h('h3', {}, it.name),
+          h('p', {}, it.desc || ''),
+          h('span', { class: 'card-cta' }, (it.cta || 'open') + ' ↗')
+        )
+      )
+    )
+  );
+}
+
 function Footer() {
   return h('footer', { class: 'app-footer' },
     h('span', {}, 'styled with '),
@@ -82,7 +102,7 @@ function Footer() {
 }
 
 function App() {
-  return h('div', {}, Hero(), Features(), Quickstart(), Footer());
+  return h('div', {}, Hero(), Features(), Examples(), Quickstart(), Footer());
 }
 
 const root = document.getElementById('app');
@@ -133,6 +153,8 @@ const html = ({ site, nav, home }) => `<!DOCTYPE html>
     .card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
     .card h3 { margin: 0 0 0.5rem; font-size: 1rem; color: ${site.accent_to || '#bc8cff'}; font-family: var(--ff-mono, ui-monospace, monospace); }
     .card p { margin: 0; color: var(--panel-muted, #8b949e); font-size: 0.9375rem; line-height: 1.6; }
+    .card-link { text-decoration: none; display: block; }
+    .card-link .card-cta { display: inline-block; margin-top: 0.8rem; color: #58a6ff; font-size: 0.8125rem; font-family: var(--ff-mono, ui-monospace, monospace); }
     .code-block { background: var(--panel-bg-2, #161b22); border: 1px solid var(--panel-border, #30363d); border-radius: 12px; padding: 1.5rem; overflow-x: auto; }
     .code-block pre { margin: 0; font-family: var(--ff-mono, ui-monospace, monospace); font-size: 0.875rem; color: var(--panel-text, #e6edf3); line-height: 1.6; }
     .cmt { color: var(--panel-muted, #8b949e); }
