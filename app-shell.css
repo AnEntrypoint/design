@@ -147,12 +147,11 @@ html, body {
     height: 100%;
 }
 .app-side .group {
-    padding: 12px 16px 4px 16px;
+    padding: 14px 18px 6px 18px;
     font-family: var(--ff-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--panel-text-2);
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    color: var(--panel-text-3);
     font-weight: 600;
 }
 .app-side a {
@@ -199,12 +198,11 @@ html, body {
 }
 .app-main h3 {
     font-family: var(--ff-mono);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     margin: 24px 0 8px 0;
     color: var(--panel-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.01em;
 }
 .app-main p {
     margin: 0 0 12px 0;
@@ -251,18 +249,19 @@ html, body {
 /* Panel — grouped content block, flat tonal surface */
 .panel {
     background: var(--panel-1);
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     margin: 16px 0;
+    box-shadow: var(--panel-shadow, none);
 }
 .panel-head {
-    padding: 12px 20px;
+    padding: 14px 22px;
     background: var(--panel-1);
     font-family: var(--ff-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 13px;
+    letter-spacing: 0.005em;
     color: var(--panel-text-2);
+    font-weight: 600;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -301,9 +300,10 @@ html, body {
 /* List — dense single-line item set, full-bleed. Drop into .app-main directly. */
 .list {
     background: var(--panel-1);
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     margin: 8px 0;
+    box-shadow: var(--panel-shadow, none);
 }
 .list-row {
     display: grid;
@@ -550,9 +550,8 @@ html, body {
     background: var(--panel-2);
     color: var(--panel-text-2);
     cursor: pointer;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 12px;
+    letter-spacing: 0.01em;
     display: flex;
     align-items: center;
 }
@@ -660,9 +659,8 @@ html, body {
 .kv td:first-child {
     color: var(--panel-text-2);
     font-family: var(--ff-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 12px;
+    letter-spacing: 0.01em;
     width: 160px;
 }
 .kv td:last-child { color: var(--panel-text); }
@@ -678,15 +676,16 @@ html, body {
     display: grid;
     grid-template-columns: 44px 1fr;
     gap: 10px;
-    padding: 16px 18px;
+    padding: 18px 20px;
     background: var(--panel-1);
     color: var(--panel-text);
     text-decoration: none;
     align-items: baseline;
-    border-radius: 16px;
-    transition: background 80ms ease;
+    border-radius: 20px;
+    box-shadow: var(--panel-shadow, none);
+    transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
-.card-item:hover { background: var(--panel-hover); }
+.card-item:hover { background: var(--panel-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(31,27,22,0.06); }
 .card-item .code {
     font-family: var(--ff-mono);
     font-size: 11px;
