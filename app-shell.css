@@ -124,7 +124,8 @@ html, body {
     gap: 0;
     transition: grid-template-columns var(--motion-fast, 220ms) ease;
 }
-.app-body.no-side { grid-template-columns: 0 1fr; }
+.app-body.no-side { grid-template-columns: 1fr; }
+.app-body.no-side > .app-main { grid-column: 1 / -1; }
 
 .app-side-shell {
     min-width: 0;
