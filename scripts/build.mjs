@@ -45,6 +45,24 @@ for (const [label, file] of cssParts) {
     raw += `\n/* ${label} */\n${fs.readFileSync(file, 'utf8')}`;
 }
 
+// Copy fonts/ into dist/fonts/ so font URLs (rewritten to dist/fonts/ below)
+// resolve at unpkg against the published package.
+const fontsSrc = path.join(root, 'vendor/fonts');
+const fontsDst = path.join(dist, 'fonts');
+if (fs.existsSync(fontsSrc)) {
+    fs.mkdirSync(fontsDst, { recursive: true });
+    for (const name of fs.readdirSync(fontsSrc)) {
+        fs.copyFileSync(path.join(fontsSrc, name), path.join(fontsDst, name));
+    }
+    console.log('[247420] copied fonts:', fs.readdirSync(fontsDst).length, 'files');
+}
+
+// Rewrite local font URLs to absolute unpkg URLs. The SDK CSS is injected
+// via <style> at runtime so relative ./fonts/ paths resolve against the
+// consumer's page (404). Anchoring at unpkg keeps the SDK self-contained.
+const FONT_BASE = 'https://unpkg.com/anentrypoint-design@latest/dist/fonts/';
+raw = raw.replace(/url\(\.?\/?fonts\//g, `url(${FONT_BASE}`);
+
 // Prefix every selector with .ds-247420 so consumers add the class on a root
 // element to opt in. Skip @-rules and :root (which we rewrite to the scope).
 const prefixed = (await postcss([
