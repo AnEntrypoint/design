@@ -81,12 +81,12 @@
   --measure:      72ch;
 
   /* Extended type scale */
-  --fs-body:      13px;
-  --fs-lg:        14px;
-  --fs-sm:        12px;
-  --fs-xs:        11px;
-  --fs-tiny:      11px;
-  --fs-micro:     9px;
+  --fs-body:      15px;
+  --fs-lg:        17px;
+  --fs-sm:        14px;
+  --fs-xs:        13px;
+  --fs-tiny:      13px;
+  --fs-micro:     12px;
   --fs-h3:        14px;
   --fs-h4:        13px;
 
@@ -111,7 +111,7 @@ body {
   background: var(--panel-0);
   color: var(--panel-text);
   font-family: var(--ff-mono);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

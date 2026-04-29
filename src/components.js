@@ -89,11 +89,19 @@ export function Status({ left = [], right = [] } = {}) {
 }
 
 export function AppShell({ topbar, crumb, side, main, status, narrow } = {}) {
+    const hasSide = Boolean(side);
+    const sideMotionClass = hasSide
+        ? ' animate__animated animate__fadeInLeft'
+        : ' animate__animated animate__fadeOutLeft';
+    const sideNode = hasSide
+        ? side
+        : h('aside', { class: 'app-side', 'aria-hidden': 'true' });
+
     return h('div', { class: 'app' },
         topbar || null,
         crumb || null,
-        h('div', { class: 'app-body' + (side ? '' : ' no-side') },
-            side || null,
+        h('div', { class: 'app-body' + (hasSide ? '' : ' no-side') },
+            h('div', { class: 'app-side-shell' + sideMotionClass }, sideNode),
             h('main', { class: 'app-main' + (narrow ? ' narrow' : '') }, ...(Array.isArray(main) ? main : [main]))
         ),
         status || null
@@ -176,7 +184,7 @@ export function Changelog({ entries = [] }) {
         children: entries.map((e, i) =>
             h('div', { key: i, class: 'row', style: 'grid-template-columns:100px 70px 1fr' },
                 h('span', { class: 'code' }, e.date),
-                h('span', { style: 'color:var(--panel-accent);font-family:var(--ff-mono);font-size:12px' }, e.ver),
+                h('span', { style: 'color:var(--panel-accent);font-family:var(--ff-mono);font-size:14px' }, e.ver),
                 h('span', { class: 'title' }, e.msg)
             )
         )

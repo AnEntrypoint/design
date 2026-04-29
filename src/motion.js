@@ -84,3 +84,39 @@ export function animateSelector(selector, name, opts = {}) {
     return animateElement(el, name, opts);
 }
 
+function defaultEffectFor(el) {
+    const tag = String(el.tagName || '').toLowerCase();
+    if (tag === 'aside') return 'fadeInLeft';
+    if (tag === 'header') return 'fadeInDown';
+    if (tag === 'footer') return 'fadeInUp';
+    if (tag === 'main' || tag === 'section' || tag === 'article') return 'fadeIn';
+    if (tag === 'a' || tag === 'button' || tag === 'input' || tag === 'textarea' || tag === 'select') return 'fadeInUp';
+    return 'fadeIn';
+}
+
+export function animateTree(root, {
+    selector = '*',
+    baseDelayMs = 14,
+    duration = 'var(--motion-base)'
+} = {}) {
+    if (!hasDom() || !root || shouldReduceMotion()) return 0;
+
+    const nodes = Array.from(root.querySelectorAll(selector));
+    let animated = 0;
+
+    nodes.forEach((el) => {
+        if (!el || !el.classList) return;
+        if (el.matches('script,style,link,meta,title')) return;
+        if (el.hasAttribute('data-no-motion')) return;
+        if (el.dataset.motionApplied === '1') return;
+
+        const effect = el.dataset.motionEffect || defaultEffectFor(el);
+        el.classList.add('animate__animated', `animate__${effect}`);
+        el.style.setProperty('--animate-duration', duration);
+        el.style.setProperty('--animate-delay', `${animated * baseDelayMs}ms`);
+        el.dataset.motionApplied = '1';
+        animated += 1;
+    });
+
+    return animated;
+}

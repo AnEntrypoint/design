@@ -1,5 +1,30 @@
 import * as webjsx from 'webjsx';
 const h = webjsx.createElement;
+const ANIMATE_CSS_HREF = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+
+function ensureMotion() {
+    if (document.getElementById('animate-style-cdn')) return;
+    const link = document.createElement('link');
+    link.id = 'animate-style-cdn';
+    link.rel = 'stylesheet';
+    link.href = ANIMATE_CSS_HREF;
+    document.head.appendChild(link);
+}
+
+function animateAll(rootNode) {
+    const nodes = Array.from(rootNode.querySelectorAll('*'));
+    let i = 0;
+    nodes.forEach((el) => {
+        if (!el || !el.classList) return;
+        if (el.matches('script,style,link,meta,title')) return;
+        if (el.dataset.motionApplied === '1') return;
+        el.classList.add('animate__animated', 'animate__fadeIn');
+        el.style.setProperty('--animate-duration', '420ms');
+        el.style.setProperty('--animate-delay', `${i * 12}ms`);
+        el.dataset.motionApplied = '1';
+        i += 1;
+    });
+}
 
 const state = { route: 'works', opened: 0 };
 const root = document.getElementById('root');
@@ -89,7 +114,7 @@ function Works() {
                         h('span', { class: 'title' }, w.title, h('span', { class: 'sub' }, w.sub)),
                         h('span', { class: 'meta' }, w.meta + '  ' + (isOpen ? '−' : '+'))
                     ),
-                    isOpen ? h('div', { style: 'padding:14px 20px 18px 86px;background:var(--panel-2);color:var(--panel-text);font-size:13px;line-height:1.6' },
+                    isOpen ? h('div', { style: 'padding:14px 20px 18px 86px;background:var(--panel-2);color:var(--panel-text);font-size:15px;line-height:1.6' },
                         h('p', { style: 'margin:0 0 12px 0;max-width:64ch' }, w.body),
                         h('div', { style: 'display:flex;gap:8px' },
                             h('a', { class: 'btn-primary', href: '#' }, 'open ↗'),
@@ -164,5 +189,9 @@ function App() {
     );
 }
 
-function render() { webjsx.applyDiff(root, App()); }
+function render() {
+    ensureMotion();
+    webjsx.applyDiff(root, App());
+    requestAnimationFrame(() => animateAll(root));
+}
 render();

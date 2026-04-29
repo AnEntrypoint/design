@@ -21,7 +21,12 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
     if (autoScope && rootEl && rootEl.classList && !rootEl.classList.contains(scope.slice(1))) {
         rootEl.classList.add(scope.slice(1));
     }
-    const render = () => webjsx.applyDiff(rootEl, viewFn(render));
+    const render = () => {
+        webjsx.applyDiff(rootEl, viewFn(render));
+        requestAnimationFrame(() => {
+            motion.animateTree(rootEl);
+        });
+    };
     render();
     return render;
 }

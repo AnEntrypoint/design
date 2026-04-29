@@ -135,7 +135,7 @@
       background: #000;
       color: #fff;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 14px;
       font-feature-settings: "tnum" 1;
       letter-spacing: 0.01em;
       opacity: 0;
@@ -179,7 +179,7 @@
     .btn::-moz-focus-inner { border: 0; }
     .btn svg { width: 14px; height: 14px; display: block; }
     .btn.reset {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 500;
       letter-spacing: 0.02em;
       padding: 0 10px 0 12px;
@@ -194,7 +194,7 @@
       height: 16px;
       padding: 0 4px;
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-      font-size: 10px;
+      font-size: 12px;
       line-height: 1;
       color: rgba(255,255,255,0.88);
       background: rgba(255,255,255,0.12);
@@ -208,7 +208,7 @@
       padding: 0 8px;
       min-width: 42px;
       text-align: center;
-      font-size: 12px;
+      font-size: 14px;
     }
     .count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }
     .count .total { color: rgba(255,255,255,0.55); }
