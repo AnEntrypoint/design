@@ -4,7 +4,7 @@ Every repo in the 247420.xyz portfolio (33 projects, source-of-truth: C:/dev/247
 - No package.json in repo root (CI/CD-only build)
 - GitHub Actions: `npx --yes flatspace@latest build` → deploys `./dist` via peaceiris/actions-gh-pages (or actions/deploy-pages)
 - Site source: flatspace.config.mjs + config/globals/*.yaml + config/pages/*.yaml + src/theme.mjs
-- theme.mjs MUST render via AnEntrypoint design system SDK (anentrypoint-design at unpkg.com/anentrypoint-design/dist/247420.js), importmap-loaded, `installStyles()` + `class="ds-247420"` on `<html>`, components from `window.ds`/webjsx `h()` factory
+- theme.mjs MUST render via AnEntrypoint design system SDK (anentrypoint-design at unpkg.com/anentrypoint-design/dist/247420.js), importmap-loaded, `installStyles()` + `class="ds-247420"` on the SDK render root (the `#app` div, not `<html>`), components from `window.ds`/webjsx `h()` factory
 - Replace ANY other framework chrome (Tailwind, etc.) with SDK
 - EXCEPTION: c:\dev\flatspace-demo stays as-is (Tailwind reference)
 - Earlier hand-rolled docs/index.html sites (floosie, rs-exec) are NOT going-forward — migrate to flatspace+SDK as part of sweep
@@ -30,6 +30,10 @@ flatspace v1.0.17 switches behavior based on file presence: when `flatspace.conf
 ## Portfolio Aggregation Contract
 
 247420.xyz aggregates per-project content via `scripts/fetch-showcase.mjs`, which scrapes `<script id="__site__">{site,nav,home}</script>` from each project's gh-pages URL into `lib/showcase.json`. Any project that emits this script tag (the standard flatspace theme contract from the Design SDK sweep) becomes auto-aggregable. Theme authors must keep emitting it — removing the tag silently downgrades the project's expo card to bare `p.body`/`p.install` fallback. Deploy uses `continue-on-error: true` so stale cache survives upstream outages.
+
+## anentrypoint-design SDK Consumer Pattern
+
+Static-site consumers (no bundler, no Node build) load the SDK from unpkg: `<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design/dist/247420.css">` + `<script type="module">` importing from `https://unpkg.com/anentrypoint-design/dist/247420.js` to populate `window.ds`. The SDK exports: `h`, `applyDiff`, `components`, `mount`, `installStyles`, `scope`, `webjsx`, `registerDeckStage`, `getDeckStage`, `loadCss`. Render pattern: `ds.applyDiff(rootEl, viewFn())` where `viewFn` returns `ds.components.AppShell({topbar, crumb, side, main, status})`. **Non-obvious caveat**: must add `class="ds-247420"` (NOT `app247420` — that string appears nowhere in the SDK) to the render root element BEFORE calling `applyDiff` — every CSS rule in `dist/247420.css` is selector-prefixed with `.ds-247420`, so without it the page falls back to user-agent defaults (Times New Roman, transparent panels). 247420.xyz hides this because it ships its own local `styles.css` instead of relying on the SDK CSS. The truth lives in `src/styles.js`: `export const scope = '.ds-247420'`. Confirmed working on AnEntrypoint/dispipe (gh-pages live at https://anentrypoint.github.io/dispipe/).
 
 ## Learning audit
 
