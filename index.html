@@ -1,43 +1,89 @@
 <!doctype html>
-<html lang="en"><head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#247420" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)">
-  <meta name="color-scheme" content="light dark">
-  <title>247420 / design system</title>
-  <meta name="description" content="a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.">
-  <meta name="author" content="247420 / AnEntrypoint">
-  <meta name="keywords" content="247420, anentrypoint, design system, webjsx, rippleui, creative collective">
-  <link rel="canonical" href="https://anentrypoint.github.io/design/">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="alternate icon" type="image/png" href="favicon.png">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="247420 / design system">
-  <meta property="og:description" content="a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.">
-  <meta property="og:url" content="https://anentrypoint.github.io/design/">
-  <meta property="og:site_name" content="247420 / design">
-  <meta property="og:image" content="https://anentrypoint.github.io/design/og-card.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="247420 design system">
-  <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="247420 / design system">
-  <meta name="twitter:description" content="a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.">
-  <meta name="twitter:image" content="https://anentrypoint.github.io/design/og-card.png">
-  <meta name="twitter:site" content="@AnEntrypoint">
-  <meta name="robots" content="index, follow">
-  <link rel="stylesheet" href="colors_and_type.css">
-  <link rel="stylesheet" href="app-shell.css">
-
-
-</head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#247420" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    <title>247420 / design system</title>
+    <meta name="description" content="a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.">
+    <meta name="author" content="247420 / AnEntrypoint">
+    <meta name="keywords" content="247420, anentrypoint, design system, webjsx, rippleui, creative collective">
+    <link rel="canonical" href="https://anentrypoint.github.io/design/">
+    <link rel="icon" type="image/svg+xml" href="https://247420.xyz/favicon.ico">
+    <link rel="alternate icon" type="image/png" href="favicon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="247420 / design system">
+    <meta property="og:description" content="a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.">
+    <meta property="og:url" content="https://anentrypoint.github.io/design/">
+    <meta property="og:site_name" content="247420 / design">
+    <meta property="og:image" content="https://anentrypoint.github.io/design/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="247420 design system">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="247420 / design system">
+    <meta name="twitter:description" content="a coherent visual paradigm for the 247420 collective — layered surfaces, monospace labels, loud content inside quiet chrome.">
+    <meta name="twitter:image" content="https://anentrypoint.github.io/design/og-card.png">
+    <meta name="twitter:site" content="@AnEntrypoint">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="colors_and_type.css">
+    <link rel="stylesheet" href="app-shell.css">
+    <style>
+      /* Root index type scale bump to match the deck's larger voice. */
+      body[data-screen-label="00 Index"] .app-topbar .brand {
+        font-size: 20px;
+      }
+      body[data-screen-label="00 Index"] .app-side a {
+        font-size: 15px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      body[data-screen-label="00 Index"] .tabs a {
+        font-size: 16px;
+      }
+      body[data-screen-label="00 Index"] .list-row {
+        font-size: 19px;
+        min-height: 76px;
+      }
+      body[data-screen-label="00 Index"] .list-row .from {
+        font-size: 16px;
+      }
+      body[data-screen-label="00 Index"] .list-row .subject {
+        font-size: 19px;
+      }
+      body[data-screen-label="00 Index"] .list-row .subject .preview {
+        font-size: 17px;
+      }
+      body[data-screen-label="00 Index"] .list-row .time,
+      body[data-screen-label="00 Index"] .list-row .label {
+        font-size: 13px;
+      }
+      body[data-screen-label="00 Index"] .list-toolbar .count {
+        font-size: 13px;
+      }
+      body[data-screen-label="00 Index"] .app-topbar .brand-link {
+        color: inherit;
+        text-decoration: none;
+      }
+      body[data-screen-label="00 Index"] .app-topbar .brand-link:hover {
+        color: var(--panel-accent);
+      }
+      body[data-screen-label="00 Index"][data-menu-collapsed="true"] .app-body {
+        grid-template-columns: 1fr;
+      }
+      body[data-screen-label="00 Index"][data-menu-collapsed="true"] .app-side {
+        display: none;
+      }
+    </style>
+  </head>
 <body data-screen-label="00 Index">
 <div class="app">
   <header class="app-topbar">
-    <button class="menu" aria-label="menu">≡</button>
-    <span class="brand">247420<span class="slash"> / </span>design</span>
+    <button class="menu" aria-label="toggle navigation" aria-expanded="true">≡</button>
+    <a class="brand brand-link" href="./index.html" aria-label="go to index">247420<span class="slash"> / </span>design</a>
     <label class="app-search">
       <span class="icon">⌕</span>
       <input type="search" placeholder="search the system" aria-label="search">
@@ -225,5 +271,74 @@ const nodes = previews.map((name, i) => h('a', {
   h('span', { class: 'time' }, String(i+1).padStart(2,'0'))
 ));
 webjsx.applyDiff(ul, nodes);
+
+const body = document.body;
+const menuBtn = document.querySelector('.app-topbar .menu');
+const searchInput = document.querySelector('.app-search input');
+const sideLinks = Array.from(document.querySelectorAll('.app-side a'));
+const tabLinks = Array.from(document.querySelectorAll('.tabs a'));
+let activeCategory = 'all';
+
+function setMenuCollapsed(nextCollapsed) {
+  body.dataset.menuCollapsed = nextCollapsed ? 'true' : 'false';
+  menuBtn.setAttribute('aria-expanded', String(!nextCollapsed));
+}
+
+function textOf(el) {
+  return (el.textContent || '').toLowerCase();
+}
+
+function tabToCategory(tab) {
+  const href = (tab.getAttribute('href') || '').toLowerCase();
+  if (href === '#kits') return 'kit';
+  if (href === '#decks') return 'deck';
+  if (href === '#previews') return 'preview';
+  return 'all';
+}
+
+function rowMatchesCategory(row) {
+  if (activeCategory === 'all') return true;
+  return row.dataset.cat === activeCategory;
+}
+
+function applyFilters() {
+  const q = searchInput.value.trim().toLowerCase();
+  const allRows = Array.from(document.querySelectorAll('.list .list-row'));
+
+  allRows.forEach((row) => {
+    const categoryHit = rowMatchesCategory(row);
+    const queryHit = !q || textOf(row).includes(q);
+    const hit = categoryHit && queryHit;
+    row.style.display = hit ? '' : 'none';
+  });
+
+  sideLinks.forEach((link) => {
+    const hit = !q || textOf(link).includes(q);
+    link.style.display = hit ? '' : 'none';
+  });
+
+  tabLinks.forEach((tab) => {
+    tab.classList.toggle('active', tabToCategory(tab) === activeCategory);
+  });
+}
+
+setMenuCollapsed(false);
+
+menuBtn.addEventListener('click', () => {
+  const collapsed = body.dataset.menuCollapsed === 'true';
+  setMenuCollapsed(!collapsed);
+});
+
+searchInput.addEventListener('input', () => {
+  applyFilters();
+});
+
+tabLinks.forEach((tab) => {
+  tab.addEventListener('click', (event) => {
+    event.preventDefault();
+    activeCategory = tabToCategory(tab);
+    applyFilters();
+  });
+});
 </script>
 </body></html>

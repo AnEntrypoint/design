@@ -1,7 +1,7 @@
 // Unified 247420 single-page app. Replaces the separate homepage,
 // project_page, writing, and manifesto entry points with one WebJSX page
 // that uses the design-system components and hash routing.
-import { h, mount, installStyles, components as C } from './index.js';
+import { h, mount, installStyles, components as C, motion } from './index.js';
 
 const data = {
     nav: [['works', '#/works'], ['writing', '#/writing'], ['manifesto', '#/manifesto'], ['source ↗', 'https://github.com/AnEntrypoint']],
@@ -59,6 +59,9 @@ function parseRoute() {
 window.addEventListener('hashchange', () => {
     state.route = parseRoute();
     render();
+    requestAnimationFrame(() => {
+        motion.animateSelector('.app-main', 'fadeIn', { duration: 'var(--motion-base)' });
+    });
 });
 
 let render;
@@ -99,7 +102,18 @@ function pageMain() {
         return C.ProjectView({
             project: data.project,
             copied: state.copied,
-            onCopy: (cmd) => { navigator.clipboard?.writeText(cmd); state.copied = true; render(); setTimeout(() => { state.copied = false; render(); }, 1200); }
+            onCopy: (cmd) => {
+                navigator.clipboard?.writeText(cmd);
+                state.copied = true;
+                render();
+                requestAnimationFrame(() => {
+                    motion.animateSelector('.cli .copy', 'pulse', { duration: 'var(--motion-fast)' });
+                });
+                setTimeout(() => {
+                    state.copied = false;
+                    render();
+                }, 1200);
+            }
         });
     }
     if (r === 'writing') {
@@ -110,7 +124,15 @@ function pageMain() {
     }
     return C.HomeView({
         state, onNav: navigate,
-        onToggleWork: (i) => { state.opened = i; render(); },
+        onToggleWork: (i) => {
+            state.opened = i;
+            render();
+            if (i >= 0) {
+                requestAnimationFrame(() => {
+                    motion.animateSelector(`[data-work-index="${i}"]`, 'fadeInUp', { duration: 'var(--motion-fast)' });
+                });
+            }
+        },
         works: data.works, posts: data.posts, manifesto: data.manifesto,
         currentlyShipping: data.currentlyShipping
     });
@@ -129,3 +151,6 @@ function App() {
 await installStyles();
 const root = document.getElementById('root');
 render = mount(root, App);
+requestAnimationFrame(() => {
+    motion.animateSelector('.app-main', 'fadeIn', { duration: 'var(--motion-base)' });
+});

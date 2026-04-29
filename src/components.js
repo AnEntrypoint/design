@@ -196,7 +196,11 @@ export function WorksList({ works = [], openedIndex = -1, onToggle }) {
                     active: isOpen,
                     onClick: () => onToggle && onToggle(isOpen ? -1 : i)
                 }),
-                isOpen ? h('div', { style: 'padding:14px 20px 18px 86px;background:var(--panel-2);color:var(--panel-text);font-size:13px;line-height:1.6' },
+                isOpen ? h('div', {
+                    class: 'work-detail',
+                    'data-work-index': String(i),
+                    style: 'padding:14px 20px 18px 86px;background:var(--panel-2);color:var(--panel-text);font-size:13px;line-height:1.6'
+                },
                     h('p', { style: 'margin:0 0 12px 0;max-width:64ch' }, w.body),
                     h('div', { style: 'display:flex;gap:8px' },
                         Btn({ primary: true, href: w.href || '#', children: 'open ↗' }),

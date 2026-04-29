@@ -2,6 +2,7 @@ import * as webjsx from '../vendor/webjsx/index.js';
 import { loadCss, scope } from './styles.js';
 import { registerDeckStage, getDeckStage } from './deck-stage.js';
 import * as components from './components.js';
+import * as motion from './motion.js';
 
 let _installed = false;
 export async function installStyles(target) {
@@ -12,6 +13,7 @@ export async function installStyles(target) {
     tag.setAttribute('data-247420', '');
     tag.textContent = css;
     root.appendChild(tag);
+    if (!target) motion.installMotion();
     if (!target) _installed = true;
 }
 
@@ -24,7 +26,7 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
     return render;
 }
 
-export { webjsx, loadCss, scope, registerDeckStage, getDeckStage, components };
+export { webjsx, loadCss, scope, registerDeckStage, getDeckStage, components, motion };
 export const h = webjsx.createElement;
 export const applyDiff = webjsx.applyDiff;
-export default { webjsx, loadCss, scope, installStyles, mount, h, applyDiff, registerDeckStage, getDeckStage, components };
+export default { webjsx, loadCss, scope, installStyles, mount, h, applyDiff, registerDeckStage, getDeckStage, components, motion };
