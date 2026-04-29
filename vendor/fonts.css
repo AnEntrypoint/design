@@ -1,3 +1,6 @@
+/* Friendly rounded humanist sans — body / UI voice. CDN, swap so paint isn't blocked. */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
