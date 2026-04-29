@@ -23,6 +23,22 @@ jobs:
           node-version: '20'
       - name: Build with flatspace
         run: npx --yes flatspace@latest build
+      - name: Copy static assets into dist
+        run: |
+          set -e
+          # Move the flatspace landing aside so it lands at /design/home.html
+          # and the full app shell (index.html) becomes the site root.
+          if [ -f dist/index.html ] && [ -f index.html ]; then
+            mv dist/index.html dist/home.html
+          fi
+          # Top-level static files
+          for f in index.html app.html app-shell.css colors_and_type.css favicon.svg robots.txt sitemap.xml .nojekyll; do
+            [ -e "$f" ] && cp -f "$f" dist/ || true
+          done
+          # Static directories shipped as-is
+          for d in ui_kits preview slides vendor src site; do
+            [ -d "$d" ] && cp -R "$d" dist/ || true
+          done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
