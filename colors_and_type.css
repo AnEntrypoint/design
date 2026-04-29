@@ -282,8 +282,32 @@ pre code { background: transparent; padding: 0; }
 }
 
 /* ============================================================
-   Primitives — rules, stamps, buttons
+   Primitives — rails, rules, stamps, buttons
+
+   Rail = a 4px tonal stripe on the inline-start edge of any block.
+   Used to separate concerns by hue without ever drawing a border.
    ============================================================ */
+
+.rail        { box-shadow: inset 4px 0 0 var(--panel-text-3); }
+.rail-green  { box-shadow: inset 4px 0 0 var(--green); }
+.rail-purple { box-shadow: inset 4px 0 0 var(--purple); }
+.rail-mascot { box-shadow: inset 4px 0 0 var(--mascot); }
+.rail-sun    { box-shadow: inset 4px 0 0 var(--sun); }
+.rail-flame  { box-shadow: inset 4px 0 0 var(--flame); }
+.rail-sky    { box-shadow: inset 4px 0 0 var(--sky); }
+.rail-live   { box-shadow: inset 4px 0 0 var(--live); }
+.rail-warn   { box-shadow: inset 4px 0 0 var(--warn); }
+
+/* Dot — 8px tonal status pip. Use for "live", "draft", "shipped" indicators. */
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--panel-text-3); vertical-align: middle; margin-right: 8px; }
+.dot.green  { background: var(--green); }
+.dot.purple { background: var(--purple); }
+.dot.mascot { background: var(--mascot); }
+.dot.sun    { background: var(--sun); }
+.dot.flame  { background: var(--flame); }
+.dot.sky    { background: var(--sky); }
+.dot.live   { background: var(--live); }
+.dot.warn   { background: var(--warn); }
 
 .rule       {   margin: 0; }
 .rule-double{    height: var(--bw-rule); margin: 0; }
@@ -326,17 +350,16 @@ pre code { background: transparent; padding: 0; }
   color: var(--bg);
 
   border-radius: var(--r-pill);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.08);
   font-family: var(--ff-ui);
   font-weight: 600;
   font-size: var(--fs-sm);
   letter-spacing: 0.01em;
   text-decoration: none;
   cursor: pointer;
-  transition: transform var(--dur-snap) var(--ease), box-shadow var(--dur-snap) var(--ease), filter var(--dur-snap) var(--ease);
+  transition: filter var(--dur-base) var(--ease), background var(--dur-base) var(--ease);
 }
-.btn-stamp:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 rgba(0,0,0,0.10); filter: brightness(1.04); }
-.btn-stamp:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.10); }
+.btn-stamp:hover  { filter: brightness(1.05); }
+.btn-stamp:active { filter: brightness(0.96); }
 
 .btn-stamp.green  { background: var(--green);  color: var(--green-fg); }
 .btn-stamp.purple { background: var(--purple); color: var(--purple-fg); }
@@ -449,7 +472,6 @@ pre code { background: transparent; padding: 0; }
   border-radius: var(--r-3);
   background: var(--bg);
   padding: var(--space-5);
-  box-shadow: var(--panel-shadow, none);
 }
 .card.chunk { }
 
@@ -476,7 +498,7 @@ pre code { background: transparent; padding: 0; }
   --panel-accent:    var(--green);
   --panel-accent-2:  var(--green-deep);
   --panel-accent-fg: #ffffff;
-  --panel-shadow:  0 1px 2px rgba(31,27,22,0.04);
+  --panel-shadow: none;
   --panel-shadow-top: none;
 }
 
@@ -494,7 +516,7 @@ pre code { background: transparent; padding: 0; }
     --panel-accent:    var(--green-2);
     --panel-accent-2:  var(--green-2);
     --panel-accent-fg: var(--ink);
-    --panel-shadow:  none;
+    --panel-shadow: none;
     --panel-shadow-top: none;
   }
 }
@@ -512,7 +534,7 @@ pre code { background: transparent; padding: 0; }
   --panel-accent:    var(--green-2);
   --panel-accent-2:  var(--green-2);
   --panel-accent-fg: var(--ink);
-  --panel-shadow:  none;
+  --panel-shadow: none;
   --panel-shadow-top: none;
 }
 
@@ -529,7 +551,7 @@ pre code { background: transparent; padding: 0; }
   --panel-accent:    var(--green);
   --panel-accent-2:  var(--green-deep);
   --panel-accent-fg: #ffffff;
-  --panel-shadow:  none;
+  --panel-shadow: none;
 }
 
 /* Foreground / background aliases derived from panel tokens */
