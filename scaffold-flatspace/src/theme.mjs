@@ -18,6 +18,9 @@ import { h, applyDiff, installStyles, components as C } from 'anentrypoint-desig
 installStyles();
 document.documentElement.classList.add('ds-247420');
 
+const __reveal = () => document.documentElement.classList.add('ds-ready');
+const __fallback = setTimeout(__reveal, 1500);
+
 const data = JSON.parse(document.getElementById('__site__').textContent);
 const { site, nav, home } = data;
 
@@ -121,6 +124,14 @@ const App = C.AppShell({
 });
 
 applyDiff(document.getElementById('app'), [App]);
+
+const __fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+Promise.race([__fontsReady, new Promise(r => setTimeout(r, 1200))]).then(() => {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    clearTimeout(__fallback);
+    __reveal();
+  }));
+});
 `;
 
 const html = ({ site, nav, home }) => `<!DOCTYPE html>
@@ -136,7 +147,8 @@ const html = ({ site, nav, home }) => `<!DOCTYPE html>
   <link rel="canonical" href="${escapeHtml(site.url || '')}" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E${encodeURIComponent(site.glyph || '◆')}%3C/text%3E%3C/svg%3E" />
   <script type="importmap">{"imports":{"anentrypoint-design":"${SDK_URL}"}}</script>
-  <style>html,body{margin:0;padding:0}body{background:var(--app-bg,#FBF6EB);color:var(--ink,#1F1B16);font-family:var(--ff-ui,'Nunito',system-ui,sans-serif)}</style>
+  <style>html,body{margin:0;padding:0}body{background:var(--app-bg,#FBF6EB);color:var(--ink,#1F1B16);font-family:var(--ff-ui,'Nunito',system-ui,sans-serif)}html:not(.ds-ready) body{visibility:hidden}html.ds-ready body{visibility:visible;animation:ds-fade-in .18s ease-out both}@keyframes ds-fade-in{from{opacity:0}to{opacity:1}}</style>
+  <noscript><style>html body{visibility:visible !important}</style></noscript>
 </head>
 <body>
   <div id="app"></div>
