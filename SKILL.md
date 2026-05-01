@@ -280,16 +280,32 @@ Set in JetBrains Mono so they share cap-height with rank numbers. No font-awesom
 ## files in this repo
 
 - `colors_and_type.css` — every token, every semantic class, every rail and dot.
-- `app-shell.css` — topbar, breadcrumb, sidebar, panel, list, tabs, status, kv, cards.
+- `app-shell.css` — topbar, breadcrumb, sidebar, panel, list, tabs, status, kv, cards, chat bubbles.
 - `vendor/fonts.css` — Archivo, JetBrains Mono, Space Grotesk (legacy), Nunito via Google Fonts CDN.
 - `preview/` — one concept per page (buttons, stamps, rails, dots, manifesto, type-display, …).
 - `ui_kits/homepage` — editorial home with hero + works.
 - `ui_kits/project_page` — project shell with overview/receipt/install/changelog.
 - `ui_kits/docs` — sidebar nav + prose reading view.
 - `ui_kits/blog` — dated index + reading view.
-- `slides/deck-stage.js` — the 16:9 web component.
-- `src/components.js` — the component library exported by the SDK.
+- `ui_kits/chat`, `ui_kits/aicat` — chat surfaces (timeline + composer + AICat portrait).
+- `slides/deck-stage.js` — the 16:9 web component (split into `deck-stage-style.js` + `deck-stage-overlay.js`).
+- `src/components.js` — re-export barrel; do not extend.
+- `src/components/{shell,content,chat}.js` — component groups, 200-line cap each. Chrome (Topbar/Crumb/Side/AppShell) lives in `shell.js`; surfaces/pages (Panel/Row/Hero/HomeView/ProjectView/…) in `content.js`; chat (Chat/ChatMessage/ChatComposer/AICat) in `chat.js`.
+- `src/markdown.js` — lazy `marked@15` + `DOMPurify@3` from jsDelivr ESM. Block markdown in chat lands via the `MdNode` ref-callback that `innerHTML`s the sanitized output. **Never bypass `renderMarkdown` to set chat HTML** — DOMPurify is the only XSS gate.
+- `src/highlight.js` — lazy Prism core + per-language scripts on first use; `CodeNode` ref-callback waits for prism then calls `highlightAllUnder`. Adding a language: append to the `LANGS` array.
+- `src/bootstrap.js` — `mountKit({ root, view, screen })`. Every ui_kit goes through this. No new motion / CDN / applyDiff loops in kit `app.js`.
+- `src/web-components/ds-chat.js` — auto-registers `<ds-chat>` on browser load. Consumers set `el.messages = […]` (or pass JSON via the `messages` attribute) and listen for the bubbling/composed `send` event with `{ detail: { text } }`.
+- `src/debug.js` — `window.__debug` registry; subsystems register snapshot fns at load time. `console.log` is not observability.
+- `src/motion.js` — `installMotion()` + `animateTree(rootEl)`; called once from `installStyles` + on every render tick by `mount`.
 - `scripts/build.mjs` — esbuild + postcss-prefix-selector, scoped under `.ds-247420`.
+
+## hard rules added 2026-05-01 (re-architecture)
+
+- **No new inline `style="…"` strings** in components — add a `.ds-<thing>` class to `app-shell.css`; the build prefixes with `.ds-247420`.
+- **No new files in `src/components.js`.** New components go under `src/components/<group>.js` and re-export from the barrel.
+- **No parallel observability surfaces.** `window.__debug` is THE in-page registry; new subsystems must register on mount. `console.log` does not count.
+- **webjsx applyDiff caveat.** Children arrays that mix keyed VElements with raw text crash inside `vendor/webjsx/applyDiff.js`. Wrap raw text in a keyed `<span>` so all siblings are VElements.
+- **marked v15 + html-passthrough.** Lines containing raw HTML tags pass through as text — markdown emphasis around an inline `<script>` won't parse. Security holds (DOMPurify still strips dangerous tags); cosmetic blast on mixed input is expected.
 
 ## one-liner for any new surface
 

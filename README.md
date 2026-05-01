@@ -144,8 +144,48 @@ Primitives: `Brand`, `Chip`, `Btn`, `Glyph`, `Heading`, `Lede`, `Dot`, `Rail`.
 Chrome: `Topbar`, `Crumb`, `Side`, `Status`, `AppShell`.
 Surfaces: `Panel`, `Row`, `RowLink`, `Section`, `Install`, `Receipt`, `Changelog`.
 Pages: `Hero`, `WorksList`, `WritingList`, `Manifesto`, `HomeView`, `ProjectView`.
+Chat: `Chat`, `ChatMessage`, `ChatComposer`, `AICat`, `AICatPortrait`. Helpers: `renderInline`, `fmtBytes`.
 
-All factories are pure: props in, WebJSX tree out.
+All factories are pure: props in, WebJSX tree out. Component source is split per group under `src/components/<shell|content|chat>.js`; `src/components.js` is a re-export barrel. The 200-line cap applies per module.
+
+## chat / markdown / code-highlight
+
+`Chat({ messages, onSend })` renders the bubble timeline; `ChatComposer({ onSend })` is the input row. Block markdown inside messages is sanitized through `renderMarkdown` (`marked@15` + `DOMPurify@3`, lazy-loaded from jsDelivr ESM on first call) and code blocks are highlighted by Prism (lazy-loaded core + per-language scripts via `ensurePrism` / `highlightAllUnder`). Direct `innerHTML` from chat content is forbidden — DOMPurify is the only XSS gate.
+
+```js
+import { components as C } from 'anentrypoint-design';
+
+C.Chat({
+  messages: [
+    { role: 'user', text: 'hello' },
+    { role: 'assistant', text: '```js\nconsole.log(1)\n```' }
+  ],
+  onSend: text => /* push to your store, re-render */ null
+});
+```
+
+## `<ds-chat>` web component
+
+`src/index.js` auto-registers `<ds-chat>` in any browser context. Set `el.messages = [...]` (or pass JSON via the `messages` attribute) and listen for the bubbling, composed `send` event:
+
+```html
+<ds-chat id="c"></ds-chat>
+<script type="module">
+  import 'https://unpkg.com/anentrypoint-design@latest/dist/247420.js';
+  const el = document.getElementById('c');
+  el.messages = [{ role: 'assistant', text: 'gm.' }];
+  el.addEventListener('send', e => console.log(e.detail.text));
+</script>
+```
+
+## ui-kit bootstrap
+
+`mountKit({ root, view, screen })` is the single entry point every kit uses — it installs styles, scopes the root, runs the WebJSX render loop, and registers the kit on the `window.__debug` registry. Do not roll your own motion / applyDiff / CDN loop in a kit's `app.js`.
+
+```js
+import { mountKit } from 'anentrypoint-design';
+mountKit({ root: document.getElementById('app'), view: () => myView(), screen: 'aicat' });
+```
 
 ## DeckStage
 
