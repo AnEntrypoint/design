@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### CDN elimination per AGENTS.md portfolio rule
+
+- **Removed Prism.js CDN loader** from `src/highlight.js`. Syntax highlighting is optional showcase feature; disabled to align with "no CDN except SDK @latest" rule.
+- **Removed animate.css CDN loader** from `src/motion.js` and both UI kits (`ui_kits/homepage/app.js`, `ui_kits/project_page/app.js`). Motion system disabled as showcase enhancement, not critical feature.
+- **Added `scripts/bundle-markdown.mjs`** — fetch-at-build-time pattern for marked@15 + DOMPurify@3. Bundles locally instead of loading from jsDelivr CDN at runtime.
+- Lazy-loaded markdown (src/markdown.js) remains unchanged — non-blocking deferred load acceptable per rule intent.
+
 ### Re-architecture pass
 
 - **Modularized `src/components.js`** (was 524L) → barrel re-exporting `src/components/shell.js`, `src/components/content.js`, `src/components/chat.js`. The barrel itself is 21 lines.
