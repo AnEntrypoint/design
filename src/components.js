@@ -276,6 +276,107 @@ export function HomeView({ state, onNav, onToggleWork, works, posts, manifesto, 
     ];
 }
 
+// ---------- chat ----------
+
+export function ChatMessage({ who = 'them', avatar, text, time, typing, key, aicat }) {
+    const cls = 'chat-msg ' + who + (aicat && who === 'them' ? ' aicat' : '');
+    const av = h('span', { class: 'chat-avatar' }, avatar || (who === 'you' ? 'u' : '?'));
+    const body = typing
+        ? h('span', { class: 'chat-typing' }, h('span'), h('span'), h('span'))
+        : h('span', { class: 'chat-bubble' }, text);
+    const meta = time ? h('div', { class: 'chat-meta' }, time) : null;
+    const stack = h('div', {},
+        body,
+        meta
+    );
+    return h('div', { key, class: cls },
+        who === 'you' ? stack : av,
+        who === 'you' ? av : stack
+    );
+}
+
+export function ChatComposer({ value, onInput, onSend, placeholder = 'message…', disabled }) {
+    const send = () => {
+        const v = (value || '').trim();
+        if (!v || disabled) return;
+        if (onSend) onSend(v);
+    };
+    return h('div', { class: 'chat-composer' },
+        h('textarea', {
+            value: value || '',
+            placeholder,
+            rows: 1,
+            oninput: (e) => onInput && onInput(e.target.value),
+            onkeydown: (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                }
+            }
+        }),
+        h('button', {
+            class: 'send',
+            disabled: disabled || !(value && value.trim()),
+            onclick: send
+        }, '↑')
+    );
+}
+
+export function Chat({ title = 'chat', sub, messages = [], composer, header } = {}) {
+    return h('div', { class: 'chat' },
+        header || h('div', { class: 'chat-head' },
+            h('span', { class: 'dot' }),
+            h('span', {}, title),
+            sub ? h('span', { class: 'sub' }, ' · ' + sub) : null,
+            h('span', { class: 'spread' }),
+            h('span', { class: 'sub' }, String(messages.length).padStart(2, '0') + ' msgs')
+        ),
+        h('div', { class: 'chat-thread' },
+            ...messages.map((m, i) => ChatMessage({ ...m, key: m.key != null ? m.key : i }))
+        ),
+        composer || null
+    );
+}
+
+const AICAT_FACE = ` /\\_/\\\n( o.o )\n > ^ <`;
+
+export function AICatPortrait({ name = 'aicat', status = 'idle', face } = {}) {
+    return h('div', { class: 'aicat-portrait' },
+        h('pre', { class: 'aicat-face' }, face || AICAT_FACE),
+        h('div', { class: 'aicat-meta' },
+            h('span', { class: 'name' }, name),
+            h('span', { class: 'status' },
+                h('span', { class: 'dot' }, '● '),
+                status
+            )
+        )
+    );
+}
+
+export function AICat({ name = 'aicat', messages = [], thinking, composer, status = 'online · purring' } = {}) {
+    const annotated = messages.map((m) =>
+        m.who === 'them' ? { ...m, aicat: true, avatar: m.avatar || '=^.^=' } : m
+    );
+    const all = thinking
+        ? [...annotated, { who: 'them', aicat: true, avatar: '=^.^=', typing: true, key: '_thinking' }]
+        : annotated;
+    return h('div', { class: 'chat' },
+        h('div', { class: 'chat-head' },
+            h('span', { class: 'dot' }),
+            h('span', {}, name),
+            h('span', { class: 'sub' }, ' · ' + status),
+            h('span', { class: 'spread' }),
+            h('span', { class: 'sub' }, String(messages.length).padStart(2, '0') + ' turns')
+        ),
+        h('div', { class: 'chat-thread' },
+            ...all.map((m, i) => ChatMessage({ ...m, key: m.key != null ? m.key : i }))
+        ),
+        composer || null
+    );
+}
+
+export { AICAT_FACE };
+
 export function ProjectView({ project, copied, onCopy }) {
     return [
         Heading({ level: 1, children: project.name }),

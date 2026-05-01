@@ -712,3 +712,197 @@ html, body {
 ::-webkit-scrollbar-thumb { background: var(--panel-3); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--panel-hover); }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* ============================================================
+   Chat & AICat — message thread + composer
+   Tonal panels, pill bubbles, monospace meta. Tokens-only.
+   ============================================================ */
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    background: var(--panel-1);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 12px 0;
+    max-width: 820px;
+    min-height: 480px;
+}
+.chat-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: var(--panel-1);
+    color: var(--panel-text-2);
+    font-family: var(--ff-ui);
+    font-size: 13px;
+    font-weight: 600;
+}
+.chat-head .dot {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--panel-accent);
+    display: inline-block;
+}
+.chat-head .spread { flex: 1; }
+.chat-head .sub { color: var(--panel-text-3); font-weight: 400; font-size: 12px; }
+
+.chat-thread {
+    flex: 1;
+    padding: 18px 18px 8px 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--panel-1);
+}
+
+.chat-msg {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 10px;
+    align-items: flex-start;
+    max-width: 92%;
+}
+.chat-msg.you {
+    grid-template-columns: 1fr 32px;
+    margin-left: auto;
+    text-align: right;
+}
+.chat-msg.you .chat-bubble { background: var(--panel-accent); color: var(--panel-accent-fg); border-radius: 18px 18px 4px 18px; }
+.chat-msg.you .chat-meta { justify-content: flex-end; }
+
+.chat-avatar {
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    color: var(--panel-text);
+    flex-shrink: 0;
+    line-height: 1;
+}
+.chat-msg.them .chat-avatar { grid-column: 1; }
+.chat-msg.you .chat-avatar  { grid-column: 2; background: var(--panel-accent); color: var(--panel-accent-fg); }
+
+.chat-bubble {
+    background: var(--panel-2);
+    color: var(--panel-text);
+    padding: 10px 14px;
+    border-radius: 18px 18px 18px 4px;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.chat-msg.you .chat-bubble { text-align: left; display: inline-block; }
+
+.chat-meta {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    font-family: var(--ff-mono);
+    font-size: 10.5px;
+    color: var(--panel-text-3);
+    letter-spacing: 0.02em;
+}
+
+.chat-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 14px;
+    background: var(--panel-2);
+    border-radius: 18px 18px 18px 4px;
+}
+.chat-typing span {
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: var(--panel-text-3);
+    animation: chat-bounce 1.2s infinite ease-in-out;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.18s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes chat-bounce {
+    0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+    40% { opacity: 1; transform: translateY(-4px); }
+}
+
+.chat-composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--panel-1);
+}
+.chat-composer textarea {
+    flex: 1;
+    background: var(--panel-2);
+    color: var(--panel-text);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 18px;
+    resize: none;
+    min-height: 40px;
+    max-height: 140px;
+    border: 0;
+    outline: 0;
+    transition: background 80ms ease;
+}
+.chat-composer textarea:hover, .chat-composer textarea:focus { background: var(--panel-3); }
+.chat-composer .send {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 999px;
+    background: var(--panel-accent);
+    color: var(--panel-accent-fg);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-family: var(--ff-ui);
+    font-size: 18px;
+    transition: filter 80ms ease;
+    border: 0;
+}
+.chat-composer .send:hover { filter: brightness(1.06); }
+.chat-composer .send:disabled { background: var(--panel-3); color: var(--panel-text-3); cursor: not-allowed; }
+
+/* AICat — cat-themed AI assistant chat variant */
+.aicat-portrait {
+    background: var(--panel-2);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 12px 0;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    max-width: 820px;
+}
+.aicat-face {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    line-height: 1.15;
+    color: var(--panel-accent);
+    white-space: pre;
+    background: var(--panel-1);
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 0;
+}
+.aicat-meta { display: flex; flex-direction: column; gap: 4px; }
+.aicat-meta .name { color: var(--panel-text); font-weight: 600; font-size: 15px; }
+.aicat-meta .status { color: var(--panel-text-2); font-family: var(--ff-mono); font-size: 12px; }
+.aicat-meta .status .dot { color: var(--panel-accent); }
+
+.chat-msg.them.aicat .chat-avatar {
+    background: var(--panel-2);
+    color: var(--panel-accent);
+    font-size: 11px;
+    line-height: 1.0;
+    letter-spacing: -0.5px;
+}
