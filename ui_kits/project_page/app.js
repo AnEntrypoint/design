@@ -1,30 +1,5 @@
 import * as webjsx from 'webjsx';
 const h = webjsx.createElement;
-const ANIMATE_CSS_HREF = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
-
-function ensureMotion() {
-    if (document.getElementById('animate-style-cdn')) return;
-    const link = document.createElement('link');
-    link.id = 'animate-style-cdn';
-    link.rel = 'stylesheet';
-    link.href = ANIMATE_CSS_HREF;
-    document.head.appendChild(link);
-}
-
-function animateAll(rootNode) {
-    const nodes = Array.from(rootNode.querySelectorAll('*'));
-    let i = 0;
-    nodes.forEach((el) => {
-        if (!el || !el.classList) return;
-        if (el.matches('script,style,link,meta,title')) return;
-        if (el.dataset.motionApplied === '1') return;
-        el.classList.add('animate__animated', 'animate__fadeIn');
-        el.style.setProperty('--animate-duration', '420ms');
-        el.style.setProperty('--animate-delay', `${i * 12}ms`);
-        el.dataset.motionApplied = '1';
-        i += 1;
-    });
-}
 
 const state = { copied: false, tab: 'readme' };
 const root = document.getElementById('root');
@@ -174,8 +149,6 @@ function App() {
 }
 
 function render() {
-    ensureMotion();
     webjsx.applyDiff(root, App());
-    requestAnimationFrame(() => animateAll(root));
 }
 render();
