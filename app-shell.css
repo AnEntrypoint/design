@@ -1112,3 +1112,99 @@ html, body {
 .chat-stack > .chat-pdf,
 .chat-stack > .chat-file,
 .chat-stack > .chat-link { max-width: 100%; }
+
+/* ============================================================
+   ds-* utility classes — replace inline styles in components
+   ============================================================ */
+
+.ds-hero { padding: 32px 32px 24px 32px; }
+.ds-hero-title { font-size: 36px; font-weight: 600; margin: 0 0 4px 0; color: var(--panel-text); letter-spacing: -0.01em; }
+.ds-hero-body { font-size: 14px; line-height: 1.55; color: var(--panel-text-2); max-width: 64ch; margin: 0 0 20px 0; }
+.ds-hero-accent { color: var(--panel-accent); font-weight: 500; }
+
+.ds-section { padding: 20px 32px; }
+
+.ds-link-accent { color: var(--panel-accent); text-decoration: none; }
+
+.ds-changelog-row { grid-template-columns: 100px 70px 1fr; }
+.ds-changelog-ver { color: var(--panel-accent); font-family: var(--ff-mono); font-size: 14px; }
+
+.work-detail {
+    padding: 14px 20px 18px 86px;
+    background: var(--panel-2);
+    color: var(--panel-text);
+    font-size: 13px;
+    line-height: 1.6;
+}
+.ds-work-body { margin: 0 0 12px 0; max-width: 64ch; }
+.ds-work-actions { display: flex; gap: 8px; }
+
+.panel.panel-inline { max-width: 560px; margin: 0; }
+.panel.panel-wide  { max-width: 900px; }
+.panel.panel-manifesto { /* width comes from style attr */ }
+
+.ds-manifesto { padding: 20px 24px; font-size: 14px; line-height: 1.7; color: var(--panel-text); }
+.ds-manifesto-para { margin: 0 0 12px 0; }
+.ds-manifesto-para.dim { color: var(--panel-text-2); }
+
+.ds-pattern-notes {
+    padding: 14px 20px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--panel-text-2);
+}
+.ds-pattern-notes p { margin: 0 0 8px 0; }
+.ds-pattern-notes p:last-child { margin-bottom: 0; }
+
+.ds-dot-live { color: var(--panel-accent); }
+.ds-dot-idle { color: var(--panel-text-3); }
+
+.crumb-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+
+/* ============================================================
+   Marked block markdown inside .chat-md (rendered via innerHTML
+   so styling applies to real tags rather than vnodes).
+   ============================================================ */
+.chat-md h1, .chat-md h2, .chat-md h3, .chat-md h4 {
+    margin: 8px 0 6px 0;
+    color: var(--panel-text);
+    font-weight: 600;
+    line-height: 1.25;
+}
+.chat-md h1 { font-size: 17px; }
+.chat-md h2 { font-size: 15px; }
+.chat-md h3 { font-size: 14px; }
+.chat-md p { margin: 0 0 8px 0; }
+.chat-md p:last-child { margin-bottom: 0; }
+.chat-md ul, .chat-md ol { margin: 4px 0; padding-left: 18px; }
+.chat-md li { margin: 2px 0; }
+.chat-md blockquote {
+    margin: 6px 0;
+    padding: 4px 12px;
+    border-left: 3px solid var(--panel-accent);
+    color: var(--panel-text-2);
+    background: var(--panel-1);
+    border-radius: 0 6px 6px 0;
+}
+.chat-md hr { border: 0; border-top: 1px solid var(--panel-3); margin: 8px 0; }
+.chat-md table { border-collapse: collapse; margin: 6px 0; font-size: 12.5px; }
+.chat-md th, .chat-md td { padding: 4px 10px; border-bottom: 1px solid var(--panel-3); text-align: left; }
+.chat-md a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.chat-md code {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    background: rgba(0,0,0,0.18);
+    padding: 1px 5px;
+    border-radius: 5px;
+}
+.chat-msg.you .chat-md code { background: rgba(255,255,255,0.22); }
+.chat-md pre {
+    margin: 6px 0;
+    padding: 10px 12px;
+    background: var(--panel-1);
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+}
+.chat-md pre code { background: transparent; padding: 0; }

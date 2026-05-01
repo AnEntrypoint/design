@@ -40,6 +40,21 @@ Static-site consumers (no bundler, no Node build) load the SDK from unpkg: `<lin
 
 When a portfolio repo has legacy `docs/*.html` pages with their own `<style>`/`<script>`/importmap, wrapping them as gm-style article extraction (body unwrap) breaks interactivity. Use **iframe embed inside SDK shell** instead: flatspace `theme.mjs` `assets:` map copies `../docs/<page>` to `_legacy/<page>` (plus sibling deps like `vendor/`, `css/`, `js/`); theme `render` emits a wrapper page at the original URL with SDK Topbar+Crumb+Footer and `main: C.Panel({ children: h('iframe', { src: '<rel-path-to-_legacy>', style: 'width:100%;height:calc(100vh - 180px);min-height:520px;border:0' }) })`. embedSrc resolves relative to wrapper path: `./_legacy/foo.html` for top-level, `../_legacy/foo/index.html` for nested. Trade-off: loses content height auto-sizing. Use article extraction only for static prose papers. Applied 2026-04-30 to thebird/todo, thebird/preview, agentgui/demo, zellous/nostr-chat.
 
+## Re-architecture caveats — added 2026-05-01
+
+- **Component layout**: `src/components.js` is a barrel; do not extend it. Add new components under `src/components/<group>.js` and re-export from the barrel. Chat-related code in `src/components/chat.js`; chrome (Topbar/Crumb/Side/AppShell) in `src/components/shell.js`; content blocks (Panel/Row/Hero/Manifesto/HomeView/ProjectView) in `src/components/content.js`. The 200-line cap applies per-module.
+- **Markdown stack**: `src/markdown.js` lazy-loads `marked@15` + `DOMPurify@3` from jsDelivr ESM at first call. Block markdown lands in `.chat-md` via the `MdNode` ref-callback in chat.js, which sets `innerHTML` from the sanitized output. Never bypass `renderMarkdown` to set chat HTML directly — DOMPurify is the only XSS gate.
+- **Highlight stack**: `src/highlight.js` injects Prism core + per-language scripts on first use. The `CodeNode` ref-callback waits for prism then calls `highlightAllUnder`. Adding a new language: add to `LANGS` array; loader idempotency-checks `Prism.languages[lang]`.
+- **Bootstrap pattern**: every ui_kit goes through `mountKit({ root, view, screen })` from `src/bootstrap.js`. Do not roll new motion/CDN/applyDiff loops in kit `app.js` files.
+- **Web component**: `<ds-chat>` registers automatically when `src/index.js` loads in a browser. Consumers set `el.messages = […]` (or pass JSON via the `messages` attribute) and listen for the bubbling/composed `send` event with `{detail:{text}}`.
+- **Observability**: `window.__debug` is the single client-side registry; modules register snapshot fns at load time. New subsystems must register; `console.log` does not count.
+- **Inline styles ban**: no new inline `style="..."` strings in components. Add a `.ds-<thing>` class to `app-shell.css` instead — the build prefixes with `.ds-247420`.
+- **marked v15 + html-passthrough**: lines that contain raw HTML tags become text-passthrough — markdown emphasis around an inline `<script>` tag won't parse. Security holds (DOMPurify still strips dangerous tags); cosmetic blast on mixed input is expected.
+
+## webjsx applyDiff — Mixed Keyed/Primitive Children Crash
+
+The vendored webjsx `applyDiff` (vendor/webjsx/applyDiff.js:43) throws `Cannot read properties of undefined (reading 'key')` when a parent's children array mixes keyed VElements with primitive (string) siblings. The keyed-map iteration assumes every oldVNode has `.props`. Fix: wrap raw text segments in a keyed `<span>` so all children are VElements. Affects every SDK consumer that interleaves text fragments with keyed component children.
+
 ## Learning audit
 
 - 2026-04-26 (1): 5 items probed, 5 migrated to rs-learn (zero-border policy, row zebra, input focus, hermes-theme ref, surface tokens). 2 new non-obvious items added (box-shadow source-strip, pill radius scale).
@@ -47,3 +62,4 @@ When a portfolio repo has legacy `docs/*.html` pages with their own `<style>`/`<
 - 2026-04-26 (3): ingested 4 new project facts (no-serifs, dark-mode-neutral-grey, list-row-category-colors, density-tweaks). Re-probed 5 stable items (zero border, pill radius, hermes tokens, list-row primitives, fab/cta) — all returned accurate top hits. AGENTS.md held at pointer + vocabulary-ban only.
 - 2026-04-28: ingested 3 new project facts (247420-showcase-aggregator, 247420-showcase-runtime, site-script-contract). Added one new AGENTS.md caveat ("Portfolio Aggregation Contract") because the `<script id="__site__">` shape is a load-bearing cross-project convention. Probe attempted on 5 stable items but rs-learn recall returned empty across all queries — migration deferred, all existing AGENTS.md items retained as safe default.
 - 2026-04-30: ingested 3 new facts (sdk-iframe-wrap-legacy, sdk-iframe-wrap-applied, iframe-vs-article-extraction). Added "Legacy Interactive Page Wrap" caveat to AGENTS.md — non-obvious cross-project decision rule for the next sweep. Probe attempted on flatspace-dual-mode item but exec:recall returned empty (same as 2026-04-28); migration deferred.
+- 2026-04-30 (2): ingested webjsx-applydiff-mixed-keyed-crash. Added "webjsx applyDiff — Mixed Keyed/Primitive Children Crash" caveat to AGENTS.md (load-bearing runtime trap for every SDK consumer). Probed zero-border-aesthetic via exec:recall — returned empty; migration still deferred until rs-learn HTTP recall is healthy.

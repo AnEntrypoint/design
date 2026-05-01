@@ -3,6 +3,11 @@ import { loadCss, scope } from './styles.js';
 import { registerDeckStage, getDeckStage } from './deck-stage.js';
 import * as components from './components.js';
 import * as motion from './motion.js';
+import * as debug from './debug.js';
+import { renderMarkdown, ensureReady as ensureMarkdownReady } from './markdown.js';
+import { ensurePrism, highlightAllUnder } from './highlight.js';
+import { mountKit } from './bootstrap.js';
+import { registerChatElement } from './web-components/ds-chat.js';
 
 let _installed = false;
 export async function installStyles(target) {
@@ -23,15 +28,27 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
     }
     const render = () => {
         webjsx.applyDiff(rootEl, viewFn(render));
-        requestAnimationFrame(() => {
-            motion.animateTree(rootEl);
-        });
+        requestAnimationFrame(() => motion.animateTree(rootEl));
     };
     render();
     return render;
 }
 
-export { webjsx, loadCss, scope, registerDeckStage, getDeckStage, components, motion };
+if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
+    registerChatElement();
+}
+
+export {
+    webjsx, loadCss, scope, registerDeckStage, getDeckStage,
+    components, motion, debug, mountKit,
+    renderMarkdown, ensureMarkdownReady,
+    ensurePrism, highlightAllUnder,
+    registerChatElement
+};
 export const h = webjsx.createElement;
 export const applyDiff = webjsx.applyDiff;
-export default { webjsx, loadCss, scope, installStyles, mount, h, applyDiff, registerDeckStage, getDeckStage, components, motion };
+export default {
+    webjsx, loadCss, scope, installStyles, mount, h, applyDiff,
+    registerDeckStage, getDeckStage, components, motion, debug, mountKit,
+    renderMarkdown, ensurePrism, registerChatElement
+};

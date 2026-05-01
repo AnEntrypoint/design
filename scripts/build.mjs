@@ -20,7 +20,6 @@ const TAILWIND_CDN = 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailw
 
 const cssParts = [
     ['vendor/fonts.css', path.join(root, 'vendor/fonts.css')],
-    ['vendor/rippleui-1.12.1.css', path.join(root, 'vendor/rippleui-1.12.1.css')],
     ['colors_and_type.css', path.join(root, 'colors_and_type.css')],
     ['app-shell.css', path.join(root, 'app-shell.css')],
 ];
