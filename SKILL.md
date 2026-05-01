@@ -290,7 +290,7 @@ Set in JetBrains Mono so they share cap-height with rank numbers. No font-awesom
 - `ui_kits/chat`, `ui_kits/aicat` — chat surfaces (timeline + composer + AICat portrait).
 - `slides/deck-stage.js` — the 16:9 web component (split into `deck-stage-style.js` + `deck-stage-overlay.js`).
 - `src/components.js` — re-export barrel; do not extend.
-- `src/components/{shell,content,chat}.js` — component groups, 200-line cap each. Chrome (Topbar/Crumb/Side/AppShell) lives in `shell.js`; surfaces/pages (Panel/Row/Hero/HomeView/ProjectView/…) in `content.js`; chat (Chat/ChatMessage/ChatComposer/AICat) in `chat.js`.
+- `src/components/{shell,content,chat,files,files-modals}.js` — component groups, 200-line cap each. Chrome (Topbar/Crumb/Side/AppShell) lives in `shell.js`; surfaces/pages (Panel/Row/Hero/HomeView/ProjectView/…) in `content.js`; chat (Chat/ChatMessage/ChatComposer/AICat) in `chat.js`; file-explorer surface (FileGrid/FileRow/DropZone/UploadProgress/BreadcrumbPath/EmptyState/…) in `files.js`; modal/preview parts (ConfirmDialog/PromptDialog/FilePreviewMedia/FilePreviewCode/FilePreviewText/FileViewer) in `files-modals.js`.
 - `src/markdown.js` — lazy `marked@15` + `DOMPurify@3` from jsDelivr ESM. Block markdown in chat lands via the `MdNode` ref-callback that `innerHTML`s the sanitized output. **Never bypass `renderMarkdown` to set chat HTML** — DOMPurify is the only XSS gate.
 - `src/highlight.js` — lazy Prism core + per-language scripts on first use; `CodeNode` ref-callback waits for prism then calls `highlightAllUnder`. Adding a language: append to the `LANGS` array.
 - `src/bootstrap.js` — `mountKit({ root, view, screen })`. Every ui_kit goes through this. No new motion / CDN / applyDiff loops in kit `app.js`.

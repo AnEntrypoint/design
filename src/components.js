@@ -19,3 +19,14 @@ export {
     ChatMessage, ChatComposer, Chat,
     AICAT_FACE, AICatPortrait, AICat
 } from './components/chat.js';
+
+export {
+    fileGlyph, fmtFileSize,
+    FileIcon, FileRow, FileGrid, FileToolbar,
+    DropZone, UploadProgress, EmptyState, BreadcrumbPath
+} from './components/files.js';
+
+export {
+    ConfirmDialog, PromptDialog,
+    FilePreviewMedia, FilePreviewCode, FilePreviewText, FileViewer
+} from './components/files-modals.js';

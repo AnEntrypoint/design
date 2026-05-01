@@ -21,6 +21,7 @@ node_modules/
 
 
 
+
 .plugkit-browser-profile-*/
 .plugkit-agent-worktree/
 .code-search/

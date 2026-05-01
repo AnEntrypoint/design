@@ -145,6 +145,7 @@ Chrome: `Topbar`, `Crumb`, `Side`, `Status`, `AppShell`.
 Surfaces: `Panel`, `Row`, `RowLink`, `Section`, `Install`, `Receipt`, `Changelog`.
 Pages: `Hero`, `WorksList`, `WritingList`, `Manifesto`, `HomeView`, `ProjectView`.
 Chat: `Chat`, `ChatMessage`, `ChatComposer`, `AICat`, `AICatPortrait`. Helpers: `renderInline`, `fmtBytes`.
+Files: `FileIcon`, `FileRow`, `FileGrid`, `FileToolbar`, `DropZone`, `UploadProgress`, `EmptyState`, `BreadcrumbPath`, `FileViewer` (+ `ConfirmDialog` / `PromptDialog` / `FilePreviewMedia` / `FilePreviewCode` / `FilePreviewText`). Helpers: `fileGlyph`, `fmtFileSize`.
 
 All factories are pure: props in, WebJSX tree out. Component source is split per group under `src/components/<shell|content|chat>.js`; `src/components.js` is a re-export barrel. The 200-line cap applies per module.
 
