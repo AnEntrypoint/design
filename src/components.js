@@ -278,22 +278,153 @@ export function HomeView({ state, onNav, onToggleWork, works, posts, manifesto, 
 
 // ---------- chat ----------
 
-export function ChatMessage({ who = 'them', avatar, text, time, typing, key, aicat }) {
+function fmtBytes(n) {
+    if (n == null) return '';
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    if (n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(1) + ' MB';
+    return (n / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+}
+
+function renderInline(text) {
+    if (text == null) return [];
+    const out = [];
+    const re = /(\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\))/g;
+    let last = 0;
+    let m;
+    let i = 0;
+    const push = (node) => out.push(node);
+    while ((m = re.exec(text)) !== null) {
+        if (m.index > last) push(h('span', { key: 's' + i + 'a' }, text.slice(last, m.index)));
+        if (m[2] != null) push(h('strong', { key: 's' + i }, m[2]));
+        else if (m[3] != null) push(h('em', { key: 's' + i }, m[3]));
+        else if (m[4] != null) push(h('code', { key: 's' + i, class: 'chat-tick' }, m[4]));
+        else if (m[5] != null) push(h('a', { key: 's' + i, href: m[6], target: '_blank', rel: 'noopener' }, m[5]));
+        last = m.index + m[0].length;
+        i += 1;
+    }
+    if (last < text.length) push(h('span', { key: 's' + i + 'a' }, text.slice(last)));
+    return out;
+}
+
+function renderMd(text) {
+    // markdown-lite block: blank line = paragraph, line starting with "- " = bullet.
+    const lines = String(text || '').split('\n');
+    const blocks = [];
+    let para = [];
+    let bullets = [];
+    const flush = () => {
+        if (para.length) { blocks.push({ kind: 'p', text: para.join(' ') }); para = []; }
+        if (bullets.length) { blocks.push({ kind: 'ul', items: bullets.slice() }); bullets = []; }
+    };
+    lines.forEach((raw) => {
+        const ln = raw.trim();
+        if (!ln) { flush(); return; }
+        if (/^[-*]\s+/.test(ln)) { if (para.length) flush(); bullets.push(ln.replace(/^[-*]\s+/, '')); return; }
+        if (bullets.length) flush();
+        para.push(ln);
+    });
+    flush();
+    return blocks.map((b, i) =>
+        b.kind === 'p'
+            ? h('p', { key: 'b' + i }, ...renderInline(b.text))
+            : h('ul', { key: 'b' + i }, ...b.items.map((it, j) => h('li', { key: 'l' + j }, ...renderInline(it))))
+    );
+}
+
+const FILE_GLYPHS = { pdf: '▤', zip: '▦', tar: '▦', gz: '▦', mp4: '▶', mp3: '♪', wav: '♪', csv: '⊞', json: '{}', md: '§', txt: '§', default: '◫' };
+function fileGlyph(name) {
+    const ext = String(name || '').split('.').pop().toLowerCase();
+    return FILE_GLYPHS[ext] || FILE_GLYPHS.default;
+}
+
+const PART_RENDERERS = {
+    text: (p) => h('div', { class: 'chat-bubble' }, ...renderInline(p.text || '')),
+    md:   (p) => h('div', { class: 'chat-bubble chat-md' }, ...renderMd(p.text || '')),
+    code: (p) => h('div', { class: 'chat-bubble chat-code' },
+        h('div', { class: 'chat-code-head' },
+            h('span', { class: 'lang' }, p.lang || 'code'),
+            p.filename ? h('span', { class: 'name' }, p.filename) : null
+        ),
+        h('pre', {}, h('code', { class: p.lang ? 'lang-' + p.lang : '' }, p.code || ''))
+    ),
+    image: (p) => h('a', { class: 'chat-image', href: p.href || p.src, target: '_blank', rel: 'noopener' },
+        h('img', { src: p.src, alt: p.alt || '', loading: 'lazy' }),
+        p.caption ? h('span', { class: 'cap' }, p.caption) : null
+    ),
+    pdf: (p) => h('div', { class: 'chat-pdf' },
+        h('div', { class: 'chat-pdf-head' },
+            h('span', { class: 'glyph' }, '▤'),
+            h('span', { class: 'name' }, p.name || 'document.pdf'),
+            p.size != null ? h('span', { class: 'size' }, fmtBytes(p.size)) : null,
+            h('a', { class: 'open', href: p.src, target: '_blank', rel: 'noopener' }, 'open ↗')
+        ),
+        h('embed', { src: p.src, type: 'application/pdf' })
+    ),
+    file: (p) => h('a', { class: 'chat-file', href: p.src, target: '_blank', rel: 'noopener', download: p.name || true },
+        h('span', { class: 'glyph' }, fileGlyph(p.name)),
+        h('span', { class: 'meta' },
+            h('span', { class: 'name' }, p.name || 'attachment'),
+            h('span', { class: 'size' }, [p.kindLabel || (p.name || '').split('.').pop().toUpperCase(), p.size != null ? fmtBytes(p.size) : null].filter(Boolean).join(' · '))
+        ),
+        h('span', { class: 'go' }, '↓')
+    ),
+    link: (p) => h('a', { class: 'chat-link', href: p.href, target: '_blank', rel: 'noopener' },
+        p.thumb ? h('img', { class: 'thumb', src: p.thumb, alt: '' }) : null,
+        h('span', { class: 'meta' },
+            h('span', { class: 'host' }, p.host || (() => { try { return new URL(p.href).host; } catch { return ''; } })()),
+            h('span', { class: 'title' }, p.title || p.href),
+            p.desc ? h('span', { class: 'desc' }, p.desc) : null
+        )
+    )
+};
+
+function renderPart(p, key) {
+    const fn = PART_RENDERERS[p.kind] || PART_RENDERERS.text;
+    const node = fn(p);
+    if (node && typeof node === 'object') node.props = { ...(node.props || {}), key: 'p' + key };
+    return node;
+}
+
+export function ChatMessage({ who = 'them', avatar, text, parts, time, typing, key, aicat, reactions, receipt, name }) {
     const cls = 'chat-msg ' + who + (aicat && who === 'them' ? ' aicat' : '');
     const av = h('span', { class: 'chat-avatar' }, avatar || (who === 'you' ? 'u' : '?'));
-    const body = typing
-        ? h('span', { class: 'chat-typing' }, h('span'), h('span'), h('span'))
-        : h('span', { class: 'chat-bubble' }, text);
-    const meta = time ? h('div', { class: 'chat-meta' }, time) : null;
-    const stack = h('div', { class: 'chat-stack' },
-        body,
-        meta
-    );
+
+    let bodyNodes;
+    if (typing) {
+        bodyNodes = [h('span', { class: 'chat-typing', key: 'typ' }, h('span'), h('span'), h('span'))];
+    } else if (parts && parts.length) {
+        bodyNodes = parts.map((p, i) => renderPart(p, i));
+    } else {
+        bodyNodes = [h('div', { class: 'chat-bubble', key: 't' }, ...renderInline(text || ''))];
+    }
+
+    const reactionRow = reactions && reactions.length
+        ? h('div', { class: 'chat-reactions' },
+            ...reactions.map((r, i) => h('span', { class: 'rxn' + (r.you ? ' you' : ''), key: 'r' + i },
+                h('span', { class: 'e' }, r.emoji),
+                h('span', { class: 'n' }, String(r.count))
+            )))
+        : null;
+
+    const receiptMark = who === 'you' && receipt
+        ? h('span', { class: 'tick' + (receipt === 'read' ? ' read' : '') }, receipt === 'read' ? '✓✓' : '✓')
+        : null;
+
+    const metaItems = [];
+    if (name && who === 'them') metaItems.push(h('span', { class: 'who', key: 'w' }, name));
+    if (time) metaItems.push(h('span', { class: 't', key: 'ti' }, time));
+    if (receiptMark) metaItems.push(receiptMark);
+    const meta = metaItems.length ? h('div', { class: 'chat-meta' }, ...metaItems) : null;
+
+    const stack = h('div', { class: 'chat-stack' }, ...bodyNodes, reactionRow, meta);
     return h('div', { key, class: cls },
         who === 'you' ? stack : av,
         who === 'you' ? av : stack
     );
 }
+
+export { renderInline, renderMd, fmtBytes };
 
 export function ChatComposer({ value, onInput, onSend, placeholder = 'message…', disabled }) {
     const send = () => {
