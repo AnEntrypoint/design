@@ -285,7 +285,7 @@ export function ChatMessage({ who = 'them', avatar, text, time, typing, key, aic
         ? h('span', { class: 'chat-typing' }, h('span'), h('span'), h('span'))
         : h('span', { class: 'chat-bubble' }, text);
     const meta = time ? h('div', { class: 'chat-meta' }, time) : null;
-    const stack = h('div', {},
+    const stack = h('div', { class: 'chat-stack' },
         body,
         meta
     );

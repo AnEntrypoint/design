@@ -759,18 +759,27 @@ html, body {
 
 .chat-msg {
     display: grid;
-    grid-template-columns: 32px 1fr;
+    grid-template-columns: 32px minmax(0, 1fr);
     gap: 10px;
-    align-items: flex-start;
+    align-items: start;
     max-width: 92%;
 }
 .chat-msg.you {
-    grid-template-columns: 1fr 32px;
+    grid-template-columns: minmax(0, 1fr) 32px;
     margin-left: auto;
-    text-align: right;
+    justify-self: end;
 }
+.chat-msg.you .chat-stack { align-items: flex-end; }
 .chat-msg.you .chat-bubble { background: var(--panel-accent); color: var(--panel-accent-fg); border-radius: 18px 18px 4px 18px; }
 .chat-msg.you .chat-meta { justify-content: flex-end; }
+
+.chat-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 0;
+}
 
 .chat-avatar {
     width: 32px; height: 32px;
@@ -797,14 +806,13 @@ html, body {
     line-height: 1.5;
     text-align: left;
     white-space: pre-wrap;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    max-width: 100%;
 }
-.chat-msg.you .chat-bubble { text-align: left; display: inline-block; }
 
 .chat-meta {
     display: flex;
     gap: 6px;
-    margin-top: 4px;
     font-family: var(--ff-mono);
     font-size: 10.5px;
     color: var(--panel-text-3);
