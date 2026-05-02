@@ -1,6 +1,6 @@
 ---
 name: 247420-design
-description: 247420 / AnEntrypoint design system — friendly rounded sans body, mono only on code, soft tonal surfaces, indicator rails for color-coded separation, generous negative space, terminal-flavoured rhythm. Use this skill to consume the SDK from any project (typical example\: a buildless flatspace site at c\:\\dev\\flatspace-demo).
+description: "247420 / AnEntrypoint design system — friendly rounded sans body, mono only on code, soft tonal surfaces, indicator rails for color-coded separation, generous negative space, terminal-flavoured rhythm. Use this skill to consume the SDK from any project (typical example: a buildless flatspace site)."
 user-invocable: true
 ---
 
