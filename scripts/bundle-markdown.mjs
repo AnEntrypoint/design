@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Bundle marked + DOMPurify for gh-pages showcase to remove jsDelivr CDN dependency.
-// Outputs to dist/markdown-bundle.js with both packages as named exports.
+
+
 import { build } from 'esbuild';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
@@ -31,7 +31,7 @@ const dompurify = await fetchUrl('https://cdn.jsdelivr.net/npm/dompurify@3.4.1/+
 const dompurifyPath = path.join(tmpDir, 'dompurify.esm.js');
 fs.writeFileSync(dompurifyPath, dompurify, 'utf8');
 
-// Wrapper that re-exports from local files
+
 const wrapperFile = path.join(tmpDir, 'wrapper.js');
 fs.writeFileSync(wrapperFile, `
 import marked from './marked.esm.js';
@@ -49,6 +49,6 @@ await build({
   logLevel: 'info'
 });
 
-// Cleanup
+
 fs.rmSync(tmpDir, { recursive: true, force: true });
 console.log('[markdown-bundle] complete → dist/markdown-bundle.js');

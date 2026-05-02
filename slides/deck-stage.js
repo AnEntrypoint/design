@@ -1,12 +1,10 @@
 import { STYLESHEET } from './deck-stage-style.js';
 import { buildOverlay, buildTapzones, handleDeckKey } from './deck-stage-overlay.js';
+import { loadNotes, restoreIndex, persistIndex, collectSlides, applyIndex, STORAGE_PREFIX } from './deck-stage-state.js';
 
 const DESIGN_W_DEFAULT = 1920;
 const DESIGN_H_DEFAULT = 1080;
-const STORAGE_PREFIX = 'deck-stage:slide:';
 const OVERLAY_HIDE_MS = 1800;
-const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
-const pad2 = (n) => String(n).padStart(2, '0');
 
 class DeckStage extends HTMLElement {
     static get observedAttributes() { return ['width', 'height', 'noscale']; }
@@ -31,7 +29,7 @@ class DeckStage extends HTMLElement {
 
     connectedCallback() {
         this._render();
-        this._loadNotes();
+        this._notes = loadNotes(this);
         this._syncPrintPageRule();
         window.addEventListener('keydown', this._onKey);
         window.addEventListener('resize', this._onResize);
@@ -105,86 +103,16 @@ class DeckStage extends HTMLElement {
     }
 
     _onSlotChange() {
-        this._collectSlides();
-        this._restoreIndex();
-        this._applyIndex({ showOverlay: false, broadcast: true, reason: 'init' });
+        this._slides = collectSlides(this, this._slot);
+        this._index = restoreIndex(this, this._slides);
+        applyIndex(this, {
+            index: this._index, prevIndex: this._prevIndex, slides: this._slides,
+            countEl: this._countEl, showOverlay: false, broadcast: true, reason: 'init',
+            flashFn: () => this._flashOverlay()
+        });
         this._fit();
     }
 
-    _collectSlides() {
-        const assigned = this._slot.assignedElements({ flatten: true });
-        this._slides = assigned.filter((el) => {
-            const tag = el.tagName;
-            return tag !== 'TEMPLATE' && tag !== 'SCRIPT' && tag !== 'STYLE';
-        });
-        this._slides.forEach((slide, i) => {
-            const n = i + 1;
-            let label = slide.getAttribute('data-label');
-            if (!label) {
-                const existing = slide.getAttribute('data-screen-label');
-                if (existing) label = existing.replace(/^\s*\d+\s*/, '').trim() || existing;
-            }
-            if (!label) {
-                const heading = slide.querySelector('h1, h2, h3, [data-title]');
-                if (heading) label = (heading.textContent || '').trim().slice(0, 40);
-            }
-            if (!label) label = 'Slide';
-            slide.setAttribute('data-screen-label', `${pad2(n)} ${label}`);
-            if (!slide.hasAttribute('data-om-validate')) slide.setAttribute('data-om-validate', VALIDATE_ATTR);
-            slide.setAttribute('data-deck-slide', String(i));
-        });
-        if (this._totalEl) this._totalEl.textContent = String(this._slides.length || 1);
-        if (this._index >= this._slides.length) this._index = Math.max(0, this._slides.length - 1);
-    }
-
-    _loadNotes() {
-        const tag = document.getElementById('speaker-notes');
-        if (!tag) { this._notes = []; return; }
-        try {
-            const parsed = JSON.parse(tag.textContent || '[]');
-            if (Array.isArray(parsed)) this._notes = parsed;
-        } catch (e) {
-            console.warn('[deck-stage] Failed to parse #speaker-notes JSON:', e);
-            this._notes = [];
-        }
-    }
-
-    _restoreIndex() {
-        try {
-            const raw = localStorage.getItem(this._storageKey);
-            if (raw == null) return;
-            const n = parseInt(raw, 10);
-            if (Number.isFinite(n) && n >= 0 && n < this._slides.length) this._index = n;
-        } catch (e) { /* ignore */ }
-    }
-
-    _persistIndex() { try { localStorage.setItem(this._storageKey, String(this._index)); } catch (e) {} }
-
-    _applyIndex({ showOverlay = true, broadcast = true, reason = 'init' } = {}) {
-        if (!this._slides.length) return;
-        const prev = this._prevIndex == null ? -1 : this._prevIndex;
-        const curr = this._index;
-        this._slides.forEach((s, i) => {
-            if (i === curr) s.setAttribute('data-deck-active', '');
-            else s.removeAttribute('data-deck-active');
-        });
-        if (this._countEl) this._countEl.textContent = String(curr + 1);
-        this._persistIndex();
-        if (broadcast) {
-            try { window.postMessage({ slideIndexChanged: curr }, '*'); } catch (e) {}
-            this.dispatchEvent(new CustomEvent('slidechange', {
-                detail: {
-                    index: curr, previousIndex: prev, total: this._slides.length,
-                    slide: this._slides[curr] || null,
-                    previousSlide: prev >= 0 ? (this._slides[prev] || null) : null,
-                    reason
-                },
-                bubbles: true, composed: true
-            }));
-        }
-        this._prevIndex = curr;
-        if (showOverlay) this._flashOverlay();
-    }
 
     _flashOverlay() {
         if (!this._overlay) return;
@@ -209,7 +137,11 @@ class DeckStage extends HTMLElement {
         const clamped = Math.max(0, Math.min(this._slides.length - 1, i));
         if (clamped === this._index) { this._flashOverlay(); return; }
         this._index = clamped;
-        this._applyIndex({ showOverlay: true, broadcast: true, reason });
+        applyIndex(this, {
+            index: this._index, prevIndex: this._prevIndex, slides: this._slides,
+            countEl: this._countEl, showOverlay: true, broadcast: true, reason,
+            flashFn: () => this._flashOverlay()
+        });
     }
 
     get index() { return this._index; }

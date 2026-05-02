@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Flash of Unstyled Content (FOUC) fix
+
+- **Added render-blocking stylesheet link** to `site/theme.mjs` — `<link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">` placed in `<head>` before `<div id="app"></div>`. Blocks initial page paint until SDK CSS loads, eliminating visible flash when flatspace portfolio projects load anentrypoint-design from unpkg.
+
+### Claude Code skill registration
+
+- **Enabled `npx skills add AnEntrypoint/design -g claude-code`** — copied `SKILL.md` (324L, user-invocable) from root to `.claude/skills/design/SKILL.md` following Agent Skills GitHub discovery convention. Skill documentation includes design tokens, consuming patterns, and SDK integration examples.
+
+### Hygiene: split deck-stage.js
+
+- **Split `slides/deck-stage.js`** (was 227L) into `deck-stage-state.js` (66L, state/lifecycle functions) + `deck-stage.js` (159L, custom element class). Extracted: `loadNotes`, `restoreIndex`, `persistIndex`, `collectSlides`, `applyIndex` + shared constants `STORAGE_PREFIX`, `VALIDATE_ATTR`. Main class now imports and delegates to state module. Acceptance criterion met: slides/deck-stage.js ≤200L. test.js passes.
+
 ### CDN elimination per AGENTS.md portfolio rule
 
 - **Removed Prism.js CDN loader** from `src/highlight.js`. Syntax highlighting is optional showcase feature; disabled to align with "no CDN except SDK @latest" rule.
