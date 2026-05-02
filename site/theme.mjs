@@ -134,20 +134,86 @@ Promise.race([__fontsReady, new Promise(r => setTimeout(r, 1200))]).then(() => {
 });
 `;
 
-const html = ({ site, nav, home }) => `<!DOCTYPE html>
-<html lang="en" class="ds-247420">
+const html = ({ site, nav, home }) => {
+  const title = `${escapeHtml(site.title)}${site.tagline ? ' — ' + escapeHtml(site.tagline) : ''}`;
+  const desc = escapeHtml(site.description || site.tagline || site.title);
+  const url = escapeHtml(site.url || '');
+  const image = escapeHtml(site.image || (site.url ? site.url.replace(/\/$/, '') + '/og-card.png' : ''));
+  const siteName = escapeHtml(site.siteName || site.title);
+  const author = escapeHtml(site.author || '247420 / AnEntrypoint');
+  const twitter = escapeHtml(site.twitter || '@AnEntrypoint');
+  const keywords = escapeHtml((site.keywords && site.keywords.join(', ')) || '247420, anentrypoint, design system');
+  const locale = escapeHtml(site.locale || 'en_US');
+  const lang = escapeHtml(site.lang || 'en');
+  const ldJson = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.title || '',
+    alternateName: site.siteName || undefined,
+    url: site.url || '',
+    description: site.description || site.tagline || '',
+    inLanguage: site.lang || 'en',
+    publisher: {
+      '@type': 'Organization',
+      name: site.author || '247420 / AnEntrypoint',
+      url: 'https://247420.xyz'
+    }
+  }).replace(/</g, '\\u003c');
+  return `<!DOCTYPE html>
+<html lang="${lang}" class="ds-247420">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${escapeHtml(site.title)}${site.tagline ? ' — ' + escapeHtml(site.tagline) : ''}</title>
-  <meta name="description" content="${escapeHtml(site.description || site.tagline || site.title)}" />
+  <title>${title}</title>
+  <meta name="description" content="${desc}" />
+  <meta name="keywords" content="${keywords}" />
+  <meta name="author" content="${author}" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="rating" content="general" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="generator" content="anentrypoint-design" />
+  <meta name="theme-color" content="#247420" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="application-name" content="${siteName}" />
+  <meta name="apple-mobile-web-app-title" content="${siteName}" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="msapplication-TileColor" content="#247420" />
+  <meta http-equiv="content-language" content="${lang}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="alternate" hreflang="${lang}" href="${url}" />
+  <link rel="alternate" hreflang="x-default" href="${url}" />
+  <meta property="og:type" content="website" />
   <meta property="og:title" content="${escapeHtml(site.title)}" />
   <meta property="og:description" content="${escapeHtml(site.description || site.tagline || '')}" />
-  <meta property="og:url" content="${escapeHtml(site.url || '')}" />
-  <link rel="canonical" href="${escapeHtml(site.url || '')}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:site_name" content="${siteName}" />
+  <meta property="og:locale" content="${locale}" />
+  ${image ? `<meta property="og:image" content="${image}" />
+  <meta property="og:image:secure_url" content="${image}" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="${escapeHtml(site.title)}" />` : ''}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapeHtml(site.title)}" />
+  <meta name="twitter:description" content="${escapeHtml(site.description || site.tagline || '')}" />
+  <meta name="twitter:site" content="${twitter}" />
+  <meta name="twitter:creator" content="${twitter}" />
+  ${image ? `<meta name="twitter:image" content="${image}" />
+  <meta name="twitter:image:alt" content="${escapeHtml(site.title)}" />` : ''}
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E${encodeURIComponent(site.glyph || '◆')}%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E${encodeURIComponent(site.glyph || '◆')}%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">${ldJson}</script>
   <script type="importmap">{"imports":{"anentrypoint-design":"${SDK_URL}"}}</script>
   <link rel="stylesheet" href="https://unpkg.com/anentrypoint-design@latest/dist/247420.css">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
   <style>html,body{margin:0;padding:0}body{background:var(--app-bg,#FBF6EB);color:var(--ink,#1F1B16);font-family:var(--ff-ui,'Nunito',system-ui,sans-serif)}html:not(.ds-ready) body{visibility:hidden}html.ds-ready body{visibility:visible;animation:ds-fade-in .18s ease-out both}@keyframes ds-fade-in{from{opacity:0}to{opacity:1}}</style>
   <noscript><style>html body{visibility:visible !important}</style></noscript>
 </head>
@@ -158,6 +224,7 @@ const html = ({ site, nav, home }) => `<!DOCTYPE html>
 </body>
 </html>
 `;
+};
 
 export default {
   render: async (ctx) => {
