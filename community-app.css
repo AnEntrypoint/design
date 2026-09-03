@@ -1,0 +1,516 @@
+/* community-app.css — layout glue for mountCommunityApp (the full chat/community
+   app GUI). Reuses the canonical app/body/main classes from app-shell.css and
+   the community + voice component classes from community.css; this part only adds
+   the app-composition wrapper, the server+channel rail pills, the voice view grid,
+   and the category-color tokens the consumer avatars use. All scoped under
+   .ds-247420. Additive — defines only the ca- prefix, group, rail-empty, vx-view
+   classes plus the cat color tokens.
+
+   Relationship to community.css: this is NOT a fork of community.css's content
+   -- it is a small (~150-line), genuinely distinct app-shell WRAPPER around the
+   canonical, complete community surface. community.css (~1650 lines) owns every
+   .cm-* / .vx-* component (server rail, channel sidebar, chat header, member list,
+   voice PTT/VAD/webcam, thread panel, forum, page view) and is the canonical,
+   actively-referenced stylesheet -- it is the one listed in package.json's
+   `exports`/`files`, the one scripts/build.mjs and scripts/lint-tokens.mjs treat
+   as a first-class component sheet on its own, and the one THEME.md/
+   COMPONENT_API.md document as the load-order anchor
+   (colors_and_type.css -> app-shell.css -> community.css -> chat.css ->
+   editor-primitives.css -> community-app.css -> app-surfaces.css). This file
+   loads strictly AFTER community.css (see ui_kits/community-app/index.html) and
+   only adds the .ca-* composition shell + category-color tokens that
+   community.css deliberately has no opinion about -- it never redefines a
+   .cm-* / .vx-* rule community.css already owns. Canonical tokens/rules live in
+   community.css; only overrides/additions specific to mountCommunityApp's own
+   composition live here. */
+
+html.ds-247420 .ca-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+html.ds-247420 .ca-app > .app-body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+html.ds-247420 .ca-app > .app-body > .app-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  /* AppShell's own unrelated `.app-main` (src/css/app-shell/topbar.css)
+     reserves a permanent scrollbar track via `scrollbar-gutter: stable` --
+     meant for its own scrolling route content. This app's `<main>` reuses
+     the bare `.app-main` class name (see the class list in the view()
+     function this file styles) purely for AppShell's base flex/min-height
+     resets, but that stray rule still matches it and was reserving ~10px
+     of dead space down the right edge here regardless of scroll state
+     (this element is `overflow: hidden` above, never scrolls), showing up
+     as a dark seam separate from the actual content. Same collision
+     pattern as the .app-topbar fix above -- reset it back to the default
+     for this component's own composition. */
+  scrollbar-gutter: auto;
+}
+
+/* app topbar — mountCommunityApp's own sole chrome above the chat-head; had
+   no rules anywhere (relying on raw flex defaults), which read as unaligned
+   default spacing rather than a designed header row.
+   Scoped under .ca-app: a bare `.app-topbar` selector here collided with the
+   main AppShell's own `.app-topbar` (src/css/app-shell/topbar.css) — same
+   class name, unrelated component. The main site's merged-chrome reset rule
+   (`.app-chrome > .app-topbar { padding: 0; background: none; }`) is
+   specificity (0,3,0); this block's un-scoped `.app-topbar` at (0,2,0)
+   shouldn't have beaten it, but the mirrored dist build re-scopes every
+   selector here to `.ds-247420.ds-247420` (0,4,0) to survive minification/
+   dedup, which DID beat it — showing up live as the homepage topbar
+   floating inset with a `--bg-2` card fill instead of flush. `.ca-app`
+   confines every rule in this file to the community-app widget's own DOM
+   subtree, the fix for both the source and its dist mirror. */
+html.ds-247420 .ca-app .app-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0 var(--space-3);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent));
+}
+html.ds-247420 .ca-app .app-topbar .brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-width: 0;
+  font-weight: var(--fw-medium, 500);
+  font-size: var(--fs-sm);
+  color: var(--fg);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+html.ds-247420 .ca-app .app-topbar .brand .slash { color: var(--fg-3); }
+html.ds-247420 .ca-app .app-topbar nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+html.ds-247420 .ca-app .app-topbar nav a {
+  color: var(--fg-2);
+  font-size: var(--fs-tiny);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-1-5);
+  border-radius: var(--r-1);
+  transition: background var(--dur-snap, .12s) var(--ease, ease), color var(--dur-snap, .12s) var(--ease, ease);
+}
+html.ds-247420 .ca-app .app-topbar nav a:hover { color: var(--fg); background: color-mix(in oklab, var(--fg) 8%, transparent); }
+html.ds-247420 .ca-app .app-topbar nav a:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 2px; }
+
+/* server + channel rail. --ca-channel-column-width is defined in
+   colors_and_type.css (loaded first) so community.css's .cm-member-list can
+   also consume it -- see that token's own comment for why. */
+html.ds-247420 .ca-rail {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-2, color-mix(in oklab, var(--bg) 92%, var(--fg)));
+}
+/* narrow icon-only strip — stoat's ServerList is a fixed 56px column,
+   visually distinct from the channel list beside it (see ServerList.tsx). */
+html.ds-247420 .ca-rail-servers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: var(--ca-rail-icon-width);
+  min-width: var(--ca-rail-icon-width);
+  padding: 8px 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  border-right: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent));
+}
+/* Corner-radius standardization (audited across this file + community.css):
+   this app now uses exactly 3 radius tokens --
+     --r-1 (8px)  "sm"   buttons/inputs: app-topbar nav links, rail-channels
+                          items + their group-add-btn, vx-vc-btn toolbar
+                          buttons, cm-member-item.
+     --r-2 (10px) "md"   cards/panels/tiles: this rail's own server-icon
+                          pills below, cm-voice-tile.
+     --r-pill            toggle/status chips + the hold-to-talk mic control
+                          (a toggle-like control, so the pill reading is
+                          appropriate there rather than an inconsistency).
+   The rail's own left-edge active/hover indicator (::before below) is a
+   4px-wide decorative bar, not a button or panel, so it keeps its own small
+   rounded-cap radius (--r-0) outside this 3-token scheme -- same reasoning
+   stoat's ServerList (entryContainer, ServerList.tsx:363-390) uses for that
+   indicator: it signals hover/active with the indicator's own geometry
+   (0->16px height on hover, ->32px when selected) rather than morphing the
+   avatar's shape, so the avatar radius below is unrelated to it. */
+html.ds-247420 .ca-rail-servers a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--r-2);
+  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+  text-decoration: none;
+  font-size: var(--fs-sm, 14px);
+  font-weight: var(--fw-semibold, 600);
+  transition: background 0.1s, color 0.1s;
+}
+html.ds-247420 .ca-rail-servers a::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 4px;
+  height: 0;
+  border-radius: var(--r-0);
+  background: var(--fg);
+  transform: translateY(-50%);
+  transition: height var(--dur-snap, .12s) var(--ease, ease);
+}
+html.ds-247420 .ca-rail-servers a:hover::before { height: 16px; }
+html.ds-247420 .ca-rail-servers a.active::before { height: 32px; }
+html.ds-247420 .ca-rail-servers a:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); }
+html.ds-247420 .ca-rail-servers a.active { background: color-mix(in oklab, var(--accent) 22%, transparent); color: var(--fg); }
+/* icon-only: hide the name label + unread badge text that railServerPill
+   still renders (kept in markup for a11y/aria-label parity), the glyph disc
+   alone carries the row at this width. */
+html.ds-247420 .ca-rail-servers a > span:nth-child(2) { display: none; }
+html.ds-247420 .ca-rail-servers a .count {
+  position: absolute;
+  transform: translate(10px, -10px);
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--r-1);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 10px;
+  font-weight: var(--fw-semibold, 600);
+  line-height: 16px;
+  text-align: center;
+}
+/* create/join + explore actions at the foot of the icon strip (stoat's
+   ServerList.tsx:307-323) -- reuse the same pill geometry as a server icon
+   but a hairline divider marks them as actions, not servers. */
+html.ds-247420 .ca-rail-server-add,
+html.ds-247420 .ca-rail-server-explore {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-2);
+  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+  text-decoration: none;
+  transition: background 0.1s, color 0.1s;
+}
+html.ds-247420 .ca-rail-server-add { margin-top: 6px; border-top: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent)); padding-top: 6px; }
+html.ds-247420 .ca-rail-server-add:hover,
+html.ds-247420 .ca-rail-server-explore:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
+/* auto-width channel column — stoat's ServerSidebar/MemberSidebar both read
+   var(--layout-width-channel-sidebar); this repo mirrors that with one
+   token (--ca-channel-column-width) so the member list can match it. */
+html.ds-247420 .ca-rail-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: var(--ca-channel-column-width);
+  min-width: var(--ca-channel-column-width);
+  padding: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+html.ds-247420 .ca-rail-channels .group {
+  font-size: 11px;
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-3, color-mix(in oklab, var(--fg) 55%, transparent));
+  padding: 10px 8px 4px;
+}
+html.ds-247420 .ca-rail-channels .group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: var(--space-1, 4px);
+}
+html.ds-247420 .ca-rail-channels .group-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  /* r-1 ("sm"), not r-0: see the corner-radius standardization note above
+     .ca-rail-servers a -- r-0 was a fourth, uncoordinated radius alongside
+     this file's other buttons/inputs (app-topbar nav links, vx-vc-btn) all
+     already on r-1, and this rail's own server icons on r-2. */
+  border-radius: var(--r-1);
+  background: transparent;
+  color: var(--fg-3, color-mix(in oklab, var(--fg) 55%, transparent));
+  cursor: pointer;
+}
+html.ds-247420 .ca-rail-channels .group-add-btn:hover {
+  background: var(--bg-3, color-mix(in oklab, var(--fg) 8%, transparent));
+  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+}
+html.ds-247420 .ca-rail-channels a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  /* r-1 ("sm" bucket) -- was r-0, the same stray fourth radius as
+     .group-add-btn above; standardized alongside it. */
+  border-radius: var(--r-1);
+  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+  text-decoration: none;
+  font-size: var(--fs-sm, 14px);
+  line-height: 1.2;
+  transition: background 0.1s, color 0.1s;
+}
+html.ds-247420 .ca-rail-channels a:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
+html.ds-247420 .ca-rail-channels a.active { background: color-mix(in oklab, var(--accent) 22%, transparent); color: var(--fg); }
+html.ds-247420 .ca-rail-channels a .glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  flex-shrink: 0;
+  color: var(--fg-3, currentColor);
+}
+/* Visual-density pass: every rail glyph previously sat at the same flat
+   --fg-3 regardless of channel type, reading as a monochrome wireframe list.
+   Voice + announcement rooms get this repo's existing status/accent tokens
+   (same --green community.css's own .cm-channel-item.voice-active already
+   uses for a connected voice room) so the rail carries real signal at a
+   glance; text channels (the majority, and the visual baseline) keep the
+   neutral tone above. */
+html.ds-247420 .ca-rail-channels a .glyph-voice { color: var(--presence-online, var(--green)); }
+html.ds-247420 .ca-rail-channels a .glyph-announcement { color: var(--accent); }
+html.ds-247420 .ca-rail-channels a > span:nth-child(2) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html.ds-247420 .ca-rail-channels a .count {
+  flex-shrink: 0;
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-1);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: var(--fw-semibold, 600);
+  text-align: center;
+}
+html.ds-247420 .ca-rail-channels .rail-empty {
+  padding: 8px;
+  color: var(--fg-3, color-mix(in oklab, var(--fg) 50%, transparent));
+  font-size: var(--fs-sm, 14px);
+  font-style: italic;
+}
+
+/* voice channel view */
+html.ds-247420 .vx-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+html.ds-247420 .vx-view .vx-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: safe center;
+  align-content: safe center;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  padding: 16px;
+  overflow-y: auto;
+}
+html.ds-247420 .vx-view .vx-grid .cm-voice-tile {
+  width: min(280px, 100%);
+}
+
+/* Empty voice grid (no participants yet, or everyone left) -- previously a
+   bare .vx-grid rendered nothing at all here, leaving the whole main area a
+   flat black rectangle with no signal that the view had loaded correctly.
+   Same icon+title+sub shape as .chat-empty (chat.css) so the two "nothing
+   here yet" surfaces in this app read as one consistent pattern. */
+html.ds-247420 .vx-view .vx-grid-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: var(--space-2);
+  flex: 1;
+  min-height: 0;
+  margin: auto;
+  padding: var(--space-5) var(--space-3);
+  color: var(--fg-3);
+  text-align: center;
+}
+html.ds-247420 .vx-view .vx-grid-empty svg { color: var(--fg-3); opacity: .7; }
+html.ds-247420 .vx-view .vx-grid-empty-title { font-size: var(--fs-lg); font-weight: var(--fw-medium); color: var(--fg-2); margin: 0; }
+html.ds-247420 .vx-view .vx-grid-empty-sub { font-size: var(--fs-sm); margin: 0; max-width: var(--measure-narrow, 60ch); }
+
+/* Talk control dock -- groups PttButton + VoiceControls (+ webcam/VAD when
+   present) into one cluster instead of two independently-floating bars.
+   Previously .vx-ptt sat directly in the .vx-view flex column, so the
+   column's default align-items:stretch blew a 120px-square hold-to-talk
+   button up to the FULL width of the main pane (the "giant pill" bug) with
+   the toolbar as an unrelated full-width bar under it. Centering + capping
+   the dock's own width, then centering vx-ptt inside it, fixes both at
+   once: a compact control instead of an edge-to-edge one, sitting directly
+   above a toolbar that now reads as part of the same cluster. */
+html.ds-247420 .vx-view .vx-dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  width: min(360px, 100%);
+  margin: 0 auto;
+  /* .ca-app (unlike .cm-shell above) never applies env(safe-area-inset-*),
+     so on a notched/gesture-bar phone in portrait this dock -- the only
+     bottom-edge interactive chrome in the voice view -- sat flush against
+     the unsafe zone: the home-indicator bar could visually sit on top of
+     the mic/leave buttons with no inset to push them clear. */
+  padding: var(--space-3) var(--space-3) max(var(--space-4), env(safe-area-inset-bottom));
+}
+/* Pill rounding stays (this repo's r-pill token) -- it's the one control on
+   this screen where the "toggle/status chip" radius bucket genuinely
+   applies (see the corner-radius standardization note in this file's
+   header). Only the box it's stretched into changes: auto width instead of
+   the 120px-minimum square, so it reads as a real button, not a canvas. */
+html.ds-247420 .vx-view .vx-dock .vx-ptt {
+  width: auto;
+  min-width: 200px;
+  min-height: 0;
+  flex-direction: row;
+  gap: var(--space-1-5, 6px);
+  padding: var(--space-2-5, 10px) var(--space-5, 24px);
+}
+html.ds-247420 .vx-view .vx-dock .vx-ptt .vx-ptt-icon { font-size: var(--fs-lg); }
+/* The toolbar keeps its own --r-1 "sm" button radius (community.css
+   .vx-vc-btn) -- only its dock-specific chrome (background/border/full
+   width) is reset here so it reads as sitting inside the dock card instead
+   of as a second, separately-styled bar butted up against the pill. */
+html.ds-247420 .vx-view .vx-dock .vx-vc {
+  width: auto;
+  border-top: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* Visual-density pass: chat.css's shared .chat-empty (Chat(), used by every
+   kit built on this component -- not just this one) was text-only, no
+   icon/mark, which reads as an empty wireframe rather than a designed
+   state. Adding the mark here rather than in chat.css/threads.js keeps the
+   change scoped to this consumer's own composition instead of touching the
+   shared component other kits also render as-is. CSS-mask (not
+   background-image) so the glyph tracks --accent through theme changes
+   instead of a baked-in color. */
+html.ds-247420 .ca-app .chat-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+html.ds-247420 .ca-app .chat-empty::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 0 auto var(--space-3);
+  background-color: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 15px color-mix(in oklab, var(--accent) 12%, transparent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2011.5a8.38%208.38%200%200%201-.9%203.8%208.5%208.5%200%200%201-7.6%204.7%208.38%208.38%200%200%201-3.8-.9L3%2021l1.9-5.7a8.38%208.38%200%200%201-.9-3.8%208.5%208.5%200%200%201%204.7-7.6%208.38%208.38%200%200%201%203.8-.9h.5a8.48%208.48%200%200%201%208%208v.5z%22/%3E%3C/svg%3E") center / 20px 20px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2011.5a8.38%208.38%200%200%201-.9%203.8%208.5%208.5%200%200%201-7.6%204.7%208.38%208.38%200%200%201-3.8-.9L3%2021l1.9-5.7a8.38%208.38%200%200%201-.9-3.8%208.5%208.5%200%200%201%204.7-7.6%208.38%208.38%200%200%201%203.8-.9h.5a8.48%208.48%200%200%201%208%208v.5z%22/%3E%3C/svg%3E") center / 20px 20px no-repeat;
+}
+
+/* ============================================================
+   Responsive — collapse the server+channel rail on narrow viewports.
+   community-app builds its own hand-rolled .ca-app/.app-body/.ca-rail tree
+   (not AppShell()), so it does not inherit AppShell's @container drawer CSS
+   (keyed off .app/.app-side-shell, which .ca-app/.ca-rail never establish).
+   Mirrors the .cm-channel-sidebar off-canvas idiom in community.css 1:1: same
+   breakpoint, same translateX(-110%) + .open reveal, same :has() scrim — so
+   the .ca-rail drawer driven by MobileHeader's hamburger (mobileMenuOpen in
+   the adapter snapshot) behaves identically to the community kit's sidebar.
+   ============================================================ */
+@media (max-width: 900px) {
+  html.ds-247420 .ca-rail {
+    position: absolute;
+    z-index: calc(var(--z-drawer) + 1);
+    top: 0; left: 0; bottom: 0;
+    width: 240px; min-width: 240px;
+    transform: translateX(-110%);
+    transition: transform var(--dur-base, 240ms) var(--ease, ease);
+    box-shadow: 2px 0 16px color-mix(in oklab, var(--ink, #000) 30%, transparent);
+  }
+  html.ds-247420 .ca-rail.open { transform: translateX(0); }
+  html.ds-247420 .ca-app:has(.ca-rail.open) .app-main {
+    position: relative;
+  }
+  html.ds-247420 .ca-app:has(.ca-rail.open) .app-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-drawer);
+    background: color-mix(in oklab, var(--ink, #000) 40%, transparent);
+    pointer-events: none;
+  }
+}
+
+/* Full-surface drag-anywhere drop overlay -- stoat for-web's
+   FileDropAnywhereCollector shape (dim scrim + centered dashed-border
+   affordance), gated on adapter.actions.attachFiles existing at all. */
+html.ds-247420 .ca-drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--ink, #000) 55%, transparent);
+  pointer-events: none;
+}
+html.ds-247420 .ca-drop-overlay-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-5);
+  border: 2px dashed var(--accent);
+  border-radius: var(--r-3);
+  background: color-mix(in oklab, var(--accent-tint) 60%, var(--bg));
+  color: var(--accent-ink);
+}
+html.ds-247420 .ca-drop-overlay-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.ds-247420 .ca-drop-overlay-inner { animation: ca-drop-overlay-pulse 1.1s var(--ease) infinite; }
+}
+@keyframes ca-drop-overlay-pulse {
+  0%, 100% { border-color: var(--accent); }
+  50% { border-color: color-mix(in oklab, var(--accent) 45%, transparent); }
+}
