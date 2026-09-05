@@ -6,6 +6,7 @@
 // entity-placement/EDITOR_UPDATE transport.
 import * as webjsx from '../../../vendor/webjsx/index.js'
 import { Btn, Toolbar, EmptyState } from './ui-components.js'
+import { Icon } from '../shell/icons.js'
 const h = webjsx.createElement
 const applyDiff = webjsx.applyDiff
 
@@ -69,16 +70,16 @@ export function createWaypointTimeline(container, { onSelect, onAdd, onRemove, o
             h('span', { class: 'ds-ep-eventrow-sub' }, `[${r.position.map(v => v.toFixed(1)).join(', ')}]`)
           ),
           h('span', { style: 'flex:0 0 auto;display:flex;gap:2px' },
-            Btn({ ghost: true, dense: true, title: 'Move earlier in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i - 1)) }, children: ['↑'] }),
-            Btn({ ghost: true, dense: true, title: 'Move later in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i + 1)) }, children: ['↓'] }),
-            Btn({ ghost: true, dense: true, danger: true, title: 'Remove this waypoint', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onRemove?.(r.id) }, children: ['✕'] })
+            Btn({ ghost: true, dense: true, title: 'Move earlier in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i - 1)) }, children: [Icon('chevron-up', { size: 12 })] }),
+            Btn({ ghost: true, dense: true, title: 'Move later in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i + 1)) }, children: [Icon('chevron-down', { size: 12 })] }),
+            Btn({ ghost: true, dense: true, danger: true, title: 'Remove this waypoint', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onRemove?.(r.id) }, children: [Icon('x', { size: 12 })] })
           )
         ))
       )
     }
 
     applyDiff(container, [
-      h('div', { class: 'ds-ep-panel' }, toolbar, h('div', { class: 'ds-ep-panel-body flush', style: 'display:flex;flex-direction:column;flex:1;min-height:0' }, body))
+      h('div', { class: 'ds-ep-panel' }, toolbar, h('div', { class: 'ds-ep-panel-body ds-ep-flush', style: 'display:flex;flex-direction:column;flex:1;min-height:0' }, body))
     ])
   }
 

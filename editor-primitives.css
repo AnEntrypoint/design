@@ -37,7 +37,7 @@
     flex: 1; min-height: 0; overflow: auto;
     padding: var(--space-1-75) var(--space-2);
 }
-.ds-ep-panel-body.flush { padding: 0; }
+.ds-ep-panel-body.ds-ep-flush { padding: 0; }
 /* A sub-section divider inside a docked panel (e.g. app-prop mount). Only
    shows its top seam when it actually has content — an empty section is
    collapsed so no stray dashed rule floats over an empty inspector. */
