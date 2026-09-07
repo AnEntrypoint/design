@@ -68,7 +68,7 @@ const COMPONENT_SHEETS = [
 // ever reach them. Listed directly rather than expanded through @import,
 // since a consumer's sheet is a leaf the consumer's own build already
 // resolves, not part of this repo's barrel graph.
-function extraCssFiles() {
+export function extraCssFiles() {
     const raw = process.env.DS_LINT_EXTRA_CSS_FILES;
     if (!raw) return [];
     return raw.split(',').map((s) => s.trim()).filter(Boolean).map((f) => path.resolve(process.cwd(), f));
@@ -623,32 +623,22 @@ export function lintSpacingReport() {
 // build.mjs (replacing the old report-only lintSpacingOrThrow) and the CLI
 // entry below. Pass `--write-spacing-baseline` to (re-)freeze the current
 // count after a reviewed, intentional change to the corpus.
+// Folded onto ratchetOrThrow. It used to be hand-rolled "to avoid churning a
+// working gate", which was fine while the three ratchets only had to agree on
+// baseline semantics -- it stopped being fine once they also had to agree on
+// splitting the kit's corpus from a consumer's (see ratchetOrThrow's note). A
+// second copy of that split is exactly how the two would drift.
 export function lintSpacingOrThrow() {
-    const violations = findSpacingViolations();
-    const count = violations.length;
-
-    if (process.argv.includes('--write-spacing-baseline')) {
-        fs.writeFileSync(SPACING_BASELINE_FILE, JSON.stringify({ count, updated: new Date().toISOString() }, null, 2) + '\n');
-        console.log(`[lint-spacing] wrote baseline count=${count} to ${path.relative(root, SPACING_BASELINE_FILE)}`);
-        return;
-    }
-
-    let baseline;
-    if (fs.existsSync(SPACING_BASELINE_FILE)) {
-        baseline = JSON.parse(fs.readFileSync(SPACING_BASELINE_FILE, 'utf8'));
-    } else {
-        fs.writeFileSync(SPACING_BASELINE_FILE, JSON.stringify({ count, updated: new Date().toISOString() }, null, 2) + '\n');
-        console.log(`[lint-spacing] no baseline found, wrote initial baseline count=${count}`);
-        return;
-    }
-
-    if (count > baseline.count) {
-        const msg = '[lint-spacing] FAIL — ' + count + ' raw margin/padding/gap literal(s) bypassing the --space-* scale from '
-            + TOKEN_SOURCE + ' exceeds frozen baseline ' + baseline.count + ':\n  ' + violations.join('\n  ')
-            + `\n[lint-spacing] Use --space-N tokens for new declarations, or re-run with --write-spacing-baseline if this growth is reviewed/intentional.`;
-        throw new Error(msg);
-    }
-    console.log('[lint-spacing] PASS — ' + count + ' <= baseline ' + baseline.count + ' (' + expandSheets().length + ' component sheets).');
+    ratchetOrThrow({
+        label: 'lint-spacing',
+        flag: '--write-spacing-baseline',
+        baselineFile: SPACING_BASELINE_FILE,
+        violations: findSpacingViolations(),
+        extraPaths: extraCssFiles(),
+        extraEnv: 'DS_LINT_EXTRA_SPACING_BASELINE',
+        noun: `raw margin/padding/gap literal(s) bypassing the --space-* scale from ${TOKEN_SOURCE}`,
+        fix: 'Use --space-N tokens for new declarations.',
+    });
 }
 
 // Shared ratchet driver, factored out of the three ratchet gates so they cannot
@@ -667,8 +657,58 @@ export function lintSpacingOrThrow() {
 // landed, which is precisely what this exists to catch. The only legitimate
 // upward re-freeze is a widened SCAN SET (more sheets now visible), and that
 // must be stated in the commit, not assumed.
-export function ratchetOrThrow({ label, flag, baselineFile, violations, noun, fix, scope }) {
-    const count = violations.length;
+// TWO CORPORA, TWO COUNTS — never one shared number.
+//
+// A consuming project registers its OWN stylesheets through
+// DS_LINT_EXTRA_CSS_FILES / DS_LINT_EXTRA_JS_DIRS and then runs these very
+// scripts (casey does exactly this: its scripts/lint.mjs shells out to
+// deps/design/scripts/lint-tokens.mjs with its dashboard SPA's .css files in
+// the env). Those files used to be folded straight into the same total the
+// kit's frozen baseline guards, which makes the baseline mean two different
+// things depending on who runs it, and breaks in both directions:
+//
+//   - the kit tightens its own number after a real triage pass, and every
+//     consumer's build goes red on debt the kit does not own and cannot fix;
+//   - the only way out is to re-freeze the kit's number UPWARD to cover the
+//     consumer, which hands the KIT a slot of slack -- a new `!important` could
+//     then land in the kit's own sheets and the gate would still say PASS.
+//     That is precisely the "slack silently absorbs the next regression"
+//     failure a11y-audit.mjs refuses to allow, arrived at sideways.
+//
+// So the two corpora are counted and compared separately. The kit's own sheets
+// are measured against the frozen baseline file, as before and unchanged. A
+// consumer's registered sheets are measured against a budget the CONSUMER sets,
+// in its own environment, via `extraEnv` (default 0). Neither can hide in the
+// other's slack, and the kit can drive its own number down as far as it likes
+// without touching a single consumer.
+//
+// For a consumer: if the extra count is legitimate (a print/forced-colors
+// override the kit's own lint message explicitly blesses, say), set that env
+// var in your lint invocation with a comment saying why -- that pin lives in
+// YOUR repo, next to the CSS it describes, which is where a reader looking at
+// the declaration will actually find it.
+function splitCorpus(violations, extraPaths) {
+    if (!extraPaths || !extraPaths.length) return { own: violations, extra: [] };
+    const own = [], extra = [];
+    for (const v of violations) {
+        (extraPaths.some((p) => v.startsWith(p + ':')) ? extra : own).push(v);
+    }
+    return { own, extra };
+}
+
+export function ratchetOrThrow({ label, flag, baselineFile, violations, noun, fix, scope, extraPaths, extraEnv }) {
+    const { own, extra } = splitCorpus(violations, extraPaths);
+    const count = own.length;
+
+    if (extraEnv && extra.length) {
+        const budget = Number(process.env[extraEnv] || 0);
+        if (!(extra.length <= budget)) {
+            throw new Error(`[${label}] FAIL — ${extra.length} ${noun} in CONSUMER sheets registered via DS_LINT_EXTRA_CSS_FILES/DS_LINT_EXTRA_JS_DIRS, over this project's budget of ${budget}:\n  `
+                + extra.join('\n  ')
+                + `\n[${label}] ${fix}`
+                + `\n[${label}] These files are not part of the kit, so the kit's own frozen baseline does not cover them. If every one above is genuinely load-bearing, set ${extraEnv}=${extra.length} in YOUR lint invocation, with a comment saying why — do not re-freeze the kit's baseline, which would leave the KIT a slot of slack it did not earn.`);
+        }
+    }
 
     if (process.argv.includes(flag)) {
         fs.writeFileSync(baselineFile, JSON.stringify({ count, updated: new Date().toISOString() }, null, 2) + '\n');
@@ -685,7 +725,7 @@ export function ratchetOrThrow({ label, flag, baselineFile, violations, noun, fi
     const baseline = JSON.parse(fs.readFileSync(baselineFile, 'utf8'));
     if (count > baseline.count) {
         throw new Error(`[${label}] FAIL — ${count} ${noun} exceeds frozen baseline ${baseline.count}:\n  `
-            + violations.join('\n  ')
+            + own.join('\n  ')
             + `\n[${label}] ${fix} Re-run with ${flag} ONLY if this growth is reviewed and intentional — the baseline is debt to drive down, not a budget to raise.`);
     }
     // `scope` describes WHAT was scanned. It defaults to the component-sheet
@@ -694,7 +734,8 @@ export function ratchetOrThrow({ label, flag, baselineFile, violations, noun, fi
     // inline <style> blocks — printing "N component sheets" there would be a
     // false claim about coverage in the one message a reader trusts to tell
     // them what the gate actually looked at.
-    console.log(`[${label}] PASS — ${count} <= baseline ${baseline.count} (${scope || `${expandSheets().length} component sheets`}).`);
+    console.log(`[${label}] PASS — ${count} <= baseline ${baseline.count} (${scope || `${expandSheets().length} component sheets`})`
+        + (extra.length ? ` + ${extra.length} in consumer sheets (budget ${Number(process.env[extraEnv] || 0)})` : '') + '.');
 }
 
 // Ratchet baseline for raw font-size literals. Frozen at the post-migration
@@ -715,6 +756,8 @@ export function lintFontSizeOrThrow() {
         flag: '--write-fontsize-baseline',
         baselineFile: FONTSIZE_BASELINE_FILE,
         violations: findFontSizeViolations(),
+        extraPaths: extraCssFiles(),
+        extraEnv: 'DS_LINT_EXTRA_FONTSIZE_BASELINE',
         noun: `raw font-size literal(s) bypassing the --fs-* type scale from ${TOKEN_SOURCE}`,
         fix: 'Use a --fs-pico/--fs-nano/--fs-micro/--fs-tiny/--fs-xs/--fs-sm/--fs-body/--fs-lg/--fs-xl (or --fs-h*/--fs-hero/--fs-mega) token. If the value is genuinely off-scale — an ICON size matched to its chip box, or an em-relative inline size that must track its parent — leave the literal and add a comment in the sheet saying which, so the next reader does not "fix" it.',
     });
@@ -737,6 +780,8 @@ export function lintImportantOrThrow() {
         flag: '--write-important-baseline',
         baselineFile: IMPORTANT_BASELINE_FILE,
         violations: findImportantViolations(),
+        extraPaths: extraCssFiles(),
+        extraEnv: 'DS_LINT_EXTRA_IMPORTANT_BASELINE',
         noun: '`!important` declaration(s)',
         fix: 'Beat the losing rule on specificity or source order instead — an `!important` cannot be overridden by a consumer theming the SDK without another `!important`, so each one is a permanent hole in the themability this lint file exists to protect. If it is genuinely load-bearing (a utility reset, a print/forced-colors/reduced-motion override that must win), say so in a comment on the line.',
     });

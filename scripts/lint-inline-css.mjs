@@ -270,6 +270,13 @@ export function lintInlineCssOrThrow() {
         flag: '--write-inline-css-baseline',
         baselineFile: BASELINE_FILE,
         violations: findInlineCssViolations(),
+        // Same two-corpora split the .css ratchets use: files a CONSUMER
+        // registered through DS_LINT_EXTRA_JS_DIRS are counted against that
+        // consumer's own budget, never folded into the kit's frozen baseline.
+        // See ratchetOrThrow in lint-tokens.mjs for why one shared number
+        // breaks in both directions.
+        extraPaths: jsFiles,
+        extraEnv: 'DS_LINT_EXTRA_INLINE_CSS_BASELINE',
         scope: jsFiles.length
             ? `${files.length} HTML files with inline <style>, ${jsFiles.length} JS files with style.cssText`
             : `${files.length} HTML files with inline <style>`,
