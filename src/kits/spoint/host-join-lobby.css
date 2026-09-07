@@ -55,7 +55,7 @@
   color: var(--accent-fg);
   border-color: var(--accent);
 }
-.sp-lobby-join { display: flex; gap: 8px; }
+.sp-lobby-join { display: flex; gap: var(--space-2, 8px); }
 .sp-lobby-input {
   flex: 1;
   min-width: 0;
@@ -75,7 +75,7 @@
   letter-spacing: 0.12em;
   text-align: center;
   color: var(--accent);
-  padding: 8px;
+  padding: var(--space-2, 8px);
   background: var(--bg);
   border-radius: var(--r-1, 8px);
 }
@@ -88,7 +88,7 @@
   background: none;
   border: none;
   color: var(--fg-3);
-  font-size: 16px;
+  font-size: var(--fs-body, 16px);
   cursor: pointer;
   line-height: 1;
 }

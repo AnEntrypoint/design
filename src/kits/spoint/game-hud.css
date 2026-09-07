@@ -44,17 +44,17 @@
   width: 100%;
   text-align: center;
   color: var(--fg);
-  font-size: 12px;
+  font-size: var(--fs-micro, 12px);
   line-height: 20px;
 }
 .sp-hud-boost {
   position: fixed;
   top: 80px;
   right: calc(20px + env(safe-area-inset-right, 0px));
-  padding: 8px 16px;
+  padding: var(--space-2, 8px) var(--space-3, 16px);
   background: var(--accent);
   color: var(--accent-fg);
   font-weight: bold;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: var(--fs-xs, 14px);
 }

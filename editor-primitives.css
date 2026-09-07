@@ -1508,6 +1508,8 @@
     overflow: hidden;
 }
 .ov-boot-bar-fill {
+    /* --ov-boot-progress is written per render by BootOverlay (0%..100%). */
+    width: var(--ov-boot-progress, 0%);
     height: 100%; background: var(--accent);
     border-radius: var(--r-pill, 999px);
     transition: width var(--dur-base, 160ms) var(--ease, ease);

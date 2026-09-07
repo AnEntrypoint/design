@@ -859,7 +859,7 @@
 .aicat-face-hero {
   width: 44px;
   height: 44px;
-  font-size: 12px;
+  font-size: var(--fs-micro);
 }
 .aicat-empty-lead {
   font-family: var(--ff-display);

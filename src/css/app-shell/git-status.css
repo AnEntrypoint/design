@@ -3,10 +3,10 @@
    ============================================================ */
 
 .ds-git-status-grid {
-  display: flex; flex-direction: column; gap: 2px;
+  display: flex; flex-direction: column; gap: var(--space-hair);
 }
 .ds-git-row {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: var(--space-2-5);
   width: 100%; padding: 7px 12px;
   background: none; border: var(--bw-hair) solid transparent; border-radius: var(--r-2);
   color: var(--fg); font: inherit; text-align: left; cursor: pointer;
@@ -38,7 +38,7 @@
   flex: 0 0 auto; font-size: var(--fs-micro); color: var(--fg-3);
   border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 1px 6px;
 }
-.ds-git-row-stats { flex: 0 0 auto; display: inline-flex; gap: 6px; font-family: var(--ff-body); font-size: var(--fs-micro); }
+.ds-git-row-stats { flex: 0 0 auto; display: inline-flex; gap: var(--space-1-75); font-family: var(--ff-body); font-size: var(--fs-micro); }
 .ds-git-stat-add { color: var(--green-2); }
 .ds-git-stat-del { color: var(--flame); }
 
@@ -84,8 +84,8 @@
    ============================================================ */
 .ds-wts { display: inline-flex; }
 .ds-wts-trigger {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 5px 10px; min-height: 32px;
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-1-5) var(--space-2-5); min-height: 32px;
   background: var(--bg); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1);
   color: var(--fg); font: inherit; font-size: var(--fs-sm); cursor: pointer;
   max-width: 220px;
@@ -98,7 +98,7 @@
 }
 .ds-wts-trigger-caret { display: inline-flex; flex: 0 0 auto; color: var(--fg-3); }
 
-.ds-wts-item-body { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ds-wts-item-body { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
 .ds-wts-item-check { display: inline-flex; flex: 0 0 16px; color: var(--accent-ink); }
 .ds-wts-item-text { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
 .ds-wts-item-branch {

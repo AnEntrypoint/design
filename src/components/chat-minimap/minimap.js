@@ -162,6 +162,9 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
         ref: containerRef,
         role: 'navigation',
         'aria-label': 'conversation scroll overview',
-        style: 'width:' + width + 'px',
+        // A custom-property write, not an inline `width:` — the rail's width is
+        // per-instance data, but the property it drives belongs in chat.css so
+        // media queries and [data-density] can still reach it.
+        style: '--chat-minimap-w:' + width + 'px',
     });
 }

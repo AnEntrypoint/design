@@ -10,12 +10,12 @@
 .ds-247420 .site-hero { padding: var(--space-4); }
 .ds-247420 .site-hero-h { margin: 0 0 var(--space-2); }
 .ds-247420 .site-hero-body { margin: var(--space-2) 0 var(--space-3); color: var(--fg-2); max-width: 64ch; }
-.ds-247420 .site-chip-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 0 0 var(--space-3); }
+.ds-247420 .site-chip-row { display: flex; align-items: center; gap: var(--space-1-75); flex-wrap: wrap; margin: 0 0 var(--space-3); }
 .ds-247420 .site-cta-row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 
 /* Quickstart CLI block — these .cli/.prompt/.cmd nodes were previously unstyled. */
 .ds-247420 .site-cli { padding: var(--space-3); background: var(--bg); border: var(--bw-hair, 1px) solid var(--rule); border-radius: var(--r-1); }
-.ds-247420 .site-cli .cli { display: flex; align-items: baseline; gap: var(--space-2); font-family: var(--ff-mono); font-size: var(--fs-sm); padding: 2px 0; }
+.ds-247420 .site-cli .cli { display: flex; align-items: baseline; gap: var(--space-2); font-family: var(--ff-mono); font-size: var(--fs-sm); padding: var(--space-hair) 0; }
 .ds-247420 .site-cli .prompt { color: var(--fg-3); user-select: none; flex: 0 0 auto; }
 .ds-247420 .site-cli .cmd { color: var(--fg); white-space: pre-wrap; word-break: break-word; }
 

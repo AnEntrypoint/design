@@ -1,0 +1,14 @@
+# The repo had no .gitignore at all, so `npm install` (esbuild + postcss are
+# real devDependencies) left ~40MB of node_modules sitting in `git status` for
+# every contributor, and any agent/tool scratch directory did the same.
+node_modules/
+
+# Agent tooling scratch state (gm spool, index db, kv store). Local to a
+# working copy; never part of the published package.
+.gm/
+.agentplug-kv/
+
+# OS / editor droppings.
+.DS_Store
+Thumbs.db
+*.swp

@@ -34,7 +34,7 @@
 }
 .app-side a:has(> .count:empty) > .count,
 .app-side .count:empty { display: none; }
-.app-side a .glyph { font-family: var(--ff-body); font-size: 13px; font-weight: 600; color: var(--fg-3); text-align: center; }
+.app-side a .glyph { font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); text-align: center; }
 .app-side a.active .glyph { color: var(--accent-ink); }
 
 /* .ds-side-tree — two-level project-tree group (parent <details> + nested
@@ -56,7 +56,7 @@
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
-.ds-side-tree-summary .glyph { font-family: var(--ff-body); font-size: 13px; font-weight: 600; color: var(--fg-3); }
+.ds-side-tree-summary .glyph { font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); }
 .ds-side-tree-summary .count {
   margin-left: auto; padding: 1px 8px; font-size: var(--fs-micro); font-weight: 700;
   font-family: var(--ff-body); letter-spacing: 0.04em; min-width: 18px; text-align: center;
@@ -121,12 +121,12 @@
 /* -- mobile responsive: chat -------------------------------------------- */
 @media (max-width: 768px) {
     .chat-stack { max-width: 100%; }
-    .chat-msg { padding: 4px 0; }
-    .chat-msg:hover { padding: 4px 0; margin: 0; border-radius: 0; background: transparent; }
+    .chat-msg { padding: var(--space-1) 0; }
+    .chat-msg:hover { padding: var(--space-1) 0; margin: 0; border-radius: 0; background: transparent; }
     .chat-bubble { font-size: var(--fs-sm); padding: 10px 14px; }
-    .chat-avatar { width: 28px; height: 28px; font-size: 12px; }
-    .chat-composer { padding: 8px; }
-    .chat-composer textarea { padding: 10px 12px; }
+    .chat-avatar { width: 28px; height: 28px; font-size: var(--fs-micro); }
+    .chat-composer { padding: var(--space-2); }
+    .chat-composer textarea { padding: var(--space-2-5) var(--space-2-75); }
 }
 
 /* --- landscape orientation: reduce vertical space for chrome + composer --- */

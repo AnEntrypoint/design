@@ -878,7 +878,7 @@ if (process.argv[1] && process.argv[1].endsWith('lint-tokens.mjs')) {
     try { lintZIndexOrThrow(); }
     catch (e) { console.error(e.message); process.exit(1); }
     try { lintDarkParityOrThrow(); }
-    catch (e) { console.error(String(e.message || e)); failed = true; }
+    catch (e) { console.error(e.message); process.exit(1); }
     try { lintTransitionAllOrThrow(); }
     catch (e) { console.error(e.message); process.exit(1); }
     try { lintSpacingOrThrow(); }

@@ -23,8 +23,15 @@
 }
 
 /* Base: full-height app root reading kit tokens. */
-.ds-247420, .ds-247420 body { margin: 0; height: 100%; }
-.ds-247420 body {
+/* Two arms, not one: agentgui mounts on <html class="ds-247420"> but casey's
+   dashboard mounts on <body class="ds-247420">, and a lone `.ds-247420 body`
+   matches no element at all in the second case. The margin/height reset always
+   had both arms; the colour/type block below used to have only the descendant
+   one, so a body-mounted consumer got the reset and none of the surface colour
+   or type. Merged into one rule so the two halves cannot drift apart again. */
+.ds-247420, .ds-247420 body {
+  margin: 0;
+  height: 100%;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--ff-display, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
@@ -80,7 +87,7 @@
 .ds-247420 .history-actions { display: flex; gap: .5em; padding: 0 0 .75em 0; flex-wrap: wrap; }
 
 /* Empty / loading state. */
-.ds-247420 .empty-state { display: flex; gap: 8px; align-items: center; padding: .5em 0; white-space: normal; }
+.ds-247420 .empty-state { display: flex; gap: var(--space-2); align-items: center; padding: .5em 0; white-space: normal; }
 .ds-247420 p.empty-state { text-align: left; padding: .6em 0; color: var(--fg-3); }
 
 /* Project filter pills. */

@@ -1,5 +1,5 @@
 .btn, .btn-primary, .btn-ghost {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1-75);
   height: var(--ctl-md); min-height: var(--ctl-md);
   padding: 0 var(--space-2-75);
   font-family: var(--ff-body);
@@ -114,7 +114,7 @@
 
 .ds-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 18px; height: 18px; padding: 0 6px;
+  min-width: 18px; height: 18px; padding: 0 var(--space-1-75);
   font-size: var(--fs-micro); font-weight: 600; line-height: 1;
   border-radius: var(--r-pill);
   background: var(--bg-3); color: var(--fg-2);
@@ -154,7 +154,7 @@
 
 .chip {
   display: inline-flex; align-items: center; gap: var(--space-1-75);
-  padding: 3px 10px;
+  padding: var(--space-half) var(--space-2-5);
   background: var(--bg-2); color: var(--fg-2);
   font-family: var(--ff-body);
   font-size: var(--fs-tiny); font-weight: 600;

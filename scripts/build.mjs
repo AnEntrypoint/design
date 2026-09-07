@@ -234,9 +234,25 @@ const prefixed = (await postcss([
             // rule) instead of discarding it -- a bare `return prefix` here
             // would silently strip that guard at build time.
             if (/^:root\b/.test(selector)) return selector.replace(/^:root\b/, prefix);
-            // <html class="ds-247420"> — body is a child, needs descendant selector.
+            // `body` (and `html body`) must match BOTH real mounting shapes, so
+            // this branch runs BEFORE the bare-`html` one below (which would
+            // otherwise swallow `html body`). The scope class lands either ON
+            // the document element (`<html class="ds-247420">`, what this repo's
+            // own preview/ and site/ pages do) or ON the body itself
+            // (`<body class="ds-247420">`, what casey's dashboard ships) — and
+            // the previous `prefix + ' body'` only ever matched the first.
+            // For every body-mounted consumer that made base.css's `body`
+            // reset — background, color, font-family, font-size, line-height —
+            // a rule that could not match any element, so their body copy
+            // rendered in the browser's default serif at the browser's default
+            // size on the browser's default white. `:is()` takes the
+            // specificity of its most specific argument, so `.ds-247420 body`
+            // (0,1,1) is preserved exactly and no cascade order moves.
+            if (/^(?:html\s+)?body\b/.test(selector)) {
+                return selector.replace(/^(?:html\s+)?body\b/, `:is(${prefix}, ${prefix} body)`);
+            }
+            // <html class="ds-247420"> — the scope IS the document element.
             if (/^html\b/.test(selector)) return selector.replace(/^html\b/, prefix);
-            if (/^body\b/.test(selector)) return selector.replace(/^body\b/, prefix + ' body');
             // Keep @keyframes, @font-face, ::-pseudo selectors untouched
             if (/^(from|to|\d+%)$/.test(selector)) return selector;
             // Attribute / class selectors at the start mean "same element as scope"

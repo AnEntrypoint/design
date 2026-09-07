@@ -132,7 +132,7 @@
   .chat-bubble {
     padding: var(--space-2-5) var(--space-2-75); font-size: var(--fs-sm);
   }
-  .chat-avatar { width: 28px; height: 28px; font-size: 11px; }
+  .chat-avatar { width: 28px; height: 28px; font-size: var(--fs-nano); }
   .chat-msg:hover { padding: var(--space-1) 0; margin: 0; background: transparent; }
   .chat-composer { padding: var(--space-2); gap: var(--space-1-75); }
   .chat-composer textarea { padding: var(--space-2-5) var(--space-2-75); font-size: var(--fs-sm); }
@@ -255,7 +255,7 @@
        and --space-3) and snapping visibly re-pitches every bubble in a thread. */
     padding: 11px 14px; font-size: var(--fs-sm);
   }
-  .chat-avatar { width: 32px; height: 32px; font-size: 12px; }
+  .chat-avatar { width: 32px; height: 32px; font-size: var(--fs-micro); }
 
   /* KPI Cards */
   .kpi {

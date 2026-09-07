@@ -22,7 +22,7 @@
 .ds-plugins-title { font-size: var(--fs-md); font-weight: 600; color: var(--fg); }
 .ds-plugins-close {
   background: none; border: none; color: var(--fg-3); cursor: pointer;
-  font-size: 20px; line-height: 1; padding: 2px 6px; border-radius: var(--r-1);
+  font-size: 20px; line-height: 1; padding: var(--space-hair) var(--space-1-75); border-radius: var(--r-1);
 }
 .ds-plugins-close:hover { background: var(--bg-2); color: var(--fg); }
 .ds-plugins-close:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
@@ -38,10 +38,10 @@
   padding: var(--space-3) var(--space-2); font-size: var(--fs-sm); color: var(--fg-3);
 }
 .ds-plugins-sidebar-status.ds-plugins-status-error { color: var(--flame); }
-.ds-plugins-list { display: flex; flex-direction: column; gap: 2px; }
+.ds-plugins-list { display: flex; flex-direction: column; gap: var(--space-hair); }
 
 .ds-plugins-row {
-  display: flex; align-items: center; gap: 8px; width: 100%;
+  display: flex; align-items: center; gap: var(--space-2); width: 100%;
   padding: var(--space-2); border-radius: var(--r-2);
   background: none; border: var(--bw-hair) solid transparent; text-align: left; cursor: pointer;
   color: var(--fg); font: inherit;
@@ -51,7 +51,7 @@
 .ds-plugins-row.active { background: var(--accent-tint); border-color: var(--accent); }
 .ds-plugins-row:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-.ds-plugins-row-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ds-plugins-row-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--space-hair); }
 .ds-plugins-row-name {
   font-family: var(--ff-body); font-size: var(--fs-sm); color: var(--fg);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -80,7 +80,7 @@
 .ds-plugins-detail-head {
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap;
 }
-.ds-plugins-detail-title { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ds-plugins-detail-title { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
 .ds-plugins-detail-title .name {
   font-family: var(--ff-body); font-size: var(--fs-md); font-weight: 600; color: var(--fg);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -118,9 +118,9 @@
 
 .ds-plugins-group-label {
   font-size: var(--fs-micro); font-weight: 600; color: var(--fg-3);
-  letter-spacing: 0; margin-bottom: 6px;
+  letter-spacing: 0; margin-bottom: var(--space-1-75);
 }
-.ds-plugins-requires-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.ds-plugins-requires-list { display: flex; flex-wrap: wrap; gap: var(--space-1-75); }
 .ds-plugins-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-2);
   border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 2px 7px;
@@ -129,7 +129,7 @@
 
 .ds-plugins-detail-actions { display: flex; gap: var(--space-2); }
 .ds-plugins-btn {
-  padding: 6px 12px; background: none; border: var(--bw-hair) solid var(--rule); border-radius: var(--r-2);
+  padding: var(--space-1-75) var(--space-2-75); background: none; border: var(--bw-hair) solid var(--rule); border-radius: var(--r-2);
   color: var(--fg-2); cursor: pointer; font-size: var(--fs-sm);
 }
 .ds-plugins-btn:hover { background: var(--bg-2); }

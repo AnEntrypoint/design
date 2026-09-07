@@ -1600,6 +1600,8 @@
   overflow: visible;
 }
 .vx-vad-fill {
+  /* --vx-vad-level is written per render by VadMeter (0%..100%). */
+  width: var(--vx-vad-level, 0%);
   position: absolute; left: 0; top: 0; bottom: 0;
   border-radius: var(--r-pill);
   background: var(--fg-3);
@@ -2392,7 +2394,7 @@
   background: var(--avatar-bg, var(--bg-3)); color: var(--avatar-fg, var(--fg));
   font-weight: var(--fw-semibold); font-size: var(--fs-tiny);
 }
-.cm-webhook-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cm-webhook-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-hair); }
 .cm-webhook-item-name { font-weight: var(--fw-medium); font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cm-webhook-item-desc { font-size: var(--fs-tiny); color: var(--fg-3); font-family: var(--ff-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cm-webhook-item-actions { display: flex; gap: var(--space-1); flex-shrink: 0; }
@@ -2461,7 +2463,7 @@
 .cm-perm-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-3); }
 .cm-perm-row + .cm-perm-row { border-top: var(--bw-hair) solid var(--rule); }
 .cm-perm-row:hover { background: color-mix(in oklab, var(--fg) 4%, var(--bg-2)); }
-.cm-perm-row-body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cm-perm-row-body { min-width: 0; display: flex; flex-direction: column; gap: var(--space-hair); }
 .cm-perm-row-title { font-size: var(--fs-sm); font-weight: var(--fw-medium); }
 .cm-perm-row-desc { font-size: var(--fs-tiny); color: var(--fg-3); }
 .cm-perm-tristate {
@@ -2563,7 +2565,7 @@
   background: var(--avatar-bg, var(--bg-3)); color: var(--avatar-fg, var(--fg-2));
   font-weight: var(--fw-semibold); font-size: var(--fs-tiny);
 }
-.cm-search-result-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.cm-search-result-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: var(--space-hair); }
 .cm-search-result-head { display: flex; align-items: baseline; gap: var(--space-1); flex-wrap: wrap; }
 .cm-search-result-author { font-weight: var(--fw-medium); font-size: var(--fs-sm); }
 .cm-search-result-channel { font-size: var(--fs-tiny); color: var(--accent-ink); }

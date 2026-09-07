@@ -146,7 +146,7 @@
      dead and misleading). */
   transition: background var(--dur-snap) var(--ease), box-shadow var(--dur-base) var(--ease-spring);
 }
-.row + .row { margin-top: 2px; }
+.row + .row { margin-top: var(--space-hair); }
 /* Mobile tap-target floor: at compact/comfortable density on a touch
    viewport the padding-only row height can fall under the 44px effective
    tap target (WCAG 2.5.5), especially at [data-density="compact"] (0.75x).
@@ -170,7 +170,7 @@ a.row:hover, button.row:hover, .row[role="button"]:hover {
   font-size: var(--fs-sm);
   line-height: var(--lh-snug);
   margin-top: var(--space-2);
-  padding: 10px 12px;
+  padding: var(--space-2-5) var(--space-2-75);
   background: var(--bg);
   border-radius: var(--r-1);
   overflow-x: auto;
@@ -287,7 +287,7 @@ a.row:hover .ds-row-arrow, .row[role="button"]:hover .ds-row-arrow {
    marketing-surface voice). One size for ALL app list rows - matches
    .ds-file-row/.ds-session-title at fs-sm/500; values mirror the kit's own
    mobile block below. Marketing pages without data-typescale keep the default. */
-[data-typescale="app"] .row { padding: 12px 16px; }
+[data-typescale="app"] .row { padding: var(--space-2-75) var(--space-3); }
 [data-typescale="app"] .row .title { font-size: var(--fs-sm); font-weight: 500; }
 .row .sub   { font-family: var(--ff-body); font-weight: 400; font-size: var(--fs-sm); color: var(--fg-3); }
 /* Context-pane cwd fact reads as a path (like .ds-dash-cwd/.ds-session-agent/

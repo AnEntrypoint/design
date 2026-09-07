@@ -19,7 +19,10 @@ export function BootOverlay({ progress = 0, phase = '', errored = false, visible
                 : h('div', { class: 'ov-boot-spinner', 'aria-hidden': 'true' }),
             !errored ? h('div', { class: 'ov-boot-bar', role: 'progressbar',
                 'aria-valuenow': String(Math.round(pct)), 'aria-valuemin': '0', 'aria-valuemax': '100' },
-                h('div', { class: 'ov-boot-bar-fill', style: 'width:' + pct + '%' })) : null,
+                // Custom-property write, not an inline `width:` — the fill's
+                // width is per-render data, the property it drives lives in
+                // editor-primitives.css with the rest of the bar's layout.
+                h('div', { class: 'ov-boot-bar-fill', style: '--ov-boot-progress:' + pct + '%' })) : null,
             h('div', { class: 'ov-boot-phase' }, String(phase || (errored ? 'Error' : 'Loading…')))
         )
     );

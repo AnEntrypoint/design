@@ -17,7 +17,7 @@
   width: min(420px, 86vw);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-3-5, 20px);
 }
 .sp-loading-header h1 {
   margin: 0;
@@ -26,16 +26,16 @@
   letter-spacing: 0.04em;
 }
 .sp-loading-label {
-  margin: 4px 0 0;
+  margin: var(--space-1, 4px) 0 0;
   color: var(--fg-2);
   font-size: var(--fs-body);
 }
-.sp-loading-bars { display: flex; flex-direction: column; gap: 10px; }
+.sp-loading-bars { display: flex; flex-direction: column; gap: var(--space-2-5, 10px); }
 .sp-loading-bar-row {
   display: grid;
   grid-template-columns: 88px 1fr 44px;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2-5, 10px);
 }
 .sp-loading-bar-name {
   color: var(--fg-3);

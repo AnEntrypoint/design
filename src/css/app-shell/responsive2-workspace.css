@@ -58,13 +58,13 @@
   .app-side a {
     flex: 0 0 auto; min-width: 0;
     grid-template-columns: 18px 1fr auto;
-    padding: 10px 12px;
+    padding: var(--space-2-5) var(--space-2-75);
   }
   .app-side .group { width: 100%; }
   /* Keep the crumb on mobile — apps mount contextual controls (model picker,
      actions, live status) in crumb-right, so hiding it strands them. Collapse
      the breadcrumb trail/leaf instead and let the right cluster wrap. */
-  .app-crumb { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: 8px 12px; }
+  .app-crumb { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--space-2-75); }
   .app-crumb > .sep, .app-crumb > span:not(.crumb-right):not(.leaf) { display: none; }
   .app-crumb .crumb-right { margin-left: 0; }
   .chat-head { padding: var(--space-2) var(--space-3) var(--space-2); margin-bottom: var(--space-2); }
@@ -99,7 +99,7 @@
      reliable-tap threshold on touch. */
   width: 44px; height: 44px;
   align-items: center; justify-content: center;
-  font-size: 18px; line-height: 1;
+  font-size: var(--fs-lg); line-height: 1;
   background: var(--bg-2); color: var(--fg);
   border: 1px solid var(--rule, color-mix(in oklab, var(--fg) 12%, transparent));
   border-radius: var(--r-1, 6px);
@@ -305,7 +305,7 @@
 }
 .ws-rail-action:hover { filter: brightness(0.92); }
 .ws-rail-action:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
-.ws-rail-nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.ws-rail-nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-hair); flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .ws-rail-item {
   display: flex; align-items: center; gap: var(--space-2);
   width: 100%; padding: var(--space-2); min-height: 44px;
@@ -515,7 +515,7 @@
      does not exist inside WorkspaceShell - mirror it here so the crumb bar
      cannot overflow a narrow viewport (trail hides, leaf ellipsizes, the
      right cluster wraps under instead of pushing past the edge). */
-  .ws-crumb { padding-top: 6px; padding-bottom: 6px; }
+  .ws-crumb { padding-top: var(--space-1-75); padding-bottom: var(--space-1-75); }
   .ws-crumb .app-crumb { flex-wrap: wrap; min-width: 0; }
   .ws-crumb .app-crumb > .sep, .ws-crumb .app-crumb > span:not(.crumb-right):not(.leaf) { display: none; }
   .ws-crumb .app-crumb .leaf { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }

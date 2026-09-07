@@ -29,8 +29,8 @@
   .ds-mc-body { grid-template-columns: 1fr; }
 }
 
-.ds-mc-tree { display: flex; flex-direction: column; gap: 2px; }
-.ds-mc-tree-group + .ds-mc-tree-group { margin-top: 2px; }
+.ds-mc-tree { display: flex; flex-direction: column; gap: var(--space-hair); }
+.ds-mc-tree-group + .ds-mc-tree-group { margin-top: var(--space-hair); }
 
 .ds-mc-key-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); font-weight: 700;
@@ -40,7 +40,7 @@
 .ds-mc-key-chip.tone-fail { color: var(--fg-3); background: var(--bg-3); }
 
 .ds-mc-sampler {
-  display: inline-block; margin: 2px 0 4px 12px;
+  display: inline-block; margin: var(--space-hair) 0 var(--space-1) var(--space-2-75);
   font-size: var(--fs-micro); padding: 1px 6px; border-radius: var(--r-1);
 }
 .ds-mc-sampler.tone-ok { color: var(--green-2); background: var(--green-tint); }
@@ -81,7 +81,7 @@
 .ds-mc-usable-chip.tone-fail { color: var(--fg-3); background: var(--bg-3); }
 
 /* 7-mode availability grid — one chip per mode, wraps on narrow panes. */
-.ds-mc-mode-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.ds-mc-mode-grid { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 .ds-mc-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); font-weight: 600;
   padding: 2px 7px; border-radius: var(--r-1);

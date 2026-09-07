@@ -1587,6 +1587,10 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
    position/tooltip offsets are set imperatively in JS (chat-minimap.js) since
    they are per-render numeric layout, not a static rule. */
 .chat-minimap {
+  /* --chat-minimap-w is written per instance by minimap.js (the rail width is
+     a prop); the fallback is the component's own default so the rail is never
+     zero-width if the property is missing. */
+  width: var(--chat-minimap-w, 36px);
   position: relative;
   flex-shrink: 0;
   align-self: stretch;

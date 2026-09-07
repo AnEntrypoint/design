@@ -2010,9 +2010,9 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .tb-chat-queue-indicator-hidden { display: none; }
 .ds-247420 .tb-chat-queue-indicator {
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--fs-micro, 12px);
   color: var(--panel-text-2);
-  padding: 2px 8px;
+  padding: var(--space-hair, 2px) var(--space-2, 8px);
   user-select: none;
 }
 .ds-247420 .tb-chat-queue-indicator:hover { color: var(--panel-text); }
@@ -2021,7 +2021,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-2);
-  margin: 0 8px 8px;
+  margin: 0 var(--space-2, 8px) var(--space-2, 8px);
   border-radius: var(--r-2);
   background: var(--panel-1);
   border: 1px solid var(--panel-border);
@@ -2033,7 +2033,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   gap: var(--space-2);
 }
 .ds-247420 .tb-chat-queue-row-text {
-  font-size: 12px;
+  font-size: var(--fs-micro, 12px);
   color: var(--panel-text-2);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2041,8 +2041,8 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   flex: 1;
 }
 .ds-247420 .tb-chat-queue-row-remove {
-  font-size: 11px;
-  padding: 2px 8px;
+  font-size: var(--fs-nano, 11px);
+  padding: var(--space-hair, 2px) var(--space-2, 8px);
   border-radius: var(--r-1);
   border: 1px solid var(--panel-border);
   background: transparent;

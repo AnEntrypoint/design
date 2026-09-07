@@ -233,7 +233,7 @@ input[type="checkbox"], input[type="radio"] {
   box-shadow: var(--shadow-overlay);
   min-width: 160px;
   z-index: var(--z-dropdown);
-  padding: 4px 0;
+  padding: var(--space-1) 0;
 }
 
 @keyframes context-menu-in {
@@ -251,7 +251,7 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 .ds-context-menu-item {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: var(--space-2-5);
   padding: 10px 14px;
   cursor: pointer;
   color: var(--fg);
@@ -275,7 +275,7 @@ input[type="checkbox"], input[type="radio"] {
 .ds-context-menu-divider {
   height: 1px;
   background: var(--rule);
-  margin: 4px 0;
+  margin: var(--space-1) 0;
 }
 .ds-context-menu-icon {
   width: 16px; height: 16px;
@@ -516,7 +516,7 @@ hr.rule-dotted { border-top: 2px dotted var(--rule-strong); }
 .ds-field-required {
   color: var(--danger);
   font-weight: 700;
-  margin-left: 2px;
+  margin-left: var(--space-hair);
 }
 .ds-field-hint {
   font-size: var(--fs-tiny, 13px);
@@ -652,7 +652,7 @@ input[type="password"]:not(:placeholder-shown) + .input-clear {
   background: transparent;
   border: 0;
   padding: 0;
-  margin-right: 8px;
+  margin-right: var(--space-2);
   border-radius: var(--r-1);
   transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
 }
@@ -681,24 +681,13 @@ input[type="password"]:not(:placeholder-shown) + .input-clear {
   outline-offset: var(--focus-offset);
 }
 
-/* Reduced motion preferences — scoped to the DS surface so it doesn't reach
-   into and neutralize the host document's own motion.
-   The !important flags here are LOAD-BEARING and must not be "cleaned up":
-   `.ds-247420 *` / `.app *` is only (0,1,0) — the universal selector adds
-   nothing — yet it has to defeat every animation/transition declaration in the
-   kit, many of which are strictly more specific. Concrete rules it would
-   otherwise lose to: `.ds-dropzone.dragover` (0,2,0, files.css),
-   `.ds-upload-bar.indeterminate .ds-upload-fill` (0,3,0, files.css),
-   `.list-item.drag-after::after` (0,2,1, this file). Raising this selector to
-   out-specify an open-ended set of future component rules is not possible, so
-   the flag is the only correct mechanism — this is a WCAG 2.3.3 guarantee,
-   not a stylistic preference. */
+/* Reduced-motion: the blanket animation/transition net for this bundle lives
+   ONCE, in base.css (see the long note there — it used to be duplicated here at
+   a different duration, and this later copy silently won). What stays here is
+   only the part base.css's net cannot express: the skeleton/shimmer rules below
+   need `animation: none`, not a near-zero duration, so the placeholder settles
+   on a steady fill instead of a residual paint frame. */
 @media (prefers-reduced-motion: reduce) {
-  .ds-247420 *, .app * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
   /* Kill the residual paint frame of looping skeleton/shimmer placeholders and
      give reduced-motion users a steady placeholder fill instead.
      Also load-bearing: `.skeleton` is (0,1,0) and must override
@@ -731,7 +720,7 @@ input[type="password"]:not(:placeholder-shown) + .input-clear {
   .ds-icon-btn, .composer-btn {
     min-height: 48px;
     min-width: 48px;
-    padding: 12px 20px;
+    padding: var(--space-2-75) var(--space-3-5);
   }
   /* Icon buttons stay square — the padding bump above would distort them. */
   .ds-icon-btn, .composer-btn { padding: 0; }
@@ -799,8 +788,8 @@ input[type="password"]:not(:placeholder-shown) + .input-clear {
   100% { background-position: -200% 0; }
 }
 
-.skeleton-line { height: 12px; margin-bottom: 12px; }
-.skeleton-title { height: 24px; margin-bottom: 16px; width: 60%; }
+.skeleton-line { height: 12px; margin-bottom: var(--space-2-75); }
+.skeleton-title { height: 24px; margin-bottom: var(--space-3); width: 60%; }
 
 /* ------------------------------------------------------------
    Toast Notification Styles

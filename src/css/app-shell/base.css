@@ -13,17 +13,34 @@
 html, body { margin: 0; padding: 0; width: 100%; overflow-x: clip; }
 button, input, select, textarea { font: inherit; }
 
-/* Global reduced-motion safety net: catches any component transition/animation
-   that lacks its own per-file prefers-reduced-motion override (most components
-   already opt out locally; this is the backstop for the rest, e.g.
-   plugins-config.css, catalog-theme.css, sidebar-misc.css, row-print.css,
-   topbar.css, primitives.css, git-status.css, panel-row.css). Scroll-snap
+/* THE global reduced-motion safety net for the app-shell bundle — one block,
+   not two. states-interactions.css carried a second `.ds-247420 *, .app *`
+   copy of the same three declarations at a different duration (0.01ms vs the
+   0.001ms here); being later in the bundle it always won, so this block's own
+   element-level values had never applied to anything. The two have been merged
+   here at the value that was actually live, and `.app *` is gone with them: the
+   build prefixes it to `.ds-247420 .app *`, which is strictly narrower than the
+   prefixed `*` on this line and could never match anything the wider selector
+   did not already cover.
+
+   The !important flags are LOAD-BEARING and must not be "cleaned up": the
+   prefixed `.ds-247420 *` is only (0,1,0) — the universal selector adds
+   nothing — yet it has to defeat every animation/transition declaration in the
+   kit, many of which are strictly more specific (`.ds-dropzone.dragover` at
+   (0,2,0), `.ds-upload-bar.indeterminate .ds-upload-fill` at (0,3,0),
+   `.list-item.drag-after::after` at (0,2,1)). Raising this selector to
+   out-specify an open-ended set of future component rules is not possible, so
+   the flag is the only correct mechanism — WCAG 2.3.3, not a style preference.
+
+   Sheets published standalone (community.css, chat.css, editor-primitives.css)
+   keep their own local overrides on purpose: a consumer may link one of them
+   without app-shell.css, and would then get no net at all from here. Scroll-snap
    carousels handle scroll-behavior themselves and are unaffected. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }
@@ -194,7 +211,7 @@ h3 + .lede, h3 + .t-lede,
   letter-spacing: var(--tr-label);
   text-transform: uppercase;
   color: var(--accent-ink);
-  display: inline-flex; align-items: center; gap: 12px;
+  display: inline-flex; align-items: center; gap: var(--space-2-75);
 }
 .eyebrow::before {
   content: '';
@@ -265,7 +282,7 @@ a.ds-link-accent:hover, .ds-prose a:hover {
 
 kbd {
   font-family: var(--ff-mono); font-size: 0.85em;
-  background: var(--bg-2); padding: 2px 6px; border-radius: var(--r-1);
+  background: var(--bg-2); padding: var(--space-hair) var(--space-1-75); border-radius: var(--r-1);
 }
 
 code {

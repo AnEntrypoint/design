@@ -131,10 +131,10 @@ html.ds-247420 .ca-rail-servers {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-75);
   width: var(--ca-rail-icon-width);
   min-width: var(--ca-rail-icon-width);
-  padding: 8px 6px;
+  padding: var(--space-2) var(--space-1-75);
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -197,11 +197,11 @@ html.ds-247420 .ca-rail-servers a .count {
   transform: translate(10px, -10px);
   min-width: 16px;
   height: 16px;
-  padding: 0 4px;
+  padding: 0 var(--space-1);
   border-radius: var(--r-1);
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 10px;
+  font-size: var(--fs-pico);
   font-weight: var(--fw-semibold, 600);
   line-height: 16px;
   text-align: center;
@@ -222,7 +222,7 @@ html.ds-247420 .ca-rail-server-explore {
   text-decoration: none;
   transition: background 0.1s, color 0.1s;
 }
-html.ds-247420 .ca-rail-server-add { margin-top: 6px; border-top: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent)); padding-top: 6px; }
+html.ds-247420 .ca-rail-server-add { margin-top: var(--space-1-75); border-top: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent)); padding-top: var(--space-1-75); }
 html.ds-247420 .ca-rail-server-add:hover,
 html.ds-247420 .ca-rail-server-explore:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
 /* auto-width channel column — stoat's ServerSidebar/MemberSidebar both read
@@ -231,21 +231,21 @@ html.ds-247420 .ca-rail-server-explore:hover { background: color-mix(in oklab, v
 html.ds-247420 .ca-rail-channels {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-hair);
   width: var(--ca-channel-column-width);
   min-width: var(--ca-channel-column-width);
-  padding: 8px;
+  padding: var(--space-2);
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
 }
 html.ds-247420 .ca-rail-channels .group {
-  font-size: 11px;
+  font-size: var(--fs-nano);
   font-weight: var(--fw-semibold, 600);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--fg-3, color-mix(in oklab, var(--fg) 55%, transparent));
-  padding: 10px 8px 4px;
+  padding: var(--space-2-5) var(--space-2) var(--space-1);
 }
 html.ds-247420 .ca-rail-channels .group-header {
   display: flex;
@@ -277,8 +277,8 @@ html.ds-247420 .ca-rail-channels .group-add-btn:hover {
 html.ds-247420 .ca-rail-channels a {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
+  gap: var(--space-2);
+  padding: var(--space-1-75) var(--space-2);
   /* r-1 ("sm" bucket) -- was r-0, the same stray fourth radius as
      .group-add-btn above; standardized alongside it. */
   border-radius: var(--r-1);
@@ -311,16 +311,16 @@ html.ds-247420 .ca-rail-channels a > span:nth-child(2) { flex: 1; overflow: hidd
 html.ds-247420 .ca-rail-channels a .count {
   flex-shrink: 0;
   min-width: 18px;
-  padding: 0 5px;
+  padding: 0 var(--space-1-5);
   border-radius: var(--r-1);
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 11px;
+  font-size: var(--fs-nano);
   font-weight: var(--fw-semibold, 600);
   text-align: center;
 }
 html.ds-247420 .ca-rail-channels .rail-empty {
-  padding: 8px;
+  padding: var(--space-2);
   color: var(--fg-3, color-mix(in oklab, var(--fg) 50%, transparent));
   font-size: var(--fs-sm, 14px);
   font-style: italic;
@@ -339,10 +339,10 @@ html.ds-247420 .vx-view .vx-grid {
   flex-wrap: wrap;
   justify-content: safe center;
   align-content: safe center;
-  gap: 12px;
+  gap: var(--space-2-75);
   flex: 1;
   min-height: 0;
-  padding: 16px;
+  padding: var(--space-3);
   overflow-y: auto;
 }
 html.ds-247420 .vx-view .vx-grid .cm-voice-tile {

@@ -37,7 +37,10 @@ export function VadMeter({ level = 0, threshold = 0.5, onThresholdChange } = {})
     const over = lvl >= thr;
     return h('div', { class: 'vx-vad', role: 'group', 'aria-label': 'voice activity meter' },
         h('div', { class: 'vx-vad-track' },
-            h('div', { class: 'vx-vad-fill' + (over ? ' vx-vad-fill-over' : ''), style: 'width:' + (lvl * 100).toFixed(1) + '%' }),
+            // Custom-property write, not an inline `width:` — the live level is
+            // per-render data; the property it drives lives in community.css
+            // with the rest of the meter's layout.
+            h('div', { class: 'vx-vad-fill' + (over ? ' vx-vad-fill-over' : ''), style: '--vx-vad-level:' + (lvl * 100).toFixed(1) + '%' }),
             h('div', { class: 'vx-vad-marker', style: 'left:' + (thr * 100).toFixed(1) + '%', 'aria-hidden': 'true' }),
             h('input', {
                 class: 'vx-vad-range',
