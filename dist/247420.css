@@ -1123,7 +1123,7 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip: rect(0,0,0,0);
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
@@ -4619,7 +4619,7 @@
 .ds-247420 .chat-thread {
   display: flex; flex-direction: column; gap: var(--space-3);
   flex: 1; min-height: 0; overflow-y: auto;
-  padding: var(--space-2) 0;
+  padding: var(--space-3) var(--space-3) var(--space-4);
   scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -4676,7 +4676,7 @@
 
 .ds-247420 .chat-stack {
   display: flex; flex-direction: column; gap: var(--space-1);
-  max-width: min(70%, 56ch); min-width: 0;
+  max-width: 70%; min-width: 0;
   flex: 0 1 auto; overflow: hidden;
 }
 
@@ -4907,7 +4907,7 @@
 .ds-247420 .ov-lightbox-backdrop {
   position: fixed; inset: 0; z-index: var(--z-modal);
   display: flex; align-items: center; justify-content: center;
-  background: color-mix(in oklab, var(--ink) 88%, transparent);
+  background: var(--scrim-media);
   padding: var(--space-5);
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -4915,7 +4915,7 @@
   @keyframes ov-lightbox-fade-in { from { opacity: 0; } to { opacity: 1; } }
 }
 .ds-247420 .ov-lightbox-stage {
-  position: relative; max-width: min(90vw, 1100px); max-height: 90vh;
+  position: relative; max-width: 92vw; max-height: 90vh;
   display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -5082,9 +5082,9 @@
 }
 .ds-247420 .chat-msg-action {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  padding: var(--space-1); border: 0; border-radius: var(--r-1);
-  background: transparent; color: var(--fg-3); cursor: pointer;
-  font-family: var(--ff-mono); font-size: var(--fs-nano);
+  padding: 0 var(--space-1-75); border: none; border-radius: var(--r-1, 8px);
+  background: none; color: var(--fg-3); cursor: pointer;
+  font-family: var(--ff-body); font-size: var(--fs-tiny);
   transition: background var(--dur-snap, .12s) var(--ease, ease), color var(--dur-snap, .12s) var(--ease, ease), transform var(--dur-snap, .08s) var(--ease-spring);
 }
 .ds-247420 .chat-msg-action:hover { background: var(--bg-3); color: var(--fg); }
@@ -5113,9 +5113,9 @@
 }
 .ds-247420 .chat-msg-notice.is-error { color: var(--flame); }
 .ds-247420 .chat-msg-retry-btn {
-  border: var(--bw-hair) solid var(--rule-strong); background: transparent;
-  color: inherit; border-radius: var(--r-1); padding: var(--space-hair) var(--space-2);
-  font-family: var(--ff-mono); font-size: var(--fs-nano); cursor: pointer;
+  border: var(--bw-hair) solid var(--danger); background: transparent;
+  color: var(--danger-ink, var(--danger)); border-radius: var(--r-1); padding: var(--space-hair) var(--space-2-5);
+  font-family: var(--ff-mono); font-size: var(--fs-tiny); cursor: pointer;
 }
 .ds-247420 .chat-msg-retry-btn:hover { background: var(--bg-3); }
 
@@ -5518,14 +5518,14 @@
 .ds-247420 .chat-composer-context-text { color: var(--fg-3); }
 
 .ds-247420 .chat-composer-detected-badge {
-  display: flex; align-items: center; gap: var(--space-2);
+  display: flex; align-items: center; gap: var(--space-2, 8px);
   width: 100%; order: -1;
-  padding: var(--space-1) var(--space-2-5);
+  padding: var(--space-1) var(--space-3);
   margin: 0 0 var(--space-1);
-  background: color-mix(in oklab, var(--accent) 12%, var(--bg-2));
-  border: 1px solid color-mix(in oklab, var(--accent) 28%, transparent);
+  background: var(--bg-2);
+  border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-1);
-  font-size: var(--fs-xs); color: var(--fg);
+  font-size: var(--fs-tiny); color: var(--fg-2);
 }
 .ds-247420 .chat-composer-detected-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-247420 .chat-composer-detected-dismiss {
@@ -5539,9 +5539,9 @@
 .ds-247420 .chat-composer-detected-dismiss:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
 .ds-247420 .chat-composer-hint {
-  width: 100%; order: 2;
-  font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3);
-  padding: 0 var(--space-1);
+  width: 100%; order: 5;
+  font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-3);
+  padding: var(--space-hair) var(--space-1) 0;
 }
 
 .ds-247420 .chat-composer-toolbar {
@@ -5623,17 +5623,17 @@
 .ds-247420 .ov-emoji-tab:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .ds-247420 .ov-emoji-grid { overflow-y: auto; flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent; }
 .ds-247420 .ov-emoji-grid-inner {
-  display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-1);
+  display: grid; grid-template-columns: repeat(9, 1fr); gap: var(--space-1, 4px);
 }
 .ds-247420 .ov-emoji-cell {
   display: inline-flex; align-items: center; justify-content: center;
-  aspect-ratio: 1; font-size: var(--fs-lg); line-height: 1;
-  background: transparent; border: 0; border-radius: var(--r-1);
+  aspect-ratio: 1; font-size: var(--fs-lg, 18px); line-height: 1;
+  background: transparent; border: 0; border-radius: var(--r-1, 8px);
   cursor: pointer;
   transition: background var(--dur-snap, .15s) var(--ease, ease), transform 0.12s ease;
 }
 .ds-247420 .ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); transform: scale(1.12); }
-.ds-247420 .ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--fg) 10%, transparent); }
+.ds-247420 .ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--accent) 18%, transparent); }
 .ds-247420 .ov-emoji-empty {
   grid-column: 1 / -1;
   text-align: center; color: var(--fg-3); font-size: var(--fs-xs);
@@ -6656,8 +6656,8 @@
    stacks instead of overlapping at the same bottom-right point. */
 .ds-247420 .ds-ep-toast-host {
   position: fixed; z-index: var(--z-toast);
-  bottom: 24px; right: 24px;
-  display: flex; flex-direction: column-reverse; gap: var(--space-2);
+  bottom: 24px; right: max(16px, env(safe-area-inset-right));
+  display: flex; flex-direction: column; gap: var(--space-2);
   pointer-events: none;
 }
 .ds-247420 .ds-ep-toast {
@@ -6681,8 +6681,8 @@
 .ds-247420 .ds-ep-toast-msg { flex: 1; }
 .ds-247420 .ds-ep-toast-action {
   flex-shrink: 0;
-  background: transparent; border: 0; color: var(--accent-ink);
-  font: inherit; font-weight: 600; cursor: pointer; padding: 0;
+  background: transparent; border: none; color: var(--accent-ink, var(--accent));
+  font: inherit; font-weight: 600; cursor: pointer; padding: var(--space-1) var(--space-1-75);
 }
 .ds-247420 .ds-ep-toast-action:hover { text-decoration: underline; }
 
@@ -7606,14 +7606,14 @@
    row ran out of real width. .ds-session-main grows to fill the row; its
    title/sub children get the min-width:0 an ellipsis needs inside a flex
    item; the meta/actions siblings take only what their content needs. */
-.ds-247420 .ds-session-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0; }
+.ds-247420 .ds-session-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-hair); }
 .ds-247420 .ds-session-title {
   display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   font-size: var(--fs-sm); font-weight: 500; color: var(--fg);
 }
 .ds-247420 .ds-session-sub {
   display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-size: var(--fs-micro); color: var(--fg-3);
+  font-size: var(--fs-tiny); color: var(--fg-3);
 }
 .ds-247420 .ds-session-meta, .ds-247420 .ds-session-row-actions { flex: 0 0 auto; display: flex; align-items: center; gap: var(--space-1); }
 

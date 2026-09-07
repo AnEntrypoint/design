@@ -134,14 +134,14 @@
    row ran out of real width. .ds-session-main grows to fill the row; its
    title/sub children get the min-width:0 an ellipsis needs inside a flex
    item; the meta/actions siblings take only what their content needs. */
-.ds-session-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0; }
+.ds-session-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-hair); }
 .ds-session-title {
   display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   font-size: var(--fs-sm); font-weight: 500; color: var(--fg);
 }
 .ds-session-sub {
   display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-size: var(--fs-micro); color: var(--fg-3);
+  font-size: var(--fs-tiny); color: var(--fg-3);
 }
 .ds-session-meta, .ds-session-row-actions { flex: 0 0 auto; display: flex; align-items: center; gap: var(--space-1); }
 

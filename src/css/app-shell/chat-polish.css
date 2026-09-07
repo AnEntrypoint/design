@@ -28,7 +28,7 @@
 .chat-thread {
   display: flex; flex-direction: column; gap: var(--space-3);
   flex: 1; min-height: 0; overflow-y: auto;
-  padding: var(--space-2) 0;
+  padding: var(--space-3) var(--space-3) var(--space-4);
   scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -85,7 +85,7 @@
 
 .chat-stack {
   display: flex; flex-direction: column; gap: var(--space-1);
-  max-width: min(70%, 56ch); min-width: 0;
+  max-width: 70%; min-width: 0;
   flex: 0 1 auto; overflow: hidden;
 }
 
@@ -317,7 +317,7 @@
 .ov-lightbox-backdrop {
   position: fixed; inset: 0; z-index: var(--z-modal);
   display: flex; align-items: center; justify-content: center;
-  background: color-mix(in oklab, var(--ink) 88%, transparent);
+  background: var(--scrim-media);
   padding: var(--space-5);
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -325,7 +325,7 @@
   @keyframes ov-lightbox-fade-in { from { opacity: 0; } to { opacity: 1; } }
 }
 .ov-lightbox-stage {
-  position: relative; max-width: min(90vw, 1100px); max-height: 90vh;
+  position: relative; max-width: 92vw; max-height: 90vh;
   display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -492,9 +492,9 @@
 }
 .chat-msg-action {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  padding: var(--space-1); border: 0; border-radius: var(--r-1);
-  background: transparent; color: var(--fg-3); cursor: pointer;
-  font-family: var(--ff-mono); font-size: var(--fs-nano);
+  padding: 0 var(--space-1-75); border: none; border-radius: var(--r-1, 8px);
+  background: none; color: var(--fg-3); cursor: pointer;
+  font-family: var(--ff-body); font-size: var(--fs-tiny);
   transition: background var(--dur-snap, .12s) var(--ease, ease), color var(--dur-snap, .12s) var(--ease, ease), transform var(--dur-snap, .08s) var(--ease-spring);
 }
 .chat-msg-action:hover { background: var(--bg-3); color: var(--fg); }
@@ -523,9 +523,9 @@
 }
 .chat-msg-notice.is-error { color: var(--flame); }
 .chat-msg-retry-btn {
-  border: var(--bw-hair) solid var(--rule-strong); background: transparent;
-  color: inherit; border-radius: var(--r-1); padding: var(--space-hair) var(--space-2);
-  font-family: var(--ff-mono); font-size: var(--fs-nano); cursor: pointer;
+  border: var(--bw-hair) solid var(--danger); background: transparent;
+  color: var(--danger-ink, var(--danger)); border-radius: var(--r-1); padding: var(--space-hair) var(--space-2-5);
+  font-family: var(--ff-mono); font-size: var(--fs-tiny); cursor: pointer;
 }
 .chat-msg-retry-btn:hover { background: var(--bg-3); }
 
@@ -928,14 +928,14 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-composer-context-text { color: var(--fg-3); }
 
 .chat-composer-detected-badge {
-  display: flex; align-items: center; gap: var(--space-2);
+  display: flex; align-items: center; gap: var(--space-2, 8px);
   width: 100%; order: -1;
-  padding: var(--space-1) var(--space-2-5);
+  padding: var(--space-1) var(--space-3);
   margin: 0 0 var(--space-1);
-  background: color-mix(in oklab, var(--accent) 12%, var(--bg-2));
-  border: 1px solid color-mix(in oklab, var(--accent) 28%, transparent);
+  background: var(--bg-2);
+  border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-1);
-  font-size: var(--fs-xs); color: var(--fg);
+  font-size: var(--fs-tiny); color: var(--fg-2);
 }
 .chat-composer-detected-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chat-composer-detected-dismiss {
@@ -949,9 +949,9 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-composer-detected-dismiss:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
 .chat-composer-hint {
-  width: 100%; order: 2;
-  font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3);
-  padding: 0 var(--space-1);
+  width: 100%; order: 5;
+  font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-3);
+  padding: var(--space-hair) var(--space-1) 0;
 }
 
 .chat-composer-toolbar {
@@ -1033,17 +1033,17 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .ov-emoji-tab:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .ov-emoji-grid { overflow-y: auto; flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent; }
 .ov-emoji-grid-inner {
-  display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-1);
+  display: grid; grid-template-columns: repeat(9, 1fr); gap: var(--space-1, 4px);
 }
 .ov-emoji-cell {
   display: inline-flex; align-items: center; justify-content: center;
-  aspect-ratio: 1; font-size: var(--fs-lg); line-height: 1;
-  background: transparent; border: 0; border-radius: var(--r-1);
+  aspect-ratio: 1; font-size: var(--fs-lg, 18px); line-height: 1;
+  background: transparent; border: 0; border-radius: var(--r-1, 8px);
   cursor: pointer;
   transition: background var(--dur-snap, .15s) var(--ease, ease), transform 0.12s ease;
 }
 .ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); transform: scale(1.12); }
-.ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--fg) 10%, transparent); }
+.ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--accent) 18%, transparent); }
 .ov-emoji-empty {
   grid-column: 1 / -1;
   text-align: center; color: var(--fg-3); font-size: var(--fs-xs);

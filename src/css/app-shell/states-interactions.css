@@ -873,8 +873,8 @@ input[type="password"]:not(:placeholder-shown) + .input-clear {
    stacks instead of overlapping at the same bottom-right point. */
 .ds-ep-toast-host {
   position: fixed; z-index: var(--z-toast);
-  bottom: 24px; right: 24px;
-  display: flex; flex-direction: column-reverse; gap: var(--space-2);
+  bottom: 24px; right: max(16px, env(safe-area-inset-right));
+  display: flex; flex-direction: column; gap: var(--space-2);
   pointer-events: none;
 }
 .ds-ep-toast {
@@ -898,8 +898,8 @@ input[type="password"]:not(:placeholder-shown) + .input-clear {
 .ds-ep-toast-msg { flex: 1; }
 .ds-ep-toast-action {
   flex-shrink: 0;
-  background: transparent; border: 0; color: var(--accent-ink);
-  font: inherit; font-weight: 600; cursor: pointer; padding: 0;
+  background: transparent; border: none; color: var(--accent-ink, var(--accent));
+  font: inherit; font-weight: 600; cursor: pointer; padding: var(--space-1) var(--space-1-75);
 }
 .ds-ep-toast-action:hover { text-decoration: underline; }
 

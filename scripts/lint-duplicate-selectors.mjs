@@ -20,12 +20,34 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
 // Mirrors build.mjs's cssParts list — the exact set of sheets concatenated
-// into the published kit bundle. Kept in sync manually (same discipline as
-// lint-all.mjs mirroring build.mjs's lint block); if build.mjs's cssParts
-// changes, update this list too.
+// into the published kit bundle, IN BUNDLE ORDER (the order is load-bearing
+// here: for a genuine duplicate the later part is the one that wins).
+//
+// COVERAGE HISTORY. This list used to name the root `app-shell.css`, which is
+// an @import barrel containing 26 @import lines and zero declarations — so
+// this gate parsed 26 statements and compared nothing, while build.mjs read
+// the 26 split sheets under src/css/app-shell/ directly (its own
+// appShellSplitFiles list) and concatenated ~5,500 lines of real CSS into the
+// bundle. Every duplicate involving an app-shell sheet was therefore invisible
+// to a gate that printed OK, which is the same @import-barrel hole
+// lint-tokens.mjs documents and fixed for itself. Widening the list to the
+// split files surfaced 16 real cross-sheet duplicate blocks on the first run.
+//
+// Kept in sync manually with build.mjs's cssParts + appShellSplitFiles; if
+// either changes, update this list too.
+const APP_SHELL_SPLIT = [
+  'base.css', 'topbar.css', 'primitives.css', 'panel-row.css', 'hero-content.css',
+  'responsive.css', 'chat-basic.css', 'files.css', 'catalog-theme.css',
+  'chat-polish.css', 'sidebar-misc.css', 'states-interactions.css',
+  'loading-alerts.css', 'responsive2-workspace.css', 'row-print.css',
+  'data-density.css', 'kits-appended.css', 'git-status.css', 'plugins-config.css',
+  'models-config.css', 'skills-config.css', 'slider.css', 'otp-input.css',
+  'carousel.css', 'calendar.css', 'collab.css',
+];
+
 export const CSS_PARTS = [
   ['colors_and_type.css', path.join(root, 'colors_and_type.css')],
-  ['app-shell.css', path.join(root, 'app-shell.css')],
+  ...APP_SHELL_SPLIT.map((n) => [`app-shell/${n}`, path.join(root, 'src/css/app-shell', n)]),
   ['community.css', path.join(root, 'community.css')],
   ['chat.css', path.join(root, 'chat.css')],
   ['editor-primitives.css', path.join(root, 'editor-primitives.css')],
