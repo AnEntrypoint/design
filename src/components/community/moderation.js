@@ -10,15 +10,11 @@
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
-import { avatarInitial, avatarContrastFg } from '../content.js';
+import { avatarInitial } from '../content.js';
+import { avatarStyle } from './avatar-style.js';
 import { SettingsSection, SettingsRowToggle } from '../voice/settings-row.js';
 const h = webjsx.createElement;
 
-function avatarStyle(color) {
-    if (!color) return null;
-    const fg = avatarContrastFg(color);
-    return fg ? `--avatar-bg:${color};--avatar-fg:${fg}` : `--avatar-bg:${color}`;
-}
 
 // A single role row: drag handle, colour swatch, name, member count, chevron.
 export function RoleRow({ id, name, color, memberCount, draggable = true, onClick, onDragStart, onDragOver, onDrop } = {}) {

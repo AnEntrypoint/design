@@ -4,15 +4,11 @@
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
-import { avatarInitial, avatarContrastFg } from '../content.js';
+import { avatarInitial } from '../content.js';
+import { avatarStyle } from './avatar-style.js';
 import { SettingsRow, SettingsRowGroup, SettingsSection } from '../voice/settings-row.js';
 const h = webjsx.createElement;
 
-function avatarStyle(color) {
-    if (!color) return null;
-    const fg = avatarContrastFg(color);
-    return fg ? `--avatar-bg:${color};--avatar-fg:${fg}` : `--avatar-bg:${color}`;
-}
 
 function WebhookAvatar({ name, avatarUrl, color }) {
     if (avatarUrl) return h('img', { class: 'cm-webhook-avatar', src: avatarUrl, alt: '' });

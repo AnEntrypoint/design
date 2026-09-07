@@ -49,17 +49,18 @@ The standard button/link factory. Renders an `<a>` when `href` is given, otherwi
 
 **Kind:** component
 
-**Signature:** `href`, `variant` = `'default'`, `size` = `'md'`, `children`, `onClick`, `aria-label` _(local: ariaLabel)_, `primary`, `ghost`, `danger`, `disabled`, `class` _(local: className)_, `key`
+**Signature:** `href`, `variant` = `'default'`, `size` = `'md'`, `children`, `onClick`, `aria-label` _(local: ariaLabel)_, `title`, `primary`, `ghost`, `danger`, `disabled`, `class` _(local: className)_, `key`
 
 **Documented params:**
 
 - `props` _(Object)_
 - `props.href` _(string)_ -- if present, renders as a link instead of a button.
-- `props.variant` _('default'|'primary'|'ghost'|'danger')_
+- `props.variant` _('default'|'primary'|'ghost'|'danger'|'link')_
 - `props.size` _('sm'|'md'|'lg')_
 - `props.children` _(*)_
 - `props.onClick` _(Function)_
 - `props['aria-label']` _(string)_
+- `props.title` _(string)_ -- native tooltip text; also serves as the accessible name when no aria-label and no text child is given (the icon-only case).
 - `props.primary` _(boolean)_ -- legacy alias for variant:'primary', kept for backward compatibility.
 - `props.ghost` _(boolean)_ -- legacy alias for variant:'ghost'.
 - `props.danger` _(boolean)_ -- legacy alias for variant:'danger'.

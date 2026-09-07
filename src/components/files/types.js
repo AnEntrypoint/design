@@ -6,7 +6,6 @@ import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
 
-export const FILE_TYPES = ['dir', 'image', 'video', 'audio', 'code', 'text', 'archive', 'document', 'symlink', 'other'];
 const TYPE_ICON = {
     dir: 'folder', image: 'file-image', video: 'file-video', audio: 'file-audio', code: 'file-code',
     text: 'file-text', archive: 'file-zip', document: 'file-text', symlink: 'link', other: 'file'

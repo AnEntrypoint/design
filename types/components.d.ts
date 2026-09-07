@@ -53,12 +53,14 @@ export interface BtnProps {
     /** if present, renders as a link instead of a button. */
     href?: string;
     /** @default 'default' */
-    variant?: 'default' | 'primary' | 'ghost' | 'danger';
+    variant?: 'default' | 'primary' | 'ghost' | 'danger' | 'link';
     /** @default 'md' */
     size?: 'sm' | 'md' | 'lg';
     children?: any;
     onClick?: (...args: any[]) => any;
     'aria-label'?: string;
+    /** native tooltip text; also serves as the accessible name when no aria-label and no text child is given (the icon-only case). */
+    title?: string;
     /** legacy alias for variant:'primary', kept for backward compatibility. */
     primary?: boolean;
     /** legacy alias for variant:'ghost'. */

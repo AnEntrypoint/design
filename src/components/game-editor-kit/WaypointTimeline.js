@@ -47,7 +47,7 @@ export function createWaypointTimeline(container, { onSelect, onAdd, onRemove, o
 
   function render() {
     const toolbar = Toolbar({ children: [
-      Btn({ primary: true, dense: true, title: 'Add a new waypoint at the end of the path (drops at the viewport center)', onClick: (e) => { e.preventDefault(); onAdd?.(_rows.length) }, children: ['+ Waypoint'] }),
+      Btn({ primary: true, title: 'Add a new waypoint at the end of the path (drops at the viewport center)', onClick: (e) => { e.preventDefault(); onAdd?.(_rows.length) }, children: ['+ Waypoint'] }),
       h('div', { class: 'ds-ed-bar-grow' }),
       h('span', { class: 'ds-ed-files-loading' }, `${_rows.length} waypoint${_rows.length === 1 ? '' : 's'}`)
     ] })
@@ -70,9 +70,9 @@ export function createWaypointTimeline(container, { onSelect, onAdd, onRemove, o
             h('span', { class: 'ds-ep-eventrow-sub' }, `[${r.position.map(v => v.toFixed(1)).join(', ')}]`)
           ),
           h('span', { style: 'flex:0 0 auto;display:flex;gap:2px' },
-            Btn({ ghost: true, dense: true, title: 'Move earlier in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i - 1)) }, children: [Icon('chevron-up', { size: 12 })] }),
-            Btn({ ghost: true, dense: true, title: 'Move later in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i + 1)) }, children: [Icon('chevron-down', { size: 12 })] }),
-            Btn({ ghost: true, dense: true, danger: true, title: 'Remove this waypoint', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onRemove?.(r.id) }, children: [Icon('x', { size: 12 })] })
+            Btn({ ghost: true, title: 'Move earlier in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i - 1)) }, children: [Icon('chevron-up', { size: 12 })] }),
+            Btn({ ghost: true, title: 'Move later in the path', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onReorder?.(reorderDelta(_rows, i, i + 1)) }, children: [Icon('chevron-down', { size: 12 })] }),
+            Btn({ ghost: true, danger: true, title: 'Remove this waypoint', onClick: (e) => { e.preventDefault(); e.stopPropagation(); onRemove?.(r.id) }, children: [Icon('x', { size: 12 })] })
           )
         ))
       )

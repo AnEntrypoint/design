@@ -193,7 +193,7 @@ export function createAssetBrowser(opts = {}) {
     const tags = getAllTags()
     const toolbar = h('div', { style: 'padding:8px;border-bottom:1px solid var(--panel-border,#ddd);display:flex;flex-direction:column;gap:8px' }, [
       h('div', { style: 'display:flex;gap:6px' }, [
-        Btn({ dense: true, onClick: async () => {
+        Btn({ onClick: async () => {
           const wm = getSharedWM()
           const name = wm ? await promptText(wm, { title: 'New folder', label: 'Folder name', placeholder: 'name' }) : prompt('Folder name')
           if (!name) return

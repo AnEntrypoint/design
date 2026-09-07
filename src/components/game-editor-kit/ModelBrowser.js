@@ -117,21 +117,18 @@ export function createModelBrowser(container, opts = {}) {
         h('option', { value: 'character' }, 'Category: Character')
       ),
       Btn({
-        dense: true,
         ghost: _viewMode !== 'grid',
         onClick: () => { _viewMode = 'grid'; render() },
         title: 'Grid View',
         children: [Icon('grid')]
       }),
       Btn({
-        dense: true,
         ghost: _viewMode !== 'list',
         onClick: () => { _viewMode = 'list'; render() },
         title: 'List View',
         children: [Icon('rows')]
       }),
       Btn({
-        dense: true,
         ghost: true,
         onClick: loadModels,
         title: 'Refresh',

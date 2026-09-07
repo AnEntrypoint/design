@@ -153,8 +153,6 @@ export function complete(line, cwd) {
     return [...base, hits[0]].join(' ');
 }
 
-export const commandNames = () => Object.keys(COMMANDS).sort();
-
 // Run one line. ctx carries { cwd, clear, setTheme } so commands can mutate the
 // session without this module reaching into the DOM itself.
 export function run(line, ctx) {

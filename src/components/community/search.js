@@ -5,14 +5,10 @@
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
-import { avatarInitial, avatarContrastFg } from '../content.js';
+import { avatarInitial } from '../content.js';
+import { avatarStyle } from './avatar-style.js';
 const h = webjsx.createElement;
 
-function avatarStyle(color) {
-    if (!color) return null;
-    const fg = avatarContrastFg(color);
-    return fg ? `--avatar-bg:${color};--avatar-fg:${fg}` : `--avatar-bg:${color}`;
-}
 
 export function SearchBar({ value = '', placeholder = 'Search…', onChange, onClear, onSubmit, autofocus = false } = {}) {
     return h('form', {

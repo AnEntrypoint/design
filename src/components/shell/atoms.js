@@ -45,11 +45,12 @@ export function Chip({ tone = '', size = 'md', tag = false, onRemove, children }
  *
  * @param {Object} props
  * @param {string} [props.href] - if present, renders as a link instead of a button.
- * @param {'default'|'primary'|'ghost'|'danger'} [props.variant='default']
+ * @param {'default'|'primary'|'ghost'|'danger'|'link'} [props.variant='default']
  * @param {'sm'|'md'|'lg'} [props.size='md']
  * @param {*} props.children
  * @param {Function} [props.onClick]
  * @param {string} [props['aria-label']]
+ * @param {string} [props.title] - native tooltip text; also serves as the accessible name when no aria-label and no text child is given (the icon-only case).
  * @param {boolean} [props.primary] - legacy alias for variant:'primary', kept for backward compatibility.
  * @param {boolean} [props.ghost] - legacy alias for variant:'ghost'.
  * @param {boolean} [props.danger] - legacy alias for variant:'danger'.
@@ -58,9 +59,9 @@ export function Chip({ tone = '', size = 'md', tag = false, onRemove, children }
  * @param {*} [props.key]
  * @returns {*} webjsx vnode
  */
-export function Btn({ href, variant = 'default', size = 'md', children, onClick, 'aria-label': ariaLabel, primary, ghost, danger, disabled, class: className, key }) {
+export function Btn({ href, variant = 'default', size = 'md', children, onClick, 'aria-label': ariaLabel, title, primary, ghost, danger, disabled, class: className, key }) {
     // Support legacy primary/ghost props for backward compatibility, but prefer variant
-    if ((primary || ghost || danger) && typeof console !== 'undefined') {
+    if (primary || ghost || danger) {
         const used = primary ? 'primary' : (ghost ? 'ghost' : 'danger');
         console.warn(`[247420] Btn's "${used}" boolean prop is deprecated -- use variant="${used}" instead. No removal version set yet (tracked in MIGRATION_GUIDE.md); both still work.`);
     }
@@ -77,7 +78,21 @@ export function Btn({ href, variant = 'default', size = 'md', children, onClick,
         if (disabled) { e.preventDefault(); return; }
         if (onClick) onClick(e);
     };
-    const ariaName = ariaLabel || (typeof children === 'string' ? children : undefined);
+    // `title` sits between aria-label and a string child on purpose. An
+    // icon-only button (children is [Icon(...)], and Icon marks its <svg>
+    // aria-hidden) has no text content at all, so without this it shipped with
+    // NO accessible name -- six such buttons existed in game-editor-kit, each
+    // already passing a perfectly good `title` that this component used to
+    // discard. Array children that DO carry text are named by their content,
+    // which is why there is no vnode-text-extraction step here: it would be
+    // redundant where text exists and useless where it does not.
+    //
+    // Every value below may be undefined, and that is the safe shape: webjsx's
+    // updateAttributesCore skips a prop whose value equals the (absent) old
+    // value, so `undefined` writes nothing. Do NOT "normalise" these to null --
+    // `title` is a reflected IDL property, and `el.title = null` stringifies to
+    // a literal title="null" on the element (confirmed live).
+    const ariaName = ariaLabel || title || (typeof children === 'string' ? children : undefined);
 
     // A real navigational href renders an anchor; everything else is an action
     // button and renders a native <button> (correct semantics + keyboard
@@ -91,6 +106,7 @@ export function Btn({ href, variant = 'default', size = 'md', children, onClick,
         return h('a', {
             key,
             class: cls, href,
+            title,
             'aria-label': ariaName,
             'aria-disabled': disabled ? 'true' : null,
             tabindex: disabled ? '-1' : null,
@@ -101,6 +117,7 @@ export function Btn({ href, variant = 'default', size = 'md', children, onClick,
         key,
         type: 'button', class: cls,
         disabled: disabled ? true : null,
+        title,
         'aria-label': ariaName,
         onclick
     }, ...kids);
@@ -191,7 +208,12 @@ export function Dot({ tone = 'on' }) {
     // identical to a plain "this thing is on" status dot — same split
     // rationale as .chip.tone-live / .ds-badge.tone-live.
     const modifierCls = tone === 'live' ? ' ds-dot-live' : (tone === 'warn' ? ' ds-dot-warn' : '');
-    const cls = 'ds-dot ' + (tone === 'warn' ? 'ds-dot-off' : (isOn ? 'ds-dot-on' : 'ds-dot-off')) + modifierCls;
+    // `warn` is not 'on' or 'live', so isOn is already false for it — the base
+    // class is just the on/off split, and `warn` gets its hue from
+    // modifierCls above. (This used to carry an extra `tone === 'warn' ?
+    // 'ds-dot-off' : ...` arm producing the identical string the else-arm
+    // already produced.)
+    const cls = 'ds-dot ' + (isOn ? 'ds-dot-on' : 'ds-dot-off') + modifierCls;
     const statusLabel = tone === 'live' ? 'live status indicator' : (tone === 'warn' ? 'warning status indicator' : (isOn ? 'on status indicator' : 'off status indicator'));
     // Drawn as a CSS circle (.ds-dot) — no decorative text glyph.
     return h('span', { class: cls, role: 'img', 'aria-label': statusLabel });

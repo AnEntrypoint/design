@@ -6,9 +6,12 @@
 // consumer instead of drifting per-copy. `itemSelector` picks the live
 // focusable items inside the rendered menu (each consumer uses a different
 // role: menuitem / menuitemcheckbox / menuitemradio); `getLabel(item)` +
-// `items` enable typeahead when `typeahead` is true (Dropdown/MenuButton have
-// it, PermissionMenu's categories aren't typically typeahead-searched so it
-// defaults off but can opt in). Returns { refFn, onTrigClick, onTrigKey,
+// `items` enable typeahead when `typeahead` is true. Every in-repo consumer
+// passes true -- Dropdown, MenuButton, Menubar AND PermissionMenu (menus.js:54)
+// -- so the `false` default is unexercised here and exists only as an opt-out
+// for an external caller. (The comment this replaces claimed PermissionMenu
+// deliberately left typeahead off, which the call site it points at has never
+// done.) Returns { refFn, onTrigClick, onTrigKey,
 // openMenu, close, focusItem, isOpen } — the caller still owns rendering the
 // menu's DOM/CSS (role/class per consumer stays distinct) and wires
 // `menuEl.addEventListener('keydown', onMenuKey)` itself via the returned
