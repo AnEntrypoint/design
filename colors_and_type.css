@@ -838,6 +838,82 @@
   --accent: var(--green); --accent-fg: var(--paper); --accent-ink: var(--green);
 }
 
+/* herd -- orange/red brand preset on a white ground, for the animal-disease
+   surveillance deployment (AnEntrypoint/uhh). Opt in with data-theme="herd";
+   nothing else in the kit changes.
+
+   THE FILL AND THE TEXT ARE DELIBERATELY DIFFERENT COLOURS, and that is the
+   whole design of this preset. The brand's primary (#E88427) is a light,
+   saturated orange: beautiful as a fill, and unusable as type. Every ratio
+   below is computed, not estimated.
+
+     #E88427 as text on #FFFFFF ............ 2.71:1   FAILS AA (needs 4.5)
+     #FFFFFF as text on #E88427 ............ 2.71:1   FAILS even the 3:1 UI floor
+     #000000 as text on #E88427 ............ 7.76:1   passes comfortably
+     #B4600F as text on #FFFFFF ............ 4.54:1   passes AA body
+     #FF001D as text on #FFFFFF ............ 3.99:1   large text / UI only
+     #d10018 as text on #FFFFFF ............ 5.64:1   passes AA body
+     #A9AFB5 as text on #FFFFFF ............ 2.21:1   borders only, never type
+
+   So: --accent keeps the exact brand orange (fills, borders, indicators),
+   --accent-fg is BLACK rather than white (a white label on this orange is
+   the single most common way a brand palette ships an unreadable button),
+   and --accent-ink is a darkened orange used only where the accent has to
+   BE text. Operators here read this outdoors on a phone; a 2.71:1 label is
+   not a style opinion. */
+[data-theme="herd"] {
+  color-scheme: light;
+  --paper:   #FFFFFF;
+  --paper-2: #F4F5F6;
+  --paper-3: #E7E9EB;
+  --bg: var(--paper); --bg-2: var(--paper-2); --bg-3: var(--paper-3);
+  --fg: var(--ink);   --fg-2: var(--ink-2);   --fg-3: var(--ink-3);
+  --accent: #E88427;
+  --accent-fg: #000000;
+  --accent-ink: #B4600F;
+  --accent-tint: color-mix(in oklab, var(--accent) 16%, var(--bg));
+  /* The brand red is the danger signal. Darkened for text use only, same
+     reason as the orange -- the pure #FF001D is a 3.99:1 fill colour. */
+  --danger: #FF001D;
+  --flame: #d10018;
+  --warn: #d10018;
+  /* Kept distinct from the brand on purpose: --amber and --sky are map pin
+     STATUS encodings (map-leaflet.js STATUS_TOKEN), not chrome. Collapsing
+     either into the brand orange would render two different case statuses
+     identically on a disease-surveillance map. */
+  --amber: #7C570F;
+  --sky: #3A6EFF;
+}
+
+/* herd-ink -- the dark companion. It exists because this kit's own bundle
+   warns that its [data-accent] presets "hardcode LIGHT-tuned fills with no
+   dark-theme companion", and shipping a brand with no dark half means the
+   theme toggle silently produces unreadable orange-on-near-black. The hues
+   stay branded; the ground inverts and the primary lifts to hold contrast.
+
+     #E88427 on #101317 .... 6.88:1     #F59A4B on #101317 .... 8.52:1
+     #FF001D on #101317 .... 4.67:1     #FF3347 on #101317 .... 5.16:1
+
+   The lifted #F59A4B is used so the accent still reads as type on the dark
+   ground, and --accent-fg returns to black because the lifted orange is
+   lighter still. */
+[data-theme="herd-ink"] {
+  color-scheme: dark;
+  --bg: var(--ink); --bg-2: var(--ink-2);
+  --fg: var(--paper); --fg-2: var(--paper-2); --fg-3: var(--paper-3-dark);
+  --accent: #F59A4B;
+  --accent-fg: #000000;
+  --accent-ink: #F59A4B;
+  --accent-tint: color-mix(in oklab, var(--accent) 18%, var(--bg));
+  --danger: #FF3347;
+  --flame: #FF5C6B;
+  --warn: #FF5C6B;
+  --amber: var(--dark-amber);
+  --sky: var(--dark-sky);
+  --purple-2: var(--dark-purple-2);
+  --green: var(--dark-green);
+}
+
 /* github-dark — pi-web's GitHub-dark theme. Cool dark palette with blue accent,
    ported from pi-web (https://github.com/jmfederico/pi-web). */
 [data-theme="github-dark"] {
