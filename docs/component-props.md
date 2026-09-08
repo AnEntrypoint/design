@@ -2,7 +2,7 @@
 
 Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit -- re-run after any component signature or JSDoc change.
 
-310 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
+311 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
 
 ---
 
@@ -390,6 +390,19 @@ A Claude-Desktop / cowork three-(or four-)column app shell.  Pure stateless chro
 **Kind:** component
 
 **Signature:** `fields` = `[]`, `submit` = `'submit'`, `onSubmit`, `columns` = `1`
+
+### FillLines
+
+Ruled writing lines that exist only on paper.  A record printed to be READ wants a screen's "nothing recorded" placeholder. A record printed to be FILLED IN by hand wants the opposite: no placeholder text at all, and enough ruled space to write the answer. The same page is often used both ways -- an operator prints the case to carry into the field, and writes into the gaps. This renders nothing on screen and, in print, the blank lines to write on.  Pair it with `ds-print-blank` on whatever placeholder the field shows on screen, so the two swap over cleanly at the page boundary.  Lines are ruled with a real border rather than a background gradient on purpose: browsers omit background graphics from printing by default, so a gradient rule silently prints as nothing on the common setting.
+
+**Kind:** component
+
+**Signature:** `lines` = `1`, `key`
+
+**Documented params:**
+
+- `lines` _(number)_ -- How many lines to rule. Clamped to 1..20.
+- `key` _(string)_ -- webjsx list key.
 
 ### InputOTP
 

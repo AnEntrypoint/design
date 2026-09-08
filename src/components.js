@@ -15,7 +15,7 @@ export {
     Hero, HeroFromPageData, Marquee, Install, CliBlock, Receipt, Changelog,
     WorksList, WritingList, Manifesto, Section, PageHeader,
     Kpi, Sparkline, BarChart, Table, HealthTable, ProcessRegistryTable, SearchInput, TextField, Select, EventList,
-    HomeView, ProjectView, Form, InputOTP,
+    HomeView, ProjectView, Form, FillLines, InputOTP,
     Spinner, Skeleton, Alert, FilterPills, Avatar, avatarInitial
 } from './components/content.js';
 

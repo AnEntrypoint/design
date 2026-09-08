@@ -14,7 +14,7 @@ import { Install, CliBlock } from './content/cli.js';
 import { WorksList, WritingList, EventList } from './content/lists.js';
 import { Kpi, Sparkline, BarChart } from './content/charts.js';
 import { Table, HealthTable, ProcessRegistryTable } from './content/table.js';
-import { SearchInput, TextField, Select, Form } from './content/fields.js';
+import { SearchInput, TextField, Select, Form, FillLines } from './content/fields.js';
 import { InputOTP } from './content/otp-input.js';
 import { Spinner, Skeleton, Alert, FilterPills } from './content/feedback.js';
 import { HomeView, ProjectView } from './content/views.js';
@@ -28,7 +28,7 @@ export {
     WorksList, WritingList, EventList,
     Kpi, Sparkline, BarChart,
     Table, HealthTable, ProcessRegistryTable,
-    SearchInput, TextField, Select, Form, InputOTP,
+    SearchInput, TextField, Select, Form, FillLines, InputOTP,
     Spinner, Skeleton, Alert, FilterPills,
     HomeView, ProjectView,
 };

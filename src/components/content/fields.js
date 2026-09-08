@@ -2,6 +2,9 @@
 // Select) and the declarative `Form` builder that lays out a fields[] spec.
 // Every control carries a real accessible name; SearchInput additionally
 // owns the single shared clear path (Escape key and visible X button).
+//
+// FillLines belongs here too: it is the printed counterpart of a field, for
+// the case where a record is printed in order to be completed by hand.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -143,4 +146,30 @@ export function Form({ fields = [], submit = 'submit', onSubmit, columns = 1 }) 
                 control);
         }),
         h('button', { type: 'submit', class: 'btn-primary' }, submit));
+}
+
+/**
+ * Ruled writing lines that exist only on paper.
+ *
+ * A record printed to be READ wants a screen's "nothing recorded" placeholder.
+ * A record printed to be FILLED IN by hand wants the opposite: no placeholder
+ * text at all, and enough ruled space to write the answer. The same page is
+ * often used both ways -- an operator prints the case to carry into the field,
+ * and writes into the gaps. This renders nothing on screen and, in print, the
+ * blank lines to write on.
+ *
+ * Pair it with `ds-print-blank` on whatever placeholder the field shows on
+ * screen, so the two swap over cleanly at the page boundary.
+ *
+ * Lines are ruled with a real border rather than a background gradient on
+ * purpose: browsers omit background graphics from printing by default, so a
+ * gradient rule silently prints as nothing on the common setting.
+ *
+ * @param {number} lines How many lines to rule. Clamped to 1..20.
+ * @param {string} key webjsx list key.
+ */
+export function FillLines({ lines = 1, key } = {}) {
+    const n = Math.min(20, Math.max(1, Math.floor(Number(lines) || 1)));
+    return h('span', { class: 'ds-fill-lines', key, 'aria-hidden': 'true' },
+        ...Array.from({ length: n }, (_, i) => h('span', { key: 'r' + i, class: 'ds-fill-line' })));
 }

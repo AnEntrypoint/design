@@ -118,5 +118,32 @@
      future print-specific consumer override with higher specificity. */
   html body, .app-main, .page-body, .ds-lede { color: var(--ink); background: var(--paper); }
   a { color: var(--ink); text-decoration: underline; }
+
+  /* A printed record is often a form to complete by hand, not just a record
+     to read. `ds-print-blank` marks the screen's own "nothing recorded yet"
+     placeholder, which is noise once the page is paper -- someone filling the
+     form in wants the space, not a sentence telling them it is empty. It is
+     hidden here rather than in the consumer so every consumer of FillLines
+     gets the same behaviour without repeating the rule. */
+  .ds-print-blank { display: none; }
+
+  /* FillLines (src/components/content/fields.js) is invisible on screen and
+     becomes the writing space in print. The rule is a real border, never a
+     background gradient: browsers omit background graphics from printing by
+     default, so a gradient rule prints as nothing on the common setting. */
+  .ds-fill-lines { display: block; }
+  .ds-fill-line {
+    display: block;
+    height: var(--space-4);
+    border-bottom: var(--bw-hair) solid var(--ink);
+  }
+  /* Only BETWEEN lines, so a field's first line sits tight under its label and
+     the block does not grow a trailing gap before the next field. */
+  .ds-fill-line + .ds-fill-line { margin-top: var(--space-2); }
 }
+
+/* Screen: the writing lines do not exist. Declared outside the print block so
+   the default holds everywhere, including in a print PREVIEW that renders the
+   screen sheet first. */
+.ds-fill-lines { display: none; }
 

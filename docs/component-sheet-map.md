@@ -17,11 +17,11 @@ whole sheet in and every component looks scattered across 20+ sheets.
 
 ## Totals
 
-- components in the manifest: 310
-- resolved to a defining module: 310
+- components in the manifest: 311
+- resolved to a defining module: 311
 - shared-base classes: 39
-- components with distinctive rules: 225
-  - owned by exactly 1 sheet (cleanly extractable today): 110
+- components with distinctive rules: 226
+  - owned by exactly 1 sheet (cleanly extractable today): 111
   - owned by 2 sheets: 49
   - owned by 3 or more sheets (need reorganizing before a subset is safe): 66
 
@@ -157,6 +157,7 @@ These are the ones that make a safe subset impossible to express today.
 | HomeView | src/components/content/views.js | (no distinctive rules) |
 | ProjectView | src/components/content/views.js | app-shell/base.css, gm-prose.css |
 | Form | src/components/content/fields.js | app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css |
+| FillLines | src/components/content/fields.js | app-shell/row-print.css |
 | InputOTP | src/components/content/otp-input.js | app-shell/otp-input.css |
 | Spinner | src/components/content/feedback.js | app-shell/primitives.css, app-shell/loading-alerts.css |
 | Skeleton | src/components/content/feedback.js | app-shell/states-interactions.css, app-shell/loading-alerts.css |
