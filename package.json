@@ -120,6 +120,8 @@
     "lint:component-types": "node scripts/generate-component-types.mjs --check",
     "manifest:components": "node scripts/generate-component-manifest.mjs",
     "lint:component-manifest": "node scripts/generate-component-manifest.mjs --check",
+    "map:component-sheets": "node scripts/generate-component-sheet-map.mjs",
+    "lint:component-sheet-map": "node scripts/generate-component-sheet-map.mjs --check",
     "exports": "node scripts/gen-exports.mjs",
     "lint:exports": "node scripts/gen-exports.mjs --check",
     "generate:ui-kits": "node scripts/generate-ui-kit-scaffolds.mjs",
