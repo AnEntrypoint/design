@@ -912,17 +912,33 @@
    lighter still. */
 .ds-247420[data-theme="herd-ink"] {
   color-scheme: dark;
-  --bg: var(--ink); --bg-2: var(--ink-2);
+  /* All THREE background tiers, not two. Omitting --bg-3 here left it at the
+     base :root value, which is the LIGHT --paper-3 (#E5E5E5) -- so every
+     tier-3 surface (the health pill, the notification count, the view-switch
+     segment) kept a near-white background while its text correctly followed
+     the theme to light. Live audit measured the result at 1.16:1, 1.26:1 and
+     1.46:1: text that is effectively invisible. The kit's own stock dark
+     themes bind --bg-3 to --ink-3-dark for exactly this reason; this preset
+     simply forgot to. --fg-3 was set correctly, which is what made the gap
+     easy to miss by reading. */
+  --bg: var(--ink); --bg-2: var(--ink-2); --bg-3: var(--ink-3-dark);
   --fg: var(--paper); --fg-2: var(--paper-2); --fg-3: var(--paper-3-dark);
   --accent: #F59A4B;
   --accent-fg: #000000;
   --accent-ink: #F59A4B;
   --accent-tint: color-mix(in oklab, var(--accent) 18%, var(--bg));
   /* Same fill-vs-ink split as the light theme, inverted: on this ground the
-     text companion is LIGHTER, not darker. Measured on --ink (#1A1A1A):
-     #FF3347 = 4.82:1, #FF5C6B = 5.80:1. */
+     text companion is LIGHTER, not darker.
+     Chosen against the LIGHTEST surface in this theme's ladder, not the
+     darkest. --bg/--bg-2/--bg-3 here are #1A1A1A / #333333 / #4D4D4D, and a
+     text token has to survive all three -- the first pass picked #FF5C6B off
+     its 5.80:1 against --bg alone and then measured 2.82:1 in situ, because the
+     notification count actually sits on --bg-3. Measured for #FFA8B0:
+     9.51:1 on --bg, 6.91:1 on --bg-2, 4.62:1 on --bg-3 -- clear on every tier.
+     It is a lighter red than the fill, which is the price of being legible on
+     the pale end of the ladder rather than only on black. */
   --danger: #FF3347;
-  --danger-ink: #FF5C6B;
+  --danger-ink: #FFA8B0;
   --flame: #FF5C6B;
   --warn: #FF5C6B;
   --amber: var(--dark-amber);
