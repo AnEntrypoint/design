@@ -2465,6 +2465,38 @@
 .ds-247420 .panel.panel-wide .panel-body { padding: 0; }
 
 /* ============================================================
+   DetailRow — one FIELD of a record: label, value, and whatever
+   the app says about that value. The third row shape, distinct
+   from .row (a LIST row: title/sub/meta for an item in a
+   collection) and from table.kv (a static key/value table with
+   nowhere to put a control).
+
+   The separator lives HERE rather than in each consuming app.
+   That is the reason the component exists: every app rendering a
+   record's fields was otherwise hand-rolling this same row and
+   its own hairline, and the hairlines then drifted apart.
+   ============================================================ */
+.ds-247420 .ds-detail-row {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-1) 0;
+  border-bottom: var(--bw-hair) solid var(--rule);
+  font-size: var(--fs-sm);
+}
+/* The last field in a group closes the group; a trailing hairline there reads
+   as a missing row below it. */
+.ds-247420 .ds-detail-row:last-child { border-bottom: none; }
+.ds-247420 .ds-detail-label { flex: 0 0 40%; color: var(--fg-3); }
+.ds-247420 .ds-detail-val {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* ============================================================
    Row — primary list pattern. Indicator rail on the left,
    no hairlines between rows.
    ============================================================ */

@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 311 exported symbols across 32 source files.
+// 312 exported symbols across 32 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -360,6 +360,27 @@ export interface RowLinkProps {
     target?: any;
 }
 export declare function RowLink(props?: RowLinkProps): VNode;
+
+/**
+ * One FIELD of a record: its label, its value, and whatever the app needs to say about that value.  This is the third row shape, and it exists because the other two do not fit it. `Row` is a LIST row -- title/sub/meta describing one item in a collection. `Receipt` is a static key/value table with nowhere to put a control. A record's field needs both halves: a value that may be interactive (click to edit, a provenance chip beside it) and annotations that hang beneath it. Without this, every app displaying a record's fields hand-rolls the same label/value row and its own separator, and the separators then drift apart between apps.  The separator is the kit's (`panel-row.css`), not the caller's, which is the whole point: one rule owns where a field row ends, and the last row in a group correctly has none.
+ *
+ * Props for {@link DetailRow} (src/components/content.js).
+ */
+export interface DetailRowProps {
+    /** The field's human name. */
+    label?: any;
+    /** The value, or whatever the caller renders in its place. */
+    value?: any;
+    /** Rendered after the value -- chips, a source marker. */
+    trailing?: any;
+    /** Annotations rendered beneath the value. */
+    notes?: any;
+    /** Machine name, emitted as data-field for targeting. */
+    field?: string;
+    /** webjsx list key. */
+    key?: string;
+}
+export declare function DetailRow(props?: DetailRowProps): VNode;
 
 /**
  * Props for {@link PanelFromItems} (src/components/content.js).

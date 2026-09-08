@@ -7,7 +7,7 @@
 // — no consumer import needs to move.
 
 import { avatarInitial, avatarContrastFg, Avatar } from './content/avatar.js';
-import { Row, RowLink } from './content/row.js';
+import { Row, RowLink, DetailRow } from './content/row.js';
 import { Panel, Card, PanelFromItems, Section, Receipt, Changelog } from './content/panel.js';
 import { Hero, HeroFromPageData, Marquee, Manifesto, PageHeader } from './content/hero.js';
 import { Install, CliBlock } from './content/cli.js';
@@ -21,7 +21,7 @@ import { HomeView, ProjectView } from './content/views.js';
 
 export {
     avatarInitial, avatarContrastFg, Avatar,
-    Row, RowLink,
+    Row, RowLink, DetailRow,
     Panel, Card, PanelFromItems, Section, Receipt, Changelog,
     Hero, HeroFromPageData, Marquee, Manifesto, PageHeader,
     Install, CliBlock,

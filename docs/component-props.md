@@ -2,7 +2,7 @@
 
 Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit -- re-run after any component signature or JSDoc change.
 
-311 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
+312 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
 
 ---
 
@@ -234,6 +234,23 @@ A Claude-Desktop / cowork three-(or four-)column app shell.  Pure stateless chro
 **Kind:** component
 
 **Signature:** `code`, `title`, `sub`, `meta`, `href` = `'#'`, `key`, `target`
+
+### DetailRow
+
+One FIELD of a record: its label, its value, and whatever the app needs to say about that value.  This is the third row shape, and it exists because the other two do not fit it. `Row` is a LIST row -- title/sub/meta describing one item in a collection. `Receipt` is a static key/value table with nowhere to put a control. A record's field needs both halves: a value that may be interactive (click to edit, a provenance chip beside it) and annotations that hang beneath it. Without this, every app displaying a record's fields hand-rolls the same label/value row and its own separator, and the separators then drift apart between apps.  The separator is the kit's (`panel-row.css`), not the caller's, which is the whole point: one rule owns where a field row ends, and the last row in a group correctly has none.
+
+**Kind:** component
+
+**Signature:** `label`, `value`, `trailing`, `notes`, `field`, `key`
+
+**Documented params:**
+
+- `label` _(any)_ -- The field's human name.
+- `value` _(any)_ -- The value, or whatever the caller renders in its place.
+- `trailing` _(any)_ -- Rendered after the value -- chips, a source marker.
+- `notes` _(any)_ -- Annotations rendered beneath the value.
+- `field` _(string)_ -- Machine name, emitted as data-field for targeting.
+- `key` _(string)_ -- webjsx list key.
 
 ### PanelFromItems
 
