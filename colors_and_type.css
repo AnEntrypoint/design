@@ -872,9 +872,20 @@
   --accent-fg: #000000;
   --accent-ink: #B4600F;
   --accent-tint: color-mix(in oklab, var(--accent) 16%, var(--bg));
-  /* The brand red is the danger signal. Darkened for text use only, same
-     reason as the orange -- the pure #FF001D is a 3.99:1 fill colour. */
+  /* The brand red is the danger signal. --danger stays the exact brand red for
+     FILLS and indicators (the handoff banner's ring, heat bands, the accent
+     button background); --danger-ink is the darkened companion for when the
+     danger colour has to BE text, exactly the --accent/--accent-ink split
+     above. Measured on #FFFFFF: #FF001D = 3.99:1, fails AA for body type;
+     #d10018 = 5.64:1, passes.
+     --danger-ink was already consumed in four places across this kit
+     (chat.css, editor-primitives.css, app-shell/chat-polish.css) as
+     `var(--danger-ink, var(--danger))` but was never DEFINED by any theme, so
+     every one of them silently fell back to the 3.99:1 fill red. Live audit
+     caught it as a real 3.27:1 failure on casey's alert count -- on a
+     surveillance dashboard, the one number that must be noticed. */
   --danger: #FF001D;
+  --danger-ink: #d10018;
   --flame: #d10018;
   --warn: #d10018;
   /* Kept distinct from the brand on purpose: --amber and --sky are map pin
@@ -905,7 +916,11 @@
   --accent-fg: #000000;
   --accent-ink: #F59A4B;
   --accent-tint: color-mix(in oklab, var(--accent) 18%, var(--bg));
+  /* Same fill-vs-ink split as the light theme, inverted: on this ground the
+     text companion is LIGHTER, not darker. Measured on --ink (#1A1A1A):
+     #FF3347 = 4.82:1, #FF5C6B = 5.80:1. */
   --danger: #FF3347;
+  --danger-ink: #FF5C6B;
   --flame: #FF5C6B;
   --warn: #FF5C6B;
   --amber: var(--dark-amber);
