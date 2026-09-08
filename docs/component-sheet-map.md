@@ -17,11 +17,11 @@ whole sheet in and every component looks scattered across 20+ sheets.
 
 ## Totals
 
-- components in the manifest: 312
-- resolved to a defining module: 312
+- components in the manifest: 313
+- resolved to a defining module: 313
 - shared-base classes: 39
-- components with distinctive rules: 227
-  - owned by exactly 1 sheet (cleanly extractable today): 112
+- components with distinctive rules: 228
+  - owned by exactly 1 sheet (cleanly extractable today): 113
   - owned by 2 sheets: 49
   - owned by 3 or more sheets (need reorganizing before a subset is safe): 66
 
@@ -132,6 +132,7 @@ These are the ones that make a safe subset impossible to express today.
 | Row | src/components/content/row.js | app-shell/base.css, app-shell/panel-row.css, app-shell/row-print.css, chat.css, editor-primitives.css, app-surfaces.css |
 | RowLink | src/components/content/row.js | (no distinctive rules) |
 | DetailRow | src/components/content/row.js | app-shell/panel-row.css |
+| LogRow | src/components/content/row.js | app-shell/panel-row.css |
 | PanelFromItems | src/components/content/panel.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | Hero | src/components/content/hero.js | app-shell/base.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/sidebar-misc.css |
 | HeroFromPageData | src/components/content/hero.js | app-shell/base.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/sidebar-misc.css, app-shell/kits-appended.css |

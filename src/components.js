@@ -11,7 +11,7 @@ export {
 } from './components/shell.js';
 
 export {
-    Panel, Card, Row, RowLink, DetailRow, PanelFromItems,
+    Panel, Card, Row, RowLink, DetailRow, LogRow, PanelFromItems,
     Hero, HeroFromPageData, Marquee, Install, CliBlock, Receipt, Changelog,
     WorksList, WritingList, Manifesto, Section, PageHeader,
     Kpi, Sparkline, BarChart, Table, HealthTable, ProcessRegistryTable, SearchInput, TextField, Select, EventList,

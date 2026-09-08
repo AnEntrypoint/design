@@ -120,6 +120,43 @@
 .panel.panel-wide .panel-body { padding: 0; }
 
 /* ============================================================
+   LogRow — one entry in a log or timeline. Dense, quiet, and
+   carrying its meaning at the leading edge: the rail colour is
+   what lets an operator scan a hundred audit lines and see
+   where the replies and the warnings are without reading.
+
+   Deliberately NOT .row: that is a grid list row with a
+   background, a radius and hover chrome, which is right for an
+   item you click into and wrong for a long audit trail. The
+   geometry here is the density a timeline actually needs, and
+   it lives in the kit so the next app with a feed does not
+   arrive at its own slightly different version of it.
+   ============================================================ */
+.ds-log-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1-75) 0 var(--space-1-75) var(--space-2);
+  /* Dashed, not solid: a timeline separator should read as weaker than the
+     solid rules that divide real sections, or a long feed becomes a ladder. */
+  border-bottom: var(--bw-hair) dashed var(--rule);
+  /* Always present, transparent until toned, so a toned row never shifts
+     sideways relative to an untoned one. */
+  border-left: 3px solid transparent;
+  font-size: var(--fs-sm);
+}
+.ds-log-lead { flex: 0 0 auto; color: var(--fg-3); }
+/* Fixed floor so the body text of every line starts at the same x -- the
+   column an eye follows down the feed. */
+.ds-log-label { flex: 0 0 auto; min-width: 110px; color: var(--fg-3); font-size: var(--fs-pico); }
+.ds-log-text { flex: 1 1 auto; min-width: 0; }
+.ds-log-meta { flex: 0 0 auto; font-size: var(--fs-pico); color: var(--fg-3); }
+.ds-log-row--tone-accent { border-left-color: var(--accent); }
+.ds-log-row--tone-ok     { border-left-color: var(--success); }
+.ds-log-row--tone-warn   { border-left-color: var(--amber); }
+.ds-log-row--tone-muted  { border-left-color: var(--rule); }
+
+/* ============================================================
    DetailRow — one FIELD of a record: label, value, and whatever
    the app says about that value. The third row shape, distinct
    from .row (a LIST row: title/sub/meta for an item in a

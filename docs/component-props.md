@@ -2,7 +2,7 @@
 
 Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit -- re-run after any component signature or JSDoc change.
 
-312 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
+313 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
 
 ---
 
@@ -237,19 +237,27 @@ A Claude-Desktop / cowork three-(or four-)column app shell.  Pure stateless chro
 
 ### DetailRow
 
-One FIELD of a record: its label, its value, and whatever the app needs to say about that value.  This is the third row shape, and it exists because the other two do not fit it. `Row` is a LIST row -- title/sub/meta describing one item in a collection. `Receipt` is a static key/value table with nowhere to put a control. A record's field needs both halves: a value that may be interactive (click to edit, a provenance chip beside it) and annotations that hang beneath it. Without this, every app displaying a record's fields hand-rolls the same label/value row and its own separator, and the separators then drift apart between apps.  The separator is the kit's (`panel-row.css`), not the caller's, which is the whole point: one rule owns where a field row ends, and the last row in a group correctly has none.
-
 **Kind:** component
 
 **Signature:** `label`, `value`, `trailing`, `notes`, `field`, `key`
 
+### LogRow
+
+One entry in a LOG or timeline: a dense single line, with a coloured rail marking what kind of thing happened.  The kit's fourth row shape, and it is a different species from the other three rather than a variant of them. `Row` is a grid-laid LIST row with a background, a radius and hover chrome -- right for an item you click into, wrong for a hundred consecutive audit lines. `DetailRow` is a record's field. `Receipt` is a static key/value table. A timeline entry is none of those: it is quiet, dense, unclickable by default, and its most important signal is a colour at the leading edge telling you at a glance whether this line is an inbound message, a reply, an automated observation or a warning.  `EventList` already existed and does NOT cover this -- it composes `Row`, so it renders events as clickable list rows. This is the log-line shape that a case timeline, an audit trail or an activity feed actually wants.  Slots map to the parts a log line always has: `leading` an icon, `label` the fixed-width what/who column, `text` the body that takes the remaining width, `trailing` any per-entry control, and `meta` the timestamp pinned at the end.
+
+**Kind:** component
+
+**Signature:** `tone`, `leading`, `label`, `text`, `trailing`, `meta`, `kind`, `key`
+
 **Documented params:**
 
-- `label` _(any)_ -- The field's human name.
-- `value` _(any)_ -- The value, or whatever the caller renders in its place.
-- `trailing` _(any)_ -- Rendered after the value -- chips, a source marker.
-- `notes` _(any)_ -- Annotations rendered beneath the value.
-- `field` _(string)_ -- Machine name, emitted as data-field for targeting.
+- `tone` _('accent'|'ok'|'warn'|'muted')_ -- Rail colour at the leading edge.
+- `leading` _(any)_ -- Icon or marker before the label.
+- `label` _(any)_ -- Fixed-width what/who column.
+- `text` _(any)_ -- The entry body.
+- `trailing` _(any)_ -- Per-entry control, rendered before the meta.
+- `meta` _(any)_ -- Timestamp or similar, pinned at the end.
+- `kind` _(string)_ -- Machine name for the entry type, emitted as data-kind.
 - `key` _(string)_ -- webjsx list key.
 
 ### PanelFromItems

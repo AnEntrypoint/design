@@ -138,6 +138,51 @@ export function RowLink({ code, title, sub, meta, href = '#', key, target }) {
  * @param {string} field Machine name, emitted as data-field for targeting.
  * @param {string} key webjsx list key.
  */
+/**
+ * One entry in a LOG or timeline: a dense single line, with a coloured rail
+ * marking what kind of thing happened.
+ *
+ * The kit's fourth row shape, and it is a different species from the other
+ * three rather than a variant of them. `Row` is a grid-laid LIST row with a
+ * background, a radius and hover chrome -- right for an item you click into,
+ * wrong for a hundred consecutive audit lines. `DetailRow` is a record's
+ * field. `Receipt` is a static key/value table. A timeline entry is none of
+ * those: it is quiet, dense, unclickable by default, and its most important
+ * signal is a colour at the leading edge telling you at a glance whether this
+ * line is an inbound message, a reply, an automated observation or a warning.
+ *
+ * `EventList` already existed and does NOT cover this -- it composes `Row`,
+ * so it renders events as clickable list rows. This is the log-line shape
+ * that a case timeline, an audit trail or an activity feed actually wants.
+ *
+ * Slots map to the parts a log line always has: `leading` an icon, `label`
+ * the fixed-width what/who column, `text` the body that takes the remaining
+ * width, `trailing` any per-entry control, and `meta` the timestamp pinned at
+ * the end.
+ *
+ * @param {'accent'|'ok'|'warn'|'muted'} tone Rail colour at the leading edge.
+ * @param {any} leading Icon or marker before the label.
+ * @param {any} label Fixed-width what/who column.
+ * @param {any} text The entry body.
+ * @param {any} trailing Per-entry control, rendered before the meta.
+ * @param {any} meta Timestamp or similar, pinned at the end.
+ * @param {string} kind Machine name for the entry type, emitted as data-kind.
+ * @param {string} key webjsx list key.
+ */
+export function LogRow({ tone, leading, label, text, trailing, meta, kind, key }) {
+    const TONES = new Set(['accent', 'ok', 'warn', 'muted']);
+    // Whitelisted rather than interpolated: `kind` and `tone` come from data,
+    // and an unrecognised tone has no rule to lose anyway, so it falls back to
+    // the neutral rail instead of writing an unknown class into the DOM.
+    const toneCls = ' ds-log-row--tone-' + (TONES.has(tone) ? tone : 'muted');
+    return h('div', { key, class: 'ds-log-row' + toneCls, ...(kind ? { 'data-kind': String(kind) } : {}) },
+        leading != null ? h('span', { class: 'ds-log-lead' }, leading) : null,
+        label != null ? h('span', { class: 'ds-log-label' }, label) : null,
+        h('span', { class: 'ds-log-text' }, text),
+        trailing != null ? trailing : null,
+        meta != null ? h('span', { class: 'ds-log-meta' }, meta) : null);
+}
+
 export function DetailRow({ label, value, trailing, notes, field, key }) {
     return h('div', { key, class: 'ds-detail-row', ...(field ? { 'data-field': field } : {}) },
         h('span', { class: 'ds-detail-label' }, label),
