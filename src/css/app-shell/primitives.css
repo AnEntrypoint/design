@@ -91,9 +91,23 @@
 .ds-icon-btn-base { width: 32px; height: 32px; }
 .ds-icon-btn-lg { width: 40px; height: 40px; }
 .ds-icon-btn-xl { width: 48px; height: 48px; }
+/* Touch floor for the BASE button vocabulary, not just the handful of
+   components that each declared their own. This sheet already gives 44px to
+   .row-act and .ds-filter-pill, files.css to .ds-bulkbar .btn, and
+   data-density.css to .ds-sub-btn and .ds-session-row -- five per-component
+   copies of one rule, with .btn/.btn-primary/.btn-ghost/.ds-icon-btn (the
+   vocabulary nearly every consumer actually uses) covered by none of them.
+   Measured on a real consumer: 55 of 59 visible buttons on one screen were
+   under 44px, across ten distinct heights.
+   Coarse pointers only, so mouse-driven dense toolbars are untouched. */
 @media (pointer: coarse) {
-  .ds-icon-btn-xs { width: 32px; height: 32px; }
-  .ds-icon-btn-sm { width: 32px; height: 32px; }
+  .btn, .btn-primary, .btn-ghost, .ds-dropdown-trigger { min-height: 44px; }
+  /* Icon buttons were bumped to 32px here, which is larger than the base but
+     still short of the target the same sheet applies elsewhere. Square, so
+     both axes move together. */
+  .ds-icon-btn, .ds-icon-btn-xs, .ds-icon-btn-sm, .ds-icon-btn-base {
+    min-width: 44px; min-height: 44px;
+  }
 }
 .ds-icon-btn-ghost { background: transparent; }
 .ds-icon-btn-ghost:hover { background: var(--fg); color: var(--bg); }

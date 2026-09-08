@@ -136,12 +136,15 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  padding: var(--space-1-75) 0 var(--space-1-75) var(--space-2);
-  /* Dashed, not solid: a timeline separator should read as weaker than the
-     solid rules that divide real sections, or a long feed becomes a ladder. */
-  border-bottom: var(--bw-hair) dashed var(--rule);
-  /* Always present, transparent until toned, so a toned row never shifts
-     sideways relative to an untoned one. */
+  /* No hairline between entries. This sheet's own .row is built on exactly
+     that rule -- "Indicator rail on the left, no hairlines between rows" --
+     and a feed of a hundred lines is where a per-row rule turns into a
+     ladder fastest. Vertical rhythm does the separating instead, which is
+     why the padding is a step up from what a bordered row needed. */
+  padding: var(--space-2) 0 var(--space-2) var(--space-2);
+  /* The one edge that stays, because it is an INDICATOR and not a divider:
+     it says what kind of entry this is. Always present and transparent until
+     toned, so a toned row never shifts sideways against an untoned one. */
   border-left: 3px solid transparent;
   font-size: var(--fs-sm);
 }
@@ -171,13 +174,14 @@
 .ds-detail-row {
   display: flex;
   gap: var(--space-3);
-  padding: var(--space-1) 0;
-  border-bottom: var(--bw-hair) solid var(--rule);
+  /* Separated by rhythm, not by a rule per field. Twenty-eight fields with a
+     hairline each is the "ladder" this sheet's .row comment warns about, and
+     the label column already gives the eye its vertical line to follow. The
+     padding is a step up from what the bordered version used, so the rows
+     stay distinct without one. */
+  padding: var(--space-2) 0;
   font-size: var(--fs-sm);
 }
-/* The last field in a group closes the group; a trailing hairline there reads
-   as a missing row below it. */
-.ds-detail-row:last-child { border-bottom: none; }
 .ds-detail-label { flex: 0 0 40%; color: var(--fg-3); }
 .ds-detail-val {
   flex: 1 1 auto;
