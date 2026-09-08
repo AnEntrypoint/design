@@ -60,6 +60,14 @@
    the on-screen height in print/PDF; drop all chrome and let
    .ws-main expand to its natural document height.
    ============================================================ */
+/* Screen: the writing lines do not exist. Declared BEFORE the print block, not
+   after it. A media query contributes no specificity, so between two rules of
+   equal specificity source order alone decides -- and this rule sitting after
+   the print block silently beat the `display: block` inside it, in print as
+   well as on screen, so FillLines never drew on paper at all. Keep this
+   declaration above the @media print block. */
+.ds-fill-lines { display: none; }
+
 @media print {
   .ws-shell { display: block; }
   .ws-rail,
@@ -142,8 +150,4 @@
   .ds-fill-line + .ds-fill-line { margin-top: var(--space-2); }
 }
 
-/* Screen: the writing lines do not exist. Declared outside the print block so
-   the default holds everywhere, including in a print PREVIEW that renders the
-   screen sheet first. */
-.ds-fill-lines { display: none; }
 
