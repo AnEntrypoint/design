@@ -2550,6 +2550,25 @@
   min-width: 0;
   word-break: break-word;
 }
+/* Narrow: the label column stops being a column. A 40% label track is right
+   for a settings pane and wrong for anything narrow -- at 320px it is 128px
+   of label against 192px of value, and the value is the part being read.
+   Stacking is the component's own responsibility, not the consuming app's:
+   every app rendering a record's fields into a rail or a phone hits the same
+   collapse, and a per-app copy of this rule is exactly the drift DetailRow
+   exists to stop.
+   Two queries, because two different things can be narrow. The container
+   query catches a narrow ROW inside a wide window (a case rail on a desktop),
+   and is inert where no ancestor declares container-type. The media query
+   catches a phone, where there may be no container ancestor at all. */
+@container (max-width: 30rem) {
+  .ds-247420 .ds-detail-row { flex-direction: column; gap: var(--space-hair, 2px); }
+  .ds-247420 .ds-detail-label { flex: 0 0 auto; }
+}
+@media (max-width: 480px) {
+  .ds-247420 .ds-detail-row { flex-direction: column; gap: var(--space-hair, 2px); }
+  .ds-247420 .ds-detail-label { flex: 0 0 auto; }
+}
 
 /* ============================================================
    Row — primary list pattern. Indicator rail on the left,
@@ -3450,10 +3469,26 @@
   /* Headings stay on the fluid base clamps (cqi) — no mobile re-clamp. */
 
   /* Panel & Row */
-  .ds-247420 .panel { margin: 0 0 var(--space-3); }
-  .ds-247420 .panel-head { padding: var(--space-3) var(--space-2); gap: var(--space-2); }
-  .ds-247420 .panel-body { padding: var(--space-2); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* One horizontal gutter per axis, owned by the outermost container. On a
+     phone .app-main already holds the page inset (16px a side, set in
+     responsive2-workspace.css); a Panel nested inside it adds its own, its
+     head and body add two more, and the sum is a content column narrower than
+     the whitespace around it. A base .panel is transparent and borderless, so
+     its horizontal padding buys no edge definition to pay for that width --
+     it only indents content that is already inset. Vertical padding is
+     untouched: that is the panel's own rhythm, not a duplicated gutter.
+     Filled/bordered variants are re-padded below, since there the padding
+     holds content off a real edge. */
+  .ds-247420 .panel { margin: 0 0 var(--space-3); padding-left: 0; padding-right: 0; }
+  .ds-247420 .panel-head { padding: var(--space-3) 0; gap: var(--space-2); }
+  .ds-247420 .panel-body { padding: var(--space-2) 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .ds-247420 .panel-body > table { min-width: 100%; }
+  /* The variants that DO draw an edge keep an inset off it. .panel-inline and
+     .panel--dense already declare their own padding at (0,2,0) in
+     panel-row.css and out-specify the zeroing above unaided; .panel-tonal and
+     .ds-context .panel declare fill/border only, so they are named here. */
+  .ds-247420 .panel.panel-tonal,
+  .ds-247420 .ds-context .panel { padding-left: var(--space-3); padding-right: var(--space-3); }
 
   /* Scoped to the `.app` shell so this wins on SPECIFICITY (0,2,0) rather than
      on an !important flag. Three rules would otherwise beat a bare `.row`

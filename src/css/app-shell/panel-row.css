@@ -191,6 +191,25 @@
   min-width: 0;
   word-break: break-word;
 }
+/* Narrow: the label column stops being a column. A 40% label track is right
+   for a settings pane and wrong for anything narrow -- at 320px it is 128px
+   of label against 192px of value, and the value is the part being read.
+   Stacking is the component's own responsibility, not the consuming app's:
+   every app rendering a record's fields into a rail or a phone hits the same
+   collapse, and a per-app copy of this rule is exactly the drift DetailRow
+   exists to stop.
+   Two queries, because two different things can be narrow. The container
+   query catches a narrow ROW inside a wide window (a case rail on a desktop),
+   and is inert where no ancestor declares container-type. The media query
+   catches a phone, where there may be no container ancestor at all. */
+@container (max-width: 30rem) {
+  .ds-detail-row { flex-direction: column; gap: var(--space-hair, 2px); }
+  .ds-detail-label { flex: 0 0 auto; }
+}
+@media (max-width: 480px) {
+  .ds-detail-row { flex-direction: column; gap: var(--space-hair, 2px); }
+  .ds-detail-label { flex: 0 0 auto; }
+}
 
 /* ============================================================
    Row — primary list pattern. Indicator rail on the left,
