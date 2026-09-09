@@ -2185,17 +2185,23 @@
 .ds-247420 .chip.tone-live {
   background: color-mix(in oklab, var(--sky) 16%, var(--bg));
   color: var(--sky);
-  position: relative;
-  padding-left: 22px;
 }
+/* The dot FLOWS; it is not absolutely positioned with padding reserved for it.
+   It used to be `position:absolute; left:10px` with `padding-left:22px` on the
+   chip, while the right padding stayed at the .chip--sm default of 8px -- so a
+   tone-live chip carried 22px of space on the left against 8px on the right and
+   its label sat 14px off centre, measured on the running page. It was the only
+   tone that did this, so in a row of chips that one looked broken.
+   .ds-filter-pill::before in this same kit already does it the right way: a
+   static dot with a margin, which the chip's own inline-flex centring then
+   treats as part of the label group. Same shape here, and the padding goes back
+   to symmetric. */
 .ds-247420 .chip.tone-live::before {
   content: '';
-  position: absolute;
-  left: 10px; top: 50%;
+  flex: 0 0 auto;
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--sky);
-  transform: translateY(-50%);
 }
 @media (prefers-reduced-motion: no-preference) {
   .ds-247420 .chip.tone-live::before {
