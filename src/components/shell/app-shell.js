@@ -122,7 +122,7 @@ export function Side({ sections = [] } = {}) {
             // groupId points at, so a plain div loses nothing for AT users.
             h('div', { class: 'group', id: groupId }, sec.group),
             ...sec.items.map((item, i) => {
-                const { glyph, label, href, active, count, color, onClick, ariaLabel } = item;
+                const { glyph, label, href, active, count, color, onClick, ariaLabel, indent } = item;
                 const countLabel = (count != null && count !== 0 && count !== '0') ? ` (${count})` : '';
                 // An item with neither href nor onClick is not a control, and
                 // must not look like one. href used to default to '#', so a
@@ -145,7 +145,11 @@ export function Side({ sections = [] } = {}) {
                 return h('a', {
                     key: sec.group + i,
                     ...(isControl ? { href: href != null ? href : '#' } : {}),
-                    class: active ? 'active' : '',
+                    // indent marks an item as a mode of the row above it (not
+                    // its own destination), rendered inset so the group reads
+                    // as one place with sub-views rather than a flat list of
+                    // equal-weight siblings.
+                    class: (active ? 'active' : '') + (indent ? ' indent' : ''),
                     'aria-current': active ? 'page' : null,
                     // ariaLabel lets a caller pass the untruncated source string
                     // as the accessible name when `label` itself is a shortened

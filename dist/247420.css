@@ -5822,6 +5822,13 @@
 .ds-247420 .app-side[data-density="spacious"] a,
 .ds-247420 .app-side-shell[data-density="spacious"] .app-side a { margin-bottom: var(--space-2); }
 
+/* An indented row is a MODE of the row above it, not its own destination
+   (e.g. Hotspots/Related reports are views ON the map, not siblings of it) --
+   inset it and shrink its glyph rail so the group reads as one place with
+   sub-views instead of a flat list of equal-weight items. */
+.ds-247420 .app-side a.indent { padding-left: calc(var(--space-2, 8px) + 18px); }
+.ds-247420 .app-side a.indent .glyph { font-size: var(--fs-nano, 10px); opacity: 0.8; }
+
 .ds-247420 .app-side .count {
   /* was a hardcoded "1px 8px" -- 1px matches no rung on the --space-* scale
      (the smallest, --space-hair, is 2px), and this rule is also the one that
