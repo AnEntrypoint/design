@@ -190,7 +190,7 @@ function toggleStatusCollapsed(fromEl) {
     try { localStorage.setItem(STATUS_COLLAPSE_KEY, next ? '1' : '0'); } catch (_) { /* private mode: state just won't persist */ }
 }
 
-export function Status({ left = [], right = [] } = {}) {
+export function Status({ left = [], right = [], ariaLabel } = {}) {
     const collapsed = isStatusCollapsed();
     // Sync .app-main's reserved clearance to the persisted collapse state on
     // first render, matching what toggleStatusCollapsed sets on click -- the
@@ -200,7 +200,7 @@ export function Status({ left = [], right = [] } = {}) {
         const app = el.closest('.app, .ws-shell');
         if (app) app.style.setProperty('--app-status-h-live', collapsed ? 'var(--space-4)' : 'var(--app-status-h)');
     };
-    return h('footer', { class: 'app-status' + (collapsed ? ' is-collapsed' : ''), role: 'contentinfo', ref: syncLiveVar },
+    return h('footer', { class: 'app-status' + (collapsed ? ' is-collapsed' : ''), role: 'contentinfo', 'aria-label': ariaLabel || null, ref: syncLiveVar },
         h('button', {
             class: 'app-status-toggle', type: 'button',
             'aria-label': 'toggle status bar', 'aria-expanded': collapsed ? 'false' : 'true',
@@ -261,7 +261,7 @@ function syncAppSide(el) {
     }
 }
 
-export function AppShell({ topbar, crumb, side, main, status, narrow, fullBleed } = {}) {
+export function AppShell({ topbar, crumb, side, main, status, narrow, fullBleed, bannerLabel, mainLabel, mainLabelledby } = {}) {
     const hasSide = Boolean(side);
     const sideNode = hasSide ? side : h('aside', { class: 'app-side', 'aria-hidden': 'true' });
     // Topbar and crumb used to stack as two separate chrome bars — a "double
@@ -287,9 +287,14 @@ export function AppShell({ topbar, crumb, side, main, status, narrow, fullBleed 
     const topbarContent = (crumb && topbarIsSelfWrappedHeader)
         ? h('div', { class: 'app-topbar' }, ...(topbar.props.children || []))
         : topbar;
+    // bannerLabel names this landmark for a caller composing topbar+crumb into
+    // one banner region -- role="banner" alone gives AT users a region with no
+    // name to distinguish it from any other banner on a multi-shell page (see
+    // the multi-window WM case above), and this kit renders the header, so
+    // only the kit can put the name directly on the element it owns.
     const chrome = (topbar && crumb)
-        ? h('header', { class: 'app-chrome', role: 'banner' }, topbarContent, crumb)
-        : (topbar || crumb) ? h('header', { class: 'app-chrome', role: 'banner' }, topbar || crumb) : null;
+        ? h('header', { class: 'app-chrome', role: 'banner', 'aria-label': bannerLabel || null }, topbarContent, crumb)
+        : (topbar || crumb) ? h('header', { class: 'app-chrome', role: 'banner', 'aria-label': bannerLabel || null }, topbar || crumb) : null;
     return h('div', { class: 'app', ref: syncAppSide },
         h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
         hasSide ? h('button', {
@@ -306,10 +311,17 @@ export function AppShell({ topbar, crumb, side, main, status, narrow, fullBleed 
             // keyboard-only user to scroll it with the arrow keys at all —
             // tabindex=-1 made it focusable only programmatically, which
             // satisfied the skip-link but left the region unscrollable
-            // without a pointer. 0 keeps the skip-link target working AND
-            // puts the region in the tab order. <main> is a landmark, so it
-            // is already named for assistive tech without an aria-label.
-            h('main', { class: 'app-main' + (narrow ? ' narrow' : '') + (fullBleed ? ' full-bleed' : ''), id: 'app-main', tabindex: '0' }, ...(Array.isArray(main) ? main : [main]))
+            // without a pointer. 0 keeps the skip-link target working. A
+            // landmark's ROLE is not its NAME -- an unnamed <main> reaches the
+            // accessibility tree as accName '' regardless of the implicit
+            // "main" role, so a page with more than one shell instance (or
+            // just a screen-reader landmark list) has no way to tell this
+            // region apart from another. Naming it is the CALLER's job (each
+            // page knows its own title), via mainLabel (a literal string) or
+            // mainLabelledby (an id already on the page, e.g. the page's own
+            // <h1> -- preferred, since the landmark and the heading can never
+            // then say different things about the same screen).
+            h('main', { class: 'app-main' + (narrow ? ' narrow' : '') + (fullBleed ? ' full-bleed' : ''), id: 'app-main', tabindex: '0', 'aria-label': mainLabel || null, 'aria-labelledby': mainLabelledby || null }, ...(Array.isArray(main) ? main : [main]))
         ),
         status || null
     );
