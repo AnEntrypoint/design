@@ -33,14 +33,16 @@ function diffChildren(parent, newVNodes) {
         const newVNode = newVNodes[i];
         const oldVNode = oldVNodes[i];
         const currentNode = originalChildNodes[i];
-        const newKey = isVElement(newVNode) ? newVNode.props.key : undefined;
+        const newKey = isVElement(newVNode) && !(newVNode instanceof Node) ? newVNode.props.key : undefined;
         if (newKey !== undefined) {
             if (!keyedMap) {
                 hasKeyedNodes = true;
                 keyedMap = new Map();
                 for (let j = 0; j < oldVNodes.length; j++) {
                     const matchingVNode = oldVNodes[j];
-                    const key = isVElement(matchingVNode) ? matchingVNode.props.key : undefined;
+                    if (matchingVNode instanceof Node || !isVElement(matchingVNode))
+                        continue;
+                    const key = matchingVNode.props.key;
                     if (key !== undefined) {
                         const node = originalChildNodes[j];
                         keyedMap.set(key, { node, oldVNode: matchingVNode });
@@ -100,6 +102,22 @@ function canUpdateVNodes(newVNode, oldVNode) {
         return true;
     }
     else {
+        // An already-real DOM node (returned by a "one-shot create/update"
+        // helper, e.g. `el.setProps(props); return el`) carries no `.props` —
+        // it always REPLACES the previous node in place (handled by
+        // applyChanges' own `newVNode instanceof Node` branch) rather than
+        // being diffed as a VElement. Critically this must still route
+        // through the "update" change type, not "create": "create" only
+        // inserts, it never removes whatever was already occupying that
+        // position, so treating this pairing as un-updatable orphans the old
+        // real node as an extra sibling instead of swapping it out — the
+        // observed duplicate composer / duplicate slot-outlet content bug.
+        if (newVNode instanceof Node) {
+            return true;
+        }
+        if (oldVNode instanceof Node) {
+            return false;
+        }
         if (isVElement(oldVNode) && isVElement(newVNode)) {
             const oldKey = oldVNode.props.key;
             const newKey = newVNode.props.key;
@@ -118,7 +136,10 @@ function applyChanges(parent, changes, originalNodes, nodeOrderUnchanged) {
     for (const change of changes) {
         if (change.type === "create") {
             let node = undefined;
-            if (isVElement(change.vnode)) {
+            if (change.vnode instanceof Node) {
+                node = change.vnode;
+            }
+            else if (isVElement(change.vnode)) {
                 node = createDOMElement(change.vnode, getNamespaceURI(parent));
             }
             else {
@@ -135,6 +156,14 @@ function applyChanges(parent, changes, originalNodes, nodeOrderUnchanged) {
         }
         else {
             const { node, newVNode, oldVNode } = change;
+            if (newVNode instanceof Node) {
+                if (newVNode !== node) {
+                    parent.replaceChild(newVNode, node);
+                }
+                lastPlacedNode = newVNode;
+                nodes.push(newVNode);
+                continue;
+            }
             if (isVElement(newVNode)) {
                 const oldProps = oldVNode?.props || {};
                 const newProps = newVNode.props;
