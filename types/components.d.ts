@@ -185,6 +185,7 @@ export interface StatusProps {
     left?: any[];
     /** @default [] */
     right?: any[];
+    ariaLabel?: any;
 }
 export declare function Status(props?: StatusProps): VNode;
 
@@ -199,6 +200,9 @@ export interface AppShellProps {
     status?: any;
     narrow?: any;
     fullBleed?: any;
+    bannerLabel?: any;
+    mainLabel?: any;
+    mainLabelledby?: any;
 }
 export declare function AppShell(props?: AppShellProps): VNode;
 
@@ -2120,6 +2124,7 @@ export interface ThreadPanelProps {
     onSelect?: (...args: any[]) => any;
     onCreate?: (...args: any[]) => any;
     onClose?: (...args: any[]) => any;
+    onReply?: (...args: any[]) => any;
     /** @default false */
     loading?: boolean;
 }

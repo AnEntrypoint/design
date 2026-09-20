@@ -33,8 +33,22 @@ function ListSkeleton({ cls, rows = 5 } = {}) {
             h('span', { class: 'ds-skel ds-skel-title' }), h('span', { class: 'ds-skel ds-skel-meta' }))));
 }
 
-export function ThreadPanel({ threads = [], activeId = null, title = 'Threads', onSelect, onCreate, onClose, loading = false } = {}) {
+// onReply is opt-in: a caller with no reply concept (a plain threaded-channel
+// list) omits it and gets the original list-only panel; a caller that models
+// replies as list entries (forum posts, via selectForumPost's synthetic
+// thread rows) passes it and gets a composer docked under the list, matching
+// the Chat composer pattern already used elsewhere in this file's siblings.
+export function ThreadPanel({ threads = [], activeId = null, title = 'Threads', onSelect, onCreate, onClose, onReply, loading = false } = {}) {
     const list = Array.isArray(threads) ? threads : [];
+    let draft = '';
+    const submit = () => {
+        const text = draft.trim();
+        if (!text || !onReply) return;
+        onReply(text);
+        draft = '';
+        const input = document.querySelector('.cm-tp-reply-input');
+        if (input) input.value = '';
+    };
     return h('div', { class: 'cm-thread-panel', role: 'complementary', 'aria-label': title },
         h('div', { class: 'cm-tp-head' },
             h('span', { class: 'cm-tp-title' }, title),
@@ -61,7 +75,16 @@ export function ThreadPanel({ threads = [], activeId = null, title = 'Threads', 
                 : h('div', { class: 'cm-tp-empty', role: 'status' },
                     Icon('thread', { size: 20 }),
                     h('span', { class: 'cm-tp-empty-text' }, onCreate ? 'no threads yet — start one' : 'no threads yet'))
-        )
+        ),
+        onReply ? h('form', {
+            class: 'cm-tp-reply', onsubmit: (e) => { e.preventDefault(); submit(); }
+        },
+            h('input', {
+                type: 'text', class: 'cm-tp-reply-input', placeholder: 'Reply…', 'aria-label': 'reply',
+                oninput: (e) => { draft = e.target.value; }
+            }),
+            h('button', { type: 'submit', class: 'cm-tp-reply-send', 'aria-label': 'send reply' }, Icon('send'))
+        ) : null
     );
 }
 

@@ -11848,6 +11848,24 @@
   color: var(--fg-2, var(--fg)); opacity: .7; font-size: var(--fs-sm);
 }
 .ds-247420 .cm-tp-empty svg, .ds-247420 .cm-forum-empty svg, .ds-247420 .cm-channel-empty svg, .ds-247420 .cm-member-empty svg { opacity: .6; }
+.ds-247420 .cm-tp-reply {
+  display: flex; gap: var(--space-1);
+  padding: var(--space-2); border-top: var(--bw-hair) solid var(--rule);
+  flex: 0 0 auto;
+}
+.ds-247420 .cm-tp-reply-input {
+  flex: 1; min-width: 0;
+  background: var(--bg-1, var(--bg)); color: var(--fg);
+  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1);
+  padding: var(--space-1) var(--space-2); font-size: var(--fs-xs);
+}
+.ds-247420 .cm-tp-reply-input:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
+.ds-247420 .cm-tp-reply-send {
+  border: none; background: var(--accent); color: var(--accent-fg, var(--bg));
+  cursor: pointer; width: 32px; height: 32px; border-radius: var(--r-1);
+  display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+}
+.ds-247420 .cm-tp-reply-send:hover { filter: brightness(1.08); }
 
 /* Loading skeletons — cold-load placeholders for channel/member/thread/forum
    lists. Same .ds-skel shimmer primitive as sessions.js/files.js so every
