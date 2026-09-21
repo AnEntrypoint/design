@@ -2124,6 +2124,7 @@ export interface ThreadPanelProps {
     onSelect?: (...args: any[]) => any;
     onCreate?: (...args: any[]) => any;
     onClose?: (...args: any[]) => any;
+    onReply?: (...args: any[]) => any;
     /** @default false */
     loading?: boolean;
 }
