@@ -668,6 +668,57 @@
   --dark-green:       #5CBF52;
 }
 
+/* ============================================================
+   THEME-DERIVED SURFACE FAMILY — re-derived on EVERY themed element
+   ============================================================
+   A custom property whose value is `var(--other)` is substituted at
+   computed-value time on the element that DECLARES it, not on the element
+   that finally uses it. So a derived token declared only in the base block
+   above freezes the base block's inputs: any element that rebinds the
+   --bg / --fg / --accent ladder further down the tree keeps the ANCESTOR's
+   derived values, because nothing re-derives them at the new binding site.
+
+   This kit supports exactly that shape on purpose -- a theme island under a
+   differently-themed ancestor (see [data-theme="paper"]'s own "a paper island
+   under a dark ancestor" note) -- and a consumer that puts data-theme on the
+   app root while the document root resolves a different theme is the same
+   thing. Measured live in casey's dashboard: <html data-theme="auto"> under an
+   OS dark preference, with data-theme="herd" (light) on <body> and #app. The
+   herd block rebound --bg-2 to #F4F5F6 and --fg-2 to #333333 correctly, but
+   --panel-1 kept the ROOT's frozen #333333, so `.ds-alert` (background
+   --panel-1, message colour --fg-2) painted #333333 on #333333 -- 1.00:1,
+   invisible -- with its title at 1.09:1 and its icon at 1.99:1. Every empty
+   state, the offline banner, every toast and the case pane's visit warning.
+
+   The fix is structural, not per-theme: this one block re-derives the whole
+   family on any element carrying data-theme, whatever its value, so a theme
+   added later inherits the correctness instead of having to remember to
+   restate 15 tokens. It sits BEFORE the per-theme blocks and carries the same
+   (0,1,0) specificity, so a theme that deliberately deviates (ink's and
+   github-dark's --panel-3 at 20% rather than 12%) still wins on that one
+   declaration while taking the rest from here. */
+[data-theme] {
+  --panel-bg:     var(--bg);
+  --panel-bg-2:   var(--bg-2);
+  --panel-accent: var(--accent);
+  --panel-0:      var(--bg);
+  --panel-1:      var(--bg-2);
+  --panel-2:      var(--bg-3);
+  --panel-hover:  color-mix(in oklab, var(--fg) 4%, var(--panel-1));
+  --panel-3:      color-mix(in oklab, var(--fg) 12%, transparent);
+  --panel-text:   var(--fg);
+  --panel-text-2: var(--fg-2);
+  --panel-text-3: var(--fg-3);
+  --panel-accent-2: var(--accent-bright, var(--accent));
+  --panel-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent), 0 4px 14px color-mix(in oklab, var(--fg) 8%, transparent);
+  --panel-shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
+  /* Same class: a scrim is the theme's own ink dimming its own ground, so an
+     island's overlay must dim with the island's --fg, not its ancestor's. */
+  --scrim:        color-mix(in oklab, var(--fg) 40%, transparent);
+  --scrim-strong: color-mix(in oklab, var(--fg) 72%, transparent);
+  --scrim-media:  color-mix(in oklab, var(--fg) 85%, transparent);
+}
+
 [data-theme="ink"],
 [data-theme="dark"] {
   color-scheme: dark;
@@ -677,15 +728,10 @@
   --fg:        var(--paper);
   --fg-2:      var(--paper-2);
   --fg-3:      var(--paper-3-dark);
-  --panel-bg:  var(--bg);
-  --panel-bg-2: var(--bg-2);
-  --panel-0:   var(--bg);
-  --panel-1:   var(--bg-2);
-  --panel-2:   var(--bg-3);
+  /* The whole --panel-* family re-derives from the ladder above in the
+     [data-theme] block; only this one tier deviates from the shared
+     derivation -- a 12% hairline off a light --fg disappears on ink. */
   --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
-  --panel-text:   var(--fg);
-  --panel-text-2: var(--fg-2);
-  --panel-text-3: var(--fg-3);
   --accent:    var(--dark-accent);
   --accent-fg: var(--dark-accent-fg);
   --accent-ink: var(--dark-accent-ink);
@@ -760,15 +806,9 @@
     --fg:        var(--paper);
     --fg-2:      var(--paper-2);
     --fg-3:      var(--paper-3-dark);
-    --panel-bg:  var(--bg);
-    --panel-bg-2: var(--bg-2);
-    --panel-0:   var(--bg);
-    --panel-1:   var(--bg-2);
-    --panel-2:   var(--bg-3);
+    /* Only tier-3 deviates from the shared [data-theme] derivation; see the
+       explicit dark block above. */
     --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
-    --panel-text:   var(--fg);
-    --panel-text-2: var(--fg-2);
-    --panel-text-3: var(--fg-3);
     --accent:    var(--dark-accent);
     --accent-fg: var(--dark-accent-fg);
     --accent-ink: var(--dark-accent-ink);
@@ -955,15 +995,9 @@
   --fg:        #e6edf3;
   --fg-2:      #c9d1d9;
   --fg-3:      #8b949e;
-  --panel-bg:  var(--bg);
-  --panel-bg-2: var(--bg-2);
-  --panel-0:   var(--bg);
-  --panel-1:   var(--bg-2);
-  --panel-2:   var(--bg-3);
+  /* Only tier-3 deviates from the shared [data-theme] derivation; see the
+     explicit dark block above. */
   --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
-  --panel-text:   var(--fg);
-  --panel-text-2: var(--fg-2);
-  --panel-text-3: var(--fg-3);
   --accent:    #58a6ff;
   --accent-fg: #ffffff;
   --accent-ink: #58a6ff;
