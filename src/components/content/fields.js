@@ -56,12 +56,32 @@ export function SearchInput({ value = '', placeholder = 'search…', onInput, on
         resultCount != null ? h('span', { key: 'cnt', class: 'sr-only', role: 'status', 'aria-live': 'polite' }, resultCount) : null);
 }
 
-export function TextField({ label, value = '', type = 'text', placeholder = '', onInput, onChange, name, key, hint, multiline, rows = 4, maxLength, min, max, error, title, size = 'md', 'aria-label': ariaLabel, 'aria-invalid': ariaInvalid, 'aria-describedby': ariaDescribedBy }) {
+/**
+ * A single-line or multi-line text field.
+ *
+ * `suggestions` turns it into a COMBO BOX rather than a second control type: a
+ * real `<datalist>`, so the values are offered and filtered by the browser
+ * itself — no popup to render, no keystroke handler, nothing to re-render as
+ * someone types, and typing a value that is not on the list stays completely
+ * unblocked (which is the whole difference between this and `Select`). Native is
+ * the right mechanism here specifically because it costs zero latency on a field
+ * somebody is typing into, and because a phone gives it the platform's own
+ * picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.
+ *
+ * Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived
+ * from it, so two suggestion fields on one screen need distinct ones.
+ */
+export function TextField({ label, value = '', type = 'text', placeholder = '', onInput, onChange, name, key, hint, multiline, rows = 4, maxLength, min, max, error, title, size = 'md', suggestions, 'aria-label': ariaLabel, 'aria-invalid': ariaInvalid, 'aria-describedby': ariaDescribedBy }) {
     // size: 'sm' | 'md' | 'lg' — md is the base .ds-field control; sm/lg add a
     // wrapper modifier that snaps the control height/padding/font to --ctl-*.
     const sizeCls = size === 'sm' ? ' ds-field--sm' : (size === 'lg' ? ' ds-field--lg' : '');
     const errorId = error != null ? ((key ? key : 'tf') + '-err') : null;
     const describedBy = ariaDescribedBy || errorId || null;
+    // Stable across renders (derived from name/key, never a counter) — an id that
+    // changed per render would rewrite the input's `list` attribute on every
+    // keystroke and break the open picker.
+    const sugg = (!multiline && Array.isArray(suggestions) && suggestions.length) ? suggestions : null;
+    const listId = sugg ? ('ds-dl-' + String(name || key || 'field')) : null;
     const input = multiline
         ? h('textarea', {
             key: 'i', name, rows, placeholder, value,
@@ -78,6 +98,11 @@ export function TextField({ label, value = '', type = 'text', placeholder = '', 
             maxlength: maxLength != null ? maxLength : null,
             min: min != null ? String(min) : null,
             max: max != null ? String(max) : null,
+            list: listId,
+            // Chrome/Safari's own history dropdown would otherwise open on top of
+            // the datalist and offer this browser's past entries beside the real
+            // ones — two lists, one of them nobody else can see.
+            autocomplete: sugg ? 'off' : null,
             'aria-label': ariaLabel || null,
             'aria-invalid': error != null ? 'true' : (ariaInvalid || null),
             'aria-describedby': describedBy,
@@ -89,6 +114,17 @@ export function TextField({ label, value = '', type = 'text', placeholder = '', 
         ...[
             label != null ? h('span', { key: 'l', class: 'ds-field-label' }, label) : null,
             input,
+            sugg ? h('datalist', { key: 'dl', id: listId },
+                ...sugg.map((s) => {
+                    const v = typeof s === 'string' ? s : (s && s.value != null ? String(s.value) : '');
+                    // No text child when there is no label: a datalist option's
+                    // own value is what the browser offers, and an empty text
+                    // node renders as a blank second line beside it.
+                    const lab = (typeof s === 'object' && s && s.label != null) ? String(s.label) : null;
+                    return lab != null
+                        ? h('option', { key: 'o-' + v, value: v }, lab)
+                        : h('option', { key: 'o-' + v, value: v });
+                })) : null,
             error != null ? h('span', { key: 'e', id: errorId, class: 'ds-field-error', role: 'alert', 'aria-live': 'polite', 'aria-atomic': 'true' }, error) : null,
             maxLength != null ? h('span', { key: 'c', class: 'ds-field-count' }, String(value.length) + '/' + maxLength) : null,
             hint != null ? h('span', { key: 'h', class: 'ds-field-hint' }, hint) : null
