@@ -87,7 +87,8 @@ export function createDamageNumbers(scene, camera, config = {}) {
 		return el
 	}
 
-	function addNumber(damage, worldPos, options = {}) {
+	function addNumber(damage, worldPos, callOptions) {
+		const options = callOptions || {}
 		const value = Number(damage)
 		if (damage === null || damage === undefined || !Number.isFinite(value)) return null
 		const frame = canvasFrame()
