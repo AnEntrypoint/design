@@ -1981,11 +1981,6 @@ input.ov-set-control[type="range"] { padding: 0; accent-color: var(--accent); }
     margin: 0 var(--space-1-5, 5px);
 }
 
-/* Floating damage text (createDamageNumbers). JS supplies only what varies per number: the projected
-   left/top, the fade (opacity) and four custom properties -- --ds-damage-float (px risen so far),
-   --ds-damage-rank (nearer numbers draw above farther ones, added to the --z-raised rung),
-   --ds-damage-scale (big hits render larger) and the optional --ds-damage-color / --ds-damage-size
-   overrides. Everything else is here so the look follows the active theme. */
 .ds-damage-number {
     position: fixed;
     z-index: calc(var(--z-raised) + var(--ds-damage-rank, 0));

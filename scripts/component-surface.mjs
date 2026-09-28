@@ -180,9 +180,6 @@ function stripLineComments(raw) {
         .join('\n');
 }
 
-// Split on commas that sit at bracket depth 0. Prop and argument defaults
-// themselves contain object/array literals with their own commas, so a flat
-// split(',') would shred `actions = FILE_ROW_ACTIONS` style defaults.
 function splitTopLevel(raw) {
     const parts = [];
     let cur = '', d = 0;
@@ -204,12 +201,6 @@ function splitTopLevel(raw) {
 function parseDestructuredProps(raw) {
     raw = stripLineComments(raw).trim();
     if (!raw.startsWith('{')) {
-        // Not a destructured single-object param: a plain positional-arg
-        // function such as iconMarkup(name, opts) or createDamageNumbers(scene,
-        // camera, config = {}). Each argument is its own entry (split on
-        // top-level commas only -- a default can carry its own commas), so the
-        // JSDoc drift check compares @param names against real argument names
-        // instead of one comma-joined string that no @param can ever match.
         return splitTopLevel(raw).map((arg) => {
             const [pattern, ...defParts] = arg.split('=');
             return { name: pattern.trim(), default: defParts.length ? defParts.join('=').trim() : null, alias: null, positional: true };

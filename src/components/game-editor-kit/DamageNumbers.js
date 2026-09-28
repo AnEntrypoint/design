@@ -1,36 +1,19 @@
 import { projectToScreen, layerRank } from './damage-projection.js'
 
-/**
- * DamageNumbers — Floating damage text rendering in 3D world space.
- *
- * Creates animated damage indicators that float above hit points, fade out
- * over time. Pure UI layer with no backend dependencies — scene/camera are
- * passed in, no game-state coupling. Compatible with THREE.js.
- *
- * Factory pattern: createDamageNumbers(scene, camera, config) returns {
- *   addNumber(damage, worldPos, options),
- *   update(deltaTime),
- *   getActiveNumbers(),
- *   cleanup()
- * }
- */
-
 const FALLBACK_SIZE = { width: 1920, height: 1080 }
 const BIG_HIT = 25
 const MAX_SCALE_BONUS = 0.5
 const DEFAULT_FLOAT_PX = 60
+const DEFAULT_DURATION_MS = 1500
 const DEFAULT_MAX_ACTIVE = 200
-const SCOPE_SELECTOR = '.ds-247420'
+const STYLE_SCOPE_SELECTOR = '.ds-247420'
 
 const positive = (value, fallback) => (Number.isFinite(value) && value > 0 ? value : fallback)
 
-// Every rule in the bundled stylesheet sits under the scope class, and a consumer may put that class on
-// <html>, <body> or only a root <div>. Mounting on a body that is outside the scope would leave the number
-// unstyled (position:static, default size), so the default mount is the body only when it is inside the scope.
-function defaultMount() {
+function defaultMountInsideStyleScope() {
 	if (typeof document === 'undefined') return null
-	if (document.body.closest(SCOPE_SELECTOR)) return document.body
-	return document.querySelector(SCOPE_SELECTOR) || document.body
+	if (document.body.closest(STYLE_SCOPE_SELECTOR)) return document.body
+	return document.querySelector(STYLE_SCOPE_SELECTOR) || document.body
 }
 
 /**
@@ -52,19 +35,17 @@ export function createDamageNumbers(scene, camera, config = {}) {
 		container: requestedContainer,
 		defaultColor,
 		defaultFontSize,
-		defaultDuration = 1500,
+		defaultDuration = DEFAULT_DURATION_MS,
 		maxActive = DEFAULT_MAX_ACTIVE,
 		useLargerFontForBigDamage = true
 	} = config
 
 	const activeLimit = Math.floor(positive(maxActive, DEFAULT_MAX_ACTIVE))
-	const container = requestedContainer || defaultMount()
+	const container = requestedContainer || defaultMountInsideStyleScope()
 	const numbers = []
 	const framedByContainer = !!requestedContainer && (typeof document === 'undefined' || requestedContainer !== document.body)
 
-	// Numbers are position:fixed, so an explicit container contributes its viewport offset as well as its size;
-	// the default mount is only a style scope, and the frame is the viewport.
-	function canvasFrame() {
+	function frameOfViewportOrContainer() {
 		if (framedByContainer && container.clientWidth) {
 			const box = container.getBoundingClientRect()
 			return { left: box.left, top: box.top, width: container.clientWidth, height: container.clientHeight || FALLBACK_SIZE.height }
@@ -73,7 +54,7 @@ export function createDamageNumbers(scene, camera, config = {}) {
 		return { left: 0, top: 0, ...FALLBACK_SIZE }
 	}
 
-	function createElement(value, screen, frame, options) {
+	function mountElement(value, screen, frame, options) {
 		if (!container || typeof document === 'undefined') return null
 		const el = document.createElement('div')
 		el.className = 'ds-damage-number'
@@ -95,10 +76,10 @@ export function createDamageNumbers(scene, camera, config = {}) {
 		const options = callOptions || {}
 		const value = Number(damage)
 		if (damage === null || damage === undefined || !Number.isFinite(value)) return null
-		const frame = canvasFrame()
+		const frame = frameOfViewportOrContainer()
 		const screen = projectToScreen(camera, worldPos, frame.width, frame.height)
 		if (!screen) return null
-		const element = createElement(value, screen, frame, options)
+		const element = mountElement(value, screen, frame, options)
 		if (!element) return null
 
 		const entry = {
@@ -107,7 +88,7 @@ export function createDamageNumbers(scene, camera, config = {}) {
 			screenPos: { x: screen.x, y: screen.y, z: screen.depth },
 			element,
 			startTime: Date.now(),
-			duration: positive(options.duration, positive(defaultDuration, 1500)),
+			duration: positive(options.duration, positive(defaultDuration, DEFAULT_DURATION_MS)),
 			floatDistance: Number.isFinite(options.floatDistance) ? options.floatDistance : DEFAULT_FLOAT_PX,
 			isActive: true,
 			destroyPending: false
@@ -125,8 +106,6 @@ export function createDamageNumbers(scene, camera, config = {}) {
 		numbers.splice(index, 1)
 	}
 
-	// The float distance is a CSS variable, not a transform written here, so a prefers-reduced-motion
-	// rule in editor-primitives.css can drop the motion while the fade still plays.
 	function update(deltaTime = 16) {
 		for (let i = numbers.length - 1; i >= 0; i--) {
 			const entry = numbers[i]

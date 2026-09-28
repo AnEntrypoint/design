@@ -5,14 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# The build job runs third-party code (npm ci, npx flatspace@latest), so it gets read-only
-# access; only the deploy job, which runs nothing but deploy-pages, gets write scopes.
 permissions:
   contents: read
 
-# A run that is already deploying must finish: cancelling deploy-pages mid-flight
-# strands the site on a half-published state. With cancel-in-progress off only the
-# newest pending run is kept, so a burst of pushes still ends on the latest commit.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -28,26 +23,34 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      # Blocking gates: a stale generated artifact or a lint regression must fail
-      # here rather than reach the deployed site.
-      - run: npm run lint
-      - run: npm run build:ci
-      - run: npm run lint:exports
-      - run: npm run lint:ui-kits
-      - run: npm run lint:component-docs
-      - run: npm run lint:component-types
-      - run: npm run lint:component-manifest
+      - name: Lint
+        run: npm run lint
 
-      # Home page: flatspace renders site/content + site/theme.mjs to dist/index.html.
-      - run: npx --yes flatspace@latest build
+      - name: Build SDK bundle
+        run: npm run build:ci
 
-      # Kits, previews and slides link sibling files by relative path
-      # (../../colors_and_type.css, ../../src/...), so the artifact is the whole
-      # static tree, not a hand-kept copy list that can drift from what pages link.
-      # Only the flatspace home page replaces the root.
-      - name: Assemble site
+      - name: Check exports
+        run: npm run lint:exports
+
+      - name: Check ui kits
+        run: npm run lint:ui-kits
+
+      - name: Check component docs
+        run: npm run lint:component-docs
+
+      - name: Check component types
+        run: npm run lint:component-types
+
+      - name: Check component manifest
+        run: npm run lint:component-manifest
+
+      - name: Build home page
+        run: npx --yes flatspace@latest build
+
+      - name: Assemble whole static tree with home page at root
         run: |
           mkdir _site
           rsync -a \
