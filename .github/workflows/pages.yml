@@ -1,0 +1,71 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Blocking gates: a stale generated artifact or a lint regression must fail
+      # here rather than reach the deployed site.
+      - run: npm run lint
+      - run: npm run build:ci
+      - run: npm run lint:exports
+      - run: npm run lint:ui-kits
+      - run: npm run lint:component-docs
+      - run: npm run lint:component-types
+      - run: npm run lint:component-manifest
+
+      # Home page: flatspace renders site/content + site/theme.mjs to dist/index.html.
+      - run: npx --yes flatspace@latest build
+
+      # Kits, previews and slides link sibling files by relative path
+      # (../../colors_and_type.css, ../../src/...), so the artifact is the whole
+      # static tree, not a hand-kept copy list that can drift from what pages link.
+      # Only the flatspace home page replaces the root.
+      - name: Assemble site
+        run: |
+          mkdir _site
+          rsync -a \
+            --exclude='/.git' --exclude='/.github' --exclude='/.gm' --exclude='/.agentplug' \
+            --exclude='/.agentplug-kv' --exclude='/.wfgy' --exclude='/node_modules' \
+            --exclude='/_site' --exclude='/scripts' --exclude='/visual-baselines' \
+            --exclude='/rs-learn.db' --exclude='*.stackdump' \
+            ./ _site/
+          cp dist/index.html _site/index.html
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -2,7 +2,7 @@
 
 Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit -- re-run after any component signature or JSDoc change.
 
-313 exported symbols across 32 source files. **1 drift warning(s) found -- see bottom of file.**
+314 exported symbols across 32 source files.
 
 ---
 
@@ -94,7 +94,7 @@ Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either
 
 **Kind:** component
 
-**Signature:** `name, { size = 16 } = {}` _(positional arg)_
+**Signature:** `name` _(positional arg)_, `{ size` = `16 } = {}` _(positional arg)_
 
 ### IconButton
 
@@ -148,13 +148,13 @@ A small count/variant/status marker (unread count, label chip inline with text).
 
 **Kind:** component
 
-**Signature:** `left` = `[]`, `right` = `[]`
+**Signature:** `left` = `[]`, `right` = `[]`, `ariaLabel`
 
 ### AppShell
 
 **Kind:** component
 
-**Signature:** `topbar`, `crumb`, `side`, `main`, `status`, `narrow`, `fullBleed`
+**Signature:** `topbar`, `crumb`, `side`, `main`, `status`, `narrow`, `fullBleed`, `bannerLabel`, `mainLabel`, `mainLabelledby`
 
 ### WorkspaceShell
 
@@ -382,9 +382,11 @@ One entry in a LOG or timeline: a dense single line, with a coloured rail markin
 
 ### TextField
 
+A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself — no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones.
+
 **Kind:** component
 
-**Signature:** `label`, `value` = `''`, `type` = `'text'`, `placeholder` = `''`, `onInput`, `onChange`, `name`, `key`, `hint`, `multiline`, `rows` = `4`, `maxLength`, `min`, `max`, `error`, `title`, `size` = `'md'`, `aria-label` _(local: ariaLabel)_, `aria-invalid` _(local: ariaInvalid)_, `aria-describedby` _(local: ariaDescribedBy)_
+**Signature:** `label`, `value` = `''`, `type` = `'text'`, `placeholder` = `''`, `onInput`, `onChange`, `name`, `key`, `hint`, `multiline`, `rows` = `4`, `maxLength`, `min`, `max`, `error`, `title`, `size` = `'md'`, `suggestions`, `aria-label` _(local: ariaLabel)_, `aria-invalid` _(local: ariaInvalid)_, `aria-describedby` _(local: ariaDescribedBy)_
 
 ### Select
 
@@ -485,7 +487,7 @@ Segmented one-time-code / PIN entry.
 
 **Kind:** component
 
-**Signature:** `name, count = 1` _(positional arg)_
+**Signature:** `name` _(positional arg)_, `count` = `1` _(positional arg)_
 
 ## `src/components/chat.js`
 
@@ -529,7 +531,7 @@ Segmented one-time-code / PIN entry.
 
 **Kind:** component
 
-**Signature:** `composerEl, text` _(positional arg)_
+**Signature:** `composerEl` _(positional arg)_, `text` _(positional arg)_
 
 ### ChatSuggestions
 
@@ -567,7 +569,7 @@ Segmented one-time-code / PIN entry.
 
 **Kind:** component
 
-**Signature:** `props = {}` _(positional arg)_
+**Signature:** `props` = `{}` _(positional arg)_
 
 ### MESSAGE_CAP
 
@@ -896,7 +898,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state 
 
 **Kind:** component
 
-**Signature:** `files = [], sort = 'name', dir = 'asc'` _(positional arg)_
+**Signature:** `files` = `[]` _(positional arg)_, `sort` = `'name'` _(positional arg)_, `dir` = `'asc'` _(positional arg)_
 
 ### FileToolbar
 
@@ -1104,7 +1106,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state 
 
 **Kind:** component
 
-**Signature:** `threads` = `[]`, `activeId` = `null`, `title` = `'Threads'`, `onSelect`, `onCreate`, `onClose`, `loading` = `false`
+**Signature:** `threads` = `[]`, `activeId` = `null`, `title` = `'Threads'`, `onSelect`, `onCreate`, `onClose`, `onReply`, `loading` = `false`
 
 ### ForumView
 
@@ -1376,13 +1378,13 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state 
 
 **Kind:** component
 
-**Signature:** `schema = {}` _(positional arg)_
+**Signature:** `schema` = `{}` _(positional arg)_
 
 ### focusFirstInvalidField
 
 **Kind:** component
 
-**Signature:** `errors, order, getEl` _(positional arg)_
+**Signature:** `errors` _(positional arg)_, `order` _(positional arg)_, `getEl` _(positional arg)_
 
 ## `src/components/slider.js`
 
@@ -1436,25 +1438,25 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `el, { data, kind, onDragStart, onDragEnd } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ data, kind, onDragStart, onDragEnd }` = `{}` _(positional arg)_
 
 ### useDropTarget
 
 **Kind:** component
 
-**Signature:** `el, { accepts = [], onDrop, onDragOver } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ accepts` = `[], onDrop, onDragOver } = {}` _(positional arg)_
 
 ### useNumberScrub
 
 **Kind:** component
 
-**Signature:** `el, { getValue, onChange, step = 0.01, threshold = 3 } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ getValue, onChange, step` = `0.01, threshold = 3 } = {}` _(positional arg)_
 
 ### usePointerDrag
 
 **Kind:** component
 
-**Signature:** `el, { onStart, onMove, onEnd, button = 0 } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ onStart, onMove, onEnd, button` = `0 } = {}` _(positional arg)_
 
 ### Reorderable
 
@@ -1466,7 +1468,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `map = {}, { scope = 'global', enabled = true } = {}` _(positional arg)_
+**Signature:** `map` = `{}` _(positional arg)_, `{ scope` = `'global', enabled = true } = {}` _(positional arg)_
 
 ### formatShortcut
 
@@ -1600,7 +1602,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `targetEl, items, openCb` _(positional arg)_
+**Signature:** `targetEl` _(positional arg)_, `items` _(positional arg)_, `openCb` _(positional arg)_
 
 ### Drawer
 
@@ -1744,7 +1746,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `items = [], fn, onProgress` _(positional arg)_
+**Signature:** `items` = `[]` _(positional arg)_, `fn` _(positional arg)_, `onProgress` _(positional arg)_
 
 ## `src/components/overlay-primitives.js`
 
@@ -1770,13 +1772,13 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `targetEl, callback, { ms = 500 } = {}` _(positional arg)_
+**Signature:** `targetEl` _(positional arg)_, `callback` _(positional arg)_, `{ ms` = `500 } = {}` _(positional arg)_
 
 ### useFloating
 
 **Kind:** component
 
-**Signature:** `anchorEl, contentEl, { placement = 'bottom-start', offset = 8 } = {}` _(positional arg)_
+**Signature:** `anchorEl` _(positional arg)_, `contentEl` _(positional arg)_, `{ placement` = `'bottom-start', offset = 8 } = {}` _(positional arg)_
 
 ### CommandPalette
 
@@ -1848,7 +1850,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `btn, fn, busyLabel = '...'` _(positional arg)_
+**Signature:** `btn` _(positional arg)_, `fn` _(positional arg)_, `busyLabel` = `'...'` _(positional arg)_
 
 ### MenuButton
 
@@ -2030,13 +2032,13 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `messages = [], opts = {}` _(positional arg)_
+**Signature:** `messages` = `[]` _(positional arg)_, `opts` = `{}` _(positional arg)_
 
 ### buildNavPaletteActions
 
 **Kind:** component
 
-**Signature:** `routes, { onNavigate } = {}` _(positional arg)_
+**Signature:** `routes` _(positional arg)_, `{ onNavigate }` = `{}` _(positional arg)_
 
 ### renderDashboardSide
 
@@ -2056,31 +2058,31 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `setup, { initial = {} } = {}` _(positional arg)_
+**Signature:** `setup` _(positional arg)_, `{ initial` = `{} } = {}` _(positional arg)_
 
 ### api
 
 **Kind:** component
 
-**Signature:** `path, opts = {}` _(positional arg)_
+**Signature:** `path` _(positional arg)_, `opts` = `{}` _(positional arg)_
 
 ### loadingState
 
 **Kind:** component
 
-**Signature:** `label = 'loading…'` _(positional arg)_
+**Signature:** `label` = `'loading…'` _(positional arg)_
 
 ### errorState
 
 **Kind:** component
 
-**Signature:** `err, onRetry` _(positional arg)_
+**Signature:** `err` _(positional arg)_, `onRetry` _(positional arg)_
 
 ### emptyState
 
 **Kind:** component
 
-**Signature:** `text = 'nothing here yet', glyph = Icon('circle')` _(positional arg)_
+**Signature:** `text` = `'nothing here yet'` _(positional arg)_, `glyph` = `Icon('circle')` _(positional arg)_
 
 ### refreshError
 
@@ -2108,7 +2110,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `root, adapter = {}` _(positional arg)_
+**Signature:** `root` _(positional arg)_, `adapter` = `{}` _(positional arg)_
 
 ## `src/components/calendar.js`
 
@@ -2200,19 +2202,34 @@ Trigger button that opens a Popover hosting a range-mode Calendar.
 
 **Kind:** component
 
-**Signature:** `d, locale` _(positional arg)_
+**Signature:** `d` _(positional arg)_, `locale` _(positional arg)_
 
 ### monthLabel
 
 **Kind:** component
 
-**Signature:** `monthDate, locale` _(positional arg)_
+**Signature:** `monthDate` _(positional arg)_, `locale` _(positional arg)_
 
----
+## `src/components/game-editor-kit.js`
 
-## Drift warnings
+### createDamageNumbers
 
-Found by the generator while cross-checking components.js's export list against real source definitions and (where present) JSDoc @param names against the real destructured signature. These indicate the barrel, the source file, or a JSDoc comment disagree with each other and should be reconciled by hand.
+Create a damage numbers manager.
 
-- 'createDamageNumbers' exported by components.js but no definition found in src/components/game-editor-kit.js
+**Kind:** component
+
+**Signature:** `scene` _(positional arg)_, `camera` _(positional arg)_, `config` = `{}` _(positional arg)_
+
+**Documented params:**
+
+- `scene` _(THREE.Scene)_ -- The THREE.js scene (for container attachment).
+- `camera` _(THREE.Camera)_ -- The THREE.js camera (for projection math).
+- `config` _(Object)_ -- Configuration object.
+- `config.container` _(HTMLElement)_ -- DOM container for text elements. Defaults to document.body.
+- `config.defaultColor` _(string)_ -- Default color for numbers.
+- `config.defaultFontSize` _(number)_ -- Default font size in pixels.
+- `config.defaultDuration` _(number)_ -- Lifetime in milliseconds.
+- `config.useLargerFontForBigDamage` _(boolean)_ -- Scale font size with damage amount.
+
+**Returns:** {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.
 

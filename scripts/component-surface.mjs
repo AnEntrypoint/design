@@ -180,6 +180,22 @@ function stripLineComments(raw) {
         .join('\n');
 }
 
+// Split on commas that sit at bracket depth 0. Prop and argument defaults
+// themselves contain object/array literals with their own commas, so a flat
+// split(',') would shred `actions = FILE_ROW_ACTIONS` style defaults.
+function splitTopLevel(raw) {
+    const parts = [];
+    let cur = '', d = 0;
+    for (const ch of raw) {
+        if (ch === '{' || ch === '[' || ch === '(') d++;
+        else if (ch === '}' || ch === ']' || ch === ')') d--;
+        if (ch === ',' && d === 0) { parts.push(cur); cur = ''; }
+        else cur += ch;
+    }
+    if (cur.trim()) parts.push(cur);
+    return parts.map((p) => p.trim()).filter(Boolean);
+}
+
 // Extract top-level (depth-1) destructured prop names + their default
 // values from a `{ a, b = 1, c: { x } = {}, 'aria-label': d }`-shaped raw
 // signature. Depth-tracking (not a flat split on ',') is required because
@@ -188,9 +204,16 @@ function stripLineComments(raw) {
 function parseDestructuredProps(raw) {
     raw = stripLineComments(raw).trim();
     if (!raw.startsWith('{')) {
-        // Not a destructured single-object param (rare: a couple of
-        // components take a plain positional arg, e.g. iconMarkup(name, opts)).
-        return raw ? [{ name: raw, positional: true }] : [];
+        // Not a destructured single-object param: a plain positional-arg
+        // function such as iconMarkup(name, opts) or createDamageNumbers(scene,
+        // camera, config = {}). Each argument is its own entry (split on
+        // top-level commas only -- a default can carry its own commas), so the
+        // JSDoc drift check compares @param names against real argument names
+        // instead of one comma-joined string that no @param can ever match.
+        return splitTopLevel(raw).map((arg) => {
+            const [pattern, ...defParts] = arg.split('=');
+            return { name: pattern.trim(), default: defParts.length ? defParts.join('=').trim() : null, alias: null, positional: true };
+        });
     }
     // Strip outer { }
     let depth = 0, start = -1, end = -1;
@@ -200,18 +223,7 @@ function parseDestructuredProps(raw) {
     }
     if (start === -1 || end === -1) return [];
     const inner = raw.slice(start + 1, end);
-    const parts = [];
-    let cur = '', d = 0;
-    for (const ch of inner) {
-        if (ch === '{' || ch === '[' || ch === '(') d++;
-        else if (ch === '}' || ch === ']' || ch === ')') d--;
-        if (ch === ',' && d === 0) { parts.push(cur); cur = ''; }
-        else cur += ch;
-    }
-    if (cur.trim()) parts.push(cur);
-    return parts
-        .map((p) => p.trim())
-        .filter(Boolean)
+    return splitTopLevel(inner)
         .map((p) => {
             const [namePart, ...defParts] = p.split('=');
             const def = defParts.length ? defParts.join('=').trim() : null;

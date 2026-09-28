@@ -159,7 +159,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "name, { size = 16 } = {}",
+          "name": "name",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ size",
+          "default": "16 } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -347,6 +355,11 @@
           "name": "right",
           "default": "[]",
           "alias": null
+        },
+        {
+          "name": "ariaLabel",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -388,6 +401,21 @@
         },
         {
           "name": "fullBleed",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "bannerLabel",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "mainLabel",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "mainLabelledby",
           "default": null,
           "alias": null
         }
@@ -973,6 +1001,8 @@
       "props": [
         {
           "name": "hero",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -1535,6 +1565,11 @@
           "alias": null
         },
         {
+          "name": "suggestions",
+          "default": null,
+          "alias": null
+        },
+        {
           "name": "aria-label",
           "default": null,
           "alias": "ariaLabel"
@@ -1550,7 +1585,7 @@
           "alias": "ariaDescribedBy"
         }
       ],
-      "description": ""
+      "description": "A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself — no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones."
     },
     {
       "name": "Select",
@@ -1984,7 +2019,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "name, count = 1",
+          "name": "name",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "count",
+          "default": "1",
+          "alias": null,
           "positional": true
         }
       ],
@@ -2023,6 +2066,8 @@
       "props": [
         {
           "name": "el",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -2293,7 +2338,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "composerEl, text",
+          "name": "composerEl",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "text",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -2415,7 +2468,9 @@
       "kind": "component",
       "props": [
         {
-          "name": "props = {}",
+          "name": "props",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -2824,6 +2879,8 @@
       "props": [
         {
           "name": "ms",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -2836,6 +2893,8 @@
       "props": [
         {
           "name": "t",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -2848,6 +2907,8 @@
       "props": [
         {
           "name": "t",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -3670,6 +3731,8 @@
       "props": [
         {
           "name": "type",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -3682,6 +3745,8 @@
       "props": [
         {
           "name": "bytes",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -3930,7 +3995,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "files = [], sort = 'name', dir = 'asc'",
+          "name": "files",
+          "default": "[]",
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "sort",
+          "default": "'name'",
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "dir",
+          "default": "'asc'",
+          "alias": null,
           "positional": true
         }
       ],
@@ -4531,6 +4610,8 @@
       "props": [
         {
           "name": "error",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -5256,6 +5337,11 @@
         },
         {
           "name": "onClose",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onReply",
           "default": null,
           "alias": null
         },
@@ -6399,6 +6485,8 @@
       "props": [
         {
           "name": "children",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -6900,7 +6988,9 @@
       "kind": "component",
       "props": [
         {
-          "name": "schema = {}",
+          "name": "schema",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -6912,7 +7002,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "errors, order, getEl",
+          "name": "errors",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "order",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "getEl",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -7010,7 +7114,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "el, { data, kind, onDragStart, onDragEnd } = {}",
+          "name": "el",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ data, kind, onDragStart, onDragEnd }",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -7022,7 +7134,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "el, { accepts = [], onDrop, onDragOver } = {}",
+          "name": "el",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ accepts",
+          "default": "[], onDrop, onDragOver } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -7034,7 +7154,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "el, { getValue, onChange, step = 0.01, threshold = 3 } = {}",
+          "name": "el",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ getValue, onChange, step",
+          "default": "0.01, threshold = 3 } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -7046,7 +7174,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "el, { onStart, onMove, onEnd, button = 0 } = {}",
+          "name": "el",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ onStart, onMove, onEnd, button",
+          "default": "0 } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -7096,7 +7232,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "map = {}, { scope = 'global', enabled = true } = {}",
+          "name": "map",
+          "default": "{}",
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ scope",
+          "default": "'global', enabled = true } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -7109,6 +7253,8 @@
       "props": [
         {
           "name": "combo",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -7189,6 +7335,8 @@
       "props": [
         {
           "name": "cb",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -7229,6 +7377,8 @@
       "props": [
         {
           "name": "...actions",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -7606,7 +7756,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "targetEl, items, openCb",
+          "name": "targetEl",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "items",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "openCb",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -8038,6 +8202,8 @@
       "props": [
         {
           "name": "query",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -8236,7 +8402,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "items = [], fn, onProgress",
+          "name": "items",
+          "default": "[]",
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "fn",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "onProgress",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -8352,7 +8532,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "targetEl, callback, { ms = 500 } = {}",
+          "name": "targetEl",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "callback",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ ms",
+          "default": "500 } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -8364,7 +8558,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "anchorEl, contentEl, { placement = 'bottom-start', offset = 8 } = {}",
+          "name": "anchorEl",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "contentEl",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ placement",
+          "default": "'bottom-start', offset = 8 } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -8779,7 +8987,21 @@
       "kind": "component",
       "props": [
         {
-          "name": "btn, fn, busyLabel = '...'",
+          "name": "btn",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "fn",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "busyLabel",
+          "default": "'...'",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9215,6 +9437,8 @@
       "props": [
         {
           "name": "input",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -9234,6 +9458,8 @@
       "props": [
         {
           "name": "path",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -9245,7 +9471,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "messages = [], opts = {}",
+          "name": "messages",
+          "default": "[]",
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "opts",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9257,7 +9491,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "routes, { onNavigate } = {}",
+          "name": "routes",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ onNavigate }",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9365,7 +9607,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "setup, { initial = {} } = {}",
+          "name": "setup",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "{ initial",
+          "default": "{} } = {}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9377,7 +9627,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "path, opts = {}",
+          "name": "path",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "opts",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9389,7 +9647,9 @@
       "kind": "component",
       "props": [
         {
-          "name": "label = 'loading…'",
+          "name": "label",
+          "default": "'loading…'",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9401,7 +9661,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "err, onRetry",
+          "name": "err",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "onRetry",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -9413,7 +9681,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "text = 'nothing here yet', glyph = Icon('circle')",
+          "name": "text",
+          "default": "'nothing here yet'",
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "glyph",
+          "default": "Icon('circle')",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9426,6 +9702,8 @@
       "props": [
         {
           "name": "err",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -9462,7 +9740,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "root, adapter = {}",
+          "name": "root",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "adapter",
+          "default": "{}",
+          "alias": null,
           "positional": true
         }
       ],
@@ -9662,6 +9948,8 @@
       "props": [
         {
           "name": "monthDate",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -9673,7 +9961,15 @@
       "kind": "component",
       "props": [
         {
-          "name": "d, locale",
+          "name": "d",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "locale",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
@@ -9685,11 +9981,45 @@
       "kind": "component",
       "props": [
         {
-          "name": "monthDate, locale",
+          "name": "monthDate",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "locale",
+          "default": null,
+          "alias": null,
           "positional": true
         }
       ],
       "description": ""
+    },
+    {
+      "name": "createDamageNumbers",
+      "file": "components/game-editor-kit.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "scene",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "camera",
+          "default": null,
+          "alias": null,
+          "positional": true
+        },
+        {
+          "name": "config",
+          "default": "{}",
+          "alias": null,
+          "positional": true
+        }
+      ],
+      "description": "Create a damage numbers manager."
     }
   ]
 }

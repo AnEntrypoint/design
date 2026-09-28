@@ -35,7 +35,6 @@ export declare function AmmoCounter(...args: any[]): any;
 export declare function HealthBar(...args: any[]): any;
 export declare function BoostIndicator(...args: any[]): any;
 export declare function renderHostJoinLobby(...args: any[]): any;
-export declare function createDamageNumbers(...args: any[]): any;
 export declare function ResetButton(...args: any[]): any;
 export declare function UndoHistoryPanel(...args: any[]): any;
 export declare function LivePreviewControls(...args: any[]): any;

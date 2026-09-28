@@ -1,10 +1,13 @@
 // game-editor-kit — Game editor UI components
 // Damage numbers, asset browsers, batch operations, preview systems
 
+import { createDamageNumbers } from './game-editor-kit/DamageNumbers.js';
+
+export { createDamageNumbers };
+
 export {
 	createModelBrowser,
 	ModelPreview, createModelPreviewViewer,
-	createDamageNumbers,
 	initializeModelBrowserPanel,
 	fetchModels,
 	getThumbnailUrl,

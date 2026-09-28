@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 313 exported symbols across 32 source files.
+// 314 exported symbols across 32 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -659,6 +659,8 @@ export interface SearchInputProps {
 export declare function SearchInput(props?: SearchInputProps): VNode;
 
 /**
+ * A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself — no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones.
+ *
  * Props for {@link TextField} (src/components/content.js).
  */
 export interface TextFieldProps {
@@ -684,6 +686,7 @@ export interface TextFieldProps {
     title?: any;
     /** @default 'md' */
     size?: 'md' | 'sm' | 'lg' | (string & {});
+    suggestions?: any;
     'aria-label'?: any;
     'aria-invalid'?: any;
     'aria-describedby'?: any;
@@ -2833,13 +2836,13 @@ export declare function Carousel(props?: CarouselProps): VNode;
 
 // ---- src/components/interaction-primitives.js ------------------------
 
-export declare function useDraggable(el?: any, arg1?: any, kind?: any, onDragStart?: any, arg4?: any): VNode;
+export declare function useDraggable(el?: any, arg1?: any): VNode;
 
-export declare function useDropTarget(el?: any, arg1?: any, onDrop?: any, arg3?: any): VNode;
+export declare function useDropTarget(el?: any, arg1?: any): VNode;
 
-export declare function useNumberScrub(el?: any, arg1?: any, onChange?: any, step?: any, threshold?: any): VNode;
+export declare function useNumberScrub(el?: any, arg1?: any): VNode;
 
-export declare function usePointerDrag(el?: any, arg1?: any, onMove?: any, onEnd?: any, button?: any): VNode;
+export declare function usePointerDrag(el?: any, arg1?: any): VNode;
 
 /**
  * Props for {@link Reorderable} (src/components/interaction-primitives.js).
@@ -2857,7 +2860,7 @@ export interface ReorderableProps {
 }
 export declare function Reorderable(props?: ReorderableProps): VNode;
 
-export declare function useKeyboardShortcut(map?: any, arg1?: any, enabled?: any): VNode;
+export declare function useKeyboardShortcut(map?: any, arg1?: any): VNode;
 
 export declare function formatShortcut(combo?: any): VNode;
 
@@ -3383,7 +3386,7 @@ export declare function Dropdown(props?: DropdownProps): VNode;
 
 export declare function useLongPress(targetEl?: any, callback?: any, arg2?: any): VNode;
 
-export declare function useFloating(anchorEl?: any, contentEl?: any, arg2?: any, offset?: any): VNode;
+export declare function useFloating(anchorEl?: any, contentEl?: any, arg2?: any): VNode;
 
 /**
  * Props for {@link CommandPalette} (src/components/overlay-primitives.js).
@@ -3836,6 +3839,8 @@ export declare function formatDate(d?: any, locale?: any): VNode;
 
 export declare function monthLabel(monthDate?: any, locale?: any): VNode;
 
-// ---- drift warnings from the shared extraction -------------------
-// ! 'createDamageNumbers' exported by components.js but no definition found in src/components/game-editor-kit.js
+// ---- src/components/game-editor-kit.js -------------------------------
+
+/** Create a damage numbers manager. */
+export declare function createDamageNumbers(scene?: any, camera?: any, config?: any): Record<string, any>;
 

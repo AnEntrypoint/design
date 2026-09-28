@@ -260,6 +260,20 @@ out += `\n`;
 out += `/** A webjsx virtual node, as returned by every component in this SDK. */\n`;
 out += `export type VNode = any;\n\n`;
 
+// A plain positional-arg function is a helper or factory, not necessarily a
+// component, so `VNode` is only the fallback. A JSDoc `@returns {Type}` is used
+// when Type is one this file can emit without importing anything (primitives,
+// or `Object` as an open record) -- an unresolvable name such as `THREE.Scene`
+// would break a consumer's type-check, so those stay on the VNode fallback.
+const PRIMITIVE_RETURN = /^(?:string|number|boolean|void|null|undefined|any|unknown)(?:\s*\|\s*(?:string|number|boolean|void|null|undefined))*$/;
+function positionalReturnType(c) {
+    const m = c.jsdoc && c.jsdoc.returns && c.jsdoc.returns.match(/^\{([^}]+)\}/);
+    if (!m) return 'VNode';
+    const t = m[1].trim();
+    if (t === 'Object' || t === 'object') return 'Record<string, any>';
+    return PRIMITIVE_RETURN.test(t) ? t : 'VNode';
+}
+
 for (const file of fileOrder) {
     const inFile = components.filter((c) => c.file === file);
     if (!inFile.length) continue;
@@ -302,16 +316,11 @@ for (const file of fileOrder) {
         if (positional.length) {
             // A plain positional-arg function, not a props component.
             if (desc) out += `/** ${desc.replace(/\*\//g, '*\\/')} */\n`;
-            const args = positional[0].name
-                .split(',')
-                .map((a) => a.trim())
-                .filter(Boolean)
-                .map((a, i) => {
-                    const bare = a.split('=')[0].trim().replace(/^\{[\s\S]*\}$/, `arg${i}`);
-                    const nm = /^[A-Za-z_$][\w$]*$/.test(bare) ? bare : `arg${i}`;
-                    return `${nm}?: any`;
-                });
-            out += `export declare function ${c.name}(${args.join(', ')}): VNode;\n\n`;
+            const args = positional.map((p, i) => {
+                const nm = /^[A-Za-z_$][\w$]*$/.test(p.name) ? p.name : `arg${i}`;
+                return `${nm}?: any`;
+            });
+            out += `export declare function ${c.name}(${args.join(', ')}): ${positionalReturnType(c)};\n\n`;
             continue;
         }
 
