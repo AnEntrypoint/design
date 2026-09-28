@@ -2225,9 +2225,9 @@ Create a damage numbers manager.
 - `scene` _(THREE.Scene)_ -- The THREE.js scene (for container attachment).
 - `camera` _(THREE.Camera)_ -- The THREE.js camera (for projection math).
 - `config` _(Object)_ -- Configuration object.
-- `config.container` _(HTMLElement)_ -- DOM container for text elements. Defaults to document.body.
-- `config.defaultColor` _(string)_ -- Default color for numbers.
-- `config.defaultFontSize` _(number)_ -- Default font size in pixels.
+- `config.container` _(HTMLElement)_ -- DOM container for text elements. Defaults to document.body, or the .ds-247420 element when the body is outside that style scope.
+- `config.defaultColor` _(string)_ -- Default color for numbers. Defaults to the --danger token.
+- `config.defaultFontSize` _(number)_ -- Default font size in pixels. Defaults to the --fs-h2 token.
 - `config.defaultDuration` _(number)_ -- Lifetime in milliseconds.
 - `config.useLargerFontForBigDamage` _(boolean)_ -- Scale font size with damage amount.
 

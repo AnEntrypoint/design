@@ -1,3 +1,5 @@
+import { projectToScreen, layerRank } from './damage-projection.js'
+
 /**
  * DamageNumbers — Floating damage text rendering in 3D world space.
  *
@@ -13,184 +15,137 @@
  * }
  */
 
+const FALLBACK_SIZE = { width: 1920, height: 1080 }
+const BIG_HIT = 25
+const MAX_SCALE_BONUS = 0.5
+const DEFAULT_FLOAT_PX = 60
+const SCOPE_SELECTOR = '.ds-247420'
+
+const positive = (value, fallback) => (Number.isFinite(value) && value > 0 ? value : fallback)
+
+// Every rule in the bundled stylesheet sits under the scope class, and a consumer may put that class on
+// <html>, <body> or only a root <div>. Mounting on a body that is outside the scope would leave the number
+// unstyled (position:static, default size), so the default mount is the body only when it is inside the scope.
+function defaultMount() {
+	if (typeof document === 'undefined') return null
+	if (document.body.closest(SCOPE_SELECTOR)) return document.body
+	return document.querySelector(SCOPE_SELECTOR) || document.body
+}
+
 /**
  * Create a damage numbers manager.
  *
  * @param {THREE.Scene} scene - The THREE.js scene (for container attachment).
  * @param {THREE.Camera} camera - The THREE.js camera (for projection math).
  * @param {Object} [config={}] - Configuration object.
- * @param {HTMLElement} [config.container] - DOM container for text elements. Defaults to document.body.
- * @param {string} [config.defaultColor='#ff4444'] - Default color for numbers.
- * @param {number} [config.defaultFontSize=32] - Default font size in pixels.
+ * @param {HTMLElement} [config.container] - DOM container for text elements. Defaults to document.body, or the .ds-247420 element when the body is outside that style scope.
+ * @param {string} [config.defaultColor] - Default color for numbers. Defaults to the --danger token.
+ * @param {number} [config.defaultFontSize] - Default font size in pixels. Defaults to the --fs-h2 token.
  * @param {number} [config.defaultDuration=1500] - Lifetime in milliseconds.
  * @param {boolean} [config.useLargerFontForBigDamage=true] - Scale font size with damage amount.
  * @returns {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.
  */
 export function createDamageNumbers(scene, camera, config = {}) {
 	const {
-		container = typeof document !== 'undefined' ? document.body : null,
-		defaultColor = '#ff4444',
-		defaultFontSize = 32,
+		container: requestedContainer,
+		defaultColor,
+		defaultFontSize,
 		defaultDuration = 1500,
 		useLargerFontForBigDamage = true
-	} = config;
+	} = config
 
-	const numbers = [];
-	const screenDimensions = { width: 1920, height: 1080 };
+	const container = requestedContainer || defaultMount()
+	const numbers = []
+	const framedByContainer = !!requestedContainer && (typeof document === 'undefined' || requestedContainer !== document.body)
 
-	function updateScreenDimensions() {
-		if (container && container !== document.body) {
-			screenDimensions.width = container.clientWidth || 1920;
-			screenDimensions.height = container.clientHeight || 1080;
-		} else if (typeof window !== 'undefined') {
-			screenDimensions.width = window.innerWidth;
-			screenDimensions.height = window.innerHeight;
+	// Numbers are position:fixed, so an explicit container contributes its viewport offset as well as its size;
+	// the default mount is only a style scope, and the frame is the viewport.
+	function canvasFrame() {
+		if (framedByContainer && container.clientWidth) {
+			const box = container.getBoundingClientRect()
+			return { left: box.left, top: box.top, width: container.clientWidth, height: container.clientHeight || FALLBACK_SIZE.height }
 		}
+		if (typeof window !== 'undefined') return { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight }
+		return { left: 0, top: 0, ...FALLBACK_SIZE }
 	}
 
-	function normalizePosition(worldPos) {
-		if (!worldPos) return { x: 0, y: 0, z: 0 };
-		if (worldPos.x !== undefined) return { x: worldPos.x, y: worldPos.y, z: worldPos.z };
-		return worldPos;
-	}
-
-	function projectToScreen(worldPos) {
-		if (!camera) return null;
-
-		const pos = normalizePosition(worldPos);
-		const vector = typeof camera.project === 'function'
-			? camera.project({ x: pos.x, y: pos.y, z: pos.z })
-			: null;
-
-		if (!vector) return null;
-
-		const screenX = (vector.x + 1) / 2 * screenDimensions.width;
-		const screenY = (1 - vector.y) / 2 * screenDimensions.height;
-
-		return { x: screenX, y: screenY, z: vector.z };
-	}
-
-	function createElement(damage, screenPos, options) {
-		if (!container) return null;
-
-		const el = typeof document !== 'undefined' ? document.createElement('div') : null;
-		if (!el) return null;
-
-		const isLargeNumber = damage > 25;
-		const fontSize = useLargerFontForBigDamage && isLargeNumber
-			? defaultFontSize * (1 + Math.min(damage / 100, 0.5))
-			: defaultFontSize;
-
-		const color = options.color || defaultColor;
-
-		el.className = 'ds-damage-number';
-		el.textContent = Math.abs(Math.floor(damage));
-		el.style.cssText = `
-position: fixed;
-left: ${screenPos.x}px;
-top: ${screenPos.y}px;
-transform: translate(-50%, -50%);
-font-size: ${fontSize}px;
-font-weight: bold;
-color: ${color};
-pointer-events: none;
-white-space: nowrap;
-z-index: 10000;
-opacity: 1;
-line-height: 1;
-font-family: system-ui, -apple-system, sans-serif;
-text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-`;
-
-		container.appendChild(el);
-		return el;
+	function createElement(value, screen, frame, options) {
+		if (!container || typeof document === 'undefined') return null
+		const el = document.createElement('div')
+		el.className = 'ds-damage-number'
+		el.textContent = String(Math.abs(Math.floor(value)))
+		el.style.left = `${frame.left + screen.x}px`
+		el.style.top = `${frame.top + screen.y}px`
+		el.style.setProperty('--ds-damage-rank', layerRank(screen.depth))
+		if (useLargerFontForBigDamage && Math.abs(value) > BIG_HIT) {
+			el.style.setProperty('--ds-damage-scale', 1 + Math.min(Math.abs(value) / 100, MAX_SCALE_BONUS))
+		}
+		const color = options.color || defaultColor
+		if (color) el.style.setProperty('--ds-damage-color', color)
+		if (defaultFontSize) el.style.setProperty('--ds-damage-size', `${defaultFontSize}px`)
+		container.appendChild(el)
+		return el
 	}
 
 	function addNumber(damage, worldPos, options = {}) {
-		updateScreenDimensions();
-
-		const screenPos = projectToScreen(worldPos);
-		if (!screenPos) return null;
-
-		const el = createElement(damage, screenPos, options);
-		if (!el) return null;
-
-		const duration = options.duration !== undefined ? options.duration : defaultDuration;
-		const floatDistance = options.floatDistance !== undefined ? options.floatDistance : 60;
+		const value = Number(damage)
+		if (damage === null || damage === undefined || !Number.isFinite(value)) return null
+		const frame = canvasFrame()
+		const screen = projectToScreen(camera, worldPos, frame.width, frame.height)
+		if (!screen) return null
+		const element = createElement(value, screen, frame, options)
+		if (!element) return null
 
 		const entry = {
-			damage,
-			worldPos: normalizePosition(worldPos),
-			screenPos,
-			element: el,
+			damage: value,
+			worldPos: { x: worldPos.x, y: worldPos.y, z: worldPos.z },
+			screenPos: { x: screen.x, y: screen.y, z: screen.depth },
+			element,
 			startTime: Date.now(),
-			duration,
-			floatDistance,
+			duration: positive(options.duration, positive(defaultDuration, 1500)),
+			floatDistance: Number.isFinite(options.floatDistance) ? options.floatDistance : DEFAULT_FLOAT_PX,
 			isActive: true,
 			destroyPending: false
-		};
-
-		numbers.push(entry);
-		return entry;
+		}
+		numbers.push(entry)
+		return entry
 	}
 
+	function retire(entry, index) {
+		entry.destroyPending = true
+		entry.isActive = false
+		if (entry.element && entry.element.parentNode) entry.element.parentNode.removeChild(entry.element)
+		entry.element = null
+		numbers.splice(index, 1)
+	}
+
+	// The float distance is a CSS variable, not a transform written here, so a prefers-reduced-motion
+	// rule in editor-primitives.css can drop the motion while the fade still plays.
 	function update(deltaTime = 16) {
-		updateScreenDimensions();
-
 		for (let i = numbers.length - 1; i >= 0; i--) {
-			const entry = numbers[i];
-			if (!entry.isActive) continue;
-
-			const elapsed = Date.now() - entry.startTime;
-			const progress = Math.min(elapsed / entry.duration, 1);
-			const alpha = 1 - progress;
-
-			if (!entry.element) {
-				numbers.splice(i, 1);
-				continue;
-			}
-
-			const floatOffset = progress * entry.floatDistance;
-
-			entry.element.style.opacity = String(alpha);
-			entry.element.style.transform = `translate(-50%, calc(-50% - ${floatOffset}px))`;
-
-			if (progress >= 1) {
-				entry.destroyPending = true;
-				if (entry.element && entry.element.parentNode) {
-					entry.element.parentNode.removeChild(entry.element);
-				}
-				entry.element = null;
-				entry.isActive = false;
-				numbers.splice(i, 1);
-			}
+			const entry = numbers[i]
+			const progress = Math.min((Date.now() - entry.startTime) / entry.duration, 1)
+			if (!entry.element || progress >= 1) { retire(entry, i); continue }
+			entry.element.style.opacity = String(1 - progress)
+			entry.element.style.setProperty('--ds-damage-float', `${progress * entry.floatDistance}px`)
 		}
 	}
 
 	function getActiveNumbers() {
+		const now = Date.now()
 		return numbers.filter(n => n.isActive).map(n => ({
 			damage: n.damage,
 			worldPos: n.worldPos,
 			screenPos: n.screenPos,
-			elapsed: Date.now() - n.startTime,
+			elapsed: now - n.startTime,
 			duration: n.duration,
-			progress: Math.min((Date.now() - n.startTime) / n.duration, 1)
-		}));
+			progress: Math.min((now - n.startTime) / n.duration, 1)
+		}))
 	}
 
 	function cleanup() {
-		for (const entry of numbers) {
-			if (entry.element && entry.element.parentNode) {
-				entry.element.parentNode.removeChild(entry.element);
-			}
-		}
-		numbers.length = 0;
+		while (numbers.length) retire(numbers[numbers.length - 1], numbers.length - 1)
 	}
 
-	return {
-		addNumber,
-		update,
-		getActiveNumbers,
-		cleanup
-	};
+	return { addNumber, update, getActiveNumbers, cleanup }
 }

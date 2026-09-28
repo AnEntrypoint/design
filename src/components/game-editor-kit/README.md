@@ -11,10 +11,9 @@ Floating damage text rendering in 3D world space. Creates animated damage indica
 ```javascript
 import { createDamageNumbers } from 'anentrypoint-design';
 
-// Create manager with THREE.js scene and camera
+// Create manager with THREE.js scene and camera. Every config key is optional:
+// with none, color and size come from the theme's --danger / --fs-h2 tokens.
 const damageNumbers = createDamageNumbers(scene, camera, {
-  defaultColor: '#ff4444',
-  defaultFontSize: 32,
   defaultDuration: 1500,
   useLargerFontForBigDamage: true
 });
@@ -46,9 +45,9 @@ Factory function creating a damage numbers manager.
 - `scene` (THREE.Scene): The THREE.js scene (used for container context).
 - `camera` (THREE.Camera): The THREE.js camera (used for world-to-screen projection).
 - `config` (Object, optional):
-  - `container` (HTMLElement): DOM container for text elements. Defaults to `document.body`.
-  - `defaultColor` (string): Default color for numbers. Defaults to `'#ff4444'`.
-  - `defaultFontSize` (number): Default font size in pixels. Defaults to `32`.
+  - `container` (HTMLElement): DOM container for text elements. Defaults to `document.body`, or the `.ds-247420` element when the body sits outside that style scope (the stylesheet is scoped to it, so a number mounted outside it would render unstyled).
+  - `defaultColor` (string): Default color for numbers. Defaults to the theme's `--danger-ink` token.
+  - `defaultFontSize` (number): Default font size in pixels. Defaults to the theme's `--fs-h2` token.
   - `defaultDuration` (number): Lifetime in milliseconds. Defaults to `1500`.
   - `useLargerFontForBigDamage` (boolean): Scale font size with damage amount. Defaults to `true`.
 
@@ -67,7 +66,7 @@ Create and display a floating damage number.
   - `duration` (number): Override default duration in milliseconds.
   - `floatDistance` (number): Upward float distance in pixels. Defaults to `60`.
 
-**Returns:** Entry object or null (null when container unavailable).
+**Returns:** Entry object, or `null` when nothing can be drawn: no camera or container, a non-finite `damage` or position, a position behind the camera / past the far plane, or a position outside the viewport.
 
 #### `update(deltaTime)`
 
@@ -109,22 +108,26 @@ Dispose all resources and remove all numbers from DOM.
 
 ### Edge Cases
 
-- **Positions behind camera**: Handled gracefully (no rendering).
-- **Off-screen positions**: Numbers render outside viewport if they float there.
+- **Positions behind camera / past the far plane**: not drawn (`addNumber` returns `null`).
+- **Off-screen positions**: not drawn (`addNumber` returns `null`).
 - **Rapid successive calls**: Multiple addNumber calls at same position create separate floating entries.
 - **Zero/negative damage**: Displayed as absolute value.
+- **Null, `NaN` or infinite damage**: `addNumber` returns `null`.
+- **Zero or negative `duration`**: falls back to `defaultDuration`, so a number can never get stuck on screen.
+- **Layering**: nearer numbers draw above farther ones.
 - **Missing camera**: addNumber returns null if camera not provided.
 - **Node.js runtime**: Loads without errors; addNumber returns null without DOM container.
+- **Camera shapes**: a real `THREE.Camera` works directly (the projection is `Vector3.project(camera)`, done through the Vector3 class the camera's own position carries, so nothing imports `three`); a camera-like object exposing `project({x,y,z})` also works.
+- **Reduced motion**: with `prefers-reduced-motion: reduce` the number fades but does not rise.
 
 ### Styling
 
-Numbers use the `.ds-damage-number` class with inline styles for position/color/size. Text-shadow provides contrast in both light and dark themes. Override via CSS:
+Numbers use the `.ds-damage-number` class (defined in `editor-primitives.css`, which the `247420.css` bundle includes). JS sets only what varies per number -- position, opacity, and the custom properties `--ds-damage-float`, `--ds-damage-rank`, `--ds-damage-scale`, plus `--ds-damage-color` / `--ds-damage-size` when you pass `defaultColor` / `defaultFontSize` -- so color, size, weight and shadow all follow the active theme's tokens. Retune them from CSS with the theme tokens, or override the class:
 
 ```css
 .ds-damage-number {
   font-family: 'MyFont', sans-serif;
-  font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 4px var(--scrim-strong);
 }
 ```
 
