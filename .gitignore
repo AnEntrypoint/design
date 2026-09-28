@@ -8,6 +8,13 @@ node_modules/
 .gm/
 .agentplug-kv/
 
+rs-learn.db
+*.stackdump
+
+# Transient output of `npx flatspace build`; the deploy workflow assembles it into the site root.
+dist/index.html
+dist/.nojekyll
+
 # OS / editor droppings.
 .DS_Store
 Thumbs.db
