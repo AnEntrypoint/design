@@ -10,9 +10,12 @@ permissions:
   pages: write
   id-token: write
 
+# A run that is already deploying must finish: cancelling deploy-pages mid-flight
+# strands the site on a half-published state. With cancel-in-progress off only the
+# newest pending run is kept, so a burst of pushes still ends on the latest commit.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
