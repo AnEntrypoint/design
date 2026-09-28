@@ -197,6 +197,7 @@ for (const [label, file] of cssParts) {
     if (!fs.existsSync(file)) { console.warn('[247420] missing css:', label); continue; }
     raw += `\n/* ${label} */\n${fs.readFileSync(file, 'utf8')}`;
 }
+raw = raw.replace(/\r\n/g, '\n');
 
 // Copy fonts/ into dist/fonts/ so font URLs (rewritten to dist/fonts/ below)
 // resolve at unpkg against the published package.

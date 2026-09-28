@@ -3842,5 +3842,5 @@ export declare function monthLabel(monthDate?: any, locale?: any): VNode;
 // ---- src/components/game-editor-kit.js -------------------------------
 
 /** Create a damage numbers manager. */
-export declare function createDamageNumbers(scene?: any, camera?: any, config?: any): Record<string, any>;
+export declare function createDamageNumbers(scene?: any, camera?: any, config?: any): any;
 

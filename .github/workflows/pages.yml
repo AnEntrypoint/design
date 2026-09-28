@@ -58,6 +58,10 @@ jobs:
             --exclude='/.agentplug-kv' --exclude='/.wfgy' --exclude='/node_modules' \
             --exclude='/_site' --exclude='/scripts' --exclude='/visual-baselines' \
             --exclude='/rs-learn.db' --exclude='*.stackdump' \
+            --exclude='/*.md' --exclude='/package.json' --exclude='/package-lock.json' \
+            --exclude='/.editorconfig' --exclude='/.gitignore' --exclude='/flatspace.config.mjs' \
+            --exclude='/types' --exclude='/vendor/axe-core' \
+            --exclude='/dist/index.html' --exclude='/dist/.nojekyll' \
             ./ _site/
           cp dist/index.html _site/index.html
           touch _site/.nojekyll

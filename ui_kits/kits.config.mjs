@@ -32,7 +32,7 @@
 // optional block of extra <meta>/<link> tags emitted between the description
 // and the canonical link, verbatim, for the couple of kits that carry a
 // fuller SEO suite than the plain thin shell. `importExtra` appends extra
-// importmap entries (ds/, webjsx-router) after the always-present
+// importmap entries (ds/) after the always-present
 // webjsx/webjsx-jsx-runtime trio.
 
 export const kits = [
@@ -187,7 +187,7 @@ export const kits = [
     htmlTheme: true,
     themeColorMetas: true,
     stylesheets: [],
-    importExtra: ['webjsx-router', 'ds/'],
+    importExtra: ['ds/'],
     seo: {
       author: '247420 / AnEntrypoint',
       keywords: '247420, anentrypoint, design system, webjsx, rippleui, creative collective',
@@ -204,7 +204,7 @@ export const kits = [
     htmlTheme: true,
     themeColorMetas: true,
     stylesheets: [],
-    importExtra: ['webjsx-router', 'ds/'],
+    importExtra: ['ds/'],
     seo: {
       author: '247420 / AnEntrypoint',
       keywords: '247420, anentrypoint, design system, webjsx, rippleui, creative collective',

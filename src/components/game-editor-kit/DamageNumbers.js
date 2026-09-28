@@ -3,113 +3,157 @@ import { projectToScreen, layerRank } from './damage-projection.js'
 const FALLBACK_SIZE = { width: 1920, height: 1080 }
 const BIG_HIT = 25
 const MAX_SCALE_BONUS = 0.5
+const MAX_DISPLAYED = 999999999
 const DEFAULT_FLOAT_PX = 60
 const DEFAULT_DURATION_MS = 1500
 const DEFAULT_MAX_ACTIVE = 200
-const STYLE_SCOPE_SELECTOR = '.ds-247420'
+const STYLE_SCOPE_CLASS = 'ds-247420'
+const LAYER_ATTRIBUTE = 'data-ds-damage-layer'
+const INHERITED_SCOPE_ATTRIBUTES = ['data-theme', 'data-accent', 'data-density', 'data-typescale']
 
 const positive = (value, fallback) => (Number.isFinite(value) && value > 0 ? value : fallback)
+const monotonicNow = () => (typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now())
 
-function defaultMountInsideStyleScope() {
-	if (typeof document === 'undefined') return null
-	if (document.body.closest(STYLE_SCOPE_SELECTOR)) return document.body
-	return document.querySelector(STYLE_SCOPE_SELECTOR) || document.body
+function numericDamage(damage) {
+	if (typeof damage === 'number') return Number.isFinite(damage) ? damage : null
+	if (typeof damage === 'string' && damage.trim() !== '') {
+		const parsed = Number(damage)
+		return Number.isFinite(parsed) ? parsed : null
+	}
+	return null
+}
+
+function createStyledLayer() {
+	if (typeof document === 'undefined' || !document.body) return null
+	const layer = document.createElement('div')
+	layer.className = STYLE_SCOPE_CLASS
+	layer.setAttribute(LAYER_ATTRIBUTE, '')
+	const scopeRoot = document.querySelector(`.${STYLE_SCOPE_CLASS}:not([${LAYER_ATTRIBUTE}])`)
+	if (scopeRoot) {
+		for (const name of INHERITED_SCOPE_ATTRIBUTES) {
+			const value = scopeRoot.getAttribute(name)
+			if (value !== null) layer.setAttribute(name, value)
+		}
+	}
+	document.body.appendChild(layer)
+	return layer
 }
 
 /**
  * Create a damage numbers manager.
  *
- * @param {THREE.Scene} scene - The THREE.js scene (for container attachment).
+ * @param {THREE.Scene} scene - Accepted for API symmetry with the host's scene; not used by the projection.
  * @param {THREE.Camera} camera - The THREE.js camera (for projection math).
  * @param {Object} [config={}] - Configuration object.
- * @param {HTMLElement} [config.container] - DOM container for text elements. Defaults to document.body, or the .ds-247420 element when the body is outside that style scope.
- * @param {string} [config.defaultColor] - Default color for numbers. Defaults to the --danger token.
+ * @param {HTMLElement} [config.container] - Element whose on-screen box the 3D view occupies. Defaults to the viewport. Numbers are not mounted inside it.
+ * @param {string} [config.defaultColor] - Default color for numbers. Defaults to the --danger-ink token.
  * @param {number} [config.defaultFontSize] - Default font size in pixels. Defaults to the --fs-h2 token.
  * @param {number} [config.defaultDuration=1500] - Lifetime in milliseconds.
  * @param {number} [config.maxActive=200] - Most numbers on screen at once; past it the oldest is retired first.
  * @param {boolean} [config.useLargerFontForBigDamage=true] - Scale font size with damage amount.
  * @returns {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.
  */
-export function createDamageNumbers(scene, camera, config = {}) {
+export function createDamageNumbers(scene, camera, config) {
 	const {
-		container: requestedContainer,
+		container,
 		defaultColor,
 		defaultFontSize,
 		defaultDuration = DEFAULT_DURATION_MS,
 		maxActive = DEFAULT_MAX_ACTIVE,
 		useLargerFontForBigDamage = true
-	} = config
+	} = config || {}
 
-	const activeLimit = Math.floor(positive(maxActive, DEFAULT_MAX_ACTIVE))
-	const container = requestedContainer || defaultMountInsideStyleScope()
+	const activeLimit = Math.max(1, Math.floor(positive(maxActive, DEFAULT_MAX_ACTIVE)))
+	const fontSizePx = positive(defaultFontSize, null)
 	const numbers = []
-	const framedByContainer = !!requestedContainer && (typeof document === 'undefined' || requestedContainer !== document.body)
+	let layer = null
+
+	function overlayLayer() {
+		if (!layer || !layer.parentNode) layer = createStyledLayer()
+		return layer
+	}
 
 	function frameOfViewportOrContainer() {
-		if (framedByContainer && container.clientWidth) {
+		if (container && typeof container.getBoundingClientRect === 'function' && container.clientWidth > 0 && container.clientHeight > 0) {
 			const box = container.getBoundingClientRect()
-			return { left: box.left, top: box.top, width: container.clientWidth, height: container.clientHeight || FALLBACK_SIZE.height }
+			const scaleX = container.offsetWidth ? box.width / container.offsetWidth : 1
+			const scaleY = container.offsetHeight ? box.height / container.offsetHeight : 1
+			return {
+				left: box.left + container.clientLeft * scaleX,
+				top: box.top + container.clientTop * scaleY,
+				width: container.clientWidth * scaleX,
+				height: container.clientHeight * scaleY
+			}
 		}
 		if (typeof window !== 'undefined') return { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight }
 		return { left: 0, top: 0, ...FALLBACK_SIZE }
 	}
 
-	function mountElement(value, screen, frame, options) {
-		if (!container || typeof document === 'undefined') return null
+	function mountElement(shown, look, frame, screen) {
+		const host = overlayLayer()
+		if (!host) return null
 		const el = document.createElement('div')
 		el.className = 'ds-damage-number'
-		el.textContent = String(Math.abs(Math.floor(value)))
+		el.textContent = String(shown)
 		el.style.left = `${frame.left + screen.x}px`
 		el.style.top = `${frame.top + screen.y}px`
-		el.style.setProperty('--ds-damage-rank', layerRank(screen.depth))
-		if (useLargerFontForBigDamage && Math.abs(value) > BIG_HIT) {
-			el.style.setProperty('--ds-damage-scale', 1 + Math.min(Math.abs(value) / 100, MAX_SCALE_BONUS))
-		}
-		const color = options.color || defaultColor
-		if (color) el.style.setProperty('--ds-damage-color', color)
-		if (defaultFontSize) el.style.setProperty('--ds-damage-size', `${defaultFontSize}px`)
-		container.appendChild(el)
+		el.style.setProperty('--ds-damage-rank', layerRank(screen))
+		if (look.scale !== null) el.style.setProperty('--ds-damage-scale', look.scale)
+		if (look.color) el.style.setProperty('--ds-damage-color', look.color)
+		if (fontSizePx !== null) el.style.setProperty('--ds-damage-size', `${fontSizePx}px`)
+		host.appendChild(el)
 		return el
 	}
 
 	function addNumber(damage, worldPos, callOptions) {
 		const options = callOptions || {}
-		const value = Number(damage)
-		if (damage === null || damage === undefined || !Number.isFinite(value)) return null
+		const value = numericDamage(damage)
+		if (value === null) return null
 		const frame = frameOfViewportOrContainer()
 		const screen = projectToScreen(camera, worldPos, frame.width, frame.height)
 		if (!screen) return null
-		const element = mountElement(value, screen, frame, options)
+
+		const shown = Math.min(Math.floor(Math.abs(value)), MAX_DISPLAYED)
+		const look = {
+			color: options.color || defaultColor,
+			scale: useLargerFontForBigDamage && shown > BIG_HIT ? 1 + Math.min(shown / 100, MAX_SCALE_BONUS) : null
+		}
+		const duration = positive(options.duration, positive(defaultDuration, DEFAULT_DURATION_MS))
+		const floatDistance = Number.isFinite(options.floatDistance) ? options.floatDistance : DEFAULT_FLOAT_PX
+
+		while (numbers.length >= activeLimit) retire(numbers[0], 0)
+		const element = mountElement(shown, look, frame, screen)
 		if (!element) return null
 
 		const entry = {
 			damage: value,
-			worldPos: { x: worldPos.x, y: worldPos.y, z: worldPos.z },
+			worldPos: screen.position,
 			screenPos: { x: screen.x, y: screen.y, z: screen.depth },
 			element,
-			startTime: Date.now(),
-			duration: positive(options.duration, positive(defaultDuration, DEFAULT_DURATION_MS)),
-			floatDistance: Number.isFinite(options.floatDistance) ? options.floatDistance : DEFAULT_FLOAT_PX,
+			startTime: monotonicNow(),
+			duration,
+			floatDistance,
 			isActive: true,
 			destroyPending: false
 		}
-		while (numbers.length >= activeLimit) retire(numbers[0], 0)
 		numbers.push(entry)
 		return entry
 	}
 
 	function retire(entry, index) {
-		entry.destroyPending = true
-		entry.isActive = false
-		if (entry.element && entry.element.parentNode) entry.element.parentNode.removeChild(entry.element)
-		entry.element = null
 		numbers.splice(index, 1)
+		const element = entry.element
+		entry.element = null
+		entry.isActive = false
+		entry.destroyPending = true
+		if (element && element.parentNode) element.parentNode.removeChild(element)
 	}
 
-	function update(deltaTime = 16) {
+	function update() {
+		const now = monotonicNow()
 		for (let i = numbers.length - 1; i >= 0; i--) {
 			const entry = numbers[i]
-			const progress = Math.min((Date.now() - entry.startTime) / entry.duration, 1)
+			const progress = Math.min(Math.max(now - entry.startTime, 0) / entry.duration, 1)
 			if (!entry.element || progress >= 1) { retire(entry, i); continue }
 			entry.element.style.opacity = String(1 - progress)
 			entry.element.style.setProperty('--ds-damage-float', `${progress * entry.floatDistance}px`)
@@ -117,19 +161,21 @@ export function createDamageNumbers(scene, camera, config = {}) {
 	}
 
 	function getActiveNumbers() {
-		const now = Date.now()
-		return numbers.filter(n => n.isActive).map(n => ({
+		const now = monotonicNow()
+		return numbers.map(n => ({
 			damage: n.damage,
-			worldPos: n.worldPos,
-			screenPos: n.screenPos,
-			elapsed: now - n.startTime,
+			worldPos: { ...n.worldPos },
+			screenPos: { ...n.screenPos },
+			elapsed: Math.max(now - n.startTime, 0),
 			duration: n.duration,
-			progress: Math.min((now - n.startTime) / n.duration, 1)
+			progress: Math.min(Math.max(now - n.startTime, 0) / n.duration, 1)
 		}))
 	}
 
 	function cleanup() {
 		while (numbers.length) retire(numbers[numbers.length - 1], numbers.length - 1)
+		if (layer && layer.parentNode) layer.parentNode.removeChild(layer)
+		layer = null
 	}
 
 	return { addNumber, update, getActiveNumbers, cleanup }

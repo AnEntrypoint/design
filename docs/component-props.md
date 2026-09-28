@@ -94,7 +94,7 @@ Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either
 
 **Kind:** component
 
-**Signature:** `name` _(positional arg)_, `{ size` = `16 } = {}` _(positional arg)_
+**Signature:** `name` _(positional arg)_, `{ size = 16 }` = `{}` _(positional arg)_
 
 ### IconButton
 
@@ -1444,19 +1444,19 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `el` _(positional arg)_, `{ accepts` = `[], onDrop, onDragOver } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ accepts = [], onDrop, onDragOver }` = `{}` _(positional arg)_
 
 ### useNumberScrub
 
 **Kind:** component
 
-**Signature:** `el` _(positional arg)_, `{ getValue, onChange, step` = `0.01, threshold = 3 } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ getValue, onChange, step = 0.01, threshold = 3 }` = `{}` _(positional arg)_
 
 ### usePointerDrag
 
 **Kind:** component
 
-**Signature:** `el` _(positional arg)_, `{ onStart, onMove, onEnd, button` = `0 } = {}` _(positional arg)_
+**Signature:** `el` _(positional arg)_, `{ onStart, onMove, onEnd, button = 0 }` = `{}` _(positional arg)_
 
 ### Reorderable
 
@@ -1468,7 +1468,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `map` = `{}` _(positional arg)_, `{ scope` = `'global', enabled = true } = {}` _(positional arg)_
+**Signature:** `map` = `{}` _(positional arg)_, `{ scope = 'global', enabled = true }` = `{}` _(positional arg)_
 
 ### formatShortcut
 
@@ -1772,13 +1772,13 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `targetEl` _(positional arg)_, `callback` _(positional arg)_, `{ ms` = `500 } = {}` _(positional arg)_
+**Signature:** `targetEl` _(positional arg)_, `callback` _(positional arg)_, `{ ms = 500 }` = `{}` _(positional arg)_
 
 ### useFloating
 
 **Kind:** component
 
-**Signature:** `anchorEl` _(positional arg)_, `contentEl` _(positional arg)_, `{ placement` = `'bottom-start', offset = 8 } = {}` _(positional arg)_
+**Signature:** `anchorEl` _(positional arg)_, `contentEl` _(positional arg)_, `{ placement = 'bottom-start', offset = 8 }` = `{}` _(positional arg)_
 
 ### CommandPalette
 
@@ -2058,7 +2058,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `setup` _(positional arg)_, `{ initial` = `{} } = {}` _(positional arg)_
+**Signature:** `setup` _(positional arg)_, `{ initial = {} }` = `{}` _(positional arg)_
 
 ### api
 
@@ -2218,15 +2218,15 @@ Create a damage numbers manager.
 
 **Kind:** component
 
-**Signature:** `scene` _(positional arg)_, `camera` _(positional arg)_, `config` = `{}` _(positional arg)_
+**Signature:** `scene` _(positional arg)_, `camera` _(positional arg)_, `config` _(positional arg)_
 
 **Documented params:**
 
-- `scene` _(THREE.Scene)_ -- The THREE.js scene (for container attachment).
+- `scene` _(THREE.Scene)_ -- Accepted for API symmetry with the host's scene; not used by the projection.
 - `camera` _(THREE.Camera)_ -- The THREE.js camera (for projection math).
 - `config` _(Object)_ -- Configuration object.
-- `config.container` _(HTMLElement)_ -- DOM container for text elements. Defaults to document.body, or the .ds-247420 element when the body is outside that style scope.
-- `config.defaultColor` _(string)_ -- Default color for numbers. Defaults to the --danger token.
+- `config.container` _(HTMLElement)_ -- Element whose on-screen box the 3D view occupies. Defaults to the viewport. Numbers are not mounted inside it.
+- `config.defaultColor` _(string)_ -- Default color for numbers. Defaults to the --danger-ink token.
 - `config.defaultFontSize` _(number)_ -- Default font size in pixels. Defaults to the --fs-h2 token.
 - `config.defaultDuration` _(number)_ -- Lifetime in milliseconds.
 - `config.maxActive` _(number)_ -- Most numbers on screen at once; past it the oldest is retired first.

@@ -16190,6 +16190,7 @@
     margin: 0 var(--space-1-5, 5px);
 }
 
+.ds-247420[data-ds-damage-layer] { display: contents; }
 .ds-247420 .ds-damage-number {
     position: fixed;
     z-index: calc(var(--z-raised) + var(--ds-damage-rank, 0));

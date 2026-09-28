@@ -165,8 +165,8 @@
           "positional": true
         },
         {
-          "name": "{ size",
-          "default": "16 } = {}",
+          "name": "{ size = 16 }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -7140,8 +7140,8 @@
           "positional": true
         },
         {
-          "name": "{ accepts",
-          "default": "[], onDrop, onDragOver } = {}",
+          "name": "{ accepts = [], onDrop, onDragOver }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -7160,8 +7160,8 @@
           "positional": true
         },
         {
-          "name": "{ getValue, onChange, step",
-          "default": "0.01, threshold = 3 } = {}",
+          "name": "{ getValue, onChange, step = 0.01, threshold = 3 }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -7180,8 +7180,8 @@
           "positional": true
         },
         {
-          "name": "{ onStart, onMove, onEnd, button",
-          "default": "0 } = {}",
+          "name": "{ onStart, onMove, onEnd, button = 0 }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -7238,8 +7238,8 @@
           "positional": true
         },
         {
-          "name": "{ scope",
-          "default": "'global', enabled = true } = {}",
+          "name": "{ scope = 'global', enabled = true }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -8544,8 +8544,8 @@
           "positional": true
         },
         {
-          "name": "{ ms",
-          "default": "500 } = {}",
+          "name": "{ ms = 500 }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -8570,8 +8570,8 @@
           "positional": true
         },
         {
-          "name": "{ placement",
-          "default": "'bottom-start', offset = 8 } = {}",
+          "name": "{ placement = 'bottom-start', offset = 8 }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -9613,8 +9613,8 @@
           "positional": true
         },
         {
-          "name": "{ initial",
-          "default": "{} } = {}",
+          "name": "{ initial = {} }",
+          "default": "{}",
           "alias": null,
           "positional": true
         }
@@ -10014,7 +10014,7 @@
         },
         {
           "name": "config",
-          "default": "{}",
+          "default": null,
           "alias": null,
           "positional": true
         }

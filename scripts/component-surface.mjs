@@ -180,17 +180,39 @@ function stripLineComments(raw) {
         .join('\n');
 }
 
+function scanTopLevel(text, visit) {
+    let depth = 0, quote = null;
+    for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (quote) {
+            if (ch === '\\') i++;
+            else if (ch === quote) quote = null;
+            continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
+        if (ch === '{' || ch === '[' || ch === '(') depth++;
+        else if (ch === '}' || ch === ']' || ch === ')') depth--;
+        if (visit(ch, i, depth) === false) return;
+    }
+}
+
 function splitTopLevel(raw) {
     const parts = [];
-    let cur = '', d = 0;
-    for (const ch of raw) {
-        if (ch === '{' || ch === '[' || ch === '(') d++;
-        else if (ch === '}' || ch === ']' || ch === ')') d--;
-        if (ch === ',' && d === 0) { parts.push(cur); cur = ''; }
-        else cur += ch;
-    }
-    if (cur.trim()) parts.push(cur);
+    let start = 0;
+    scanTopLevel(raw, (ch, i, depth) => {
+        if (ch === ',' && depth === 0) { parts.push(raw.slice(start, i)); start = i + 1; }
+    });
+    parts.push(raw.slice(start));
     return parts.map((p) => p.trim()).filter(Boolean);
+}
+
+function splitPatternAndDefault(text) {
+    let equalsAt = -1;
+    scanTopLevel(text, (ch, i, depth) => {
+        if (ch === '=' && depth === 0) { equalsAt = i; return false; }
+    });
+    if (equalsAt === -1) return { pattern: text.trim(), default: null };
+    return { pattern: text.slice(0, equalsAt).trim(), default: text.slice(equalsAt + 1).trim() };
 }
 
 // Extract top-level (depth-1) destructured prop names + their default
@@ -202,8 +224,8 @@ function parseDestructuredProps(raw) {
     raw = stripLineComments(raw).trim();
     if (!raw.startsWith('{')) {
         return splitTopLevel(raw).map((arg) => {
-            const [pattern, ...defParts] = arg.split('=');
-            return { name: pattern.trim(), default: defParts.length ? defParts.join('=').trim() : null, alias: null, positional: true };
+            const { pattern, default: def } = splitPatternAndDefault(arg);
+            return { name: pattern, default: def, alias: null, positional: true };
         });
     }
     // Strip outer { }
@@ -216,9 +238,8 @@ function parseDestructuredProps(raw) {
     const inner = raw.slice(start + 1, end);
     return splitTopLevel(inner)
         .map((p) => {
-            const [namePart, ...defParts] = p.split('=');
-            const def = defParts.length ? defParts.join('=').trim() : null;
-            let name = namePart.trim();
+            const { pattern: namePart, default: def } = splitPatternAndDefault(p);
+            let name = namePart;
             // rename destructure (`class: className`) -> show as `class` (the
             // real prop key callers pass), noting the local alias.
             let alias = null;
@@ -249,6 +270,10 @@ function resolveReExportSource(src, name, fromDir) {
     return join(fromDir, im[1]);
 }
 
+function exportsBare(src, name) {
+    return new RegExp(`export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}(?!\\s*from)`).test(src);
+}
+
 /**
  * Extract the whole exported component surface.
  * @returns {{groups: Array, components: Array, driftWarnings: string[], fileOrder: string[]}}
@@ -274,6 +299,7 @@ export function extractComponentSurface() {
             const re = defRegexFor(name);
             let dm = re.exec(src);
             let defSrc = src;
+            let resolvedThroughImport = false;
             if (!dm) {
                 // Try one-hop re-export resolution before giving up.
                 const subPath = resolveReExportSource(src, name, dirname(filePath));
@@ -284,11 +310,16 @@ export function extractComponentSurface() {
                     if (subMatch) {
                         dm = subMatch;
                         defSrc = subSrc;
+                        resolvedThroughImport = true;
                     }
                 }
             }
             if (!dm) {
                 driftWarnings.push(`'${name}' exported by components.js but no definition found in src/${group.file}`);
+                continue;
+            }
+            if (resolvedThroughImport && !exportsBare(src, name)) {
+                driftWarnings.push(`'${name}' is imported by src/${group.file} but never exported from it`);
                 continue;
             }
             const defStart = dm.index;

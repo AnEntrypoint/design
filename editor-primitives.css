@@ -1981,6 +1981,7 @@ input.ov-set-control[type="range"] { padding: 0; accent-color: var(--accent); }
     margin: 0 var(--space-1-5, 5px);
 }
 
+[data-ds-damage-layer] { display: contents; }
 .ds-damage-number {
     position: fixed;
     z-index: calc(var(--z-raised) + var(--ds-damage-rank, 0));

@@ -17,13 +17,13 @@ whole sheet in and every component looks scattered across 20+ sheets.
 
 ## Totals
 
-- components in the manifest: 313
-- resolved to a defining module: 313
+- components in the manifest: 314
+- resolved to a defining module: 314
 - shared-base classes: 39
 - components with distinctive rules: 228
   - owned by exactly 1 sheet (cleanly extractable today): 113
-  - owned by 2 sheets: 49
-  - owned by 3 or more sheets (need reorganizing before a subset is safe): 66
+  - owned by 2 sheets: 47
+  - owned by 3 or more sheets (need reorganizing before a subset is safe): 68
 
 ## Shared base
 
@@ -89,6 +89,7 @@ These are the ones that make a safe subset impossible to express today.
 | Form | 3 | app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css |
 | AICatPortrait | 3 | app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/plugins-config.css |
 | SessionCard | 3 | app-shell/topbar.css, app-shell/files.css, chat.css |
+| ContextPane | 3 | app-shell/panel-row.css, app-shell/responsive.css, chat.css |
 | GitDiffView | 3 | app-shell/chat-polish.css, app-shell/git-status.css, app-shell/plugins-config.css |
 | DropZone | 3 | app-shell/files.css, app-shell/chat-polish.css, chat.css |
 | UploadProgress | 3 | app-shell/files.css, app-shell/states-interactions.css, chat.css |
@@ -102,6 +103,7 @@ These are the ones that make a safe subset impossible to express today.
 | Slider | 3 | app-shell/primitives.css, app-shell/states-interactions.css, app-shell/slider.css |
 | SplitPanel | 3 | app-shell/topbar.css, chat.css, editor-primitives.css |
 | Toast | 3 | app-shell/primitives.css, app-shell/states-interactions.css, editor-primitives.css |
+| Dropdown | 3 | app-shell/primitives.css, app-shell/git-status.css, editor-primitives.css |
 | BootOverlay | 3 | app-shell/chat-polish.css, chat.css, editor-primitives.css |
 
 ## Full map
@@ -191,7 +193,7 @@ These are the ones that make a safe subset impossible to express today.
 | fmtTime | src/components/sessions/format.js | (no distinctive rules) |
 | fmtAgo | src/components/sessions/format.js | (no distinctive rules) |
 | AgentListSkeleton | src/components/sessions/detail-bits.js | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css |
-| ContextPane | src/components/context-pane/pane.js | app-shell/panel-row.css, chat.css |
+| ContextPane | src/components/context-pane/pane.js | app-shell/panel-row.css, app-shell/responsive.css, chat.css |
 | ContextMeter | src/components/context-pane/meter.js | chat.css |
 | ContextTreemap | src/components/context-pane/treemap.js | chat.css |
 | ContextXRayPanel | src/components/context-pane/xray.js | chat.css |
@@ -357,7 +359,7 @@ These are the ones that make a safe subset impossible to express today.
 | runBatchSequential | src/components/editor-primitives/batch.js | (no distinctive rules) |
 | Tooltip | src/components/overlay-primitives/tooltip.js | (no distinctive rules) |
 | Popover | src/components/overlay-primitives/popover.js | (no distinctive rules) |
-| Dropdown | src/components/overlay-primitives/menus.js | app-shell/git-status.css, editor-primitives.css |
+| Dropdown | src/components/overlay-primitives/menus.js | app-shell/primitives.css, app-shell/git-status.css, editor-primitives.css |
 | useLongPress | src/components/overlay-primitives/floating.js | (no distinctive rules) |
 | useFloating | src/components/overlay-primitives/floating.js | (no distinctive rules) |
 | CommandPalette | src/components/overlay-primitives/command-palette.js | editor-primitives.css |
@@ -421,3 +423,4 @@ These are the ones that make a safe subset impossible to express today.
 | buildMonthGrid | src/components/calendar/grid.js | (no distinctive rules) |
 | formatDate | src/components/calendar/grid.js | (no distinctive rules) |
 | monthLabel | src/components/calendar/grid.js | (no distinctive rules) |
+| createDamageNumbers | src/components/game-editor-kit/DamageNumbers.js | (no distinctive rules) |

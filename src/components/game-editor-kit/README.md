@@ -4,136 +4,94 @@ UI components for game editors and interactive tools. Pure UI layer with no back
 
 ## DamageNumbers
 
-Floating damage text rendering in 3D world space. Creates animated damage indicators that float above hit points, fade out over time.
+Floating damage text over a 3D scene. Each number is projected from a world position to the screen, rises, fades and is removed.
 
 ### Usage
 
 ```javascript
 import { createDamageNumbers } from 'anentrypoint-design';
 
-// Create manager with THREE.js scene and camera. Every config key is optional:
-// with none, color and size come from the theme's --danger / --fs-h2 tokens.
 const damageNumbers = createDamageNumbers(scene, camera, {
   defaultDuration: 1500,
   useLargerFontForBigDamage: true
 });
 
-// Show damage at world position
 damageNumbers.addNumber(50, { x: 10, y: 5, z: 20 });
 
-// Update each frame
 function animate() {
   requestAnimationFrame(animate);
-  damageNumbers.update(deltaTime);
+  damageNumbers.update();
   renderer.render(scene, camera);
 }
 
-// Cleanup on destroy
-window.addEventListener('beforeunload', () => {
-  damageNumbers.cleanup();
-});
+window.addEventListener('beforeunload', () => damageNumbers.cleanup());
 ```
+
+Every config key is optional: with none, color and size come from the theme's `--danger-ink` / `--fs-h2` tokens.
 
 ### API
 
 #### `createDamageNumbers(scene, camera, config)`
 
-Factory function creating a damage numbers manager.
-
-**Parameters:**
-
-- `scene` (THREE.Scene): The THREE.js scene (used for container context).
-- `camera` (THREE.Camera): The THREE.js camera (used for world-to-screen projection).
-- `config` (Object, optional):
-  - `container` (HTMLElement): DOM container for text elements. Defaults to `document.body`, or the `.ds-247420` element when the body sits outside that style scope (the stylesheet is scoped to it, so a number mounted outside it would render unstyled).
-  - `defaultColor` (string): Default color for numbers. Defaults to the theme's `--danger-ink` token.
-  - `defaultFontSize` (number): Default font size in pixels. Defaults to the theme's `--fs-h2` token.
+- `scene`: accepted so the call matches the host's scene setup; the projection does not use it.
+- `camera` (THREE.Camera): used for world-to-screen projection. A real `THREE.PerspectiveCamera`/`OrthographicCamera` works directly (the projection is `Vector3.project(camera)`, run through the Vector3 class the camera's own position carries, so nothing imports `three`), and its matrices are refreshed before each projection. A camera-like object exposing `project({x,y,z})` also works.
+- `config` (Object, optional; `null` is treated as `{}`):
+  - `container` (HTMLElement): the element whose on-screen box the 3D view occupies. Defaults to the viewport. Numbers are not mounted inside it: they live in their own layer on `document.body`, so a re-render of the container cannot delete them and a CSS transform or border on it cannot mis-place them.
+  - `defaultColor` (string): Default color. Defaults to the theme's `--danger-ink` token.
+  - `defaultFontSize` (number): Default font size in pixels; a non-positive or non-finite value is ignored. Defaults to the theme's `--fs-h2` token.
   - `defaultDuration` (number): Lifetime in milliseconds. Defaults to `1500`.
-  - `maxActive` (number): Most numbers on screen at once. Defaults to `200`; past it the oldest number is retired first. A non-positive or non-finite value falls back to the default, so the count is always bounded.
-  - `useLargerFontForBigDamage` (boolean): Scale font size with damage amount. Defaults to `true`.
+  - `maxActive` (number): Most numbers on screen at once. Defaults to `200`; past it the oldest is retired first. A non-positive or non-finite value falls back to the default; a fraction floors, with a minimum of `1`.
+  - `useLargerFontForBigDamage` (boolean): Scale font size with the displayed damage. Defaults to `true`.
 
-**Returns:** Object with methods:
+Returns `{ addNumber, update, getActiveNumbers, cleanup }`.
 
 #### `addNumber(damage, worldPos, options)`
 
-Create and display a floating damage number.
+Create and display a floating damage number at a world position.
 
-**Parameters:**
+- `damage`: a finite number, or a non-empty numeric string. Anything else (`null`, `NaN`, `Infinity`, booleans, arrays, objects, blank strings) returns `null`. The displayed value is the magnitude with the fraction dropped (`-25.5` shows `25`); values above `999999999` are clamped.
+- `worldPos` (Vector3 | {x, y, z}): world-space position. The number is centred on the projected point.
+- `options` (Object, optional; `null` is treated as `{}`):
+  - `color` (string): Override the color for this number.
+  - `duration` (number): Override the lifetime in milliseconds; a non-positive or non-finite value uses the default.
+  - `floatDistance` (number): Upward float in pixels. Defaults to `60`.
 
-- `damage` (number): Damage amount to display.
-- `worldPos` (Vector3 | {x, y, z}): World-space position. Supports THREE.js Vector3 or plain `{x, y, z}` objects.
-- `options` (Object, optional):
-  - `color` (string): Override default color for this number.
-  - `duration` (number): Override default duration in milliseconds.
-  - `floatDistance` (number): Upward float distance in pixels. Defaults to `60`.
+Returns the entry object, or `null` when nothing can be drawn: no camera, no `document.body`, invalid `damage`, a non-finite position, a position behind the camera or past the far plane, or a position outside the viewport.
 
-**Returns:** Entry object, or `null` when nothing can be drawn: no camera or container, a non-finite `damage` or position, a position behind the camera / past the far plane, or a position outside the viewport.
+#### `update()`
 
-#### `update(deltaTime)`
-
-Update all active damage numbers. Call each frame.
-
-**Parameters:**
-
-- `deltaTime` (number): Delta time in milliseconds. Defaults to `16` (approximately 60fps).
-
-**Returns:** undefined.
+Advance every live number: fade, rise, and remove those past their lifetime. Call each frame. Lifetime is measured on a monotonic clock (`performance.now()`), so a system clock change cannot make a number vanish early or linger. It is wall time, not a per-call delta: a paused render loop still lets numbers expire.
 
 #### `getActiveNumbers()`
 
-Get array of currently visible numbers.
-
-**Returns:** Array of objects with properties:
-- `damage` (number): Original damage amount.
-- `worldPos` ({x, y, z}): Original world position.
-- `screenPos` ({x, y, z}): Current screen position.
-- `elapsed` (number): Milliseconds since creation.
-- `duration` (number): Total lifetime in milliseconds.
-- `progress` (number): Lifecycle progress from 0 (new) to 1 (expired).
+Copies of the live numbers: `{ damage, worldPos, screenPos, elapsed, duration, progress }`. `screenPos` is where the number was placed when it was added; it does not follow the camera afterwards.
 
 #### `cleanup()`
 
-Dispose all resources and remove all numbers from DOM.
+Remove every number and the layer. Safe to call repeatedly.
 
-**Returns:** undefined.
+### Behaviour and limits
 
-### Features
-
-- **3D world-space positioning**: Numbers appear above hit points using camera projection.
-- **Animated fade**: Alpha fades from 1 to 0 over the duration.
-- **Upward float**: Numbers rise smoothly during their lifetime.
-- **Dynamic sizing**: Font size scales with damage amount (optional).
-- **Custom styling**: Per-number color and duration overrides.
-- **No backend dependencies**: Pure UI layer, zero game-state coupling.
-- **Theme support**: CSS respects `prefers-color-scheme` for dark/light modes.
-
-### Edge Cases
-
-- **Positions behind camera / past the far plane**: not drawn (`addNumber` returns `null`).
-- **Off-screen positions**: not drawn (`addNumber` returns `null`).
-- **Rapid successive calls**: Multiple addNumber calls at same position create separate floating entries.
-- **Zero/negative damage**: Displayed as absolute value.
-- **Null, `NaN` or infinite damage**: `addNumber` returns `null`.
-- **Zero or negative `duration`**: falls back to `defaultDuration`, so a number can never get stuck on screen.
-- **Overload**: an area-of-effect burst (thousands of `addNumber` calls in one frame) sheds the oldest numbers once `maxActive` is reached instead of growing the DOM with the hit rate.
-- **A throwing camera or container**: `addNumber` propagates the error with its cause and leaves no element or entry behind, so a retry does not double-apply.
-- **Host clears the container**: `update()` and `cleanup()` still retire the entries without throwing.
-- **Layering**: nearer numbers draw above farther ones.
-- **Missing camera**: addNumber returns null if camera not provided.
-- **Node.js runtime**: Loads without errors; addNumber returns null without DOM container.
-- **Camera shapes**: a real `THREE.Camera` works directly (the projection is `Vector3.project(camera)`, done through the Vector3 class the camera's own position carries, so nothing imports `three`); a camera-like object exposing `project({x,y,z})` also works.
+- **Overload**: a burst (thousands of `addNumber` calls in one frame) sheds the oldest numbers once `maxActive` is reached instead of growing the DOM with the hit rate.
+- **Layering**: nearer numbers draw above farther ones, ranked by distance to the camera.
+- **A throwing camera or container**: `addNumber` propagates the error with its cause. Every option and position is read before anything is mounted, so a failure leaves no element or entry behind and a retry does not double-apply.
+- **Host removes the elements or the layer**: `update()` and `cleanup()` still retire the entries without throwing, and the next `addNumber` creates a fresh layer.
 - **Reduced motion**: with `prefers-reduced-motion: reduce` the number fades but does not rise.
+- **Viewport-fixed**: numbers are `position: fixed` at the spot they were placed. They do not follow the world point if the camera moves or the page scrolls during their short life.
+- **Node.js**: the module loads without a DOM; `addNumber` returns `null` there.
 
 ### Styling
 
-Numbers use the `.ds-damage-number` class (defined in `editor-primitives.css`, which the `247420.css` bundle includes). JS sets only what varies per number -- position, opacity, and the custom properties `--ds-damage-float`, `--ds-damage-rank`, `--ds-damage-scale`, plus `--ds-damage-color` / `--ds-damage-size` when you pass `defaultColor` / `defaultFontSize` -- so color, size, weight and shadow all follow the active theme's tokens. Retune them from CSS with the theme tokens, or override the class:
+Numbers use the `.ds-damage-number` class (defined in `editor-primitives.css`, which the `247420.css` bundle includes) inside a layer that carries the `.ds-247420` scope class and the app root's `data-theme` / `data-accent` / `data-density` / `data-typescale`, so the bundled stylesheet applies wherever the app root is. JS sets only what varies per number: position, opacity and the custom properties `--ds-damage-float`, `--ds-damage-rank`, `--ds-damage-scale`, plus `--ds-damage-color` / `--ds-damage-size` when you pass `defaultColor` / `defaultFontSize`. Override from CSS with the scope prefix, or the bundled rule (specificity 0,2,0) wins:
 
 ```css
-.ds-damage-number {
+.ds-247420 .ds-damage-number {
   font-family: 'MyFont', sans-serif;
   text-shadow: 0 2px 4px var(--scrim-strong);
 }
 ```
+
+The layer is `display: contents`, so it takes no space in the page layout.
 
 ### Browser Compatibility
 

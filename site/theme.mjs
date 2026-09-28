@@ -166,6 +166,8 @@ export default {
     }
 
     const html = renderPageHtml({
+      cssHref: './dist/247420.css',
+      sdkModuleHref: './dist/247420.js',
       title: site.title || home.title || '247420',
       slug: 'index',
       siteName: site.siteName || site.title || '247420',

@@ -319,6 +319,7 @@ function App() {
             ]
         ),
         main: [
+            h('h1', { class: 'sr-only' }, 'aicat'),
             state.phase === 'ready' && state.messages.length === 0 ? (
                 // True empty state matches the reference exactly: ONLY a
                 // short lead question + bare composer, vertically centered,

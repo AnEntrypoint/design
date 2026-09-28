@@ -28,11 +28,13 @@ import { CLIENT_SCRIPT } from './page-html/client-script.js';
 
 export { escape, inlineMd, slugify, renderMarkdown };
 
+const DEFAULT_SDK_MODULE_HREF = 'https://cdn.jsdelivr.net/gh/AnEntrypoint/design@main/dist/247420.js';
+
 export function renderPageHtml({
     title = '247420', slug = 'index', siteName = '247420',
     navItems = [], basePath = '',
     hero, sections, examples, body,
-    theme = 'auto', cssHref, headExtra = '',
+    theme = 'auto', cssHref, sdkModuleHref = DEFAULT_SDK_MODULE_HREF, headExtra = '',
     // Extended affordances (all optional, all backward compatible — a call
     // site that omits them gets byte-identical output to before these were
     // added). See design/site/theme.mjs and thebird/site/theme.mjs for
@@ -99,7 +101,7 @@ ${seoTags}
 ${faviconTags}
 ${cssLink}
 <script type="importmap">
-{ "imports": { "anentrypoint-design": "https://cdn.jsdelivr.net/gh/AnEntrypoint/design@main/dist/247420.js" } }
+{ "imports": { "anentrypoint-design": ${JSON.stringify(sdkModuleHref).replace(/</g, '\\u003c')} } }
 </script>
 <style>
 ${PAGE_INLINE_STYLES}

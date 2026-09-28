@@ -260,13 +260,21 @@ out += `\n`;
 out += `/** A webjsx virtual node, as returned by every component in this SDK. */\n`;
 out += `export type VNode = any;\n\n`;
 
-const RETURN_TYPE_NEEDING_NO_IMPORT = /^(?:string|number|boolean|void|null|undefined|any|unknown)(?:\s*\|\s*(?:string|number|boolean|void|null|undefined))*$/;
+function leadingBracedType(text) {
+    if (!text.startsWith('{')) return null;
+    let depth = 0;
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}' && --depth === 0) return text.slice(1, i);
+    }
+    return null;
+}
+
 function positionalReturnType(c) {
-    const m = c.jsdoc && c.jsdoc.returns && c.jsdoc.returns.match(/^\{([^}]+)\}/);
-    if (!m) return 'VNode';
-    const t = m[1].trim();
-    if (t === 'Object' || t === 'object') return 'Record<string, any>';
-    return RETURN_TYPE_NEEDING_NO_IMPORT.test(t) ? t : 'VNode';
+    const declared = c.jsdoc && c.jsdoc.returns && leadingBracedType(c.jsdoc.returns);
+    const ts = declared && jsdocTypeToTs(declared);
+    if (!ts) return 'VNode';
+    return ts === 'Record<string, any>' ? 'any' : ts;
 }
 
 for (const file of fileOrder) {
