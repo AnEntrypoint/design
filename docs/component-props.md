@@ -2229,6 +2229,7 @@ Create a damage numbers manager.
 - `config.defaultColor` _(string)_ -- Default color for numbers. Defaults to the --danger token.
 - `config.defaultFontSize` _(number)_ -- Default font size in pixels. Defaults to the --fs-h2 token.
 - `config.defaultDuration` _(number)_ -- Lifetime in milliseconds.
+- `config.maxActive` _(number)_ -- Most numbers on screen at once; past it the oldest is retired first.
 - `config.useLargerFontForBigDamage` _(boolean)_ -- Scale font size with damage amount.
 
 **Returns:** {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.

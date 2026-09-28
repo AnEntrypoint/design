@@ -19,6 +19,7 @@ const FALLBACK_SIZE = { width: 1920, height: 1080 }
 const BIG_HIT = 25
 const MAX_SCALE_BONUS = 0.5
 const DEFAULT_FLOAT_PX = 60
+const DEFAULT_MAX_ACTIVE = 200
 const SCOPE_SELECTOR = '.ds-247420'
 
 const positive = (value, fallback) => (Number.isFinite(value) && value > 0 ? value : fallback)
@@ -42,6 +43,7 @@ function defaultMount() {
  * @param {string} [config.defaultColor] - Default color for numbers. Defaults to the --danger token.
  * @param {number} [config.defaultFontSize] - Default font size in pixels. Defaults to the --fs-h2 token.
  * @param {number} [config.defaultDuration=1500] - Lifetime in milliseconds.
+ * @param {number} [config.maxActive=200] - Most numbers on screen at once; past it the oldest is retired first.
  * @param {boolean} [config.useLargerFontForBigDamage=true] - Scale font size with damage amount.
  * @returns {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.
  */
@@ -51,9 +53,11 @@ export function createDamageNumbers(scene, camera, config = {}) {
 		defaultColor,
 		defaultFontSize,
 		defaultDuration = 1500,
+		maxActive = DEFAULT_MAX_ACTIVE,
 		useLargerFontForBigDamage = true
 	} = config
 
+	const activeLimit = Math.floor(positive(maxActive, DEFAULT_MAX_ACTIVE))
 	const container = requestedContainer || defaultMount()
 	const numbers = []
 	const framedByContainer = !!requestedContainer && (typeof document === 'undefined' || requestedContainer !== document.body)
@@ -108,6 +112,7 @@ export function createDamageNumbers(scene, camera, config = {}) {
 			isActive: true,
 			destroyPending: false
 		}
+		while (numbers.length >= activeLimit) retire(numbers[0], 0)
 		numbers.push(entry)
 		return entry
 	}

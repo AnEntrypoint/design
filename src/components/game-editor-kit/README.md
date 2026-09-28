@@ -49,6 +49,7 @@ Factory function creating a damage numbers manager.
   - `defaultColor` (string): Default color for numbers. Defaults to the theme's `--danger-ink` token.
   - `defaultFontSize` (number): Default font size in pixels. Defaults to the theme's `--fs-h2` token.
   - `defaultDuration` (number): Lifetime in milliseconds. Defaults to `1500`.
+  - `maxActive` (number): Most numbers on screen at once. Defaults to `200`; past it the oldest number is retired first. A non-positive or non-finite value falls back to the default, so the count is always bounded.
   - `useLargerFontForBigDamage` (boolean): Scale font size with damage amount. Defaults to `true`.
 
 **Returns:** Object with methods:
@@ -114,6 +115,9 @@ Dispose all resources and remove all numbers from DOM.
 - **Zero/negative damage**: Displayed as absolute value.
 - **Null, `NaN` or infinite damage**: `addNumber` returns `null`.
 - **Zero or negative `duration`**: falls back to `defaultDuration`, so a number can never get stuck on screen.
+- **Overload**: an area-of-effect burst (thousands of `addNumber` calls in one frame) sheds the oldest numbers once `maxActive` is reached instead of growing the DOM with the hit rate.
+- **A throwing camera or container**: `addNumber` propagates the error with its cause and leaves no element or entry behind, so a retry does not double-apply.
+- **Host clears the container**: `update()` and `cleanup()` still retire the entries without throwing.
 - **Layering**: nearer numbers draw above farther ones.
 - **Missing camera**: addNumber returns null if camera not provided.
 - **Node.js runtime**: Loads without errors; addNumber returns null without DOM container.
