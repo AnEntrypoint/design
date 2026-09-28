@@ -1857,7 +1857,6 @@
    messages landed off-screen with no auto-scroll, live-confirmed via CDP. */
 .ds-247420 .app-main > .chat,
 .ds-247420 .app-main > .chat-area,
-.ds-247420 .app-main > .chat-kit-page,
 .ds-247420 .app-main > .aicat-focus-col,
 .ds-247420 .app-main > .ds-file-stage,
 .ds-247420 .app-main > .ds-files-stack,
@@ -5574,15 +5573,14 @@
    real call site in ui_kits/aicat/app.js): must be a flex column, not
    block flow. The AICat() surface reuses .chat (flex:1 1 0%; min-height:0)
    expecting to be sized against leftover space in a flex container, same
-   as .ds-chat-layout in the chat kit. As a block-flow parent this column's
+   as any flex-column chat host. As a block-flow parent this column's
    own child .chat had no bounded height to flex against, .chat-thread grew
    to full content height instead of scrolling internally, and
    makeThreadAutoScroll's IntersectionObserver (rooted at .chat-thread)
    never fired because .chat-thread never actually overflowed -- new
    messages landed off-screen with nothing scrolling them into view. The
    suggestions/details siblings below .chat keep their default
-   flex:0 1 auto (content-sized), matching .chat-kit-page's trailing-panel
-   pattern (kits-appended.css). min-height:0 is load-bearing too: without
+   flex:0 1 auto (content-sized). min-height:0 is load-bearing too: without
    it this column (an .app-main flex item via the topbar.css allow-list)
    sizes to its own content instead of shrinking to .app-main's leftover
    space. The two-class selector is required, not stylistic: .ds-app-surface
@@ -8740,72 +8738,6 @@
 /* full-viewport render root (community-app) */
 .ds-247420 .ds-root-viewport { height: 100vh; height: 100dvh; }
 
-/* --- chat kit: widescreen detail pane -----------------------
-   .chat itself stays single-column (shared component, untouched) and
-   stretches full-width on ultrawide via the existing .app-main > .chat
-   max-width:none rule above (~L380) — that's fine for a bare thread, but
-   it leaves a lone thread column growing to 1400px+ with no other use of
-   the extra width. This wrapper adds a persistent "thread info" rail once
-   there is room to spare, instead of just widening the message column. */
-/* min-height is a floor, not the intended size — .chat-kit-page's flex-column
-   splits leftover height between this (flex:1 1 0%, "leftover") and the
-   pattern-notes panel below it (flex:0 1 auto, i.e. sized to its own content
-   first). A hard px floor here (this used to read max(30vh, 420px)) can
-   exceed .chat-kit-page's own available height on a short/laptop viewport —
-   420px plus the panel's natural content height overflows the column
-   instead of yielding to it, so .chat-thread's internal overflow-y:auto
-   never engages and the last couple of messages are stranded below the
-   fold with no reachable scroll region (the thread is never empty, it is
-   invisible). min-height:0 here — same as .chat/.chat-thread already use —
-   lets flex:1 actually shrink this to whatever .chat-kit-page has left,
-   so .chat-thread (flex:1, min-height:0, overflow-y:auto) is the thing that
-   scrolls, not the page. It still grows past 0 via flex:1 whenever the
-   column has room, and 30vh remains the width->grid breakpoint's intent via
-   plain flex growth, not a floor that can outgrow its container. */
-.ds-247420 .ds-chat-layout { display: flex; flex-direction: column; flex: 1; min-height: 0; gap: var(--space-3); }
-.ds-247420 .ds-chat-layout > .chat { min-width: 0; }
-.ds-247420 .ds-chat-detail { display: none; }
-@media (min-width: 1100px) {
-  /* Two compounding grid quirks, not one:
-     1. align-items:start sizes the row to its tallest item's natural content
-        height instead of stretching items to fill it — align-items must stay
-        the grid default (stretch).
-     2. Even with stretch, an implicit row with no explicit sizing (the
-        default here) ALSO sizes itself to content first, then stretches
-        items to that content-derived height — which can exceed the row's
-        actual allotment from this grid's own flex parent (.chat-kit-page,
-        flex:1/min-height:0). .chat then renders taller than .ds-chat-layout's
-        own box, so it overflows past the grid container instead of being
-        clipped by .chat-thread's internal scroll — visually burying the
-        pattern-notes panel that follows this grid in the DOM. Explicit
-        `grid-template-rows: minmax(0, 1fr)` makes the row take exactly the
-        container's height (from the flex chain above) as the ceiling, so
-        .chat's min-height:0 has a real, smaller-than-content value to clip
-        against. .ds-chat-detail opts out via align-self so its own sticky
-        positioning still works without forcing the row back to content-sized. */
-  .ds-247420 .ds-chat-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; grid-template-rows: minmax(0, 1fr); gap: var(--space-4); }
-  /* display:flex + gap (not block + each .panel's own default --space-6
-     margin-bottom) owns the spacing BETWEEN this rail's panels itself, same
-     "container owns the gap" shape as .ds-panel-flush pairs with elsewhere —
-     the rail is a stack of small related panels (room info, participants),
-     not full-width page sections, so it rides the tighter --space-4 rung
-     rather than the page-section --space-6. Each Panel() call in app.js
-     passes class:'panel-flush' to zero its own margin-bottom so the two
-     don't double up.
-     max-height/overflow-y is the same "cap it, let it scroll" treatment
-     .chat-thread and the pattern-notes panel-body already use for the exact
-     same failure mode: align-self:start (needed for sticky, see above) means
-     this item does NOT stretch to the grid row's height, so nothing stops
-     ITS OWN natural content height from exceeding that row and overflowing
-     past the grid, bleeding into the pattern-notes panel below it in the DOM
-     (measured live: rail content taller than the row painted straight
-     through/behind that panel instead of being clipped). A percentage
-     height/max-height on a grid item resolves against the row's definite
-     cross size regardless of align-self, so this caps the rail to exactly
-     the room .ds-chat-layout has without re-introducing either quirk above. */
-  .ds-247420 .ds-chat-detail { display: flex; flex-direction: column; gap: var(--space-4); position: sticky; top: 0; align-self: start; max-height: 100%; overflow-y: auto; }
-}
-
 /* Avatar — generic identity disc primitive (content.js Avatar). Sized
    variants mirror the existing chat-avatar/community-avatar footprints so
    any consumer gets a consistent disc without duplicating the CSS. */
@@ -9104,42 +9036,6 @@
    track so long token names ellipsize inside the grid instead of widening it. */
 .ds-247420 .ds-swatch { min-width: 0; }
 .ds-247420 .ds-swatch .ds-swatch-name { overflow-wrap: anywhere; }
-
-/* Chat kit page root — the thread must own the leftover column height rather
-   than growing the page, so the composer stays on screen. Pairs with
-   .ds-chat-layout (flex column, flex:1) which is already defined above. */
-.ds-247420 .chat-kit-page {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-}
-/* .chat-kit-page's trailing "pattern notes" panel has no flex-basis of its
-   own, so on a content-basis vs. .ds-chat-layout's flex:1 1 0% it can win
-   the height contest either way depending on which sibling has more natural
-   content -- flex-shrink:0 alone (an earlier version of this rule) fixed the
-   composer-overlaps-panel regression but overcorrected: it let the panel
-   ALWAYS claim its full natural height regardless of how tall it is, which
-   on a viewport where the panel's content runs long (several paragraphs of
-   pattern notes) starves the actual chat surface down to a sliver -- live-
-   measured at 229px total for header+thread+composer, with .chat-thread
-   clipped to ~55px, meaning real messages render but are pushed almost
-   entirely out of the visible scroll window. The chat surface is the primary
-   content; the notes panel is reference material and must never outrank it.
-   Give .ds-chat-layout a real height floor so it always gets a usable pane
-   even when the panel below it is long, and let the panel itself scroll its
-   own overflow past that floor instead of pushing the chat surface down. */
-.ds-247420 .chat-kit-page > .ds-chat-layout { flex: 1 1 auto; min-height: min(420px, 55vh); }
-/* max-height/overflow sit on .panel-body, not the outer .panel, so the
-   panel-head title stays pinned above the scroll rather than scrolling out
-   of view with the notes. .panel-body itself needs tabindex+role for the
-   same reason Table's scroll wrapper does (WCAG 2.1.1 / axe's
-   scrollable-region-focusable) -- see ui_kits/chat/app.js's pattern-notes
-   Panel(), which sets them directly since the shared Panel() component has
-   no prop for it. */
-.ds-247420 .chat-kit-page > .panel { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; }
-.ds-247420 .chat-kit-page > .panel > .panel-body { min-height: 0; max-height: 45vh; overflow-y: auto; }
 
 /* Terminal caret — a solid block that sits on the last demo line. Sized in ch
    so it tracks the mono column it follows. The blink is motion, so it is

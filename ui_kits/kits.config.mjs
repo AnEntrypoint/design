@@ -10,12 +10,12 @@
 //   blog            -- hand-authored body (topbar/breadcrumb/article), no importmap block
 //   docs            -- hand-authored body (topbar/breadcrumb/sidebar nav), no importmap block
 //   community-app   -- data-theme="ink" on <body> (not <html data-theme="auto">), 5 stylesheets.
-//                      The sole community/chat-application kit -- demos the real
+//                      The sole chat/community kit -- demos the real
 //                      mountCommunityApp adapter-driven product (the same function
-//                      zellous consumes). A standalone ui_kits/community kit that
-//                      hand-composed CommunityShell + fake message data was merged
-//                      away here since it only duplicated a subset of this kit's
-//                      real, working reference adapter.
+//                      zellous consumes). The standalone ui_kits/community and
+//                      ui_kits/chat kits were merged away here: each only showed a
+//                      subset of this kit's real, working reference adapter, and its
+//                      sample thread now carries every message type the chat kit did.
 //   workspace       -- links chat.css + app-surfaces.css (AgentChat), not in this shape
 //   os              -- desktop-shell demo (createDesktopShell + wm + registry), links
 //                      src/kits/os/theme.css + app-panes.css directly, not app-shell.css
@@ -24,9 +24,8 @@
 //
 // Each entry maps 1:1 to the template's {{...}} placeholders. `htmlTheme`
 // controls whether <html> gets data-theme="auto"; `themeColorMetas` controls
-// whether the two theme-color <meta> tags are emitted. These are independent:
-// chat omits only the html attr (keeps the metas), and every other thin kit
-// carries both. `stylesheets`
+// whether the two theme-color <meta> tags are emitted. These are independent,
+// though every current thin kit carries both. `stylesheets`
 // is the ordered list of extra .css files linked after the base
 // colors_and_type.css + app-shell.css pair (both always present). `seo` is an
 // optional block of extra <meta>/<link> tags emitted between the description
@@ -134,19 +133,6 @@ export const kits = [
     htmlTheme: true,
     themeColorMetas: true,
     stylesheets: [],
-    importExtra: ['ds/'],
-  },
-  {
-    id: 'chat',
-    title: 'Chat',
-    description: 'chat ui kit — message thread + composer, tonal pill bubbles, monospace meta.',
-    screenLabel: '06 Chat',
-    htmlTheme: false, // no data-theme attr, but DOES carry theme-color metas — unique combo, unlike community which omits both
-    themeColorMetas: true,
-    // Same pair as aicat: Chat()/ChatComposer emit the chat.css-only
-    // tool/stream/thinking/composer-toolbar families, and ChatComposer's
-    // EmojiPicker/CommandPalette need editor-primitives' .ov-* rules.
-    stylesheets: ['chat.css', 'editor-primitives.css'],
     importExtra: ['ds/'],
   },
   {

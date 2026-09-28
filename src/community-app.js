@@ -9,7 +9,7 @@
 //   adapter.brandName  // string shown in the topbar brand span; defaults to 'app'
 //   adapter.get() -> snapshot {
 //     channels, categories, servers, currentChannel, currentServerId, homeMode,
-//     messages,  // each message may carry reactions: [{emoji, count, users?, you?}]
+//     messages,  // each message may carry reactions: [{emoji, count, users?, you?}], attachments: [{type, src|url, name, size}], linkPreview: {href, host, title, desc, thumb}
 //     chatInputValue, currentUser, userId,
 //     isConnected, voiceConnected, voiceChannelName, voiceConnectionState,
 //     voiceParticipants, micMuted, voiceDeafened,
@@ -222,6 +222,7 @@ export function mountCommunityApp(root, adapter = {}) {
             if (a.type === 'image' && (a.src || a.url)) parts.push({ kind: 'image', src: a.src || a.url, alt: a.alt || '', caption: a.caption });
             else if ((a.src || a.url) && (a.name || a.filename)) parts.push({ kind: 'file', src: a.src || a.url, name: a.name || a.filename, size: a.size });
         }
+        if (m.linkPreview && m.linkPreview.href) parts.push({ kind: 'link', ...m.linkPreview });
         return parts;
     };
 

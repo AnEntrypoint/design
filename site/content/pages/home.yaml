@@ -71,7 +71,6 @@ kits:
     - { code: "02", title: "Project page", sub: "Hero, receipt, install, changelog",  desc: "A full case-study template for shipping a product story.",                      href: "./ui_kits/project_page/", category: "apps" }
     - { code: "03", title: "Docs",         sub: "Long-form prose chrome",                desc: "Sidebar navigation, mono headings, and code blocks for documentation.",            href: "./ui_kits/docs/", category: "apps" }
     - { code: "04", title: "Blog",         sub: "Dated index and reading view",            desc: "A dated post index with author bylines and a distraction-free reading view.",                            href: "./ui_kits/blog/", category: "apps" }
-    - { code: "05", title: "Chat",         sub: "Message thread and composer",             desc: "A message thread with pill bubbles, monospace timestamps, and a room sidebar.",   href: "./ui_kits/chat/", category: "ai-chat" }
     - { code: "06", title: "AICat",        sub: "AI assistant with a cat persona",         desc: "An animated ASCII cat portrait with thinking states and mood changes.",  href: "./ui_kits/aicat/", category: "ai-chat" }
     - { code: "07", title: "File browser", sub: "Type-aware rails, drop zone, preview",   desc: "Every file-row primitive wired to a static demo backed by fsbrowse.", href: "./ui_kits/file_browser/", category: "devtools" }
     - { code: "08", title: "Dashboard",    sub: "KPIs, tables, receipts, changelog",  desc: "KPIs, tables, and receipts tracked with a running changelog in one operations surface.", href: "./ui_kits/dashboard/", category: "dashboards" }
@@ -83,7 +82,7 @@ kits:
     - { code: "14", title: "Gallery",      sub: "Visual grid, tonal cards, lightbox",  desc: "Tiles on shared panel tokens that open into a matching lightbox.", href: "./ui_kits/gallery/", category: "apps" }
     - { code: "15", title: "OS shell",     sub: "Menubar, window manager, taskbar", desc: "A runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
     - { code: "16", title: "Buttons",      sub: "Every variant, size, and state",   desc: "Primary, secondary, ghost, link, and danger, plus loading and disabled states.", href: "./ui_kits/buttons/", category: "devtools" }
-    - { code: "17", title: "Community",    sub: "Discord-style chat app, adapter-driven", desc: "A full server rail / channel sidebar / member list / voice strip community shell: mountCommunityApp wired to an injected adapter.", href: "./ui_kits/community-app/", category: "ai-chat" }
+    - { code: "17", title: "Chat & community", sub: "Threads, composer, servers, voice, members", desc: "One chat and community app: message thread with reactions, code, images, files and link cards, plus a server rail, channels, voice strip and member list, all mountCommunityApp wired to an injected adapter.", href: "./ui_kits/community-app/", category: "ai-chat" }
     - { code: "18", title: "Workspace",    sub: "Desktop-class chat-agent product", desc: "The flagship surface: WorkspaceShell, ConversationList, AgentChat, SessionDashboard.", href: "./ui_kits/workspace/", category: "ai-chat" }
 
 decks:

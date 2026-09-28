@@ -11,7 +11,7 @@ const root = document.getElementById('root');
 
 const corpus = [
     { code: 'kit', title: 'aicat',         sub: 'ai assistant with cat persona — ascii portrait + mood face', kind: 'kit',     href: '../aicat/' },
-    { code: 'kit', title: 'chat',          sub: 'message thread + composer with pill bubbles',                kind: 'kit',     href: '../chat/' },
+    { code: 'kit', title: 'community-app', sub: 'chat + community app: threads, composer, servers, voice',     kind: 'kit',     href: '../community-app/' },
     { code: 'kit', title: 'dashboard',     sub: 'kpis, tables, receipts, changelog, panels',                  kind: 'kit',     href: '../dashboard/' },
     { code: 'kit', title: 'file_browser',  sub: 'rails by file type, drop, preview',                          kind: 'kit',     href: '../file_browser/' },
     { code: 'kit', title: 'homepage',      sub: 'marquee + works grid editorial banner',                      kind: 'kit',     href: '../homepage/' },

@@ -444,7 +444,6 @@ body.canvas-host { background: transparent !important; }
    messages landed off-screen with no auto-scroll, live-confirmed via CDP. */
 .app-main > .chat,
 .app-main > .chat-area,
-.app-main > .chat-kit-page,
 .app-main > .aicat-focus-col,
 .app-main > .ds-file-stage,
 .app-main > .ds-files-stack,

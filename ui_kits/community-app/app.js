@@ -31,7 +31,7 @@ const state = {
     // Starts empty on purpose: the empty state is what a brand-new channel
     // actually looks like, so it is the kit's default view rather than a
     // branch a reader has to go hunting for.
-    messages: [], chatInputValue: '', phase: 'empty', replyTarget: null,
+    messages: [], typingUsers: [], chatInputValue: '', phase: 'empty', replyTarget: null,
     currentUser: { username: 'you' }, userId: 'you',
     isConnected: true,
     voiceConnected: false, voiceChannelName: '', voiceConnectionState: 'connected',
@@ -79,16 +79,34 @@ const VOICE_PEERS = [
 ];
 
 const SAMPLE_MESSAGES = [
-    { id: 'm1', userId: 'jordan', username: 'jordan', content: 'shipped the community adapter contract. mock lives in the kit, real one lives in the consumer.', timestamp: Date.now() - 600000, delivered: true },
-    { id: 'm1b', userId: 'jordan', username: 'jordan', content: 'no backend anywhere in this kit -- state.js + a Set of subscribers is the whole store.', timestamp: Date.now() - 590000, delivered: true },
-    { id: 'm2', userId: 'mai', username: 'mai', content: 'so the kit never talks to a backend at all?', timestamp: Date.now() - 480000, delivered: true },
-    { id: 'm3', userId: 'you', username: 'you', content: 'right -- it only has to satisfy get/subscribe/actions.', timestamp: Date.now() - 300000, delivered: true },
+    { id: 'm1', userId: 'jordan', username: 'jordan', content: 'shipped the community adapter contract. mock lives in the kit, real one lives in the consumer.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
+    { id: 'm1b', userId: 'jordan', username: 'jordan', content: 'no backend anywhere in this kit -- state.js + a Set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
+    { id: 'm2', userId: 'mai', username: 'mai', content: 'so the kit never talks to a backend at all?', timestamp: Date.now() - 780000, delivered: true },
+    { id: 'm3', userId: 'you', username: 'you', content: 'right -- it only has to satisfy get/subscribe/actions.', timestamp: Date.now() - 700000, delivered: true, read: true },
+    { id: 'm4', userId: 'you', username: 'you', type: 'code', lang: 'css', content: 'html { visibility: hidden; }\nhtml.ready { visibility: visible; }\n\n@media (prefers-reduced-motion: reduce) {\n  * { animation-duration: 0ms !important; }\n}', timestamp: Date.now() - 650000, delivered: true, read: true },
+    { id: 'm5', userId: 'jordan', username: 'jordan', content: '## review notes\n\nlooks solid. couple things:\n\n- short timeout fallback in case fonts hang\n- announce the `ready` class via `requestIdleCallback`\n- keep no-js fallback to `visibility: visible`\n\n> "ship the rough draft" -- but not the broken one.\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
+    { id: 'm6', userId: 'mai', username: 'mai', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'spot the new mascot -- final', timestamp: Date.now() - 480000, delivered: true },
+    { id: 'm7', userId: 'you', username: 'you', content: 'attaching the v0.0.27 token sheet for review:', attachments: [{ type: 'file', src: './sample.pdf', name: 'tokens-v0.0.27.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
+    { id: 'm8', userId: 'jordan', username: 'jordan', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design — design system for 247420', desc: 'a coherent visual paradigm — layered surfaces, monospace labels, loud content inside quiet chrome.', thumb: './sample-square.png' }, timestamp: Date.now() - 360000, delivered: true },
+    { id: 'm9', userId: 'mai', username: 'mai', type: 'file', url: './sample.pdf', name: 'meeting-notes-2026-05-01.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
 ];
+
+const TYPING_PEERS = [{ id: 'jordan', name: 'jordan', avatar: 'J', color: color('jordan') }];
+
+function toggleReaction(message, emoji) {
+    const reactions = (message.reactions || []).map((r) => ({ ...r }));
+    const mine = reactions.find((r) => r.emoji === emoji);
+    if (!mine) reactions.push({ emoji, count: 1, you: true });
+    else if (mine.you) { mine.count -= 1; mine.you = false; }
+    else { mine.count += 1; mine.you = true; }
+    return reactions.filter((r) => r.count > 0);
+}
 
 function applyPhase(p) {
     state.phase = p;
+    state.typingUsers = p === 'ready' ? TYPING_PEERS : [];
     if (p === 'ready') {
-        state.messages = SAMPLE_MESSAGES.slice();
+        state.messages = SAMPLE_MESSAGES.map((m) => ({ ...m }));
         state.isConnected = true;
     } else if (p === 'loading') {
         state.messages = [{ id: 'sys-loading', type: 'system', text: 'reading the last 50 messages in this channel...' }];
@@ -150,6 +168,12 @@ const adapter = {
         },
         channelContext: () => {}, serverContext: () => {}, memberMenu: () => {},
         resolveProfile: (id) => (id === 'you' ? 'you' : id),
+        reactToMessage: (id, _authorId, emoji) => {
+            const message = state.messages.find((m) => m.id === id);
+            if (!message) return;
+            message.reactions = toggleReaction(message, emoji || 'yay');
+            notify();
+        },
         startReply: (msg) => { state.replyTarget = msg; notify(); },
         cancelReply: () => { state.replyTarget = null; notify(); },
     },

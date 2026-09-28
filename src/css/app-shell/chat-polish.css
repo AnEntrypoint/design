@@ -791,15 +791,14 @@
    real call site in ui_kits/aicat/app.js): must be a flex column, not
    block flow. The AICat() surface reuses .chat (flex:1 1 0%; min-height:0)
    expecting to be sized against leftover space in a flex container, same
-   as .ds-chat-layout in the chat kit. As a block-flow parent this column's
+   as any flex-column chat host. As a block-flow parent this column's
    own child .chat had no bounded height to flex against, .chat-thread grew
    to full content height instead of scrolling internally, and
    makeThreadAutoScroll's IntersectionObserver (rooted at .chat-thread)
    never fired because .chat-thread never actually overflowed -- new
    messages landed off-screen with nothing scrolling them into view. The
    suggestions/details siblings below .chat keep their default
-   flex:0 1 auto (content-sized), matching .chat-kit-page's trailing-panel
-   pattern (kits-appended.css). min-height:0 is load-bearing too: without
+   flex:0 1 auto (content-sized). min-height:0 is load-bearing too: without
    it this column (an .app-main flex item via the topbar.css allow-list)
    sizes to its own content instead of shrinking to .app-main's leftover
    space. The two-class selector is required, not stylistic: .ds-app-surface
