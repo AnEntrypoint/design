@@ -52,7 +52,7 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
     if (!rootEl) throw new Error('mount: rootEl required (received ' + (rootEl === null ? 'null' : typeof rootEl) + ')');
     if (typeof viewFn !== 'function') throw new Error('mount: viewFn required');
     if (_mountedRoots.has(rootEl)) {
-        throw new Error('mount: this element is already mounted — call the returned render() to re-render, do not mount() the same root twice');
+        throw new Error('mount: this element is already mounted: call the returned render() to re-render, do not mount() the same root twice');
     }
     _mountedRoots.add(rootEl);
     if (autoScope && rootEl.classList && !rootEl.classList.contains(scope.slice(1))) {

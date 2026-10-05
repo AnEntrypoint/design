@@ -1,5 +1,6 @@
 import * as webjsx from 'webjsx';
 import { Topbar, Crumb, Side, AppShell, Status, Icon } from 'ds/components/shell.js';
+import { Panel, Row } from 'ds/components/content.js';
 import { AICat, flashComposerNote, ChatComposer } from 'ds/components/chat.js';
 import { mountKit } from 'ds/bootstrap.js';
 const h = webjsx.createElement;
@@ -21,18 +22,15 @@ const WELCOME_MESSAGES = [
 ];
 
 const PRESETS = [
-    { q: 'show me a small react component', k: 'code-react' },
-    { q: 'show python prime sieve', k: 'code-py' },
-    { q: 'explain prefers-reduced-motion', k: 'md-rm' },
-    { q: 'summarize the design tokens as a pdf', k: 'pdf' },
-    { q: 'show me the aicat picture', k: 'image' },
-    { q: 'link the design repo', k: 'link' },
-    { q: 'attach a config file', k: 'file' },
-    { q: 'tell me a joke about garbage collection', k: 'text' }
+    { q: 'show me a small react component', k: 'code-react', kind: 'code' },
+    { q: 'show python prime sieve', k: 'code-py', kind: 'code' },
+    { q: 'explain prefers-reduced-motion', k: 'md-rm', kind: 'markdown' },
+    { q: 'summarize the design tokens as a pdf', k: 'pdf', kind: 'pdf' },
+    { q: 'show me the aicat picture', k: 'image', kind: 'image' },
+    { q: 'link the design repo', k: 'link', kind: 'link card' },
+    { q: 'attach a config file', k: 'file', kind: 'file' },
+    { q: 'tell me a joke about garbage collection', k: 'text', kind: 'text' }
 ];
-
-const STARTER_KEYS = ['code-react', 'pdf', 'image', 'link'];
-const STARTER_PRESETS = STARTER_KEYS.map((k) => PRESETS.find((p) => p.k === k));
 
 const REPLIES = {
     'code-react': () => ({ parts: [
@@ -105,10 +103,11 @@ function AICatPortraitHead({ mood, status }) {
 
 function timeNow() { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
 
-function PromptList(presets, heading) {
-    return h('section', { class: 'aicat-prompts', 'aria-label': heading },
-        ...presets.map((p) => h('button', { key: 'pr-' + p.k, type: 'button', class: 'btn btn-ghost aicat-prompt', onclick: () => { if (!state.thinking) send(p.q); } }, p.q))
-    );
+function RequestList() {
+    return Panel({
+        title: 'example requests', count: PRESETS.length, class: 'aicat-examples',
+        children: h('div', {}, ...PRESETS.map((p) => Row({ key: 'pr-' + p.k, title: p.q, meta: p.kind, onClick: () => { if (!state.thinking) send(p.q); } })))
+    });
 }
 
 const state = {
@@ -163,9 +162,10 @@ function App() {
         main: [
             h('h1', { class: 'sr-only' }, 'aicat'),
             state.messages.length === 0 ? (
-                h('div', { key: 'main-empty', class: 'ds-app-surface aicat-focus-col aicat-empty-canvas' },
-                    h('div', { class: 'aicat-empty-hero' },
-                        h('p', { class: 'aicat-empty-lead' }, 'what should aicat help with?')
+                h('div', { key: 'main-empty', class: 'ds-app-surface ds-section-pad aicat-focus-col aicat-empty-canvas' },
+                    h('div', { class: 'aicat-start' },
+                        h('h2', { class: 'aicat-start-title' }, 'aicat'),
+                        h('p', { class: 'aicat-start-lede' }, 'replies in markdown, with code blocks, pdfs, images, link cards and file attachments.')
                     ),
                     ChatComposer({
                         value: state.draft,
@@ -174,7 +174,7 @@ function App() {
                         onInput: (v) => { state.draft = v; kit.render(); },
                         onSend: send
                     }),
-                    PromptList(STARTER_PRESETS, 'try one of these')
+                    RequestList()
                 )
             ) : h('div', { key: 'main-populated', class: 'ds-app-surface ds-section-pad aicat-focus-col' },
                 AICat({
@@ -189,12 +189,11 @@ function App() {
                         onInput: (v) => { state.draft = v; kit.render(); },
                         onSend: send
                     })
-                }),
-                state.messages.length <= 2 ? PromptList(PRESETS, 'or try one of these') : null
+                })
             )
         ],
         status: Status({
-            left: ['aicat', '- ' + state.messages.length + ' turns', state.thinking ? '- thinking' : '- idle'],
+            left: ['aicat', state.messages.length + ' turns', state.thinking ? 'thinking' : 'idle'],
             right: ['sample data']
         })
     });

@@ -10,34 +10,34 @@ const color = (id) => CAT[Math.abs([...String(id || '')].reduce((a, c) => a * 31
 const channels = [
     { id: 'general', name: 'general', type: 'text', position: 0 },
     { id: 'announcements', name: 'announcements', type: 'announcement', position: 1 },
-    { id: 'lounge', name: 'Lounge', type: 'voice', position: 2 },
+    { id: 'lounge', name: 'lounge', type: 'voice', position: 2 },
 ];
 const servers = [
-    { id: 'zellous', name: 'Zellous' },
-    { id: 'spoint', name: 'Spoint' },
-    { id: 'flatspace', name: 'Flatspace' },
-    { id: 'mutagen', name: 'Mutagen' },
+    { id: 'zellous', name: 'zellous' },
+    { id: 'spoint', name: 'spoint' },
+    { id: 'flatspace', name: 'flatspace' },
+    { id: 'mutagen', name: 'mutagen' },
 ];
 
 const VOICE_PEERS = [
-    { identity: 'jordan', color: color('jordan'), speaking: true },
-    { identity: 'mai', color: color('mai'), muted: true },
+    { identity: 'sample-user-1', color: color('sample-user-1'), speaking: true },
+    { identity: 'sample-user-2', color: color('sample-user-2'), muted: true },
 ];
 
 const SAMPLE_MESSAGES = [
-    { id: 'm1', userId: 'jordan', username: 'jordan', content: 'shipped the community adapter contract. mock lives in the kit, real one lives in the consumer.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
-    { id: 'm1b', userId: 'jordan', username: 'jordan', content: 'no backend anywhere in this kit -- state.js + a Set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
-    { id: 'm2', userId: 'mai', username: 'mai', content: 'so the kit never talks to a backend at all?', timestamp: Date.now() - 780000, delivered: true },
+    { id: 'm1', userId: 'sample-user-1', username: 'sample-user-1', content: 'shipped the community adapter contract. mock lives in the kit, real one lives in the consumer.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
+    { id: 'm1b', userId: 'sample-user-1', username: 'sample-user-1', content: 'no backend anywhere in this kit -- state.js + a Set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
+    { id: 'm2', userId: 'sample-user-2', username: 'sample-user-2', content: 'so the kit never talks to a backend at all?', timestamp: Date.now() - 780000, delivered: true },
     { id: 'm3', userId: 'you', username: 'you', content: 'right -- it only has to satisfy get/subscribe/actions.', timestamp: Date.now() - 700000, delivered: true, read: true },
     { id: 'm4', userId: 'you', username: 'you', type: 'code', lang: 'css', content: 'html { visibility: hidden; }\nhtml.ready { visibility: visible; }\n\n@media (prefers-reduced-motion: reduce) {\n  * { animation-duration: 0ms !important; }\n}', timestamp: Date.now() - 650000, delivered: true, read: true },
-    { id: 'm5', userId: 'jordan', username: 'jordan', content: '## review notes\n\nlooks solid. couple things:\n\n- short timeout fallback in case fonts hang\n- announce the `ready` class via `requestIdleCallback`\n- keep no-js fallback to `visibility: visible`\n\n> "ship the rough draft" -- but not the broken one.\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
-    { id: 'm6', userId: 'mai', username: 'mai', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'spot the new mascot -- final', timestamp: Date.now() - 480000, delivered: true },
-    { id: 'm7', userId: 'you', username: 'you', content: 'attaching the v0.0.27 token sheet for review:', attachments: [{ type: 'file', src: './sample.pdf', name: 'tokens-v0.0.27.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
-    { id: 'm8', userId: 'jordan', username: 'jordan', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'a coherent visual paradigm: layered surfaces, monospace labels, loud content inside quiet chrome.', thumb: './sample-square.png' }, timestamp: Date.now() - 360000, delivered: true },
-    { id: 'm9', userId: 'mai', username: 'mai', type: 'file', url: './sample.pdf', name: 'meeting-notes-2026-05-01.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
+    { id: 'm5', userId: 'sample-user-1', username: 'sample-user-1', content: '## review notes\n\nlooks solid. couple things:\n\n- short timeout fallback in case fonts hang\n- announce the `ready` class via `requestIdleCallback`\n- keep no-js fallback to `visibility: visible`\n\n> "ship the rough draft" -- but not the broken one.\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
+    { id: 'm6', userId: 'sample-user-2', username: 'sample-user-2', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'spot the new mascot -- final', timestamp: Date.now() - 480000, delivered: true },
+    { id: 'm7', userId: 'you', username: 'you', content: 'attaching the token sheet for review:', attachments: [{ type: 'file', src: './sample.pdf', name: 'token-sheet.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
+    { id: 'm8', userId: 'sample-user-1', username: 'sample-user-1', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'a coherent visual paradigm: layered surfaces, monospace labels, loud content inside quiet chrome.' }, timestamp: Date.now() - 360000, delivered: true },
+    { id: 'm9', userId: 'sample-user-2', username: 'sample-user-2', type: 'file', url: './sample.pdf', name: 'review-notes.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
 ];
 
-const TYPING_PEERS = [{ id: 'jordan', name: 'jordan', avatar: 'J', color: color('jordan') }];
+const TYPING_PEERS = [{ id: 'sample-user-1', name: 'sample-user-1', avatar: 'S', color: color('sample-user-1') }];
 
 const state = {
     channels, categories: [], servers,

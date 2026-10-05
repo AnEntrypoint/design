@@ -1,5 +1,5 @@
 import * as webjsx from 'webjsx';
-import { Topbar, Crumb, Status, Side, AppShell, Heading } from 'ds/components/shell.js';
+import { Topbar, Crumb, Status, Side, AppShell, Heading, Icon } from 'ds/components/shell.js';
 import { Panel } from 'ds/components/content.js';
 import { Carousel } from 'ds/components/carousel.js';
 import { Dialog } from 'ds/components/editor-primitives.js';
@@ -18,12 +18,12 @@ const swatchTokens = [
 ];
 
 const items = [
-    { id: 'a', label: 'the mascot',   caption: '/\\_/\\\n( o.o )\n > ^ <',      tone: 'panel-2', glyph: '(=)' },
-    { id: 'b', label: 'the prompt',   caption: '> run\n$ _',                    tone: 'panel-1', glyph: '$' },
-    { id: 'd', label: 'the arrow',    caption: '- - ->\n---->\n----->',         tone: 'panel-3', glyph: '->' },
-    { id: 'g', label: 'the stack',    caption: '[###]\n [##]\n  [#]',          tone: 'panel-3', glyph: '[]' },
-    { id: 'i', label: 'the target',   caption: '. . .\n.(o).\n. . .',          tone: 'panel-3', glyph: '(o)' },
-    { id: 'k', label: 'the spark',    caption: '\\ | /\n-- * --\n/ | \\',       tone: 'panel-1', glyph: '*' },
+    { id: 'a', label: 'folder',  icon: 'folder',     tone: 'panel-1' },
+    { id: 'b', label: 'image',   icon: 'file-image', tone: 'panel-2' },
+    { id: 'd', label: 'code',    icon: 'file-code',  tone: 'panel-3' },
+    { id: 'g', label: 'package', icon: 'package',    tone: 'panel-1' },
+    { id: 'i', label: 'globe',   icon: 'globe',      tone: 'panel-2' },
+    { id: 'k', label: 'shield',  icon: 'shield',     tone: 'panel-3' }
 ];
 
 const state = { open: null, density: 'comfy' };
@@ -39,10 +39,10 @@ function Tile(it) {
         'aria-label': it.label,
         style: '--tile-tone:var(--' + it.tone + ')'
     },
-        h('div', { class: 'ds-tile-cap', 'aria-hidden': 'true' }, it.caption),
+        h('div', { class: 'ds-tile-cap', 'aria-hidden': 'true' }, Icon(it.icon, { size: 32 })),
         h('div', { class: 'ds-tile-meta' },
-            h('span', { class: 'ds-tile-glyph', 'aria-hidden': 'true' }, it.glyph),
-            h('span', { class: 'ds-tile-label' }, it.label)
+            h('span', { class: 'ds-tile-label' }, it.label),
+            h('span', { class: 'ds-tile-glyph', 'aria-hidden': 'true' }, it.tone)
         )
     );
 }
@@ -59,7 +59,7 @@ function Swatch(t) {
 
 function LightboxTile(it) {
     return h('div', { class: 'ds-lightbox-preview', style: '--tile-tone:var(--' + it.tone + ')' },
-        h('div', {}, it.caption),
+        h('div', { 'aria-hidden': 'true' }, Icon(it.icon, { size: 64 })),
         h('p', { class: 'ds-m0' }, h('strong', {}, it.label))
     );
 }
@@ -110,8 +110,8 @@ function App() {
                     { glyph: h('span', { class: state.density === 'tight' ? 'ds-dot ds-dot-on' : 'ds-dot ds-dot-off' }), label: 'tight', key: 'd2', onClick: (e) => { e.preventDefault(); state.density = 'tight'; kit.render(); } }
                 ] },
                 { group: 'jump', items: [
-                    { glyph: '·', label: 'tiles',    key: 'j1', href: '#tiles' },
-                    { glyph: '·', label: 'swatches', key: 'j2', href: '#swatches' }
+                    { glyph: Icon('grid', { size: 14 }), label: 'tiles',    key: 'j1', href: '#tiles' },
+                    { glyph: Icon('square', { size: 14 }), label: 'swatches', key: 'j2', href: '#swatches' }
                 ] }
             ]
         }),
@@ -126,7 +126,7 @@ function App() {
             Lightbox()
         ],
         status: Status({
-            left: ['gallery', '- ' + items.length + ' tiles', '- density=' + state.density],
+            left: ['gallery', items.length + ' tiles', 'density=' + state.density],
             right: ['sample tiles']
         })
     });

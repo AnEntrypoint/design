@@ -45,7 +45,7 @@ export const sessions = makePage((ctx) => {
                 list.length
                     ? Table({ headers: ['session', 'platform', 'updated'], onRowClick: (i) => open(list[i].id),
                         rowLabels: list.map(x => x.title || x.id),
-                        rows: list.map(x => [truncSpan(x.title || x.id, TRUNC_TITLE), x.platform || '—', fmtAgo(x.updated_at)]) })
+                        rows: list.map(x => [truncSpan(x.title || x.id, TRUNC_TITLE), x.platform || '-', fmtAgo(x.updated_at)]) })
                     : emptyState('no sessions match')),
             s.selected ? section('messages · ' + s.selected,
                 s.msgLoading ? loadingState('loading messages…')

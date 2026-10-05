@@ -84,7 +84,6 @@ async function generateThumbnails() {
     const res = await fetch('/api/thumbnails/generate', { method: 'POST' })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
-    console.log('Thumbnail generation result:', data)
     return data
   } catch (err) {
     console.error('Failed to generate thumbnails:', err)

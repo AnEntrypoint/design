@@ -16,7 +16,7 @@ function statusLabel(plugin) {
 }
 
 function surfacesText(surfaces) {
-    if (!surfaces) return '—';
+    if (!surfaces) return '-';
     return surfaces;
 }
 

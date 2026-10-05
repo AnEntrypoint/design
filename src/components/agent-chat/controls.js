@@ -18,14 +18,14 @@ export function AgentControls({ agents, selectedAgent, models, selectedModel, bu
       ? Select({ key: 'agentsel', value: '', placeholder: 'loading agents…', title: 'Loading agents', disabled: true, options: [] })
       : (agentOptions.length
           ? Select({
-              key: 'agentsel', value: selectedAgent, placeholder: '— agent —',
+              key: 'agentsel', value: selectedAgent, placeholder: 'select agent',
               title: 'Select agent', options: agentOptions,
               onChange: (v) => onSelectAgent && onSelectAgent(v),
             })
           : null),
     showModels
       ? Select({
-          key: 'modelsel', value: selectedModel, placeholder: '— model —',
+          key: 'modelsel', value: selectedModel, placeholder: 'select model',
           title: 'Select model', options: (models || []).map((m) => ({ value: m.id, label: m.name || m.id })),
           onChange: (v) => onSelectModel && onSelectModel(v),
         })

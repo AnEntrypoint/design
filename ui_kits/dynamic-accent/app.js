@@ -46,12 +46,12 @@ function App() {
         main: [
             h('div', { class: 'ds-app-surface ds-section-pad' },
                 Heading({ level: 1, children: 'dynamic accent' }),
-                Lede({ children: 'HCT hue+chroma extracted from a source color, rendered at fixed M3-role tones so contrast holds regardless of the source. Additive to --accent/--accent-ink; never a global token rewrite. See src/theme/dynamic-accent.js.' }),
+                Lede({ children: 'HCT hue+chroma extracted from a source color, rendered at fixed M3-role tones so contrast holds regardless of the source. It adds to --accent and --accent-ink and leaves global tokens unchanged. See src/theme/dynamic-accent.js.' }),
                 SwatchGrid(false),
                 SwatchGrid(true)
             )
         ],
-        status: Status({ left: ['dynamic accent', '- 6 source hues', '- light + dark'], right: ['static demo'] })
+        status: Status({ left: ['dynamic accent', '6 source hues', 'light + dark'], right: ['static demo'] })
     });
 }
 

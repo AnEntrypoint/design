@@ -6,7 +6,7 @@
 
 ## Summary
 
-This document guides developers through migrating their codebase to use standardized component prop names. All changes are **backward compatible** — old props continue to work but trigger deprecation notices in development mode.
+This document guides developers through migrating their codebase to use standardized component prop names. All changes are **backward compatible**, old props continue to work but trigger deprecation notices in development mode.
 
 ## Key Changes
 
@@ -163,7 +163,7 @@ ChatMessage({ role: 'assistant', text: 'hi' })
 **Solution**: Support explicit `hasChildren` prop (for future API clarity).
 
 #### Note
-This is primarily an internal refactor. No action needed for users — the component still infers `hasChildren` from the `children` prop.
+This is primarily an internal refactor. No action needed for users; the component still infers `hasChildren` from the `children` prop.
 
 #### For Future Use
 ```js

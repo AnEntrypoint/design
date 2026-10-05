@@ -11,7 +11,7 @@ export function HomeView({ state = {}, onNav, onToggleWork, works = [], posts = 
     return [
         Hero({
             eyebrow: 'an entrypoint',
-            title: 'Small, weird, useful tools — built in public.',
+            title: 'Small, useful tools, built in public.',
             body: '247420 is a creative collective of eight, scattered across three timezones. We have been shipping open-source tools for the web since 2018.',
             accent: 'Some become the future. Most don\'t. That\'s the deal.'
         }),

@@ -85,17 +85,17 @@ async function main() {
     console.log(`[visual-baseline] ${shots.length} capture(s) compared against visual-baselines/.`);
 
     if (missing.length) {
-        console.error(`[visual-baseline] FAIL — ${missing.length} capture(s) have no committed baseline:`);
+        console.error(`[visual-baseline] FAIL: ${missing.length} capture(s) have no committed baseline:`);
         for (const m of missing.slice(0, MAX_MISSING_LISTED)) console.error(`  - ${m}`);
         console.error('[visual-baseline] Run: node scripts/visual-baseline.mjs update');
     }
     if (failures.length) {
-        console.error(`[visual-baseline] FAIL — ${failures.length} page(s) drifted from baseline:`);
+        console.error(`[visual-baseline] FAIL: ${failures.length} page(s) drifted from baseline:`);
         for (const f of failures) console.error(`  - ${f}`);
         console.error('[visual-baseline] If the change is intended, re-capture: node scripts/visual-baseline.mjs update');
     }
     if (missing.length || failures.length) process.exit(1);
-    console.log('[visual-baseline] OK — every page matches its baseline.');
+    console.log('[visual-baseline] OK: every page matches its baseline.');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

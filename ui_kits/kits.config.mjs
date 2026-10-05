@@ -140,7 +140,7 @@ export const kits = [
   },
   {
     id: 'project_page',
-    title: 'project / gm ·',
+    title: 'project / design ·',
     titleSuffixed: true,
     description: 'Generic project landing template: install, receipt, changelog and docs sidebar.',
     screenLabel: '02 Project Page',

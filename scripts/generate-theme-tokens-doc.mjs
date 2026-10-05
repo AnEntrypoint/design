@@ -122,7 +122,7 @@ const TEXT_ON_BACKGROUND_PAIRS = [
 ];
 
 let contrastMd = `## Contrast (WCAG 2.1 AA)\n\n`;
-contrastMd += `Computed here (relative-luminance formula, WCAG 2.1 sec. 1.4.3) from the resolved hex each semantic pair evaluates to at generation time — not a hand-maintained claim. AA text floor: 4.5:1 (normal text). Re-run this generator after any primitive color change to refresh the table. Complements the DOM-level, axe-core-driven checks in \`docs/a11y-report.md\` (which catches *rendered* violations across live component markup); this table checks the *token pairs themselves* independent of any one component's usage.\n\n`;
+contrastMd += `Computed here (relative-luminance formula, WCAG 2.1 sec. 1.4.3) from the resolved hex each semantic pair evaluates to at generation time, not a hand-maintained claim. AA text floor: 4.5:1 (normal text). Re-run this generator after any primitive color change to refresh the table. Complements the DOM-level, axe-core-driven checks in \`docs/a11y-report.md\` (which catches *rendered* violations across live component markup); this table checks the *token pairs themselves* independent of any one component's usage.\n\n`;
 contrastMd += `| pair | resolved hex | ratio | AA (4.5:1) |\n|---|---|---|---|\n`;
 for (const [label, fgTok, bgTok] of TEXT_ON_BACKGROUND_PAIRS) {
     const fgHex = resolveTokenValue(fgTok);
@@ -141,14 +141,14 @@ const STATUS_RAIL_TOKENS = ['--rail-info', '--rail-success', '--rail-warning', '
 let railMd = `## Indicator-rail colors\n\n`;
 railMd += `Two bounded rail-color sets. Both are "never borders" fill/indicator colors, never used as a 1px rule.\n\n`;
 railMd += `### Category rail (cycled)\n\n`;
-railMd += `Cycled by array index (see \`CAT\` in \`ui_kits/community-app/app.js\`) across category tags/avatars/threads — category N reuses category (N mod ${CAT_RAIL_TOKENS.length})'s color. **Cycle-repeat count: ${CAT_RAIL_TOKENS.length} distinct categories before a color repeats.**\n\n`;
+railMd += `Cycled by array index (see \`CAT\` in \`ui_kits/community-app/app.js\`) across category tags/avatars/threads: category N reuses category (N mod ${CAT_RAIL_TOKENS.length})'s color. **Cycle-repeat count: ${CAT_RAIL_TOKENS.length} distinct categories before a color repeats.**\n\n`;
 railMd += `| name | token | resolved hex |\n|---|---|---|\n`;
 for (const tok of CAT_RAIL_TOKENS) {
     const hex = resolveTokenValue(tok);
     railMd += `| ${tok.replace('--cat-', '')} | \`${tok}\` | \`${hex || '?'}\` |\n`;
 }
 railMd += `\n### Status-severity rail (picked by name, not cycled)\n\n`;
-railMd += `Selected by severity name (info/success/warning/error), matching \`.tone-info\`/\`.tone-success\`/\`.tone-warning\`/\`.tone-error\` banner/badge/chip conventions — never cycled by index.\n\n`;
+railMd += `Selected by severity name (info/success/warning/error), matching \`.tone-info\`/\`.tone-success\`/\`.tone-warning\`/\`.tone-error\` banner/badge/chip conventions, never cycled by index.\n\n`;
 railMd += `| name | token | resolved hex |\n|---|---|---|\n`;
 for (const tok of STATUS_RAIL_TOKENS) {
     const hex = resolveTokenValue(tok);

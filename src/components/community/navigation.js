@@ -135,7 +135,7 @@ export function ChannelSidebar({ serverName, channels = [], categories = [], act
             (sorted.length === 0 && uncategorized.length === 0)
                 ? h('div', { class: 'cm-channel-empty', role: 'status' },
                     Icon('hash', { size: 20 }),
-                    h('span', { class: 'cm-channel-empty-text' }, 'no channels yet — add one to get this server started'))
+                    h('span', { class: 'cm-channel-empty-text' }, 'no channels yet: add one to get this server started'))
                 : null,
             ...sorted.map(cat => ChannelCategory({
                 id: cat.id,

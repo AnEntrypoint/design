@@ -2,42 +2,36 @@ id: home
 title: Home
 
 showcase:
-  heading: "Live components"
+  heading: "live components"
   lede: "These are the live Btn, Chip, Badge and Table components that every kit imports, rendered from the published SDK."
 
 hero:
-  eyebrow: "design system"
   heading: "247420"
   subheading: "Tokens, components and kits for dense, tonal UI"
   body: "One token file drives every color, radius, and spacing value across {{TOTAL_COMPONENTS}} components and {{TOTAL_KITS}} kits. Edit a token and every surface updates; no bundler is needed."
-  badges:
-    - { label: "{{TOTAL_COMPONENTS}}", desc: "components" }
-    - { label: "{{TOTAL_KITS}}", desc: "kits" }
-    - { label: "0", desc: "blocking a11y violations" }
   ctas:
-    - { label: "View on GitHub", href: "https://github.com/AnEntrypoint/design", primary: true }
-    - { label: "Browse kits", href: "#kits" }
+    - { label: "Browse kits", href: "#kits", primary: true }
 
 sidebar:
   bins:
-    - { label: "Everything", href: "#all", active: true }
-    - { label: "UI kits",    href: "#kits" }
-    - { label: "Decks",      href: "#decks" }
-    - { label: "Previews",   href: "#previews" }
-    - { label: "Docs",       href: "#docs" }
-  more_group: "More"
+    - { label: "everything", href: "#all", active: true }
+    - { label: "ui kits",    href: "#kits" }
+    - { label: "decks",      href: "#decks" }
+    - { label: "previews",   href: "#previews" }
+    - { label: "docs",       href: "#docs" }
+  more_group: "more"
   more:
-    - { label: "Readme",  href: "https://github.com/AnEntrypoint/design/blob/main/README.md" }
-    - { label: "Skill",   href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
-    - { label: "Tokens",  href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
-    - { label: "Source",  href: "https://github.com/AnEntrypoint/design" }
-    - { label: "MIT license", href: "https://github.com/AnEntrypoint/design/blob/main/LICENSE" }
+    - { label: "readme",  href: "https://github.com/AnEntrypoint/design/blob/main/README.md" }
+    - { label: "skill",   href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
+    - { label: "tokens",  href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
+    - { label: "source",  href: "https://github.com/AnEntrypoint/design" }
+    - { label: "mit license", href: "https://github.com/AnEntrypoint/design/blob/main/LICENSE" }
 
 tabs:
-  - { label: "Everything", href: "#all", active: true }
-  - { label: "Kits",       href: "#kits" }
-  - { label: "Decks",      href: "#decks" }
-  - { label: "Previews",   href: "#previews" }
+  - { label: "everything", href: "#all", active: true }
+  - { label: "kits",       href: "#kits" }
+  - { label: "decks",      href: "#decks" }
+  - { label: "previews",   href: "#previews" }
 
 kits:
   heading: "UI kits"
@@ -60,7 +54,7 @@ kits:
     - { code: "10", title: "Settings",     sub: "Sectioned forms, toggles, save bar",  desc: "Every input primitive: fields, segmented buttons, and a danger panel.", href: "./ui_kits/settings/", category: "dashboards" }
     - { code: "11", title: "Sign in",      sub: "Auth providers and magic link",         desc: "A narrow, tone-on-tone auth form with no shadows and no spinners.", href: "./ui_kits/signin/", category: "apps" }
     - { code: "12", title: "Search",       sub: "Topbar query, faceted filters, rows", desc: "Faceted results ranking, reusing the same RowLink primitive every list uses.", href: "./ui_kits/search/", category: "devtools" }
-    - { code: "13", title: "404",          sub: "Empty-state hero, suggested routes",   desc: "An oversized mono code with three recovery calls to action.",      href: "./ui_kits/error_404/", category: "apps" }
+    - { code: "13", title: "404",          sub: "Plain heading, suggested routes",        desc: "One sentence on what was not found and a where-to-go list of links.",      href: "./ui_kits/error_404/", category: "apps" }
     - { code: "14", title: "Gallery",      sub: "Visual grid, tonal cards, lightbox",  desc: "Tiles on shared panel tokens that open into a matching lightbox.", href: "./ui_kits/gallery/", category: "apps" }
     - { code: "15", title: "OS shell",     sub: "Menubar, window manager, taskbar", desc: "A runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
     - { code: "16", title: "Buttons",      sub: "Every variant, size, and state",   desc: "Primary, secondary, ghost, link, and danger, plus loading and disabled states.", href: "./ui_kits/buttons/", category: "devtools" }
@@ -84,7 +78,7 @@ docs:
     - { code: "md",  title: "Skill",  sub: "Authoring rules for the agent",      desc: "Authoring rules for agents that build on the system.",    href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
     - { code: "css", title: "Tokens", sub: "Colors, type, panel surface tokens", desc: "Canonical source of truth.",           href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
     - { code: "md",  title: "Component props", sub: "Generated prop reference", desc: "Every exported component's signature and documented parameters.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/component-props.md" }
-    - { code: "live", title: "Component explorer", sub: "Interactive, searchable, live-rendered", desc: "The same {{TOTAL_COMPONENTS}} components as the reference above, each with a prop table. Live specimens exist for 4 of them (Btn, Chip, Badge, Table).", href: "./ui_kits/component_explorer/" }
+    - { code: "live", title: "Component explorer", sub: "Interactive, searchable, live-rendered", desc: "The same {{TOTAL_COMPONENTS}} components as the reference above plus their helpers, each with a prop table. Live specimens exist for 4 of them (Btn, Chip, Badge, Table).", href: "./ui_kits/component_explorer/" }
     - { code: "md",  title: "Changelog", sub: "Release history", desc: "What shipped in each published version.", href: "https://github.com/AnEntrypoint/design/blob/main/CHANGELOG.md" }
     - { code: "md",  title: "Accessibility", sub: "WCAG AA compliance, keyboard navigation", desc: "Contrast ratios, focus-visible tokens, ARIA conventions, and the live audit baseline.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/accessibility.md" }
     - { code: "md",  title: "Responsive breakpoints", sub: "The documented breakpoint scale in use", desc: "Verified mobile, tablet, and desktop behavior across kits.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/responsive.md" }
@@ -156,7 +150,5 @@ features:
 
 status_left:
   - "main"
-  - "utf-8"
-  - "lf"
 status_right:
   - "anentrypoint-design"

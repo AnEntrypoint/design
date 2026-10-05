@@ -16,8 +16,8 @@ const sessions = [
 ];
 
 let liveSessions = [
-    { sid: 's1', agentName: 'claude-code', model: 'sonnet', cwd: 'kit', status: 'running', startedAt: Date.now() - 120000 },
-    { sid: 's4', agentName: 'opencode', model: 'gpt-5', cwd: 'agentgui', status: 'error', startedAt: Date.now() - 900000 },
+    { sid: 's1', agentName: 'sample-agent', model: 'sample-model', cwd: 'kit', status: 'running', startedAt: Date.now() - 120000 },
+    { sid: 's4', agentName: 'sample-agent-2', model: 'sample-model-2', cwd: 'agentgui', status: 'error', startedAt: Date.now() - 900000 },
 ];
 
 const state = {
@@ -25,8 +25,8 @@ const state = {
     selectedSid: 's1',
     draft: '',
     busy: false,
-    agent: 'claude-code',
-    model: 'sonnet',
+    agent: 'sample-agent',
+    model: 'sample-model',
     cwd: 'kit',
     cwdEditing: false,
     cwdDraft: '',
@@ -37,10 +37,10 @@ const state = {
 };
 
 const AGENTS = [
-    { id: 'claude-code', name: 'claude-code' },
+    { id: 'sample-agent', name: 'sample-agent' },
 ];
 const MODELS = [
-    { id: 'sonnet', name: 'sonnet' },
+    { id: 'sample-model', name: 'sample-model' },
 ];
 
 function ChatTab() {
@@ -132,8 +132,8 @@ function App() {
         }),
         main: state.tab === 'chat' ? ChatTab() : LiveTab(),
         status: Status({
-            left: ['workspace', '- ' + (sessions.length) + ' conversations', '- ' + (liveSessions.length) + ' live'],
-            right: ['demo data'],
+            left: ['workspace', (sessions.length) + ' conversations', (liveSessions.length) + ' live'],
+            right: ['sample data'],
         }),
         stableFrame: true,
     });

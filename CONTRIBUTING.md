@@ -1,7 +1,7 @@
 # Contributing
 
 This is a guide for human contributors. AI agents working in this repo follow
-`SKILL.md` instead — that file is the authoring/voice contract, not a
+`SKILL.md` instead: that file is the authoring/voice contract, not a
 substitute for the setup steps below.
 
 ## Running things locally
@@ -16,7 +16,7 @@ npx http-server . -p 8899
 # then open http://localhost:8899/ui_kits/homepage/
 ```
 
-`8899` is not arbitrary — it's the default `BASE_URL` port the a11y
+`8899` is not arbitrary: it's the default `BASE_URL` port the a11y
 (`scripts/a11y-audit.mjs`) and visual-regression (`scripts/visual-baseline.mjs`)
 tooling expect, so using it locally keeps those scripts' defaults working
 without extra env vars.
@@ -29,40 +29,40 @@ npm run build:ci
 
 Useful scripts (see `"scripts"` in `package.json` for the full list):
 
-- `npm run lint` — full CSS/JS lint gate (see below)
-- `npm run docs:components` — regenerate `docs/component-props.md`
-- `npm run types:components` — regenerate `types/components.d.ts`
-- `npm run tokens` / `npm run tokens:css` — regenerate token JSON/CSS
-- `npm run a11y` — axe-core WCAG audit against a running kit server
-- `npm run visual` / `npm run visual:update` — visual regression check/rebaseline
+- `npm run lint`: full CSS/JS lint gate (see below)
+- `npm run docs:components`: regenerate `docs/component-props.md`
+- `npm run types:components`: regenerate `types/components.d.ts`
+- `npm run tokens` / `npm run tokens:css`: regenerate token JSON/CSS
+- `npm run a11y`: axe-core WCAG audit against a running kit server
+- `npm run visual` / `npm run visual:update`: visual regression check/rebaseline
 
 ## Where things live
 
-- **`src/components/`** — the component source, split into single-responsibility
+- **`src/components/`**: the component source, split into single-responsibility
   modules (`shell.js`, `content.js`, `chat.js`, `files.js`, etc.); `src/components.js`
   is the re-export barrel every consumer actually imports from. A module that
   outgrows ~200 lines becomes a thin barrel of its own over a sibling directory
-  (e.g. `src/components/editor-primitives.js` over `editor-primitives/*.js`) —
+  (e.g. `src/components/editor-primitives.js` over `editor-primitives/*.js`):
   the public export surface never moves.
-- **`preview/`** — one static HTML page per primitive/pattern, used for visual
+- **`preview/`**: one static HTML page per primitive/pattern, used for visual
   QA, the a11y audit, and visual regression baselines.
-- **`ui_kits/`** — full working example apps (buildless, loading the SDK from
-  this repo) — `homepage`, `chat`, `file_browser`, `dashboard`, etc. Each kit's
+- **`ui_kits/`**: full working example apps (buildless, loading the SDK from
+  this repo), `homepage`, `chat`, `file_browser`, `dashboard`, etc. Each kit's
   generated `index.html` comes from `ui_kits/kits.config.mjs` via
-  `npm run generate:ui-kits` — never hand-edit a kit's `index.html`.
-- **`site/`** — the flatspace-driven marketing/docs site (`site/theme.mjs` +
+  `npm run generate:ui-kits`: never hand-edit a kit's `index.html`.
+- **`site/`**: the flatspace-driven marketing/docs site (`site/theme.mjs` +
   `site/content/pages/*.yaml`) that renders this repo's own homepage.
 
-There is no separate `kits/` directory — kit examples live under `ui_kits/`.
+There is no separate `kits/` directory, kit examples live under `ui_kits/`.
 
 ## Adding a design token
 
-Tokens live in `colors_and_type.css` (the single source of truth — every
+Tokens live in `colors_and_type.css` (the single source of truth; every
 component stylesheet must consume `var(--token-name)`, never a raw color/size
 literal). To add or change a token:
 
 1. Add the `--token-name: value;` declaration to the right section of
-   `colors_and_type.css` (grouped by block — colors, type scale,
+   `colors_and_type.css` (grouped by block: colors, type scale,
    spacing, panel surfaces, etc.; a literal that is genuinely off-scale is named
    as a custom property on its own rule, e.g. `--bubble-inset-x: 14px;
    padding: var(--bubble-inset-x);`, never explained with a comment).
@@ -73,41 +73,41 @@ literal). To add or change a token:
    sheet still hard-codes the value you just tokenized.
 
 `tokens.json` and the token-doc generator are read-only reflections of
-`colors_and_type.css` — never hand-edit the generated output.
+`colors_and_type.css`: never hand-edit the generated output.
 
 ## What the lint gates check
 
 `npm run lint` runs `scripts/lint.mjs`, which delegates to
-`scripts/lint-css.mjs` — an orchestrator that imports every rule module below
+`scripts/lint-css.mjs`: an orchestrator that imports every rule module below
 and aggregates one pass/fail report:
 
-- **`lint-tokens.mjs`** — no raw color literal in any component stylesheet;
+- **`lint-tokens.mjs`**: no raw color literal in any component stylesheet;
   every color must come from a `var(--token)` in `colors_and_type.css`.
-- **`lint-classes.mjs`** — every class a component emits belongs to a named
+- **`lint-classes.mjs`**: every class a component emits belongs to a named
   prefix family (`ds-`/`app-`/`ws-`/`chat-`/…), a public utility class, or the
-  frozen legacy bare-name list — nothing new and unprefixed.
-- **`lint-css.mjs`** — the shared driver described above; also home to the
+  frozen legacy bare-name list; nothing new and unprefixed.
+- **`lint-css.mjs`**: the shared driver described above; also home to the
   font-size, `!important`, and spacing ratchet checks bundled inline.
-- **`lint-dead-controls.mjs`** — flags a rendered control that cannot act: an
+- **`lint-dead-controls.mjs`**: flags a rendered control that cannot act: an
   empty/no-op handler, or a bare `href="#"`.
-- **`lint-duplicate-selectors.mjs`** — the same CSS selector defined twice with
+- **`lint-duplicate-selectors.mjs`**: the same CSS selector defined twice with
   a *different* rule body (same file or across files), since the bundle is a
   straight concatenation with no cascade-dedup.
-- **`lint-glyphs.mjs`** — no hard-coded decorative unicode glyph (arrows,
+- **`lint-glyphs.mjs`**: no hard-coded decorative unicode glyph (arrows,
   bullets, stars, status dots); use the `Icon()` SVG set or plain ASCII.
-- **`lint-inline-css.mjs`** — runs the same token/literal scanners over CSS
+- **`lint-inline-css.mjs`**: runs the same token/literal scanners over CSS
   living inside inline `<style>` blocks in HTML, closing the gap
   `lint-tokens.mjs` leaves (it only scans `.css` files).
-- **`lint-inline-styles.mjs`** — no hard-coded layout property in a
+- **`lint-inline-styles.mjs`**: no hard-coded layout property in a
   `style="..."` attribute; layout belongs in classes so responsive rules stay
   centralized. Dynamic non-layout style writes are allowed.
-- **`lint-null-children.mjs`** — catches a bare `null` sitting among vnode
+- **`lint-null-children.mjs`**: catches a bare `null` sitting among vnode
   siblings in a children array (a real webjsx `applyDiff` crash), enforcing
   the `.filter(Boolean)` discipline.
-- **`lint-rtl-physical-properties.mjs`** — no physical `left`/`right`
+- **`lint-rtl-physical-properties.mjs`**: no physical `left`/`right`
   CSS property where a logical `inline-start`/`inline-end` equivalent would
   auto-mirror under `[dir="rtl"]`.
-- **`lint-empty-catch.mjs`** — hard zero: no empty `catch {}` block
+- **`lint-empty-catch.mjs`**: hard zero: no empty `catch {}` block
   (nothing inside counts) and no empty `.catch(() => {})`. Best-effort calls go
   through `attempt()` / `attemptAsync()`, and `.catch(ignoreFailure)`, from
   `src/best-effort.js`; the helper name is the statement of intent.
@@ -117,7 +117,7 @@ raw `z-index`, and `transition: all` bans folded into `lint-css.mjs`). Four
 are ratchets frozen against a baseline that may only move down
 (`lint-spacing`, `lint-fontsize`, `lint-important`, `lint-dead-controls`).
 
-`npm run a11y` is a separate, runtime companion — axe-core against the live
+`npm run a11y` is a separate, runtime companion: axe-core against the live
 rendered DOM of every kit via CDP, blocking on serious/critical WCAG
 violations; it needs a Chrome already listening on `CDP_BASE` and a server on
 `BASE_URL`.

@@ -1,19 +1,42 @@
 import * as webjsx from 'webjsx';
 import { Topbar, Crumb, Status, Side, AppShell, Heading, Lede, Icon, Badge } from 'ds/components/shell.js';
-import { Panel, Kpi, BarChart, Table, Receipt, Changelog, Row } from 'ds/components/content.js';
+import { Panel, Sparkline, BarChart, Table, Receipt, Changelog, Row } from 'ds/components/content.js';
 import { mountKit } from 'ds/bootstrap.js';
 const h = webjsx.createElement;
 
 const root = document.getElementById('root');
 
-const ERROR_RATE_DANGER_PCT = 1;
-
 const kpis = [
     ['24,891', 'requests · 24h', { delta: '+12.4%', tone: 'up',   spark: [8, 11, 9, 14, 16, 15, 19, 22, 20, 24] }],
-    ['184ms',  'avg latency · p50', { delta: '-6.1%', tone: 'down', invert: true, spark: [220, 210, 205, 198, 190, 188, 184, 186, 182, 184] }],
-    ['0.42%',  'error rate · 5xx+4xx', { delta: '+0.08%', tone: 'up', invert: 0.42 > ERROR_RATE_DANGER_PCT }],
+    ['184ms',  'avg latency · p50', { delta: '-6.1%', tone: 'down', invert: true }],
+    ['0.42%',  'error rate · 5xx+4xx', { delta: '+0.08%', tone: 'up', invert: true }],
     ['94.7%',  'cache hit · edge', { delta: '+1.2%', tone: 'up' }]
 ];
+
+function Delta({ delta, tone, invert }) {
+    const rising = tone !== 'down';
+    const better = invert ? !rising : rising;
+    return h('span', { class: 'kpi-delta kpi-delta-' + (better ? 'up' : 'down') },
+        Icon(rising ? 'arrow-up' : 'arrow-down', { size: 12 }),
+        delta,
+        h('span', { class: 'sr-only' }, better ? ' (better)' : ' (worse)'));
+}
+
+function Metrics() {
+    const [leadValue, leadLabel, leadMeta] = kpis[0];
+    return h('div', { class: 'ds-metric-split' },
+        h('div', { class: 'ds-metric-lead' },
+            h('div', { class: 'ds-metric-lead-num' }, leadValue),
+            h('div', { class: 'ds-metric-lead-lbl' }, leadLabel),
+            h('div', { class: 'ds-metric-lead-foot' },
+                Delta(leadMeta),
+                Sparkline({ values: leadMeta.spark, width: 240, height: 44, tone: 'up' }))),
+        h('div', { class: 'ds-metric-list' }, ...kpis.slice(1).map(([value, label, meta], i) =>
+            h('div', { key: 'm' + i, class: 'ds-metric-item' },
+                h('span', { class: 'ds-metric-item-lbl' }, label),
+                h('span', { class: 'ds-metric-item-num' }, value),
+                Delta(meta)))));
+}
 
 const channelBreakdown = [
     { label: 'edge cache', value: 412, display: '412 rps' },
@@ -101,7 +124,7 @@ function App() {
             h('div', { class: 'ds-app-surface ds-section-pad', 'data-density': 'comfortable' },
                 Heading({ level: 1, children: 'production overview' }),
                 Lede({ children: 'traffic, endpoint latency and recent deploys for the last 24 hours.' }),
-                Panel({ id: 'p-metrics', title: 'live metrics', class: 'ds-panel-gap', children: Kpi({ items: kpis }) }),
+                Panel({ id: 'p-metrics', title: 'live metrics', class: 'ds-panel-gap', children: Metrics() }),
                 h('div', { class: 'ds-panel-duo' },
                     Panel({ title: 'traffic by channel', class: 'ds-panel-flush', children: BarChart({ items: channelBreakdown }) }),
                     Panel({ id: 'p-endpoints', title: 'top endpoints', class: 'ds-panel-flush', children: Table({ headers: tableHeaders, rows: tableRows, striped: true }) })
@@ -114,7 +137,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['dashboard', '- ' + kpis.length + ' kpis', '- ' + tableRows.length + ' endpoints'],
+            left: ['dashboard', kpis.length + ' kpis', tableRows.length + ' endpoints'],
             right: ['sample data']
         })
     });

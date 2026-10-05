@@ -108,7 +108,7 @@ function writeReport(results) {
         if (!r.violations.length) continue;
         lines.push(`## ${r.kit}`);
         for (const v of r.violations) {
-            lines.push(`- **${v.id}** (${v.impact}): ${v.help} — ${v.nodes} node(s)`);
+            lines.push(`- **${v.id}** (${v.impact}): ${v.help}: ${v.nodes} node(s)`);
             lines.push(`  - ${v.helpUrl}`);
             for (const s of v.sample) {
                 lines.push(`  - \`${s.target}\``);
@@ -177,23 +177,23 @@ async function main() {
     console.log(`[a11y-audit] ${results.length} kit(s), ${total} blocking violation(s) (baseline ${baseline.total}). Report: docs/a11y-report.md`);
 
     if (regressed.length) {
-        console.error('[a11y-audit] FAIL — a11y regression:');
+        console.error('[a11y-audit] FAIL: a11y regression:');
         for (const r of regressed) console.error(`  - ${r}`);
         printBlockingDetail(results);
         die('[a11y-audit] Fix the violation. Never raise the baseline to make it pass.');
     }
     if (improved.length) {
-        console.error('[a11y-audit] FAIL — violations dropped below baseline; re-freeze it DOWNWARD:');
+        console.error('[a11y-audit] FAIL: violations dropped below baseline; re-freeze it DOWNWARD:');
         for (const i of improved) console.error(`  - ${i}`);
         die('[a11y-audit] Run: node scripts/a11y-audit.mjs --write-baseline');
     }
     const matrixFailures = await auditComponentMatrix(BASE_URL);
     if (matrixFailures.length) {
-        console.error('[a11y-audit] FAIL — component matrix contrast:');
+        console.error('[a11y-audit] FAIL: component matrix contrast:');
         for (const f of matrixFailures) console.error(`  - ${describeMatrixFailure(f)}`);
         die('[a11y-audit] Fix the token or the component pairing; the matrix has no baseline.');
     }
-    console.log('[a11y-audit] OK — no regression against baseline; component matrix clean across all theme modes.');
+    console.log('[a11y-audit] OK: no regression against baseline; component matrix clean across all theme modes.');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

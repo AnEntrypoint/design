@@ -55,12 +55,6 @@ export function ChatComposerElapsed({ streamingSince }) {
 export function TypingIndicator({ users } = {}) {
     const list = (users || []).filter(Boolean);
     if (!list.length) return null;
-    const shown = list.slice(0, 5);
-    const avatars = h('div', { class: 'chat-typing-avatars' },
-        ...shown.map((u, i) => h('span', {
-            key: 'ta' + (u.id || i), class: 'chat-typing-avatar',
-            style: u.color ? `background:${u.color}` : null,
-        }, u.avatar || (u.name || '?').slice(0, 1).toUpperCase())));
     let label;
     if (list.length === 1) label = `${list[0].name || 'Someone'} is typing…`;
     else if (list.length < 5) {
@@ -68,7 +62,6 @@ export function TypingIndicator({ users } = {}) {
         label = `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]} are typing…`;
     } else label = 'Several people are typing…';
     return h('div', { class: 'chat-typing-bar', role: 'status', 'aria-live': 'polite' },
-        avatars,
         h('span', { class: 'chat-typing-bar-label' }, label));
 }
 

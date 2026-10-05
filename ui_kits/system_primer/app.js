@@ -1,5 +1,5 @@
 import * as webjsx from 'webjsx';
-import { Topbar, Crumb, Status, Side, AppShell, Chip, Btn } from 'ds/components/shell.js';
+import { Topbar, Crumb, Status, Side, AppShell, Chip, Btn, Icon } from 'ds/components/shell.js';
 import { Panel, PageHeader, InputOTP } from 'ds/components/content.js';
 import { ThemeToggle } from 'ds/components/theme-toggle.js';
 import { Slider } from 'ds/components/slider.js';
@@ -316,12 +316,12 @@ function App() {
         side: Side({
             sections: [
                 { group: 'sections', items: [
-                    { glyph: '-', label: 'palette',    key: 'p', href: '#palette',    active: navState.activeId === 'palette' },
-                    { glyph: '-', label: 'semantic',   key: 's', href: '#semantic',   active: navState.activeId === 'semantic' },
-                    { glyph: '-', label: 'type scale', key: 't', href: '#type-scale', active: navState.activeId === 'type-scale' },
-                    { glyph: '-', label: 'primitives', key: 'r', href: '#primitives', active: navState.activeId === 'primitives' },
-                    { glyph: '-', label: 'inputs', key: 'x', href: '#inputs',  active: navState.activeId === 'inputs' },
-                    { glyph: '-', label: 'overlays', key: 'b', href: '#overlays',     active: navState.activeId === 'overlays' }
+                    { glyph: Icon('contrast', { size: 14 }), label: 'palette',    key: 'p', href: '#palette',    active: navState.activeId === 'palette' },
+                    { glyph: Icon('info', { size: 14 }), label: 'semantic',   key: 's', href: '#semantic',   active: navState.activeId === 'semantic' },
+                    { glyph: Icon('page', { size: 14 }), label: 'type scale', key: 't', href: '#type-scale', active: navState.activeId === 'type-scale' },
+                    { glyph: Icon('square', { size: 14 }), label: 'primitives', key: 'r', href: '#primitives', active: navState.activeId === 'primitives' },
+                    { glyph: Icon('pencil', { size: 14 }), label: 'inputs', key: 'x', href: '#inputs',  active: navState.activeId === 'inputs' },
+                    { glyph: Icon('copy', { size: 14 }), label: 'overlays', key: 'b', href: '#overlays',     active: navState.activeId === 'overlays' }
                 ] }
             ]
         }),
@@ -341,7 +341,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['system primer', '- ' + PALETTE.length + ' palette tokens', '- ' + SEMANTIC.length + ' semantic'],
+            left: ['system primer', PALETTE.length + ' palette tokens', SEMANTIC.length + ' semantic'],
             right: ['tokens from colors_and_type.css']
         })
     });

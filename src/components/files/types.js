@@ -26,8 +26,8 @@ export function fileGlyph(type) {
 }
 
 export function fmtFileSize(bytes) {
-    if (bytes == null) return '—';
-    if (typeof bytes !== 'number' || Number.isNaN(bytes) || bytes < 0) return '—';
+    if (bytes == null) return '-';
+    if (typeof bytes !== 'number' || Number.isNaN(bytes) || bytes < 0) return '-';
     if (bytes === 0) return '0 B';
     const u = ['B', 'KB', 'MB', 'GB', 'TB'];
     let i = 0, n = bytes;

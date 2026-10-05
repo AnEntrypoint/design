@@ -144,3 +144,18 @@
   .ds-dash-select { min-width: 44px; min-height: 44px; }
   .ds-dash-errors-toggle { min-height: 44px; }
 }
+
+.ds-metric-split { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-5); align-items: start; }
+.ds-metric-lead { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3) 0; }
+.ds-metric-lead-num { font-size: var(--fs-h1); font-weight: 600; line-height: 1; letter-spacing: var(--tr-tight); font-variant-numeric: tabular-nums; }
+.ds-metric-lead-lbl { font-size: var(--fs-xs); color: var(--fg-3); font-weight: 600; }
+.ds-metric-lead-foot { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; margin-top: var(--space-2); }
+.ds-metric-list { display: flex; flex-direction: column; }
+.ds-metric-item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: baseline; gap: var(--space-3); padding: var(--space-2-75) 0; border-bottom: var(--bw-hair) solid var(--rule); }
+.ds-metric-item:last-child { border-bottom: 0; }
+.ds-metric-item-lbl { font-size: var(--fs-xs); color: var(--fg-2); min-width: 0; }
+.ds-metric-item-num { font-size: var(--fs-lg); font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) {
+  .ds-metric-split { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+  .ds-metric-lead-num { font-size: var(--fs-h2); }
+}

@@ -8,8 +8,8 @@ const h = webjsx.createElement;
 const STREAM_WORD = {
   connected: 'listening for activity',
   connecting: 'connecting to live stream…',
-  offline: 'live stream offline — retrying…',
-  lost: 'live stream offline — retrying…',
+  offline: 'live stream offline, retrying…',
+  lost: 'live stream offline, retrying…',
 };
 
 /**
@@ -42,7 +42,7 @@ export function SessionDashboard({ sessions = [], onStop, onOpen, onView, onStop
                                    emptyText = 'No live sessions', emptyAction, offline = false,
                                    density = 'comfortable' } = {}) {
   if (offline) {
-    return h('div', { class: 'ds-dash-state ds-dash-state-error', role: 'status' }, 'Backend offline — live sessions unavailable');
+    return h('div', { class: 'ds-dash-state ds-dash-state-error', role: 'status' }, 'Backend offline: live sessions unavailable');
   }
   const selSet = selected instanceof Set ? selected : new Set(selected || []);
   const selCount = selSet.size;
@@ -120,7 +120,7 @@ export function SessionDashboard({ sessions = [], onStop, onOpen, onView, onStop
       ? h('span', { key: 'cnt', class: 'ds-dash-count', role: 'status', 'aria-live': 'polite' }, selCount + ' selected')
       : (breakdown || h('span', { key: 'cnt', class: 'ds-dash-count', role: 'status', 'aria-live': 'polite' },
           sessions.length ? sessions.length + ' running'
-            : (streamState && streamState !== 'connected' ? '— running (' + (STREAM_WORD[streamState] || streamState) + ')' : '0 running'))),
+            : (streamState && streamState !== 'connected' ? 'running (' + (STREAM_WORD[streamState] || streamState) + ')' : '0 running'))),
     selectAllCtl, clearCtl, streamLine,
     h('span', { key: 'spread', class: 'spread' }),
     sessions.length ? stopBtn : null,

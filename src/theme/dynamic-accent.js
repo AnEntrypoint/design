@@ -42,7 +42,6 @@ function rgbToHex(r, g, b) {
     return '#' + [r, g, b].map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join('');
 }
 
-/** hue (0-360, Lab a-b angle) + chroma (Lab a-b magnitude) from a source hex color. */
 function hueChromaFromHex(hex) {
     const [r, g, b] = hexToRgb(hex);
     const [x, y, z] = rgbToXyz(r, g, b);
@@ -50,7 +49,6 @@ function hueChromaFromHex(hex) {
     return { hue: (Math.atan2(bb, a) * 180 / Math.PI + 360) % 360, chroma: Math.sqrt(a * a + bb * bb) };
 }
 
-/** Render a hex color at a given hue/chroma and FIXED L* tone (0-100). */
 function atTone(hue, chroma, tone) {
     const rad = hue * Math.PI / 180;
     const a = chroma * Math.cos(rad), b = chroma * Math.sin(rad);

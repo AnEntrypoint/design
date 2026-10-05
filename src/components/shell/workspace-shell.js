@@ -17,7 +17,7 @@ const h = webjsx.createElement;
  * @param {*} props.pane - an OPTIONAL right context pane (per-conversation context, file preview...). Null hides it; collapsible when present.
  * @param {*} props.crumb - an optional thin top chrome bar (breadcrumb + status), spanning the content area only (the rail has its own header).
  * @param {*} props.status - an optional footer.
- * @param {boolean} props.narrow - caller's isNarrow() — drives the mobile single-column collapse.
+ * @param {boolean} props.narrow - caller's isNarrow(), drives the mobile single-column collapse.
  * @param {boolean} props.railCollapsed - initial rail collapse (persisted state wins).
  * @param {boolean} props.paneCollapsed - initial pane collapse (persisted state wins).
  * @returns {*} webjsx vnode

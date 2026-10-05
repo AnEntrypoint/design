@@ -49,6 +49,6 @@ export function EmojiManagerGrid({ emoji = [], onUpload, onDelete, dragOver = fa
                 UploadCell({ onUpload, dragOver, onDragOver, onDragLeave, onDrop }),
                 ...emoji.map((e) => EmojiCell({ id: e.id, name: e.name, imageUrl: e.imageUrl, onDelete }))
             ),
-        (!busy && emoji.length === 0) ? h('div', { class: 'cm-emoji-mgr-empty' }, 'No custom emoji yet — drop an image or click "Add emoji".') : null
+        (!busy && emoji.length === 0) ? h('div', { class: 'cm-emoji-mgr-empty' }, 'No custom emoji yet. Drop an image or click "Add emoji".') : null
     );
 }

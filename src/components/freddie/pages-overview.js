@@ -29,8 +29,8 @@ export const home = makePage((ctx) => {
         if (s.error) return errorState(s.error, load);
         const sessions = s.sessions || [];
         const agents = s.agents || {};
-        const tools = ctx.host?.pi?.tools?.size ?? s.toolsCount ?? '—';
-        const skills = ctx.host?.pi?.skills?.size ?? s.skillsCount ?? '—';
+        const tools = ctx.host?.pi?.tools?.size ?? s.toolsCount ?? '-';
+        const skills = ctx.host?.pi?.skills?.size ?? s.skillsCount ?? '-';
         return [
             PageHeader({ title: 'dashboard', lede: 'agent harness · live overview' }),
             Kpi({ items: [
@@ -45,7 +45,7 @@ export const home = makePage((ctx) => {
                     : sessions.length
                         ? Table({
                             headers: ['session', 'platform', 'updated'],
-                            rows: sessions.slice(0, 8).map(x => [truncSpan(x.title || x.id, TRUNC_TITLE), x.platform || '—', fmtAgo(x.updated_at)]),
+                            rows: sessions.slice(0, 8).map(x => [truncSpan(x.title || x.id, TRUNC_TITLE), x.platform || '-', fmtAgo(x.updated_at)]),
                         })
                         : emptyState('no sessions yet')),
             section('health',
@@ -66,7 +66,7 @@ export const agents = makePage((ctx) => {
         return [
             PageHeader({ title: 'agents', lede: 'live agent activity' }),
             s.error && s.data ? refreshError(s.error) : null,
-            Kpi({ items: [[d.count ?? 0, 'active'], [d.turns ?? 0, 'total turns'], [d.last_activity ? fmtAgo(d.last_activity) : '—', 'last activity']] }),
+            Kpi({ items: [[d.count ?? 0, 'active'], [d.turns ?? 0, 'total turns'], [d.last_activity ? fmtAgo(d.last_activity) : '-', 'last activity']] }),
             section('detail', Table({ headers: ['field', 'value'], rows: Object.entries(d).map(([k, v]) => [k, String(v)]) })),
         ].filter(Boolean);
     };
@@ -93,7 +93,7 @@ export const analytics = makePage((ctx) => {
         return [
             PageHeader({ title: 'analytics', lede: 'provider availability & sampler health' }),
             s.error && (s.sampler || s.avail) ? refreshError(s.error) : null,
-            Kpi({ items: [[ok + '/' + samp.length, 'providers up'], [sum.total_models ?? '—', 'models'], [sum.usable_in_any_mode ?? '—', 'usable']] }),
+            Kpi({ items: [[ok + '/' + samp.length, 'providers up'], [sum.total_models ?? '-', 'models'], [sum.usable_in_any_mode ?? '-', 'usable']] }),
             section('sampler', samp.length ? Table({ headers: ['provider', 'available', 'fails'], rows: samp.map(v => [v.provider, v.ok === false ? 'no' : 'yes', String(v.failCount ?? 0)]) }) : emptyState('no sampler data')),
         ].filter(Boolean);
     };

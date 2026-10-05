@@ -29,7 +29,7 @@ export function ThemeToggle({ compact = false, onChange } = {}) {
         const labelFor = (t) => 'theme: ' + wordFor(t);
         const titleFor = (t) => labelFor(t)
             + (t === 'auto' ? ' (currently ' + (resolvedTheme() === 'ink' ? 'dark' : 'light') + ')' : '')
-            + ' — click to cycle';
+            + ', click to cycle';
         return h('button', {
             class: 'btn ds-theme-toggle',
             type: 'button',

@@ -1,5 +1,5 @@
 import * as webjsx from 'webjsx';
-import { Topbar, Crumb, Side, Status, AppShell, Heading, Lede } from 'ds/components/shell.js';
+import { Topbar, Crumb, Side, Status, AppShell, Heading, Lede, Icon } from 'ds/components/shell.js';
 import { Panel } from 'ds/components/content.js';
 import { ContextMeter, ContextTreemap, ContextXRayPanel } from 'ds/components/context-pane.js';
 import { mountKit } from 'ds/bootstrap.js';
@@ -16,7 +16,7 @@ const kpis = [
     { val: '26,357', lbl: 'total events' },
     { val: '45',      lbl: 'days' },
     { val: '61',      lbl: 'prd rows' },
-    { val: '0',       lbl: 'unresolved mutables', cls: 'err-rate' }
+    { val: '0',       lbl: 'unresolved mutables' }
 ];
 
 const sessions = [
@@ -168,11 +168,11 @@ function App() {
         side: Side({
             sections: [
                 { group: 'views', items: [
-                    { glyph: '*', label: 'overview',     count: kpis.length,          key: 'o', href: '#p-overview' },
-                    { glyph: '-', label: 'sessions',     count: countFor(sessions),   key: 's', href: '#p-sessions' },
-                    { glyph: '-', label: 'process tree', count: countFor(treeNodes),  key: 't', href: '#p-tree' },
-                    { glyph: '-', label: 'deviations',   count: countFor(deviations), key: 'd', href: '#p-deviations' },
-                    { glyph: '-', label: 'context budget', count: contextSegments.length, key: 'x', href: '#p-context' }
+                    { glyph: Icon('activity', { size: 14 }), label: 'overview',     count: kpis.length,          key: 'o', href: '#p-overview' },
+                    { glyph: Icon('forum', { size: 14 }), label: 'sessions',     count: countFor(sessions),   key: 's', href: '#p-sessions' },
+                    { glyph: Icon('thread', { size: 14 }), label: 'process tree', count: countFor(treeNodes),  key: 't', href: '#p-tree' },
+                    { glyph: Icon('warn', { size: 14 }), label: 'deviations',   count: countFor(deviations), key: 'd', href: '#p-deviations' },
+                    { glyph: Icon('grid', { size: 14 }), label: 'context budget', count: contextSegments.length, key: 'x', href: '#p-context' }
                 ] },
                 { group: 'phase', items: [
                     { glyph: h('span', { class: 'ds-dot ds-dot-on' }), label: 'COMPLETE', count: '5/5', key: 'p', color: 'var(--success)', href: '#p-overview' }
@@ -216,7 +216,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['gm inspector', '- ' + countFor(sessions) + ' sessions', '- ' + countFor(treeNodes) + ' tree nodes', '- store ' + storeState.phase],
+            left: ['gm inspector', countFor(sessions) + ' sessions', countFor(treeNodes) + ' tree nodes', 'store ' + storeState.phase],
             right: ['sample data']
         })
     });

@@ -150,8 +150,8 @@ a.row:hover, button.row:hover, .row[role="button"]:hover {
 .row[role="button"], a.row { cursor: pointer; }
 .row[role="button"]:hover, a.row:hover { background: var(--bg-2); }
 
-.row .meta { transition: color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease-spring); }
-a.row:hover .meta, .row[role="button"]:hover .meta { color: var(--accent-ink); transform: translateX(3px); }
+.row .meta { transition: color var(--dur-base) var(--ease); }
+a.row:hover .meta, .row[role="button"]:hover .meta { color: var(--accent-ink); }
 .row.active { background: color-mix(in oklab, var(--accent) 4%, var(--bg-2)); }
 .row.active .title { color: var(--accent-ink); }
 

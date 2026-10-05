@@ -140,7 +140,7 @@ export function run(line, ctx) {
     const [name, ...args] = argv;
     const cmd = COMMANDS[name];
     if (!cmd) {
-        return [{ kind: 'warn', text: name + ': command not found — try `help`' }];
+        return [{ kind: 'warn', text: name + ': command not found: try `help`' }];
     }
     try {
         return cmd(args, ctx) || [];

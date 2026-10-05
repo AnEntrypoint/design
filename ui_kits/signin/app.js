@@ -237,8 +237,8 @@ function Form() {
 function App() {
     const headings = {
         signin: ['sign in',     'pick a provider or use email.'],
-        signup: ['create',      'join the 247420 portfolio. one account, every kit.'],
-        magic:  ['magic link',  "we'll email you a one-tap sign-in link. no password."],
+        signup: ['create',      'join the 247420 portfolio. one account works across every kit.'],
+        magic:  ['magic link',  "we will email you a one-tap sign-in link. it replaces the password."],
         reset:  ['reset',       'enter your email to receive a reset link.']
     }[state.mode];
     return AppShell({
@@ -265,7 +265,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['auth', '- ' + state.mode, state.error ? '- error' : '- ok'],
+            left: ['auth', state.mode, state.error ? 'error' : 'ok'],
             right: ['no real auth']
         })
     });

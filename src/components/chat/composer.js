@@ -28,7 +28,7 @@ export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, 
         const next = m ? (v.slice(0, m.index) + (m[0].startsWith(':') ? '' : v[m.index]) + ch + ' ') : (v + ch);
         if (onInput) onInput(next);
         if (taEl) {
-            attempt(() => { if (!sessionStorage.getItem('ds.composer.undoNoteShown')) { sessionStorage.setItem('ds.composer.undoNoteShown', '1'); flashComposerNote(taEl.closest('.chat-composer'), 'inserted — undo history does not include this insert'); } });
+            attempt(() => { if (!sessionStorage.getItem('ds.composer.undoNoteShown')) { sessionStorage.setItem('ds.composer.undoNoteShown', '1'); flashComposerNote(taEl.closest('.chat-composer'), 'inserted. Undo history does not include this insert'); } });
             taEl.value = next;
             taEl.focus();
             taEl.selectionStart = taEl.selectionEnd = next.length;
@@ -143,7 +143,7 @@ export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, 
         triggerPicker,
         mentionPicker,
         h('textarea', { ref: taRef, placeholder, rows: 1,
-            'aria-label': label || (disabled && disabledReason ? 'message input — ' + disabledReason : 'message input'),
+            'aria-label': label || (disabled && disabledReason ? 'message input: ' + disabledReason : 'message input'),
             disabled: !!disabled, 'aria-disabled': disabled ? 'true' : null,
             oninput: autoGrow,
             onpaste: (e) => {

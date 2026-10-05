@@ -1,13 +1,13 @@
 # Architecture map
 
-One page, high level. Detailed caveats live in AGENTS.md / component docs — this file is only the map.
+One page, high level. Detailed caveats live in AGENTS.md / component docs; this file is only the map.
 
 ## What this repo owns
 
 `anentrypoint-design` (published as `247420.xyz`'s design system) is the **sole owner of all
 visual/GUI code** shared by thebird and freddie: the OS window-manager chrome, the freddie
 dashboard (`AppShell`, `Side`, `FREDDIE_PAGES`), `<freddie-chat>`, and every themed CSS surface
-(`src/kits/os/theme.css` — brand tokens, window controls, chat config, files browser, todo app,
+(`src/kits/os/theme.css`, brand tokens, window controls, chat config, files browser, todo app,
 etc). It ships as a plain npm package (webjsx-based components + CSS), built with esbuild/postcss,
 with no framework runtime dependency of its own.
 
@@ -23,11 +23,11 @@ design  --publish to npm (always-latest)-->  thebird  (docs/vendor/ via refresh-
                                                    same createFreddieDashboard/AppShell)
 ```
 
-- design has **no dependency on thebird or freddie** — it is the leaf/upstream node. It knows
+- design has **no dependency on thebird or freddie**: it is the leaf/upstream node. It knows
   nothing about IndexedDB filesystems, acptoapi, or LLM providers.
 - **thebird** pulls design in via `scripts/refresh-design.mjs`, which fetches the published npm
   package and vendors its CSS/JS into `docs/vendor/`, stamping a `.version` file. thebird's own
-  code only ever applies class names / calls the exported component functions — it writes zero
+  code only ever applies class names / calls the exported component functions; it writes zero
   CSS of its own for these surfaces.
 - **freddie** depends on design directly as an npm package; its `src/web/app.js` is a thin mount
   point around `createFreddieDashboard`, so the SAME dashboard GUI renders both standalone
@@ -40,20 +40,20 @@ design  --publish to npm (always-latest)-->  thebird  (docs/vendor/ via refresh-
 ## Relationship to webjsx-toolkit
 
 `webjsx-toolkit` (a sibling project, `C:/dev/agent-jsx/webjsx-toolkit`) is a separate, independent
-port of a shadcn/ui-style component set onto the `webjsx` runtime — Button/Dialog/Tabs/Select/etc.
+port of a shadcn/ui-style component set onto the `webjsx` runtime, Button/Dialog/Tabs/Select/etc.
 with a Tailwind+`class-variance-authority` styling approach and Radix-derived behavior, reimplemented
 by hand since webjsx has no React-hooks/component-tag model for Radix itself to run on. It is **not**
-a dependency of this repo and this repo is not a dependency of it — no publish/consume relationship
+a dependency of this repo and this repo is not a dependency of it; no publish/consume relationship
 in either direction, unlike the thebird/freddie chain above.
 
 design predates it and has an independent, hand-authored, token-driven component/CSS architecture
 (see "Design System" in AGENTS.md) that already covered most of the same ground (Dialog, Popover,
-Tooltip, DropdownMenu, Accordion, Tabs, etc. — see `src/components/editor-primitives/`,
+Tooltip, DropdownMenu, Accordion, Tabs, etc., see `src/components/editor-primitives/`,
 `overlay-primitives/`) before webjsx-toolkit existed. A 2026 cross-project pass did two things: (1)
 backfilled the handful of primitives design genuinely lacked (Calendar, DatePicker, Slider, InputOTP,
 Carousel, HoverCard, Menubar, a standalone Progress bar, plus a new real-time-collaboration group)
 using design's OWN conventions, not webjsx-toolkit's Tailwind/cva ones; (2) restyled design's token
-system (`colors_and_type.css` — palette, radius scale, motion easing) to match webjsx-toolkit's
+system (`colors_and_type.css`, palette, radius scale, motion easing) to match webjsx-toolkit's
 shadcn-neutral visual identity, replacing the prior "Acid Editorial" look (see CHANGELOG "Unreleased"
 for the full token-by-token rationale and the WCAG re-verification that followed). The two projects
 remain architecturally independent; the restyle only moved design's own token VALUES, not its
@@ -61,35 +61,33 @@ component API surface or its underlying webjsx-native (not Tailwind) implementat
 
 ## Boot / build sequence
 
-**Dev:** `npm install`, then edit `src/*` — components are plain JS/webjsx, no dev server required
+**Dev:** `npm install`, then edit `src/*`: components are plain JS/webjsx, no dev server required
 for iteration (consumers hot-reload via their own dev flow after a `refresh-design.mjs` pull, or
 via `link-local-design.mjs`-style local linking during active cross-repo work).
 
-**Build** (`npm run build:ci`, `scripts/build.mjs`): runs the lint gate block (13 gates via
+**Build** (`npm run build:ci`, `scripts/build.mjs`): runs the lint gate block (19 gates via
 `scripts/lint.mjs`, whose `CHECKS` list and shared reporting live in `lint-css.mjs`: tokens,
-radius, zindex, transition-all, spacing, fontsize, important, glyphs, null-children, classes,
-inline-styles, duplicate-selectors), then bundles with esbuild + postcss into `dist/`. The gates
-scan 30 component sheets, expanded transitively from a smaller entry-point list through the
-`@import` graph — the root `app-shell.css` is a barrel over `src/css/app-shell/*.css` and lints
+tokens-json, radius, zindex, transition-all, dark-parity, contrast, spacing, fontsize, important,
+inline-css, glyphs, null-children, classes, inline-styles, duplicate-selectors, empty-catch,
+dead-controls, yaml-parse), then bundles with esbuild + postcss into `dist/`. The gates
+scan 41 component sheets, expanded transitively from a smaller entry-point list through the
+`@import` graph: the root `app-shell.css` is a barrel over `src/css/app-shell/*.css` and lints
 nothing on its own, and every sheet in that directory must be reachable from it. `build.mjs`
 keeps its own `appShellSplitFiles` bundling list, so barrel completeness is what keeps the
 bundled `dist/` and a `<link>`ed `app-shell.css` from diverging.
 
-**Publish** (`.github/workflows/publish.yml`, on push to `main`): installs, builds, then commits
-the rebuilt `dist/` straight back to `main` (git-tracked, not npm-published). This is the
-"always-latest" mechanism thebird's and freddie's `github:`/jsDelivr consumption relies on — there
-is no manual version-bump step for consumers to coordinate.
-
-**CI** (`.github/workflows/ci.yml`): lint (15 gates) + build on every push/PR, as a side-effect-free
-correctness gate distinct from the dist-commit workflow. The generated component prop reference is
-gated too (`npm run lint:component-docs`), so any component split or signature change must be
-followed by `npm run docs:components`.
+**Deploy** (`.github/workflows/pages.yml`, the only workflow): installs, runs the lint gate and the
+build, then the export, ui-kit, component-docs, component-types and component-manifest checks
+(`npm run lint:exports`, `lint:ui-kits`, `lint:component-docs`, `lint:component-types`,
+`lint:component-manifest`), builds the home page with flatspace and publishes the static tree to
+GitHub Pages. The generated component prop reference is gated, so any component split or
+signature change must be followed by `npm run docs:components`.
 
 ## Module shape
 
 Components live under `src/components/`. `src/components.js` is the public re-export barrel; a
 200-line cap applies per module. A group that outgrows the cap becomes a thin barrel of its own
-over single-responsibility submodules in a sibling directory of the same name — e.g.
+over single-responsibility submodules in a sibling directory of the same name, e.g.
 `src/components/editor-primitives.js` over `src/components/editor-primitives/*.js`, and likewise
 for shell, content, chat, chat-message-parts, chat-minimap, agent-chat, sessions, files,
 files-modals, community, interaction-primitives, voice, freddie and page-html. The public export

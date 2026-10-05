@@ -75,7 +75,7 @@ export function WebhookEditor({ name = '', avatarUrl = '', url = '', onNameChang
             title: 'Webhook URL',
             children: [
                 SettingsRow({
-                    icon: 'link', label: 'URL', description: url || '—',
+                    icon: 'link', label: 'URL', description: url || '-',
                     action: h('button', { type: 'button', class: 'cm-webhook-copy', onclick: onCopyUrl }, Icon('copy'), h('span', null, 'Copy')),
                 }),
             ],

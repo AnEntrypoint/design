@@ -14,28 +14,28 @@ const sideSections = [
         { glyph: Icon('page', { size: 14 }), label: 'changelog', anchor: 'changelog' }
     ] },
     { group: 'links', items: [
-        { glyph: Icon('link', { size: 14 }), label: 'source', href: 'https://github.com/AnEntrypoint' },
-        { glyph: Icon('link', { size: 14 }), label: 'npm', href: 'https://www.npmjs.com/package/@anentrypoint/mcp-gm' },
-        { glyph: Icon('link', { size: 14 }), label: 'releases', href: 'https://github.com/AnEntrypoint/releases' }
+        { glyph: Icon('link', { size: 14 }), label: 'source', href: 'https://github.com/AnEntrypoint/design' },
+        { glyph: Icon('link', { size: 14 }), label: 'npm', href: 'https://www.npmjs.com/package/anentrypoint-design' },
+        { glyph: Icon('link', { size: 14 }), label: 'full changelog', href: 'https://github.com/AnEntrypoint/design/blob/main/CHANGELOG.md' }
     ] }
 ];
 
 const receiptRows = [
-    ['status', 'live · ships tuesdays'],
-    ['stars', '3,124'],
+    ['status', 'published on npm'],
+    ['version', '1.0.34'],
     ['license', 'MIT'],
-    ['lang', 'typescript · deno'],
-    ['size', '2.1mb'],
-    ['deps', '0 runtime'],
-    ['authors', 'the collective'],
-    ['first commit', '2024.09.03']
+    ['language', 'javascript (esm) + css'],
+    ['components', '230 (84 helpers)'],
+    ['kits', '22'],
+    ['runtime deps', 'none declared'],
+    ['first commit', '2026.09.03']
 ];
 
 const changelog = [
-    { date: '2026.04.20', ver: 'v0.4.1', msg: 'ship it. fixed the thing everyone complained about.' },
-    { date: '2026.03.22', ver: 'v0.4.0', msg: 'new state machine runtime. broke everything on purpose. read the postmortem.' },
-    { date: '2026.02.09', ver: 'v0.3.7', msg: 'astgrep_search is now astgrep_enhanced_search. you will adapt.' },
-    { date: '2025.12.11', ver: 'v0.3.0', msg: 'first public release. gm, world.' }
+    { date: 'unreleased', ver: 'next', msg: 'chat kit merged into community-app, one kit for chat and community.' },
+    { date: 'unreleased', ver: 'next', msg: 'github pages workflow added: lint gates, build, deploy of the full static tree.' },
+    { date: 'unreleased', ver: 'next', msg: 'tooltip releases aria-describedby when the bubble hides.' },
+    { date: 'unreleased', ver: 'next', msg: 'appshell renders one banner landmark instead of two stacked headers.' }
 ];
 
 function copyInstall(cmd) {
@@ -49,14 +49,14 @@ const projectNavItems = sideSections[0].items.map((it) => [it.label, '#' + it.an
 function App() {
     return AppShell({
         topbar: Topbar({
-            brand: '247420', leaf: 'gm',
+            brand: '247420', leaf: 'design',
             items: [
                 ['<- all projects', '../homepage/'],
                 ...projectNavItems,
-                ['source', 'https://github.com/AnEntrypoint']
+                ['source', 'https://github.com/AnEntrypoint/design']
             ]
         }),
-        crumb: Crumb({ trail: ['247420', 'gm'], leaf: 'readme' }),
+        crumb: Crumb({ trail: ['247420', 'design'], leaf: 'readme' }),
         side: Side({
             sections: [
                 ...sideSections.map((sec) => ({
@@ -70,18 +70,18 @@ function App() {
         }),
         main: [
             h('div', { class: 'ds-app-surface ds-section ds-section-pad' },
-                Heading({ level: 1, children: 'gm' }),
-                Lede({ children: 'state machine for coding agents. it thinks, so you don\'t have to (as much).' }),
-                h('div', { class: 'ds-btn-row' }, Chip({ tone: 'accent', children: 'shipping' }), Chip({ tone: 'dim', children: 'v0.4.1' })),
+                Heading({ level: 1, children: 'design' }),
+                Lede({ children: 'tokens, components and kits for dense, tonal ui.' }),
+                h('div', { class: 'ds-btn-row' }, Chip({ tone: 'accent', children: 'published' }), Chip({ tone: 'dim', children: 'v1.0.34' })),
                 Section({ id: 'install', title: 'install',
-                    children: Install({ cmd: 'npx -y @anentrypoint/mcp-gm', copied: state.copied, onCopy: copyInstall }) }),
+                    children: Install({ cmd: 'npm install anentrypoint-design', copied: state.copied, onCopy: copyInstall }) }),
                 Section({ id: 'receipt', title: 'receipt', children: Receipt({ rows: receiptRows }) }),
                 Section({ id: 'changelog', title: 'changelog', children: Changelog({ entries: changelog }) })
             )
         ],
         status: Status({
-            left: ['gm', '- ' + changelog.length + ' releases'],
-            right: ['v0.4.1', 'MIT', 'sample data']
+            left: ['design', changelog.length + ' changes'],
+            right: ['v1.0.34', 'MIT', 'sample data']
         })
     });
 }

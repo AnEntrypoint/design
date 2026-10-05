@@ -58,7 +58,6 @@ export function StatBar(props = {}) {
   )
 }
 
-/** Level number in a round badge. */
 export function LevelBadge(props = {}) {
   const { level = 1 } = props
   return h('div', {
@@ -235,7 +234,7 @@ export function AbilityBar(props = {}) {
 }
 
 /**
- * RpgProgressHud — level/XP, health/mana, current quest and ability
+ * RpgProgressHud: level/XP, health/mana, current quest and ability
  * cooldowns for an RPG-style progression game. Pure presentation: the
  * consumer owns all game state and re-renders this on every update via
  * its own applyDiff (webjsx) cycle, mirroring anentrypoint-design's

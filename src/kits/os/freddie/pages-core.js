@@ -19,7 +19,7 @@ export function makeCorePages(ctx) {
             }));
             return [
                 Hero({ title: 'projects', body: 'each project is its own ~/.freddie home: separate sessions, agents, skills, config, env, cron, batches.', accent: activeProj ? 'active · ' + activeProj.name : 'no active project' }),
-                Kpi({ items: [[list.length, 'projects'], [activeProj?.name || '—', 'active'], [activeProj?.path?.length > 30 ? '…' + activeProj.path.slice(-28) : (activeProj?.path || '—'), 'path']] }),
+                Kpi({ items: [[list.length, 'projects'], [activeProj?.name || '-', 'active'], [activeProj?.path?.length > 30 ? '…' + activeProj.path.slice(-28) : (activeProj?.path || '-'), 'path']] }),
                 Panel({ title: 'add a project', children: form({
                     fields: [{ name: 'name', placeholder: 'project name', required: true }, { name: 'path', placeholder: '/abs/path' }],
                     submit: 'add',
@@ -49,11 +49,11 @@ export function makeCorePages(ctx) {
                 return String(v);
             };
             return [
-                Hero({ title: 'assistant', body: 'open js agent harness — in-page agent runtime.', accent: h0.version || 'web' }),
+                Hero({ title: 'assistant', body: 'open js agent harness, in-page agent runtime.', accent: h0.version || 'web' }),
                 Kpi({ items: [[sessions.length, 'sessions'], [tools, 'tools'], [skills, 'skills']] }),
                 Panel({ title: 'quick start', children: Receipt({ rows: [
-                    ['open chat',   "click 'chat' in sidebar — set a working directory and pick a skill"],
-                    ['pick skill',  "software dev, research, planning — shown with descriptions"],
+                    ['open chat',   "click 'chat' in sidebar, set a working directory and pick a skill"],
+                    ['pick skill',  "software dev, research, planning, shown with descriptions"],
                     ['pick model',  "select a configured provider + model in the chat bar"],
                     ['list tools',  '/tools in chat -> tools tab'],
                     ['set api key', 'keys tab -> click chip to set value'],
@@ -77,12 +77,12 @@ export function makeCorePages(ctx) {
                         if (typeof window.__fd_nav === 'function') window.__fd_nav('chat');
                     },
                 }, 'continue');
-                return [(s.id || '').slice(0, 8), s.title || '—', s.platform || '—', s.model || '—', s.cwd ? s.cwd.slice(-30) : '—', s.skill ? skillLabel({ name: s.skill }) : '—', cont];
+                return [(s.id || '').slice(0, 8), s.title || '-', s.platform || '-', s.model || '-', s.cwd ? s.cwd.slice(-30) : '-', s.skill ? skillLabel({ name: s.skill }) : '-', cont];
             });
             return [
                 Kpi({ items: [[list.length, 'sessions']] }),
                 Panel({ title: 'recent sessions', count: list.length, children: list.length === 0
-                    ? EmptyState({ text: 'no sessions yet — open chat and send a message', glyph: Icon('thread') })
+                    ? EmptyState({ text: 'no sessions yet: open chat and send a message', glyph: Icon('thread') })
                     : Table({ headers: ['id', 'title', 'platform', 'model', 'cwd', 'skill', ''], striped: true, rows }) }),
             ];
         },
@@ -100,11 +100,11 @@ export function makeCorePages(ctx) {
                 Kpi({ items: [[a.count || 0, 'active'], [a.turns || 0, 'turns'], [subagents.length, 'subagents']] }),
                 Panel({ title: 'agent overview', children: Receipt({ rows: [
                     ['total turns', String(a.turns || 0)],
-                    ['active session', a.active || '—'],
-                    ['last activity', a.last_activity ? new Date(a.last_activity).toLocaleString() : '—'],
+                    ['active session', a.active || '-'],
+                    ['last activity', a.last_activity ? new Date(a.last_activity).toLocaleString() : '-'],
                 ] }) }),
                 Panel({ title: 'subagents (fan-out)', count: rows.length, children: rows.length === 0
-                    ? EmptyState({ text: 'no subagents yet — agent_swarm/delegate spawns appear here live', glyph: Icon('members') })
+                    ? EmptyState({ text: 'no subagents yet: agent_swarm/delegate spawns appear here live', glyph: Icon('members') })
                     : h('div', null, rows) }),
             ];
         },

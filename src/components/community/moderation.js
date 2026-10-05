@@ -39,7 +39,7 @@ export function RoleList({ roles = [], onSelectRole, onReorder, onAddRole, savin
     };
     return h('div', { class: 'cm-role-list' },
         h('div', { class: 'cm-role-list-head' },
-            h('span', { class: 'cm-role-list-title' }, 'Server roles' + (saving ? ' — saving…' : '')),
+            h('span', { class: 'cm-role-list-title' }, 'Server roles' + (saving ? ': saving…' : '')),
             onAddRole ? h('button', { type: 'button', class: 'cm-role-add', 'aria-label': 'add role', title: 'Add role', onclick: onAddRole }, Icon('plus', { size: 18 })) : null
         ),
         h('div', { class: 'cm-role-rows' },

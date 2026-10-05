@@ -30,9 +30,9 @@ export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typ
     const lastPartHasCaret = parts && parts.length && parts[parts.length - 1] && parts[parts.length - 1].streamingCaret;
     if (streaming && !typing && !lastPartHasCaret) bodyNodes = [...bodyNodes, h('span', { key: '_caret', class: 'chat-stream-caret', 'aria-hidden': 'true' })];
     if (stopped) bodyNodes = [...bodyNodes, h('div', { key: '_stopped', class: 'chat-msg-notice is-stopped', role: 'status' },
-        typeof stopped === 'string' ? stopped : 'stopped — this turn was cancelled before it finished')];
+        typeof stopped === 'string' ? stopped : 'stopped: this turn was cancelled before it finished')];
     if (incomplete) bodyNodes = [...bodyNodes, h('div', { key: '_incomplete', class: 'chat-msg-notice is-incomplete', role: 'status' },
-        typeof incomplete === 'string' ? incomplete : 'connection dropped mid-turn — the response may be incomplete')];
+        typeof incomplete === 'string' ? incomplete : 'connection dropped mid-turn: the response may be incomplete')];
     if (error) bodyNodes = [...bodyNodes, h('div', { key: '_error', class: 'chat-msg-notice is-error', role: 'alert' },
         h('span', {}, typeof error === 'string' ? error : 'this turn failed'),
         onRetry ? h('button', {

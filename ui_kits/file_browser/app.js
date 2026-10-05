@@ -3,22 +3,21 @@ import { Topbar, Crumb, AppShell, Status, Btn, Icon, FileGrid, FileToolbar, Drop
 const h = webjsx.createElement;
 
 const SAMPLE = [
-    { name: 'src',           type: 'dir',      size: null,    modified: '2026.04.21' },
-    { name: 'design',        type: 'dir',      size: null,    modified: '2026.04.20' },
-    { name: 'cover.png',     type: 'image',    size: 184320,  modified: '2026.04.18' },
-    { name: 'reel.mp4',      type: 'video',    size: 2411724, modified: '2026.04.17' },
-    { name: 'theme.mp3',     type: 'audio',    size: 4823100, modified: '2026.04.16' },
-    { name: 'main.js',       type: 'code',     size: 4321,    modified: '2026.04.21' },
-    { name: 'README.md',     type: 'text',     size: 2410,    modified: '2026.04.21' },
-    { name: 'archive.zip',   type: 'archive',  size: 18234100,modified: '2026.04.10' },
-    { name: 'spec.pdf',      type: 'document', size: 412300,  modified: '2026.04.04' },
-    { name: 'link-out',      type: 'symlink',  size: null,    modified: '2026.04.02' },
-    { name: '.config',       type: 'other',    size: 220,     modified: '2026.04.01' }
+    { name: 'src', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'ui_kits', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'docs', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'favicon.svg', type: 'image', size: 270, modified: '2026.04.21' },
+    { name: 'colors_and_type.css', type: 'code', size: 17882, modified: '2026.10.05' },
+    { name: 'app-shell.css', type: 'code', size: 1477, modified: '2026.10.05' },
+    { name: 'package.json', type: 'code', size: 6322, modified: '2026.10.05' },
+    { name: 'README.md', type: 'text', size: 25050, modified: '2026.10.05' },
+    { name: 'CHANGELOG.md', type: 'text', size: 79060, modified: '2026.10.05' },
+    { name: 'LICENSE', type: 'text', size: 1090, modified: '2026.08.04' }
 ];
 
 const PREVIEW_TEXT = `# 247420 file browser
 this is a static demo wired to the design system.
-no backend and no real files; components only.`;
+the listing is sample data: components only, no real file access.`;
 
 const PREVIEW_CODE = `export function FileRow({ name, type, size, modified, onOpen }) {
     return h('div', { class: 'ds-file-row', 'data-file-type': type, onclick: onOpen },
@@ -30,7 +29,7 @@ const PREVIEW_CODE = `export function FileRow({ name, type, size, modified, onOp
 
 const state = {
     files: SAMPLE,
-    crumbs: ['demo', 'tigers'],
+    crumbs: ['design', 'src'],
     dragover: false,
     uploads: [],
     viewer: null,
@@ -195,7 +194,7 @@ function App() {
             }),
             crumb: Crumb({ trail: ['247420', 'ui kits'], leaf: 'file browser' }),
             main,
-            status: Status({ left: ['main', '- ' + state.files.length + ' items'], right: ['sample files'] })
+            status: Status({ left: ['main', state.files.length + ' items'], right: ['sample files'] })
         }),
         state.viewer ? FileViewer({
             file: state.viewer,

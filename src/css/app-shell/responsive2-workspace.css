@@ -92,7 +92,7 @@
     gap: var(--space-2);
   }
   .app-status > :last-child:not(:only-child) { display: none; }
-  .app-status .item:not(:first-of-type), .app-status .spread { display: none; }
+  .app-status .item:nth-of-type(n+4), .app-status .spread { display: none; }
 }
 
 @media (max-width: 480px) {

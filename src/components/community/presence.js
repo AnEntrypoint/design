@@ -105,8 +105,8 @@ export function UserCard({ identity, name, color, bannerUrl, status = 'online', 
                         r.name)))) : null,
             (joined || joinedServer) ? h('div', { class: 'cm-uc-section' },
                 h('div', { class: 'cm-uc-section-title' }, 'joined'),
-                joined ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, 'stoat — ' + joined)) : null,
-                joinedServer ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, (serverName || 'server') + ' — ' + joinedServer)) : null) : null,
+                joined ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, 'Community member since ' + joined)) : null,
+                joinedServer ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, (serverName || 'server') + ': ' + joinedServer)) : null) : null,
             actions.length ? h('div', { class: 'cm-uc-actions' },
                 ...actions.map((a, i) => h('button', {
                     type: 'button', class: 'cm-uc-action-btn' + (a.danger ? ' danger' : ''), key: a.id || i, onclick: a.onClick,
@@ -131,7 +131,7 @@ export function MemberList({ categories = [], open, loading = false, onSelectMem
                 h('span', { class: 'cm-member-empty-text' }, 'no members in this channel yet'))
             : null,
         ...categories.flatMap(cat => [
-            h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label} — ${cat.members.length}`),
+            h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label}: ${cat.members.length}`),
             ...cat.members.map((m, i) => MemberItem({
                 ...m, key: m.identity || i,
                 onClick: onSelectMember ? (e) => onSelectMember(m, e) : undefined,

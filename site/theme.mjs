@@ -25,7 +25,7 @@ function countManifestComponents() {
   const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
   try {
     const manifest = JSON.parse(readFileSync(join(repoRoot, 'ui_kits', 'component_explorer', 'manifest.json'), 'utf8'));
-    return manifest.components.length;
+    return manifest.components.filter((c) => /^[A-Z][A-Za-z0-9]*[a-z]/.test(c.name)).length;
   } catch { return 0; }
 }
 
@@ -164,7 +164,7 @@ export default {
       })) : null,
       quickstart: home.quickstart && home.quickstart.lines ? { heading: home.quickstart.heading, lines: home.quickstart.lines } : null,
       sidebar: buildSidebar(home),
-      statusLeft: home.status_left || ['main', '- utf-8', '- lf'],
+      statusLeft: home.status_left || ['main'],
       statusRight: [
         'anentrypoint-design@latest',
         totalKits + ' kits',

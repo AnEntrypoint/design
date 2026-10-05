@@ -117,7 +117,7 @@ export const machines = makePage((ctx) => {
             s.error && s.data ? refreshError(s.error) : null,
             section('machines', list.length ? Table({
                 headers: ['kind', 'key', 'state'],
-                rows: list.map(m => [m.kind || '—', m.key || m.machine_id || '—', m.state || m.value || truncJson(m)]),
+                rows: list.map(m => [m.kind || '-', m.key || m.machine_id || '-', m.state || m.value || truncJson(m)]),
             }) : emptyState('no live machines')),
             section('diagrams',
                 !s.showDiagrams
@@ -127,7 +127,7 @@ export const machines = makePage((ctx) => {
                         !s.diagrams
                             ? loadingState('loading diagrams…')
                             : Object.entries(s.diagrams).map(([kind, dgm]) => h('div', { key: kind, class: 'fd-page' },
-                                h('div', { class: 'ds-skills-group-label' }, kind + ' (initial: ' + ((dgm && dgm.initial) || '—') + ')'),
+                                h('div', { class: 'ds-skills-group-label' }, kind + ' (initial: ' + ((dgm && dgm.initial) || '-') + ')'),
                                 dgm && dgm.error
                                     ? h('div', { class: 'dim' }, dgm.error)
                                     : s.diagramSvgs[kind]
@@ -158,7 +158,7 @@ export const health = makePage((ctx) => {
             PageHeader({ title: 'health', lede: 'system & provider health', right: hd.ok ? Chip({ tone: 'ok', children: 'healthy' }) : Chip({ tone: 'miss', children: 'degraded' }) }),
             s.error && (s.health || s.providers) ? refreshError(s.error) : null,
             section('checks', Object.keys(hd).length ? Table({ headers: ['check', 'status'], rows: Object.entries(hd).map(([k, v]) => [k, typeof v === 'object' ? truncJson(v) : (v === true ? Chip({ tone: 'ok', children: 'ok' }) : v === false ? Chip({ tone: 'miss', children: 'no' }) : String(v))]) }) : emptyState('no health data')),
-            provs.length ? section('providers', Table({ headers: ['provider', 'status'], rows: provs.map(p => { const n = typeof p === 'string' ? p : p.name || p.id; const ok = typeof p === 'object' ? (p.ok ?? p.available) : null; return [n, ok == null ? '—' : (ok ? Chip({ tone: 'ok', children: 'up' }) : Chip({ tone: 'miss', children: 'down' }))]; }) })) : null,
+            provs.length ? section('providers', Table({ headers: ['provider', 'status'], rows: provs.map(p => { const n = typeof p === 'string' ? p : p.name || p.id; const ok = typeof p === 'object' ? (p.ok ?? p.available) : null; return [n, ok == null ? '-' : (ok ? Chip({ tone: 'ok', children: 'up' }) : Chip({ tone: 'miss', children: 'down' }))]; }) })) : null,
         ].filter(Boolean);
     };
 });

@@ -102,7 +102,7 @@ export function createUploadProgress(opts = {}) {
         ]),
         h('div', {}, [
           h('div', { style: 'color:var(--fg-2)' }, eta ? 'ETA' : ''),
-          h('div', { style: 'font-weight:500' }, eta || '—')
+          h('div', { style: 'font-weight:500' }, eta || '-')
         ])
       ]),
 

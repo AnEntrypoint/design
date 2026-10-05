@@ -31,7 +31,7 @@ const slides = [
     {
         kind: 'quote',
         body: '"the surface should never lie about what the program is doing."',
-        cite: '— 247420 design principle'
+        cite: '247420 design principle'
     },
     {
         kind: 'split',
@@ -179,7 +179,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['slide deck', '- slide ' + (state.i + 1) + '/' + slides.length, '- </> to nav'],
+            left: ['slide deck', 'slide ' + (state.i + 1) + '/' + slides.length, '</> to nav'],
             right: ['3 modes: auto, paper, ink']
         })
     });

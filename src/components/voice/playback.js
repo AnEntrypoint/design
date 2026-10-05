@@ -65,7 +65,7 @@ export function AudioQueue({ segments = [], currentSegmentId = null, paused = fa
                 onclick: () => onReplay && onReplay(s.id)
             },
                 h('span', { class: 'vx-chip-dot', style: s.color ? 'background:' + s.color : null, 'aria-hidden': 'true' }),
-                h('span', { class: 'vx-chip-name' }, s.speaker || '—'),
+                h('span', { class: 'vx-chip-name' }, s.speaker || '-'),
                 s.isLive
                     ? h('span', { class: 'vx-chip-tag' }, 'LIVE')
                     : h('span', { class: 'vx-chip-dur' }, fmtDur(s.duration))

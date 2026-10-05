@@ -1,5 +1,4 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
-import { Icon, iconMarkup } from '../shell/icons.js';
 const h = webjsx.createElement;
 
 function heroStat(b, i) {
@@ -64,28 +63,12 @@ export function HeroFromPageData(hero) {
 
 export function Marquee({ items = [], sep = '/' }) {
     if (!items.length) return null;
-    const run = (runKey) => items.flatMap((it, i) => [
-        h('span', { class: 'ds-marquee-item', key: `${runKey}-i${i}` }, it),
-        h('span', { class: 'ds-marquee-sep', key: `${runKey}-s${i}`, 'aria-hidden': 'true' }, sep),
+    const run = items.flatMap((it, i) => [
+        h('span', { class: 'ds-marquee-item', key: `i${i}` }, it),
+        ...(i < items.length - 1 ? [h('span', { class: 'ds-marquee-sep', key: `s${i}`, 'aria-hidden': 'true' }, sep)] : []),
     ]);
-    const togglePause = (e) => {
-        const btn = e.currentTarget;
-        const root = btn.closest('.ds-marquee');
-        const paused = root.classList.toggle('ds-marquee--paused');
-        btn.setAttribute('aria-pressed', String(paused));
-        btn.setAttribute('aria-label', paused ? 'Play ticker' : 'Pause ticker');
-        btn.innerHTML = iconMarkup(paused ? 'play' : 'pause', { size: 14 });
-    };
-    return h('div', { class: 'ds-marquee', role: 'region', 'aria-label': 'Announcements ticker' },
-        h('button', {
-            type: 'button', class: 'ds-marquee-pause',
-            'aria-pressed': 'false', 'aria-label': 'Pause ticker',
-            onclick: togglePause,
-        }, Icon('pause', { size: 14 })),
-        h('div', { class: 'ds-marquee-track' },
-            h('span', { class: 'ds-marquee-run ds-marquee-run-a' }, ...run('a')),
-            h('span', { class: 'ds-marquee-run ds-marquee-run-b', 'aria-hidden': 'true' }, ...run('b')),
-        )
+    return h('div', { class: 'ds-marquee', role: 'region', 'aria-label': 'Highlights' },
+        h('div', { class: 'ds-marquee-track' }, ...run)
     );
 }
 

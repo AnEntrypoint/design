@@ -29,7 +29,7 @@ export function PermissionRow({ title, description, value, onCycle } = {}) {
         ),
         h('button', {
             type: 'button', class: 'cm-perm-tristate cm-perm-tristate-' + (value || 'neutral'),
-            'aria-label': `${title}: ${label} — click to cycle`, title: label,
+            'aria-label': `${title}: ${label}, click to cycle`, title: label,
             onclick: () => onCycle && onCycle(next),
         }, Icon(icon, { size: 16 }))
     );

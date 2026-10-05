@@ -1,10 +1,9 @@
-/** Center-screen aim reticle. No props beyond `h`. */
 export function Crosshair(h) {
   return h('div', { class: 'sp-hud-crosshair' }, '+')
 }
 
 /**
- * Ammo readout — `ammo/magazine`, or a reload-progress label while reloading.
+ * Ammo readout: `ammo/magazine`, or a reload-progress label while reloading.
  * @param {Object} [props]
  * @param {number} [props.ammo=0]
  * @param {number} [props.magazine=30]

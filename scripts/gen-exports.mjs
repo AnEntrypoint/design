@@ -115,7 +115,7 @@ function main() {
         const current = JSON.stringify(pkg.exports ?? {}, null, 2);
         const next = JSON.stringify(generated, null, 2);
         if (current !== next) {
-            console.error('[gen-exports] FAIL — package.json "exports" is out of date with the file tree.');
+            console.error('[gen-exports] FAIL: package.json "exports" is out of date with the file tree.');
             console.error('[gen-exports] Run `node scripts/gen-exports.mjs` to regenerate it.');
             console.error('--- current ---');
             console.error(current);
@@ -123,7 +123,7 @@ function main() {
             console.error(next);
             process.exit(1);
         }
-        console.log('[gen-exports] OK — package.json "exports" matches the generated map (' + Object.keys(generated).length + ' entries).');
+        console.log('[gen-exports] OK: package.json "exports" matches the generated map (' + Object.keys(generated).length + ' entries).');
         return;
     }
 

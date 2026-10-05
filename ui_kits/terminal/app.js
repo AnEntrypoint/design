@@ -1,5 +1,5 @@
 import * as webjsx from 'webjsx';
-import { Topbar, Crumb, Status, Side, AppShell, Heading, Lede } from 'ds/components/shell.js';
+import { Topbar, Crumb, Status, Side, AppShell, Heading, Lede, Icon } from 'ds/components/shell.js';
 import { Panel } from 'ds/components/content.js';
 import { mountKit } from 'ds/bootstrap.js';
 import { run as runCommand, complete as completeLine } from 'ds/shell.js';
@@ -126,8 +126,8 @@ function App() {
         side: Side({
             sections: [
                 { group: 'sessions', items: [
-                    { glyph: '*', label: 'live', count: live.phase === 'ready' ? liveTranscript.length : 0, key: 'l', href: '#p-live' },
-                    { glyph: '-', label: 'demo loop', count: demo.looping ? 'play' : 'still', key: 'd',
+                    { glyph: Icon('activity', { size: 14 }), label: 'live', count: live.phase === 'ready' ? liveTranscript.length : 0, key: 'l', href: '#p-live' },
+                    { glyph: Icon('refresh', { size: 14 }), label: 'demo loop', count: demo.looping ? 'play' : 'still', key: 'd',
                       href: '#p-demo',
                       onClick: (e) => {
                           e.preventDefault();
@@ -137,9 +137,9 @@ function App() {
                       } }
                 ] },
                 { group: 'shortcuts', items: [
-                    { glyph: '·', label: 'clear (ctrl/cmd k)', key: 'c',
+                    { glyph: Icon('trash', { size: 14 }), label: 'clear (ctrl/cmd k)', key: 'c',
                       onClick: (e) => { e.preventDefault(); clearScrollback(); } },
-                    { glyph: '·', label: 'history (up)', key: 'h',
+                    { glyph: Icon('arrow-up', { size: 14 }), label: 'history (up)', key: 'h',
                       onClick: (e) => { e.preventDefault(); recallHistory(); } }
                 ] }
             ]
@@ -207,7 +207,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['terminal', '- live ' + (live.phase === 'ready' ? liveTranscript.length : 0) + ' lines', demo.looping ? '- demo playing' : '- demo still'],
+            left: ['terminal', 'live ' + (live.phase === 'ready' ? liveTranscript.length : 0) + ' lines', demo.looping ? 'demo playing' : 'demo still'],
             right: ['simulated output']
         })
     });

@@ -72,7 +72,7 @@ export function DateRangePicker({ value, onChange, open = false, onOpenChange, m
     const close = () => onOpenChange && onOpenChange(false);
     const from = value && value.from, to = value && value.to;
     const displayedMonth = month || from || new Date();
-    const label = from ? (formatDate(from, locale) + ' – ' + (to ? formatDate(to, locale) : '…')) : placeholder;
+    const label = from ? (formatDate(from, locale) + ' to ' + (to ? formatDate(to, locale) : '…')) : placeholder;
     const trigger = h('button', {
         type: 'button', class: 'ds-dp-trigger', 'data-dp-name': name,
         'aria-haspopup': 'dialog', 'aria-expanded': open ? 'true' : 'false',

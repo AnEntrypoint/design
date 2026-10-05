@@ -1,5 +1,5 @@
 import * as webjsx from 'webjsx';
-import { Topbar, Crumb, Status, Side, AppShell, Heading } from 'ds/components/shell.js';
+import { Topbar, Crumb, Status, Side, AppShell, Heading, Icon } from 'ds/components/shell.js';
 import { Panel, Row } from 'ds/components/content.js';
 import { mountKit } from 'ds/bootstrap.js';
 const h = webjsx.createElement;
@@ -72,10 +72,10 @@ function App() {
                     onClick: (e) => { e.preventDefault(); state.kind = k; kit.render(); }
                 })) },
                 { group: 'recent', items: [
-                    { glyph: '·', label: 'panel', key: 'q1', onClick: (e) => { e.preventDefault(); state.q = 'panel'; kit.render(); } },
-                    { glyph: '·', label: 'rail',  key: 'q2', onClick: (e) => { e.preventDefault(); state.q = 'rail';  kit.render(); } },
-                    { glyph: '·', label: 'chat',  key: 'q3', onClick: (e) => { e.preventDefault(); state.q = 'chat';  kit.render(); } },
-                    { glyph: '·', label: 'auth',  key: 'q4', onClick: (e) => { e.preventDefault(); state.q = 'auth';  kit.render(); } }
+                    { glyph: Icon('search', { size: 14 }), label: 'panel', key: 'q1', onClick: (e) => { e.preventDefault(); state.q = 'panel'; kit.render(); } },
+                    { glyph: Icon('search', { size: 14 }), label: 'rail',  key: 'q2', onClick: (e) => { e.preventDefault(); state.q = 'rail';  kit.render(); } },
+                    { glyph: Icon('search', { size: 14 }), label: 'chat',  key: 'q3', onClick: (e) => { e.preventDefault(); state.q = 'chat';  kit.render(); } },
+                    { glyph: Icon('search', { size: 14 }), label: 'auth',  key: 'q4', onClick: (e) => { e.preventDefault(); state.q = 'auth';  kit.render(); } }
                 ] }
             ]
         }),
@@ -92,7 +92,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['search', '- kind=' + state.kind, '- ' + rows.length + ' rows'],
+            left: ['search', 'kind=' + state.kind, rows.length + ' rows'],
             right: ['sample index']
         })
     });

@@ -65,7 +65,7 @@ export const logs = makePage((ctx) => {
         const severities = ['error', 'warning', 'info', 'debug'];
         return [
             PageHeader({
-                title: 'logs', lede: 'live JSONL log tail — /api/logs/stream',
+                title: 'logs', lede: 'live JSONL log tail: /api/logs/stream',
                 right: s.connected ? Chip({ tone: 'live', children: 'live' }) : Chip({ tone: 'miss', children: 'reconnecting…' }),
             }),
             s.wsError ? refreshError(s.wsError) : null,
@@ -87,12 +87,12 @@ export const logs = makePage((ctx) => {
                     headers: ['time', 'subsystem', 'severity', 'message'],
                     rows: rows.map((l) => [
                         formatTime(l.ts ? Date.parse(l.ts) : Date.now()),
-                        l.subsystem || '—',
+                        l.subsystem || '-',
                         Chip({ tone: LOG_SEVERITY_TONE[l.severity] || 'dim', children: l.severity || 'info' }),
                         truncSpan(l.msg, TRUNC_DESC),
                     ]),
                 }),
-            ) : emptyState(s.connected ? 'no log lines yet — waiting for activity' : 'connecting to log stream…'),
+            ) : emptyState(s.connected ? 'no log lines yet: waiting for activity' : 'connecting to log stream…'),
         ].filter(Boolean);
     };
 });

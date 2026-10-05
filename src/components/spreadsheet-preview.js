@@ -57,7 +57,7 @@ export function SpreadsheetPreview({
             onclick: () => onSheetChange && onSheetChange(name),
         }, name))) : null,
         isTruncated ? h('div', { class: 'ds-sheet-preview-truncated', role: 'status' },
-            'showing first ' + clampedRows.length + ' rows' + (colOverflow ? ' (columns truncated)' : '') + ' — full file has more data') : null,
+            'showing first ' + clampedRows.length + ' rows' + (colOverflow ? ' (columns truncated)' : '') + '; full file has more data') : null,
         h('div', { class: 'ds-sheet-preview-body' },
             clampedRows.length === 0
                 ? h('div', { class: 'ds-sheet-preview-empty' }, 'empty sheet')

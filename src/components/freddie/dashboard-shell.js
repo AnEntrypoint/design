@@ -48,7 +48,7 @@ export function renderDashboardShell({
     active, body, routeGroups, onNavigate,
     sampler = { ok: 0, bad: 0, total: 0, error: false },
     degraded = false, error = null, project = 'default',
-    toolsCount = '—', skillsCount = '—', ts = '', brand = 'freddie',
+    toolsCount = '-', skillsCount = '-', ts = '', brand = 'freddie',
     fullBleed = false,
 }) {
     if (fullBleed) return body;
@@ -57,7 +57,7 @@ export function renderDashboardShell({
         ? Chip({ tone: 'miss', children: 'sampler err' })
         : sampler.total > 0
             ? Chip({ tone: sampler.bad > 0 ? 'miss' : 'ok', children: 'sampler ' + sampler.ok + '/' + sampler.total })
-            : Chip({ tone: 'neutral', children: 'sampler —' });
+            : Chip({ tone: 'neutral', children: 'sampler' });
     const leaf = h('span', { class: 'fd-topbar-leaf' }, samplerPill, ThemeToggle ? ThemeToggle({}) : null);
     const topbarItems = [['New Chat', '#fd-chat']];
     const searchHint = h('span', { class: 'fd-search-hint', 'aria-hidden': 'true' }, 'Ctrl+K');

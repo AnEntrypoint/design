@@ -61,7 +61,7 @@ export function ProcessRegistryTable({ processes = [], emptyText = 'no live proc
     if (!processes.length) return h('div', { class: 'empty' }, emptyText);
     const headers = ['kind', 'key', 'state', ...extraColumns.map(c => c.header)];
     const rows = processes.map(p => [
-        p.kind || '—', p.key || '—', p.state || '—',
+        p.kind || '-', p.key || '-', p.state || '-',
         ...extraColumns.map(c => c.render(p))
     ]);
     return Table({ headers, rows });

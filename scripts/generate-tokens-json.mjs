@@ -44,7 +44,7 @@ function rootGroupFor(ordinal) {
 function slug(label) {
     return label
         .toLowerCase()
-        .replace(/247420 design system\s*[-—]*\s*/g, '')
+        .replace(/247420 design system\s*[-\u2014]*\s*/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '') || 'root';
 }

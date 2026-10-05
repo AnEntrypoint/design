@@ -60,12 +60,6 @@ function isSubsequence(needle, haystack) {
     return i === needle.length
 }
 
-/**
- * Score ladder: exact 100 / prefix 80 / substring 50 / path-substring 30,
- * directories get +10, plus a low-weight subsequence fallback (10) so a
- * loose query like "chinp" still finds components/ChatInput.tsx. Queries
- * containing "/" rank against the full relative path (drill-down support).
- */
 function scoreEntry(entry, lowerQuery) {
     const lowerPath = entry.path.toLowerCase()
     let score = 0
@@ -111,7 +105,7 @@ export function filterFileEntries(entries, query, limit = AT_RESULT_LIMIT) {
  * Replacement text for the @token when a suggestion is confirmed. Files
  * close the token ("@path ", quoted if it has spaces), caret after the
  * trailing space. Directories stay open for drill-down ("@dir/"), no
- * trailing space — quoted directories close instead (@"my dir/") with the
+ * trailing space; quoted directories close instead (@"my dir/") with the
  * caret placed before the closing quote.
  * @returns {{text:string, cursorOffset:number}}
  */
@@ -126,7 +120,6 @@ export function buildAtInsertText(entryPath, isDir, forceQuotes = false) {
     return { text, cursorOffset: text.length }
 }
 
-/** Closed one-shot @mention (e.g. an explorer's "@" button) — directories close too. */
 export function buildAtMentionText(entryPath, isDir) {
     const p = isDir ? `${entryPath}/` : entryPath
     return p.includes(' ') ? `@"${p}" ` : `@${p} `

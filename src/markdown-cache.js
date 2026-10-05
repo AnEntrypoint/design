@@ -145,22 +145,3 @@ export function getCacheStats() {
 }
 
 register('markdown-cache', () => getCacheStats());
-
-/**
- * Reset cache state (for testing only).
- */
-export function resetCacheState() {
-    _markdownInitialized = false;
-    _prismInitialized = false;
-    _initPromise = null;
-    _renderCache.clear();
-    _stats = {
-        markdownInitMs: 0,
-        totalInitMs: 0,
-        prismInitMs: 0,
-        renderCount: 0,
-        renderTimes: [],
-        cacheHits: 0,
-        cacheMisses: 0,
-    };
-}

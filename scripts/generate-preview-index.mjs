@@ -25,7 +25,7 @@ const row = ({ href, title, description }) => `      <li><a href="${href}">${tit
 
 const sections = PREVIEW_GROUPS.map(group => {
   const rows = PREVIEWS.filter(p => p.group === group).map(p => row({ href: `./${p.name}.html`, title: p.title, description: p.description })).join('\n')
-  return `<h2>${group}</h2>\n<ul>\n${rows}\n</ul>`
+  return `<h2>${group.toLowerCase()}</h2>\n<ul>\n${rows}\n</ul>`
 }).join('\n')
 
 const extraRows = EXTRA_LINKS.map(row).join('\n')
@@ -48,10 +48,10 @@ h2{font-size:var(--fs-h4);margin:var(--space-5) 0 var(--space-2);color:var(--fg-
 </style>
 </head><body>
 <div class="ds-demo-label idx-kicker">247420 / preview index</div>
-<h1>Component previews</h1>
+<h1>component previews</h1>
 <p class="idx-lede">${files.length} specimen pages, each rendering one primitive or token set in isolation so you can see it, measure it and copy its markup.</p>
 ${sections}
-<h2>Other demo surfaces</h2>
+<h2>other demo surfaces</h2>
 <ul>
 ${extraRows}
 </ul>

@@ -68,7 +68,7 @@ export const config = makePage((ctx) => {
             liveRegion(s.busy ? 'saving configuration' : ''),
             arrayKeys.length ? h('div', { class: 'ds-alert ds-alert-info', role: 'note' },
                 h('span', { class: 'ds-alert-icon' }, 'i'),
-                h('div', { class: 'ds-alert-content' }, arrayKeys.length + ' array-valued config ' + (arrayKeys.length === 1 ? 'key is' : 'keys are') + ' read-only here (' + arrayKeys.join(', ') + ') — edit via the config file or raw view below.')) : null,
+                h('div', { class: 'ds-alert-content' }, arrayKeys.length + ' array-valued config ' + (arrayKeys.length === 1 ? 'key is' : 'keys are') + ' read-only here (' + arrayKeys.join(', ') + '). Edit via the config file or raw view below.')) : null,
             skinList.length ? section('skin',
                 Select({ label: 'active skin', value: activeSkin, options: skinList, onChange: (v) => setSkin(v) })
             ) : null,

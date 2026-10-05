@@ -32,7 +32,7 @@ function App() {
             )
         ],
         status: Status({
-            left: ['not found', '- 404', '- ' + (path || 'no path given')],
+            left: ['not found', '404', (path || 'no path given')],
             right: ['static page']
         })
     });

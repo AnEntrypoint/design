@@ -38,12 +38,12 @@ export function SearchInput({ value = '', placeholder = 'search…', onInput, on
  *
  * `suggestions` turns it into a COMBO BOX rather than a second control type: a
  * real `<datalist>`, so the values are offered and filtered by the browser
- * itself — no popup to render, no keystroke handler, nothing to re-render as
+ * itself, with no popup to render, no keystroke handler, nothing to re-render as
  * someone types, and typing a value that is not on the list stays completely
  * unblocked (which is the whole difference between this and `Select`). Native is
  * the right mechanism here specifically because it costs zero latency on a field
  * somebody is typing into, and because a phone gives it the platform's own
- * picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.
+ * picker. Ignored for `multiline`, since `<datalist>` only binds to `<input>`.
  *
  * Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived
  * from it, so two suggestion fields on one screen need distinct ones.

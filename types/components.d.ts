@@ -224,7 +224,7 @@ export interface WorkspaceShellProps {
     crumb?: any;
     /** an optional footer. */
     status?: any;
-    /** caller's isNarrow() — drives the mobile single-column collapse. */
+    /** caller's isNarrow(), drives the mobile single-column collapse. */
     narrow?: boolean;
     /** initial rail collapse (persisted state wins). @default false */
     railCollapsed?: boolean;
@@ -659,7 +659,7 @@ export interface SearchInputProps {
 export declare function SearchInput(props?: SearchInputProps): VNode;
 
 /**
- * A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself — no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones.
+ * A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself, with no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline`, since `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones.
  *
  * Props for {@link TextField} (src/components/content.js).
  */
@@ -3701,9 +3701,9 @@ export interface renderDashboardShellProps {
     error?: any;
     /** @default 'default' */
     project?: string;
-    /** @default '—' */
+    /** @default '-' */
     toolsCount?: string;
-    /** @default '—' */
+    /** @default '-' */
     skillsCount?: string;
     /** @default '' */
     ts?: string;

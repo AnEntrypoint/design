@@ -35,7 +35,7 @@ const POST_HREF = '../blog/';
 const posts = [
     { date: '2026.04.14', title: 'a short history of 247420', tag: 'lore', href: POST_HREF },
     { date: '2026.03.22', title: 'gm v0.4 postmortem, or: why state machines', tag: 'gm', href: POST_HREF },
-    { date: '2026.02.09', title: 'push-to-talk is a protocol, not a feature', tag: 'zellous', href: POST_HREF },
+    { date: '2026.02.09', title: 'push-to-talk over a shared voice channel', tag: 'zellous', href: POST_HREF },
     { date: '2025.12.11', title: 'why interfaces should state what they do', tag: 'manifesto', href: POST_HREF },
     { date: '2025.10.03', title: 'notes on shipping unusual projects', tag: 'notes', href: POST_HREF }
 ];
@@ -43,7 +43,7 @@ const posts = [
 const manifesto = [
     { text: 'we are a small group that builds open-source tools and keeps them online every day.' },
     { text: 'ship early, say plainly what is unfinished, and write down what changed.' },
-    { text: 'we avoid decoration that carries no information: no gradients, no filler sections, no copy that could describe any product.', dim: true }
+    { text: 'tokens define every color, radius and layer; every section states what the product does.', dim: true }
 ];
 
 const state = { route: 'works', opened: 0 };
@@ -69,13 +69,7 @@ function App() {
                 title: 'tools for agents and live rooms.',
                 body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser os shell. Every project is open source on github.',
                 actions: [
-                    h('a', { key: 'works', class: 'btn btn-primary', href: '#works' }, 'browse the works'),
-                    h('a', { key: 'source', class: 'btn btn-ghost', href: GH }, 'source on github')
-                ],
-                badges: [
-                    { label: works.length, desc: 'projects' },
-                    { label: shipping.filter((s) => s.live).length, desc: 'live now' },
-                    { label: posts.length, desc: 'posts' }
+                    h('a', { key: 'works', class: 'btn btn-primary', href: '#works' }, 'browse the works')
                 ]
             }),
             Panel({

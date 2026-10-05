@@ -61,7 +61,7 @@ export function ThreadPanel({ threads = [], activeId = null, title = 'Threads', 
                 ))
                 : h('div', { class: 'cm-tp-empty', role: 'status' },
                     Icon('thread', { size: 20 }),
-                    h('span', { class: 'cm-tp-empty-text' }, onCreate ? 'no threads yet — start one' : 'no threads yet'))
+                    h('span', { class: 'cm-tp-empty-text' }, onCreate ? 'no threads yet: start one' : 'no threads yet'))
         ),
         onReply ? h('form', {
             class: 'cm-tp-reply', onsubmit: (e) => { e.preventDefault(); submit(); }
@@ -116,7 +116,7 @@ export function ForumView({ posts = [], onSearch, onSort, onSelect, onNewPost, l
                 ))
                 : h('div', { class: 'cm-forum-empty', role: 'status' },
                     Icon('forum', { size: 20 }),
-                    h('span', { class: 'cm-forum-empty-text' }, onNewPost ? 'no posts yet — start the discussion' : 'no posts yet'))
+                    h('span', { class: 'cm-forum-empty-text' }, onNewPost ? 'no posts yet: start the discussion' : 'no posts yet'))
         )
     );
 }

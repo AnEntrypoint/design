@@ -20,7 +20,7 @@ export function ContextPane({ agent, model, cwd, toolCount = 0, usage, session, 
     if (!agent && !hasUsage && !hasSession && !cwd) {
         return h('div', { class: 'ds-context' },
             h('div', { class: 'ds-context-empty', role: 'status' },
-                'No active conversation — start a chat to see context here'),
+                'No active conversation: start a chat to see context here'),
             onSetCwd ? h('div', { class: 'ds-context-actions' }, Btn({ onClick: onSetCwd, children: 'set working dir' })) : null);
     }
     const panels = [
@@ -28,7 +28,7 @@ export function ContextPane({ agent, model, cwd, toolCount = 0, usage, session, 
             title: 'context',
             children: [
                 Row({ title: 'agent', meta: agent || 'none' }),
-                Row({ title: 'model', meta: model || '—' }),
+                Row({ title: 'model', meta: model || '-' }),
                 h('div', { class: 'ds-context-cwd-row' }, Row({
                     title: 'working dir',
                     sub: cwd || 'server default',

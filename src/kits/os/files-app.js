@@ -20,7 +20,7 @@ export function renderFilesApp(opts = {}) {
         node.innerHTML = '';
         const head = document.createElement('div');
         head.className = 'head';
-        head.textContent = (label ? label + ' — ' : '') + items.length + ' files';
+        head.textContent = (label ? label + ': ' : '') + items.length + ' files';
         node.appendChild(head);
         for (const p of items) {
             const row = document.createElement('div');

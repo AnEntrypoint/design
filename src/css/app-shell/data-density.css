@@ -60,7 +60,6 @@
 .ds-stat { min-width: 0; background: var(--bg-3); border-radius: var(--r-0); padding: var(--space-2-5) var(--space-2-75); }
 .ds-stat-val { font-size: clamp(18px, 5cqi, 22px); font-weight: 700; color: var(--accent-ink); overflow-wrap: anywhere; }
 .ds-stat-val.rate-big { font-size: clamp(24px, 7cqi, 32px); color: var(--success); }
-.ds-stat-val.err-rate { font-size: clamp(24px, 7cqi, 32px); color: var(--warn); }
 .ds-stat-lbl { font-size: var(--fs-micro); color: var(--fg-3); margin-top: var(--space-hair); }
 
 .ds-rate-cell { font-variant-numeric: tabular-nums; font-weight: 600; }

@@ -51,7 +51,7 @@ export function BarRow({ label, value, pct = 0, tone } = {}) {
 
 export function RateCell({ value, tone = 'neutral' } = {}) {
     const cls = 'ds-rate-cell ds-rate-cell-' + tone;
-    return h('span', { class: cls }, value == null ? '–' : String(value));
+    return h('span', { class: cls }, value == null ? '-' : String(value));
 }
 
 export function StatTile({ val, lbl, cls = '' } = {}) {

@@ -52,15 +52,7 @@ html, body {
 }
 
 .ds-247420 .wm-root {
-    background-image:
-        radial-gradient(circle, color-mix(in oklab, var(--os-fg) 6%, transparent) 1px, transparent 1px),
-        radial-gradient(ellipse 120% 80% at 20% -10%, color-mix(in oklab, var(--os-accent) 6%, transparent), transparent 60%),
-        radial-gradient(ellipse 100% 70% at 100% 100%, color-mix(in oklab, var(--os-accent) 4%, transparent), transparent 55%);
-    background-color: var(--os-bg-0);
-    background-size: 28px 28px, auto, auto;
-}
-@media (prefers-reduced-transparency: reduce) {
-    .ds-247420 .wm-root { background: var(--os-bg-0); }
+    background: var(--os-bg-0);
 }
 
 .ds-247420 :focus-visible {

@@ -95,7 +95,7 @@
 
 .ds-marquee {
   display: flex; align-items: center; gap: var(--space-2);
-  overflow: hidden; width: 100%;
+  width: 100%;
   border-block: var(--bw-hair) solid var(--rule-strong);
   padding: var(--space-2) 0;
   font-family: var(--ff-display); font-weight: 600;
@@ -103,40 +103,10 @@
 }
 .ds-marquee-track {
   flex: 1; min-width: 0;
-  display: inline-flex; gap: var(--space-5);
-  white-space: nowrap; will-change: transform;
-  mask-image: linear-gradient(90deg, transparent 0, var(--fg) 28px, var(--fg) calc(100% - 28px), transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, var(--fg) 28px, var(--fg) calc(100% - 28px), transparent 100%);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-5);
 }
-
-.ds-marquee-pause {
-  flex: none; appearance: none; background: transparent; cursor: pointer;
-  border: 1px solid var(--rule-control); border-radius: var(--r-pill);
-  color: var(--fg-2); width: var(--ctl-sm); height: var(--ctl-sm);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: var(--fs-micro); line-height: 1;
-}
-.ds-marquee-pause:hover { color: var(--fg); border-color: var(--accent-ink); }
-@media (prefers-reduced-motion: no-preference) {
-  .ds-marquee-track { animation: ds-marquee-run 28s linear infinite; }
-  .ds-marquee.ds-marquee--paused .ds-marquee-track,
-  .ds-marquee:focus-within .ds-marquee-track { animation-play-state: paused; }
-}
-.ds-marquee-run { display: inline-flex; align-items: center; gap: var(--space-5); }
-.ds-marquee-item { display: inline-flex; align-items: center; gap: var(--space-5); }
-.ds-marquee-sep { color: var(--accent-ink); }
-@keyframes ds-marquee-run {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (hover: none), (pointer: coarse) {
-  .ds-marquee-track { animation-duration: 40s; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-marquee-track { animation: none; flex-wrap: wrap; white-space: normal; }
-  .ds-marquee-run-b { display: none; }
-}
+.ds-marquee-item { display: inline-flex; align-items: center; }
+.ds-marquee-sep { color: var(--fg-3); }
 
 .cli {
   display: flex; align-items: center; gap: 14px;

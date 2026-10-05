@@ -15,9 +15,9 @@
   }
   .app-topbar nav::-webkit-scrollbar { display: none; }
   .app-topbar nav a {
-    flex: 0 0 auto; padding: var(--space-2-5) var(--space-2-75); min-height: 44px; white-space: nowrap;
+    flex: 0 0 auto; padding: var(--space-2-5) var(--space-2); min-height: 44px; white-space: nowrap;
   }
-  .brand { font-size: var(--fs-tiny); font-weight: 600; }
+  .brand { font-size: var(--fs-body); font-weight: 600; }
 
   .app-search {
     display: none;

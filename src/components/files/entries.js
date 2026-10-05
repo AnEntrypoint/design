@@ -61,7 +61,7 @@ export function FileRow({ name, type = 'other', size, modified, code, onOpen, on
                 code != null ? h('span', { class: 'code', 'aria-label': `code: ${code}` }, code) : null,
                 FileIcon({ type }),
                 h('span', { class: 'title' }, name),
-                h('span', { class: 'ds-file-meta meta', 'aria-label': meta ? `metadata: ${meta}` : null }, meta || '—'),
+                h('span', { class: 'ds-file-meta meta', 'aria-label': meta ? `metadata: ${meta}` : null }, meta || '-'),
                 permTag ? h('span', { class: 'ds-file-perm-tag' + (noAccess ? ' is-noaccess' : ''), 'aria-hidden': 'true' }, permTag) : null,
             ].filter(Boolean)
         ),

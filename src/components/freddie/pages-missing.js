@@ -114,7 +114,7 @@ export const files = makePage((ctx) => {
             : s.fileBody && s.fileBody.type === 'text'
                 ? FilePreviewText({ content: s.fileBody.content, truncated: s.fileBody.truncated })
                 : s.fileBody && s.fileBody.type === 'binary'
-                    ? h('div', { class: 'fd-empty' }, 'binary file — preview not available')
+                    ? h('div', { class: 'fd-empty' }, 'binary file: preview not available')
                     : null;
         return [
             PageHeader({ title: 'files', lede: s.dirPath || 'active project' }),
@@ -173,7 +173,7 @@ export const worktree = makePage((ctx) => {
         return [
             PageHeader({ title: 'worktrees', lede: (s.data && s.data.cwd) || 'git worktrees' }),
             trees.length
-                ? section('worktrees', Table({ headers: ['path', 'branch', 'head'], rows: trees.map(t => [t.worktree || '—', t.branch || (t.detached ? '(detached)' : '—'), (t.head || '').slice(0, 8) || '—']) }))
+                ? section('worktrees', Table({ headers: ['path', 'branch', 'head'], rows: trees.map(t => [t.worktree || '-', t.branch || (t.detached ? '(detached)' : '-'), (t.head || '').slice(0, 8) || '-']) }))
                 : emptyState('no worktrees'),
         ];
     };
@@ -211,9 +211,9 @@ export const notifications = makePage((ctx) => {
             }),
             items.length
                 ? section('notifications', ...items.map((n, i) => h('div', { key: i, class: 'fd-row-actions' },
-                    h('span', {}, '[' + (n.type || '—') + '] '),
+                    h('span', {}, '[' + (n.type || '-') + '] '),
                     truncSpan(n.message || '', TRUNC_SUB),
-                    h('span', { class: 'dim' }, n.timestamp ? new Date(n.timestamp).toLocaleTimeString() : '—'),
+                    h('span', { class: 'dim' }, n.timestamp ? new Date(n.timestamp).toLocaleTimeString() : '-'),
                     Btn({ size: 'sm', disabled: s.busy === n.id, children: s.busy === n.id ? '…' : Icon('x'), 'aria-label': 'dismiss', onClick: () => dismiss(n.id) }))))
                 : emptyState('no notifications'),
         ].filter(Boolean);

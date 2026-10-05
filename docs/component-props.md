@@ -173,7 +173,7 @@ A Claude-Desktop / cowork three-(or four-)column app shell.  Pure stateless chro
 - `props.pane` _(*)_ -- an OPTIONAL right context pane (per-conversation context, file preview...). Null hides it; collapsible when present.
 - `props.crumb` _(*)_ -- an optional thin top chrome bar (breadcrumb + status), spanning the content area only (the rail has its own header).
 - `props.status` _(*)_ -- an optional footer.
-- `props.narrow` _(boolean)_ -- caller's isNarrow() — drives the mobile single-column collapse.
+- `props.narrow` _(boolean)_ -- caller's isNarrow(), drives the mobile single-column collapse.
 - `props.railCollapsed` _(boolean)_ -- initial rail collapse (persisted state wins).
 - `props.paneCollapsed` _(boolean)_ -- initial pane collapse (persisted state wins).
 
@@ -382,7 +382,7 @@ One entry in a LOG or timeline: a dense single line, with a coloured rail markin
 
 ### TextField
 
-A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself — no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline` — `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones.
+A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX rather than a second control type: a real `<datalist>`, so the values are offered and filtered by the browser itself, with no popup to render, no keystroke handler, nothing to re-render as someone types, and typing a value that is not on the list stays completely unblocked (which is the whole difference between this and `Select`). Native is the right mechanism here specifically because it costs zero latency on a field somebody is typing into, and because a phone gives it the platform's own picker. Ignored for `multiline`, since `<datalist>` only binds to `<input>`.  Pass `name` (or `key`) alongside `suggestions`: the datalist's id is derived from it, so two suggestion fields on one screen need distinct ones.
 
 **Kind:** component
 
@@ -2050,7 +2050,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `active`, `body`, `routeGroups`, `onNavigate`, `sampler` = `{ ok: 0, bad: 0, total: 0, error: false }`, `degraded` = `false`, `error` = `null`, `project` = `'default'`, `toolsCount` = `'—'`, `skillsCount` = `'—'`, `ts` = `''`, `brand` = `'freddie'`, `fullBleed` = `false`
+**Signature:** `active`, `body`, `routeGroups`, `onNavigate`, `sampler` = `{ ok: 0, bad: 0, total: 0, error: false }`, `degraded` = `false`, `error` = `null`, `project` = `'default'`, `toolsCount` = `'-'`, `skillsCount` = `'-'`, `ts` = `''`, `brand` = `'freddie'`, `fullBleed` = `false`
 
 ## `src/components/freddie/runtime.js`
 

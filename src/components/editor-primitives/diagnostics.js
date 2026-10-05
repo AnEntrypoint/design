@@ -5,7 +5,7 @@ const h = webjsx.createElement;
 export function InfoRow({ label, value, key } = {}) {
     return h('div', { key, class: 'ds-ep-inforow' },
         h('span', { class: 'ds-ep-inforow-label' }, label),
-        h('span', { class: 'ds-ep-inforow-value' }, value == null || value === '' ? '—' : String(value)));
+        h('span', { class: 'ds-ep-inforow-value' }, value == null || value === '' ? '-' : String(value)));
 }
 
 export function InfoSection({ title, rows, key } = {}) {
