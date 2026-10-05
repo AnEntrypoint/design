@@ -16,7 +16,7 @@ export function showToast(message, type = 'info') {
     background:${bgColor};
     color:${fgColor};
     padding:12px 16px;
-    border-radius:4px;
+    border-radius:var(--r-0,4px);
     font-size:12px;
     box-shadow:var(--shadow-overlay,0 2px 8px rgba(0,0,0,0.3));
     max-width:300px;

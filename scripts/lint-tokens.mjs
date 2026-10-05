@@ -153,7 +153,31 @@ function scanSheets({ pattern, isExempt, prepare }) {
     return violations;
 }
 
-const prepareWithoutLiteralFallbacks = (anchoredFn, tokenPrefix) => (src) =>
+const JS_STYLE_ROOT = 'src';
+
+function listJsSources(dir) {
+    const out = [];
+    for (const entry of fs.readdirSync(path.join(root, dir), { withFileTypes: true })) {
+        const rel = `${dir}/${entry.name}`;
+        if (entry.isDirectory()) out.push(...listJsSources(rel));
+        else if (entry.name.endsWith('.js')) out.push(rel);
+    }
+    return out;
+}
+
+function scanJsStyleStrings({ pattern, prepare }) {
+    const violations = [];
+    for (const rel of listJsSources(JS_STYLE_ROOT)) {
+        const src = fs.readFileSync(path.join(root, rel), 'utf8');
+        const rawLines = src.split(/\r?\n/);
+        prepare(src).split(/\r?\n/).forEach((code, i) => {
+            if (pattern.test(code)) violations.push(`${rel}:${i + 1}: ${rawLines[i].trim().slice(0, 160)}`);
+        });
+    }
+    return violations;
+}
+
+const prepareWithoutLiteralFallbacks =(anchoredFn, tokenPrefix) => (src) =>
     blankTokenAnchoredExpressions(stripThemableLiterals(stripComments(src)), anchoredFn, tokenPrefix);
 
 export function findTokenViolations() {
@@ -174,11 +198,15 @@ export function findTokenViolations() {
 }
 
 export function findRadiusViolations() {
-    return scanSheets({
-        pattern: RADIUS_RE,
-        isExempt: (rel, line) => isAllowed(rel, line) || isRadiusAllowed(rel, line),
-        prepare: prepareWithoutLiteralFallbacks('calc', 'r'),
-    });
+    const prepare = prepareWithoutLiteralFallbacks('calc', 'r');
+    return [
+        ...scanSheets({
+            pattern: RADIUS_RE,
+            isExempt: (rel, line) => isAllowed(rel, line) || isRadiusAllowed(rel, line),
+            prepare,
+        }),
+        ...scanJsStyleStrings({ pattern: RADIUS_RE, prepare }),
+    ];
 }
 
 export function findSpacingViolations() {
@@ -206,7 +234,10 @@ export function findZIndexViolations() {
 }
 
 export function findTransitionAllViolations() {
-    return scanSheets({ pattern: TRANSITION_ALL_RE, isExempt: isAllowed, prepare: stripComments });
+    return [
+        ...scanSheets({ pattern: TRANSITION_ALL_RE, isExempt: isAllowed, prepare: stripComments }),
+        ...scanJsStyleStrings({ pattern: TRANSITION_ALL_RE, prepare: stripComments }),
+    ];
 }
 
 export function findImportantViolations() {

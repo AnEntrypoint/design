@@ -2,8 +2,8 @@
 <html lang="en" data-theme="auto" class="ds-247420"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#247420" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F0F0F" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
   <title>deck / 247420</title>
   <meta name="description" content="presentation deck template: title, content, quote, comparison, receipt, end.">
@@ -46,6 +46,10 @@
     --slide-cmp-pad: 48px;
     --slide-receipt-size: 28px;
     --slide-closing-line-size: 32px;
+    --slide-radius: 12px;
+    --slide-label-gap: 24px;
+    --slide-label-gap-wide: 32px;
+    --slide-attribution-gap: 48px;
   }
   body { background: var(--panel-0); margin: 0; }
   deck-stage { display: block; }
@@ -141,7 +145,7 @@
   }
   .cmp > div {
     padding: var(--slide-cmp-pad);
-    border-radius: 12px;
+    border-radius: var(--slide-radius);
     box-shadow: var(--panel-shadow);
   }
   .cmp .cmp-before { background: var(--panel-2); }
@@ -178,7 +182,7 @@
     font-size: var(--slide-receipt-size);
     max-width: 900px;
     background: var(--panel-2);
-    border-radius: 12px;
+    border-radius: var(--slide-radius);
     padding: 28px 36px;
     box-shadow: var(--panel-shadow);
   }
@@ -201,6 +205,11 @@
     text-align: right;
     color: var(--panel-text);
   }
+.s-label-lead{margin-bottom:var(--slide-label-gap)}
+.s-label-lead-wide{margin-bottom:var(--slide-label-gap-wide)}
+.s-attribution{margin-top:var(--slide-attribution-gap);color:var(--panel-text-3)}
+.cmp .cmp-struck{text-decoration:line-through}
+:root:root .s-hero{margin:0}
 :root:root .pv1{display:flex;align-items:center;height:100%}
 .s-quote-mark{font-family:var(--ff-display);font-size:var(--slide-quote-mark-size);line-height:0.8;margin-bottom:-40px;color:var(--panel-accent)}
 .s-hero-closing{font-size:var(--slide-closing-size);color:var(--panel-accent-fg)}
@@ -247,8 +256,8 @@
 <section class="s-elev" data-label="title">
   <div class="s-dateline"><span>247420 · AnEntrypoint</span><span class="spread"></span><span>apr 20 · 2026 · live</span></div>
   <div>
-    <div class="s-label" style="margin-bottom:24px">template deck</div>
-    <div class="s-hero">247420 design system: the 2026 restyle</div>
+    <div class="s-label s-label-lead">template deck</div>
+    <h1 class="s-hero">247420 design system: the 2026 restyle</h1>
     <div class="s-sub">what changed in the palette, type and surfaces, and what ships next.</div>
   </div>
   <div class="s-footer"><span>deck 001</span><span>247420 design system</span></div>
@@ -257,7 +266,7 @@
 <section data-label="section intro">
   <div class="s-dateline"><span>247420</span><span>01</span><span class="spread"></span><span>of 05</span></div>
   <div>
-    <div class="s-label" style="margin-bottom:32px">chapter one</div>
+    <div class="s-label s-label-lead-wide">chapter one</div>
     <div class="s-h1">the problem<br/>with default styling.</div>
   </div>
   <div class="s-footer"><span>chapter</span><span>default styling</span></div>
@@ -269,7 +278,7 @@
     <div>
       <div class="s-quote-mark">&ldquo;</div>
       <div class="s-quote">we ship things and watch how they are used.</div>
-      <div class="s-label" style="margin-top:48px;color:var(--panel-text-3)">247420 design principle</div>
+      <div class="s-label s-attribution">247420 design principle</div>
     </div>
   </div>
   <div class="s-footer"><span>quote</span><span>247420</span></div>
@@ -278,14 +287,14 @@
 <section class="s-elev" data-label="receipt">
   <div class="s-dateline"><span>247420</span><span>receipt · repo figures</span><span class="spread"></span><span>live</span></div>
   <div>
-    <div class="s-label" style="margin-bottom:32px">by the numbers (counted from this repo)</div>
+    <div class="s-label s-label-lead-wide">by the numbers (counted from this repo)</div>
     <div class="receipt">
       <div class="receipt-row"><span>components</span><span>230</span></div>
       <div class="receipt-row"><span>helpers</span><span>84</span></div>
       <div class="receipt-row"><span>ui kits</span><span>22</span></div>
       <div class="receipt-row"><span>css lint gates</span><span>19</span></div>
       <div class="receipt-row"><span>serious a11y violations</span><span>0</span></div>
-      <div class="receipt-row"><span>component sheets</span><span>41</span></div>
+      <div class="receipt-row"><span>component sheets</span><span>42</span></div>
     </div>
   </div>
   <div class="s-footer"><span>receipt</span><span>247420</span></div>
@@ -297,7 +306,7 @@
     <div class="cmp">
       <div class="cmp-before">
         <div class="cmp-l">before</div>
-        <div class="cmp-h" style="text-decoration:line-through">gradient ripple-ui demo</div>
+        <div class="cmp-h cmp-struck">gradient ripple-ui demo</div>
         <div class="cmp-p">gradient fills, glass cards and decorative emoji.</div>
       </div>
       <div class="cmp-after">

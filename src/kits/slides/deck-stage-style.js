@@ -41,7 +41,7 @@ export const STYLESHEET = `
       display: flex; align-items: center;
       gap: 4px; padding: 4px;
       background: var(--scrim-media, rgba(19,19,24,0.85)); color: var(--on-color, #fff);
-      border-radius: 999px;
+      border-radius: var(--r-pill,999px);
       font-size: 14px;
       font-feature-settings: "tnum" 1;
       letter-spacing: 0.01em;
@@ -62,7 +62,7 @@ export const STYLESHEET = `
       color: inherit; font: inherit; cursor: default;
       display: inline-flex; align-items: center; justify-content: center;
       height: 28px; min-width: 28px;
-      border-radius: 999px;
+      border-radius: var(--r-pill,999px);
       color: color-mix(in oklab, var(--on-color, #fff) 72%, transparent);
       transition: background 140ms ease, color 140ms ease;
       -webkit-tap-highlight-color: transparent;
@@ -84,7 +84,7 @@ export const STYLESHEET = `
       font-size: 12px; line-height: 1;
       color: color-mix(in oklab, var(--on-color, #fff) 88%, transparent);
       background: color-mix(in oklab, var(--on-color, #fff) 12%, transparent);
-      border-radius: 4px;
+      border-radius: var(--r-0,4px);
     }
     .count {
       font-variant-numeric: tabular-nums;

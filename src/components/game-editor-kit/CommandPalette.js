@@ -7,7 +7,7 @@ export function createCommandPalette({ wm, commands = [], onExecute }) {
   const input = document.createElement('input')
   input.type = 'text'
   input.placeholder = 'Type a command...'
-  input.style.cssText = 'width:100%;box-sizing:border-box;padding:6px 8px;background:var(--panel-2,#1a1a1a);color:var(--panel-text,#eee);border:1px solid var(--rule,#444);border-radius:4px;font:inherit;outline:none'
+  input.style.cssText = 'width:100%;box-sizing:border-box;padding:6px 8px;background:var(--panel-2,#1a1a1a);color:var(--panel-text,#eee);border:1px solid var(--rule,#444);border-radius:var(--r-0,4px);font:inherit;outline:none'
   input.addEventListener('input', () => { _query = input.value; _filter(); _render() })
   input.addEventListener('keydown', _onKey)
   _inputEl = input
@@ -48,7 +48,7 @@ export function createCommandPalette({ wm, commands = [], onExecute }) {
     _resultsEl.innerHTML = ''
     _results.forEach((r, i) => {
       const row = document.createElement('div')
-      row.style.cssText = `padding:6px 8px;cursor:pointer;border-radius:4px;display:flex;align-items:center;gap:8px;${i === _highlight ? 'background:var(--accent-2,rgba(100,120,255,0.25))' : ''}`
+      row.style.cssText = `padding:6px 8px;cursor:pointer;border-radius:var(--r-0,4px);display:flex;align-items:center;gap:8px;${i === _highlight ? 'background:var(--accent-2,rgba(100,120,255,0.25))' : ''}`
       row.setAttribute('data-cmd-id', r.cmd.id)
       const label = document.createElement('span')
       label.textContent = r.cmd.label

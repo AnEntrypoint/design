@@ -116,25 +116,25 @@ export class ModelPreview {
 
     const toggleWireframe = document.createElement('button')
     toggleWireframe.textContent = 'Wireframe'
-    toggleWireframe.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:3px;cursor:pointer;font-size:11px'
+    toggleWireframe.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--r-hair,3px);cursor:pointer;font-size:11px'
     toggleWireframe.addEventListener('click', () => this.toggleWireframe())
     uiContainer.appendChild(toggleWireframe)
 
     const toggleCollider = document.createElement('button')
     toggleCollider.textContent = 'Collider'
-    toggleCollider.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:3px;cursor:pointer;font-size:11px;opacity:0.6'
+    toggleCollider.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--r-hair,3px);cursor:pointer;font-size:11px;opacity:0.6'
     toggleCollider.addEventListener('click', () => this.toggleCollider())
     uiContainer.appendChild(toggleCollider)
 
     const toggleRotate = document.createElement('button')
     toggleRotate.textContent = 'AutoRotate'
-    toggleRotate.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:3px;cursor:pointer;font-size:11px'
+    toggleRotate.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--r-hair,3px);cursor:pointer;font-size:11px'
     toggleRotate.addEventListener('click', () => this.toggleAutoRotate())
     uiContainer.appendChild(toggleRotate)
 
     const exportBtn = document.createElement('button')
     exportBtn.textContent = 'Export'
-    exportBtn.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:3px;cursor:pointer;font-size:11px'
+    exportBtn.style.cssText = 'padding:4px 8px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--r-hair,3px);cursor:pointer;font-size:11px'
     exportBtn.addEventListener('click', () => this.exportPreview())
     uiContainer.appendChild(exportBtn)
 

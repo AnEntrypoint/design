@@ -134,7 +134,7 @@ export function createAssetBrowser(opts = {}) {
         onMouseEnter: (el) => el.target.style.background = 'var(--panel-hover,#f5f5f5)',
         onMouseLeave: (el) => el.target.style.background = 'transparent'
       }, [
-        asset.thumbnail ? h('img', { src: asset.thumbnail, style: 'width:32px;height:32px;border-radius:2px;object-fit:contain', alt: asset.name }) : h('span', { style: 'width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--panel-bg-2,#eee);border-radius:2px' }, Icon('package', { size: 18 })),
+        asset.thumbnail ? h('img', { src: asset.thumbnail, style: 'width:32px;height:32px;border-radius:var(--r-hair,2px);object-fit:contain', alt: asset.name }) : h('span', { style: 'width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--panel-bg-2,#eee);border-radius:var(--r-hair,2px)' }, Icon('package', { size: 18 })),
         h('div', { style: 'flex:1;min-width:0', onClick: () => onAssetSelect?.(asset) }, [
           h('div', { style: 'font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, asset.name),
           asset.tags && asset.tags.length > 0 ? h('div', { style: 'font-size:10px;color:var(--panel-text-3,#999);margin-top:2px' }, asset.tags.join(', ')) : null
@@ -210,7 +210,7 @@ export function createAssetBrowser(opts = {}) {
       tags.length > 0 ? h('div', { style: 'display:flex;gap:4px;flex-wrap:wrap' }, tags.map(tag =>
         h('button', {
           type: 'button',
-          style: `padding:2px 8px;font-size:10px;border-radius:4px;border:1px solid var(--panel-border,#ddd);background:${_selectedTags.has(tag) ? 'var(--primary,#262626)' : 'transparent'};color:${_selectedTags.has(tag) ? '#fff' : 'var(--panel-text-2)'};cursor:pointer`,
+          style: `padding:2px 8px;font-size:10px;border-radius:var(--r-0,4px);border:1px solid var(--panel-border,#ddd);background:${_selectedTags.has(tag) ? 'var(--primary,#262626)' : 'transparent'};color:${_selectedTags.has(tag) ? '#fff' : 'var(--panel-text-2)'};cursor:pointer`,
           onClick: () => {
             if (_selectedTags.has(tag)) _selectedTags.delete(tag)
             else _selectedTags.add(tag)

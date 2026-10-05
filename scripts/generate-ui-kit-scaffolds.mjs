@@ -55,7 +55,7 @@ function render(kit) {
   const title = titleFor(kit);
   const htmlThemeAttr = kit.htmlTheme ? ' data-theme="auto"' : '';
   const themeColorMetas = kit.themeColorMetas
-    ? '  <meta name="theme-color" content="#247420" media="(prefers-color-scheme: light)">\n  <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)">\n'
+    ? '  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">\n  <meta name="theme-color" content="#0F0F0F" media="(prefers-color-scheme: dark)">\n'
     : '';
 
   const stylesheetLines = [

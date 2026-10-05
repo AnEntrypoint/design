@@ -70,7 +70,7 @@ via `link-local-design.mjs`-style local linking during active cross-repo work).
 tokens-json, radius, zindex, transition-all, dark-parity, contrast, spacing, fontsize, important,
 inline-css, glyphs, null-children, classes, inline-styles, duplicate-selectors, empty-catch,
 dead-controls, yaml-parse), then bundles with esbuild + postcss into `dist/`. The gates
-scan 41 component sheets, expanded transitively from a smaller entry-point list through the
+scan the component sheets, expanded transitively from a smaller entry-point list through the
 `@import` graph: the root `app-shell.css` is a barrel over `src/css/app-shell/*.css` and lints
 nothing on its own, and every sheet in that directory must be reachable from it. `build.mjs`
 keeps its own `appShellSplitFiles` bundling list, so barrel completeness is what keeps the

@@ -41,7 +41,7 @@ export function SearchInput(opts = {}) {
     oninput: (e) => onInput?.(e.target.value),
     style: `
       padding: 4px 6px;
-      border-radius: 4px;
+      border-radius: var(--r-0,4px);
       border: 1px solid var(--rule,#444);
       background: var(--bg-1,#1a1a1a);
       color: var(--fg,#ccc);

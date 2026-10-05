@@ -10,21 +10,21 @@ export function buildNavPaletteActions(routes, { onNavigate } = {}) {
         id: 'nav-' + r.path,
         label: r.label || r.path,
         icon: r.icon || 'circle',
-        group: 'Navigate',
+        group: 'navigate',
         hint: null,
         action: () => onNavigate(r.path),
     }));
     actions.push(
-        { id: 'cmd-new-chat', label: 'New Chat Session', icon: 'forum', group: 'Actions', hint: null, action: () => onNavigate('chat') },
-        { id: 'cmd-terminal', label: 'Open Terminal', icon: 'more-horizontal', group: 'Actions', hint: null, action: () => onNavigate('terminal') },
+        { id: 'cmd-new-chat', label: 'new chat session', icon: 'forum', group: 'actions', hint: null, action: () => onNavigate('chat') },
+        { id: 'cmd-terminal', label: 'open terminal', icon: 'more-horizontal', group: 'actions', hint: null, action: () => onNavigate('terminal') },
         {
-            id: 'cmd-toggle-theme', label: 'Toggle Theme', icon: 'contrast', group: 'Actions', hint: null, action: () => {
+            id: 'cmd-toggle-theme', label: 'toggle theme', icon: 'contrast', group: 'actions', hint: null, action: () => {
                 const cur = theme.getTheme();
                 const next = cur === 'github-dark' ? 'paper' : (cur === 'paper' ? 'ink' : (cur === 'ink' ? 'auto' : 'github-dark'));
                 theme.applyTheme(next);
             },
         },
-        { id: 'cmd-refresh', label: 'Refresh Data', icon: 'refresh', group: 'Actions', hint: null, action: () => location.reload() },
+        { id: 'cmd-refresh', label: 'refresh data', icon: 'refresh', group: 'actions', hint: null, action: () => location.reload() },
     );
     return actions;
 }

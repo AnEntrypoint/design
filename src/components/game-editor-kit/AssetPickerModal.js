@@ -60,7 +60,7 @@ export function createAssetPickerModal(opts = {}) {
       const isSelected = _selectedAsset && _selectedAsset.id === asset.id
 
       return h('div', {
-        style: `padding:12px;border:2px solid ${isSelected ? 'var(--primary,#262626)' : 'var(--panel-border,#ddd)'};border-radius:6px;cursor:pointer;background:${isSelected ? 'var(--primary-bg,#f0f7ff)' : 'var(--panel-bg,#fff)'};transition:all 0.15s`,
+        style: `padding:12px;border:2px solid ${isSelected ? 'var(--primary,#262626)' : 'var(--panel-border,#ddd)'};border-radius:var(--r-1,6px);cursor:pointer;background:${isSelected ? 'var(--primary-bg,#f0f7ff)' : 'var(--panel-bg,#fff)'};transition:border-color 0.15s, background-color 0.15s`,
         onClick: () => {
           _selectedAsset = asset
           render()
@@ -73,11 +73,11 @@ export function createAssetPickerModal(opts = {}) {
         }
       }, [
         asset.thumbnail ? h('div', {
-          style: 'width:100%;aspect-ratio:1;background:var(--panel-bg-2,#eee);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden'
+          style: 'width:100%;aspect-ratio:1;background:var(--panel-bg-2,#eee);border-radius:var(--r-0,4px);margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden'
         }, [
           h('img', { src: asset.thumbnail, style: 'width:100%;height:100%;object-fit:contain' })
         ]) : h('div', {
-          style: 'width:100%;aspect-ratio:1;background:var(--panel-bg-2,#eee);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:24px'
+          style: 'width:100%;aspect-ratio:1;background:var(--panel-bg-2,#eee);border-radius:var(--r-0,4px);margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:24px'
         }, Icon('package', { size: 24 })),
 
         h('div', { style: 'font-weight:500;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, asset.name),
@@ -100,7 +100,7 @@ export function createAssetPickerModal(opts = {}) {
       style: 'position:fixed;top:0;left:0;right:0;bottom:0;background:var(--scrim,rgba(0,0,0,0.5));display:flex;align-items:center;justify-content:center;z-index:var(--z-modal,800)'
     }, [
       h('div', {
-        style: 'background:var(--panel-bg,#fff);border-radius:8px;box-shadow:var(--shadow-overlay,0 2px 16px rgba(0,0,0,0.2));width:90vw;max-width:800px;max-height:80vh;display:flex;flex-direction:column'
+        style: 'background:var(--panel-bg,#fff);border-radius:var(--r-1,8px);box-shadow:var(--shadow-overlay,0 2px 16px rgba(0,0,0,0.2));width:90vw;max-width:800px;max-height:80vh;display:flex;flex-direction:column'
       }, [
         h('div', { style: 'padding:16px;border-bottom:1px solid var(--panel-border,#ddd)' }, [
           h('div', { style: 'font-weight:600;font-size:14px;margin-bottom:12px' }, 'Select Asset'),
@@ -108,7 +108,7 @@ export function createAssetPickerModal(opts = {}) {
             type: 'text',
             placeholder: 'Search by name, path, or tag...',
             value: _searchQuery,
-            style: 'width:100%;padding:8px 12px;border:1px solid var(--panel-border,#ddd);border-radius:4px;font-size:12px',
+            style: 'width:100%;padding:8px 12px;border:1px solid var(--panel-border,#ddd);border-radius:var(--r-0,4px);font-size:12px',
             onInput: (e) => {
               _searchQuery = e.target.value
               saveSessionData()
@@ -126,12 +126,12 @@ export function createAssetPickerModal(opts = {}) {
           h('div', { style: 'display:flex;gap:8px' }, [
             h('button', {
               type: 'button',
-              style: 'padding:6px 16px;border:1px solid var(--panel-border,#ddd);border-radius:4px;background:var(--panel-bg,#fff);cursor:pointer;font-size:12px',
+              style: 'padding:6px 16px;border:1px solid var(--panel-border,#ddd);border-radius:var(--r-0,4px);background:var(--panel-bg,#fff);cursor:pointer;font-size:12px',
               onClick: () => onCancel?.()
             }, 'Cancel'),
             h('button', {
               type: 'button',
-              style: `padding:6px 16px;border-radius:4px;background:${_selectedAsset ? 'var(--primary,#262626)' : 'var(--fg-3,#ccc)'};color:var(--on-color,#fff);border:none;cursor:pointer;font-size:12px`,
+              style: `padding:6px 16px;border-radius:var(--r-0,4px);background:${_selectedAsset ? 'var(--primary,#262626)' : 'var(--fg-3,#ccc)'};color:var(--on-color,#fff);border:none;cursor:pointer;font-size:12px`,
               disabled: !_selectedAsset,
               onClick: () => {
                 if (_selectedAsset) {

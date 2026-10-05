@@ -78,7 +78,7 @@
     style.textContent =
       '.copy-code-btn{position:absolute;top:.5em;right:.5em;font:inherit;' +
       'font-size:.75em;line-height:1;padding:.35em .6em;border:1px solid currentColor;' +
-      'border-radius:4px;background:transparent;color:inherit;cursor:pointer;opacity:.6}' +
+      'border-radius:var(--r-0,4px);background:transparent;color:inherit;cursor:pointer;opacity:.6}' +
       '.copy-code-btn:hover{opacity:1}';
     document.head.appendChild(style);
   }

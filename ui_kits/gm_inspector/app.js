@@ -175,7 +175,7 @@ function App() {
                     { glyph: Icon('grid', { size: 14 }), label: 'context budget', count: contextSegments.length, key: 'x', href: '#p-context' }
                 ] },
                 { group: 'phase', items: [
-                    { glyph: h('span', { class: 'ds-dot ds-dot-on' }), label: 'COMPLETE', count: '5/5', key: 'p', color: 'var(--success)', href: '#p-overview' }
+                    { glyph: h('span', { class: 'ds-dot ds-dot-on' }), label: 'complete', count: '5/5', key: 'p', color: 'var(--success)', href: '#p-overview' }
                 ] }
             ]
         }),

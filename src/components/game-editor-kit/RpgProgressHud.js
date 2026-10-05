@@ -17,7 +17,7 @@ export function StatBar(props = {}) {
       position: relative;
       width: 100%;
       height: 14px;
-      border-radius: 4px;
+      border-radius: var(--r-0,4px);
       background: var(--bg-1,#1a1a1a);
       border: 1px solid var(--rule,#444);
       overflow: hidden;
@@ -84,7 +84,7 @@ export function QuestPanel(props = {}) {
       padding: 6px 10px;
       background: var(--bg-2,#222);
       border: 1px solid var(--rule,#444);
-      border-radius: 4px;
+      border-radius: var(--r-0,4px);
       min-width: 180px;
     `
   },
@@ -128,7 +128,7 @@ export function AbilitySlot(props = {}) {
       position: relative;
       width: 36px;
       height: 36px;
-      border-radius: 5px;
+      border-radius: var(--r-0,5px);
       background: var(--bg-2,#222);
       border: 1px solid var(--rule,#444);
       display: flex;
@@ -240,7 +240,7 @@ export function RpgProgressHud(props = {}) {
         padding: 8px 10px;
         background: var(--bg-2,#222);
         border: 1px solid var(--rule,#444);
-        border-radius: 6px;
+        border-radius: var(--r-1,6px);
         min-width: 220px;
       `
     },

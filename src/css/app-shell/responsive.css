@@ -27,6 +27,8 @@
   .panel { margin: 0 0 var(--space-3); padding-left: 0; padding-right: 0; }
   .panel-head { padding: var(--space-3) 0; gap: var(--space-2); }
   .panel-body { padding: var(--space-2) 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .ds-section .panel-body, .ds-hero ~ .panel .panel-body, .ds-hero-side .panel-body { overflow-x: visible; }
+  .app .ds-hero-side .row { column-gap: var(--space-3); }
   .panel-body > table { min-width: 100%; }
 
   .panel.panel-tonal,

@@ -425,7 +425,7 @@ Row({ code, rank, title, sub, meta, state = 'default', onClick, href, kind, cols
 | `target` | string | - | Link target (`_blank`, etc.) |
 | `active` | boolean | - | **Deprecated**: use `state="active"` |
 | `selected` | boolean | - | **Deprecated**: use `state="active"` |
-| `rail` | string | - | Leading status-bar tone: `'green'` (ok/selected) \| `'purple'` (subagent) \| `'flame'` (error/unavailable) \| any CSS color token |
+| `rail` | string | - | Leading status-bar tone: `'green'` (ok/selected) \| `'purple'` (subagent, rendered in gray) \| `'flame'` (error/unavailable) \| any CSS color token |
 | `expanded` | boolean | - | Disclosure-toggle state; sets `aria-expanded` and gates `actions` rendering. Omit entirely for plain action rows (not a toggle) |
 | `highlight` | string | - | Case-insensitive substring to wrap in `<mark class="ds-hl">` within `title` |
 | `actions` | array | - | Action-button specs rendered as a sibling strip; only shown when `expanded === true` |
