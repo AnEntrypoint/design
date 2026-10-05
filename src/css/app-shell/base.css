@@ -1,41 +1,8 @@
 * { box-sizing: border-box; }
-/* width:100% + overflow-x:clip on both html and body: without an explicit
-   width, either can end up narrower than the real viewport once ANY
-   descendant's layout box overflows horizontally by even a subpixel (a flex
-   row that doesn't quite wrap, a fixed-width child inside a shrinking
-   container) -- the sticky .app-topbar/.app-chrome then reads as "not
-   filling the page" because it's pinned to .app's box while the page-level
-   scrollbar (driven by body's real scrollWidth) sits further right than
-   .app's right edge, and login-style narrow pages show the same scrollbar
-   short of the visual page edge. clip (not hidden) so no new scroll
-   container is introduced -- .app-main/.app-side-shell already own their
-   own scroll regions and must stay the only scrollers. */
+
 html, body { margin: 0; padding: 0; width: 100%; overflow-x: clip; }
 button, input, select, textarea { font: inherit; }
 
-/* THE global reduced-motion safety net for the app-shell bundle — one block,
-   not two. states-interactions.css carried a second `.ds-247420 *, .app *`
-   copy of the same three declarations at a different duration (0.01ms vs the
-   0.001ms here); being later in the bundle it always won, so this block's own
-   element-level values had never applied to anything. The two have been merged
-   here at the value that was actually live, and `.app *` is gone with them: the
-   build prefixes it to `.ds-247420 .app *`, which is strictly narrower than the
-   prefixed `*` on this line and could never match anything the wider selector
-   did not already cover.
-
-   The !important flags are LOAD-BEARING and must not be "cleaned up": the
-   prefixed `.ds-247420 *` is only (0,1,0) — the universal selector adds
-   nothing — yet it has to defeat every animation/transition declaration in the
-   kit, many of which are strictly more specific (`.ds-dropzone.dragover` at
-   (0,2,0), `.ds-upload-bar.indeterminate .ds-upload-fill` at (0,3,0),
-   `.list-item.drag-after::after` at (0,2,1)). Raising this selector to
-   out-specify an open-ended set of future component rules is not possible, so
-   the flag is the only correct mechanism — WCAG 2.3.3, not a style preference.
-
-   Sheets published standalone (community.css, chat.css, editor-primitives.css)
-   keep their own local overrides on purpose: a consumer may link one of them
-   without app-shell.css, and would then get no net at all from here. Scroll-snap
-   carousels handle scroll-behavior themselves and are unaffected. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -118,10 +85,7 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--bg-3) transparent;
 }
-/* Firefox gets themed scrollbars via scrollbar-width/-color above; Chrome,
-   Safari, and Edge need the ::-webkit-scrollbar family too, or every
-   scrollable node in the app shell falls back to the raw OS scrollbar and
-   clashes with the dark UI. Same selector scope, same --bg-3 token. */
+
 .app::-webkit-scrollbar, .ds-stage::-webkit-scrollbar,
 .app *::-webkit-scrollbar, .ds-stage *::-webkit-scrollbar {
   width: 8px;
@@ -139,24 +103,24 @@ body {
 
 h1, .t-h1 { font-family: var(--ff-display); font-size: var(--fs-h1); line-height: var(--lh-snug); letter-spacing: var(--tr-tight); font-weight: var(--fw-semibold); margin: 0; }
 h2, .t-h2 { font-family: var(--ff-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tr-tight); font-weight: 600; margin: 0; }
-h3, .t-h3 { font-family: var(--ff-display); font-size: var(--fs-h3); line-height: var(--lh-snug); letter-spacing: -0.01em;          font-weight: 600; margin: 0; }
-h4, .t-h4 { font-family: var(--ff-display); font-size: var(--fs-h4); line-height: var(--lh-snug);                                  font-weight: 600; margin: 0; }
+h3, .t-h3 { font-family: var(--ff-display); font-size: var(--fs-h3); line-height: var(--lh-snug); letter-spacing: -0.01em; font-weight: 600; margin: 0; }
+h4, .t-h4 { font-family: var(--ff-display); font-size: var(--fs-h4); line-height: var(--lh-snug); font-weight: 600; margin: 0; }
 
 [data-typescale="app"] h1, [data-typescale="app"] .t-h1 { font-size: var(--fs-h1-app); line-height: 1.15; font-weight: var(--fw-medium); }
 [data-typescale="app"] h2, [data-typescale="app"] .t-h2 { font-size: var(--fs-h2-app); font-weight: var(--fw-medium); }
 [data-typescale="app"] h3, [data-typescale="app"] .t-h3 { font-size: var(--fs-h3-app); font-weight: var(--fw-medium); }
 [data-typescale="app"] h4, [data-typescale="app"] .t-h4 { font-size: var(--fs-h4-app); }
 
-.t-hero    { font-family: var(--ff-display); font-size: var(--fs-hero); line-height: var(--lh-tight); letter-spacing: var(--tr-tighter); font-weight: 700; margin: 0; }
-.t-mega    { font-family: var(--ff-display); font-size: var(--fs-mega); line-height: 0.92;            letter-spacing: var(--tr-tighter); font-weight: 700; margin: 0; }
+.t-hero { font-family: var(--ff-display); font-size: var(--fs-hero); line-height: var(--lh-tight); letter-spacing: var(--tr-tighter); font-weight: 700; margin: 0; }
+.t-mega { font-family: var(--ff-display); font-size: var(--fs-mega); line-height: 0.92; letter-spacing: var(--tr-tighter); font-weight: 700; margin: 0; }
 
 .t-display { font-family: var(--ff-display); font-weight: 600; letter-spacing: var(--tr-tight); }
-.t-mono    { font-family: var(--ff-mono); font-weight: 400; }
-.t-body    { font-family: var(--ff-body); }
+.t-mono { font-family: var(--ff-mono); font-weight: 400; }
+.t-body { font-family: var(--ff-body); }
 
-.t-label   { font-family: var(--ff-body); font-size: var(--fs-tiny); letter-spacing: 0; font-weight: 600; }
-.t-micro   { font-family: var(--ff-body); font-size: var(--fs-micro); letter-spacing: 0; color: var(--fg-3); font-weight: 600; }
-.t-meta    { font-family: var(--ff-body); font-size: var(--fs-sm); color: var(--fg-3); }
+.t-label { font-family: var(--ff-body); font-size: var(--fs-tiny); letter-spacing: 0; font-weight: 600; }
+.t-micro { font-family: var(--ff-body); font-size: var(--fs-micro); letter-spacing: 0; color: var(--fg-3); font-weight: 600; }
+.t-meta { font-family: var(--ff-body); font-size: var(--fs-sm); color: var(--fg-3); }
 
 .lede, .t-lede {
   font-family: var(--ff-body); font-size: var(--fs-xl);
@@ -171,27 +135,8 @@ h3 + .lede, h3 + .t-lede,
   margin-top: var(--space-2);
 }
 
-/* .app-main.narrow widens well past prose measure on wide no-sidebar
-   viewports on purpose (topbar.css) so full-width siblings like .post-meta/
-   h1/.post-index use the room. .ds-prose keeps its reading-measure cap
-   (--measure) but stayed left edge-anchored inside that wider column,
-   turning the freed width into one-sided dead whitespace on the right of
-   the article body instead of being absorbed as margin. .lede/.t-lede are
-   deliberately excluded here: when a lede is a direct .app-main.narrow
-   child (e.g. blog posts, where it sits next to .post-body rather than
-   inside a .ds-prose wrapper like docs), centering it breaks alignment
-   with the flush-left h1/body -- it should stay start-aligned like docs'
-   in-flow lede. */
 .app-main.narrow > .ds-prose {
   margin-left: auto; margin-right: auto;
-  /* .app-main is a column flex container -- an auto cross-axis margin on a
-     flex item disables stretch per spec (align-self resolves to start
-     instead), so without an explicit width these fell back to shrink-to-fit
-     content instead of filling out to their own max-width. Live-measured:
-     .ds-prose's max-width resolved to 802.96px but its rendered width was
-     only 706.5px on a page whose .app-main was 811.6px wide -- the auto
-     margins were centering a content-sized box, not clamping a full-width
-     one. width:100% restores fill-then-cap. */
   width: 100%;
 }
 
@@ -225,7 +170,7 @@ h3 + .lede, h3 + .t-lede,
   max-width: var(--measure);
   text-wrap: pretty;
 }
-.ds-prose p  { margin: 0 0 var(--space-4); }
+.ds-prose p { margin: 0 0 var(--space-4); }
 .ds-prose h1 { font-size: clamp(34px, 5.4cqi, 64px); margin-bottom: var(--space-3); }
 .ds-prose h2 { margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-h3); }
 .ds-prose h3 { margin: var(--space-5) 0 var(--space-2); font-size: var(--fs-h4); font-weight: 600; }
@@ -234,15 +179,6 @@ h3 + .lede, h3 + .t-lede,
 .ds-prose blockquote {
   margin: var(--space-5) 0;
   padding: var(--space-3) var(--space-4);
-  /* Was an accent-colored --bw-chunk rule -- the generic "AI callout" tell
-     (a colored stripe standing in for "this box matters"). .chat-bubble.chat-md
-     blockquote (chat-polish.css) already made this exact call for the chat
-     surface's own <blockquote>: a real markdown quote reads by its left rule
-     as standard quotation typography, not a semantic alert, so the rule must
-     carry no accent color, just a slimmed neutral tone off currentColor. Same
-     fix here for prose's own blockquote -- the tonal background (panel-hover)
-     already does the "this is set apart" job the accent color was redundantly
-     also trying to do. */
   border-left: var(--bw-rule) solid color-mix(in oklab, currentColor 30%, transparent);
   background: var(--panel-hover);
   border-radius: var(--r-1);
@@ -269,10 +205,7 @@ a.ds-link-accent, .ds-prose a {
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
 }
-/* Visited state was entirely absent -- a returning user had no way to tell an
-   already-read link from an unread one, the one link state browsers don't
-   fake for you. --purple-2 keeps it distinct from both the unvisited accent
-   and any hover/danger tone already in the palette. */
+
 a.ds-link-accent:visited, .ds-prose a:visited {
   color: var(--purple-2);
 }
@@ -293,7 +226,7 @@ code {
 
 pre {
   font-family: var(--ff-mono);
-  background: var(--panel-bg);
+  background: var(--bg-2);
   color: var(--panel-text, inherit);
   padding: var(--space-5);
   overflow-x: auto;

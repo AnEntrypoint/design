@@ -1,9 +1,3 @@
-/* ============================================================
-   Calendar / DatePicker / DateRangePicker — month date-grid
-   primitive plus its trigger+popover shells. Tokens only: no raw
-   color/radius/z-index literal anywhere below (lint-tokens /
-   lint-radius / lint-zindex hard gates).
-   ============================================================ */
 .ds-cal {
   display: flex;
   flex-direction: column;
@@ -104,7 +98,6 @@
   .ds-cal-nav, .ds-cal-day { transition: none; }
 }
 
-/* -- DatePicker / DateRangePicker trigger -------------------------------- */
 .ds-dp { display: inline-flex; position: relative; }
 .ds-dp-trigger {
   display: inline-flex;

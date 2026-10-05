@@ -12,14 +12,14 @@ const root = document.getElementById('root');
 
 const state = {
     section: 'profile',
-    name: 'lanmower',
-    email: 'almagestfraternite@247420.xyz',
-    handle: '@247420',
-    bio: 'creative department of the internet. always open. always a little high.',
+    name: 'Alex Morgan',
+    email: 'alex@example.com',
+    handle: '@alex',
+    bio: 'Maintainer. Reviews pull requests and publishes releases.',
     theme: 'auto',
     motion: true,
     notify: { mentions: true, releases: true, marketing: false },
-    api_key: 'sk-247420-*******-c2a',
+    api_key: 'sk-example-*******-c2a',
     dirty: false,
     lastSaved: null,
     draft: null,
@@ -216,7 +216,7 @@ function ApiKeys() {
             h('div', { class: 'ds-btn-row' },
                 h('input', { class: 'input ds-key-input', value: state.api_key, readonly: true }),
                 h('button', { class: 'btn', onclick: () => { navigator.clipboard?.writeText(state.api_key); } }, 'copy'),
-                h('button', { class: 'btn', onclick: () => { state.api_key = 'sk-247420-' + shortUid(8) + '-' + shortUid(5); state.dirty = true; kit.render(); } }, 'rotate')
+                h('button', { class: 'btn', onclick: () => { state.api_key = 'sk-example-' + shortUid(8) + '-' + shortUid(5); state.dirty = true; kit.render(); } }, 'rotate')
             ) })
     ) });
 }
@@ -282,7 +282,7 @@ function App() {
         ],
         status: Status({
             left: ['settings', '- ' + state.section, state.dirty ? '- dirty' : '- saved'],
-            right: ['247420 / mmxxvi']
+            right: ['sample profile']
         })
     });
 }

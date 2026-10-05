@@ -19,10 +19,6 @@ hero:
     - { label: "Browse kits", href: "#kits" }
 
 sidebar:
-  fab:
-    label: "open"
-    glyph: "+"
-    href: "./ui_kits/homepage/"
   bins:
     - { label: "Everything", href: "#all", active: true }
     - { label: "UI kits",    href: "#kits" }
@@ -45,7 +41,6 @@ tabs:
 
 kits:
   heading: "UI kits"
-  count: "18 surfaces"
   layout: cards
   categories:
     - { key: "ai-chat",    label: "AI & Chat" }
@@ -70,6 +65,11 @@ kits:
     - { code: "15", title: "OS shell",     sub: "Menubar, window manager, taskbar", desc: "A runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
     - { code: "16", title: "Buttons",      sub: "Every variant, size, and state",   desc: "Primary, secondary, ghost, link, and danger, plus loading and disabled states.", href: "./ui_kits/buttons/", category: "devtools" }
     - { code: "17", title: "Chat & community", sub: "Threads, composer, servers, voice, members", desc: "One chat and community app: message thread with reactions, code, images, files and link cards, plus a server rail, channels, voice strip and member list, all mountCommunityApp wired to an injected adapter.", href: "./ui_kits/community-app/", category: "ai-chat" }
+    - { code: "19", title: "System primer", sub: "Palette, type scale and primitives on one page", desc: "Every color token, type step and form primitive rendered side by side.", href: "./ui_kits/system_primer/", category: "devtools" }
+    - { code: "20", title: "Dynamic accent", sub: "Per-server accent generation", desc: "HCT tone-locked accents across eight source hues, in light and dark.", href: "./ui_kits/dynamic-accent/", category: "devtools" }
+    - { code: "21", title: "GM inspector", sub: "Sessions, process tree, PRD editors", desc: "Operator surface for gm: session list, deviations, mutables and a query builder.", href: "./ui_kits/gm_inspector/", category: "devtools" }
+    - { code: "22", title: "Slide deck", sub: "16:9 deck with keyboard navigation", desc: "Slide template with counter and SDK chrome; the deck itself is under Decks.", href: "./ui_kits/slide_deck/", category: "apps" }
+    - { code: "23", title: "Component explorer", sub: "Searchable component reference", desc: "Every exported component with a prop table and live specimens where available.", href: "./ui_kits/component_explorer/", category: "devtools" }
     - { code: "18", title: "Workspace",    sub: "Desktop-class chat-agent product", desc: "The flagship surface: WorkspaceShell, ConversationList, AgentChat, SessionDashboard.", href: "./ui_kits/workspace/", category: "ai-chat" }
 
 decks:
@@ -81,7 +81,7 @@ docs:
   heading: "Docs"
   items:
     - { code: "md",  title: "Readme", sub: "Overview, manifesto, conventions",   desc: "Start here.",                          href: "https://github.com/AnEntrypoint/design/blob/main/README.md" }
-    - { code: "md",  title: "Skill",  sub: "Authoring rules for the agent",      desc: "Editorial zine surface modes.",    href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
+    - { code: "md",  title: "Skill",  sub: "Authoring rules for the agent",      desc: "Authoring rules for agents that build on the system.",    href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
     - { code: "css", title: "Tokens", sub: "Colors, type, panel surface tokens", desc: "Canonical source of truth.",           href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
     - { code: "md",  title: "Component props", sub: "Generated prop reference", desc: "Every exported component's signature and documented parameters.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/component-props.md" }
     - { code: "live", title: "Component explorer", sub: "Interactive, searchable, live-rendered", desc: "The same {{TOTAL_COMPONENTS}} components as the reference above, each with a prop table. Live specimens exist for 4 of them (Btn, Chip, Badge, Table).", href: "./ui_kits/component_explorer/" }
@@ -92,37 +92,6 @@ docs:
 previews:
   heading: "Previews"
   base: "./preview/"
-  items:
-    - buttons
-    - colors-core
-    - colors-lore
-    - colors-semantic
-    - content
-    - data-density
-    - dateline
-    - dropzone
-    - editor-primitives
-    - file-grid
-    - file-row
-    - file-toolbar
-    - file-viewer
-    - header
-    - icons-unicode
-    - index-row
-    - inputs
-    - manifesto
-    - panel-rows
-    - rules
-    - spacing
-    - stamps
-    - stamps-lore
-    - theme-ink
-    - theme-map
-    - type-display
-    - type-mono
-    - type-prose
-    - type-scale
-    - wordmarks
 
 file_browser:
   heading: "File browser"
@@ -191,4 +160,3 @@ status_left:
   - "lf"
 status_right:
   - "anentrypoint-design"
-  - "18 kits"

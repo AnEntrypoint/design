@@ -1,29 +1,8 @@
-// Preview entrance motion — SDK-native, zero network.
-//
-// WHY THIS DOES NOT LOAD animate.css: it used to inject
-// https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css at
-// runtime and apply `animate__*` classes. That contradicted the SDK's own
-// documented position (src/motion.js:1-2: "the SDK historically wired
-// animate.css for entry flourishes. We tone this down: no animate.css"), made
-// every preview page depend on a third-party CDN for decoration, and was the
-// sole cause of a cross-origin SecurityError when reading document.styleSheets
-// (the CDN sheet is opaque to same-origin cssRules access). Worse, the link was
-// injected even under `prefers-reduced-motion: reduce`, where no animation
-// would ever play — pure privacy and latency cost for zero benefit.
-//
-// The replacement uses the SAME mechanism as the real SDK: a `data-anim`
-// in -> ready transition driven by --dur-reveal / --ease / --ease-spring,
-// wrapped in `prefers-reduced-motion: no-preference` so the animated block
-// simply does not exist for users who asked for less motion.
 (function () {
   function reduced() {
     return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  // The entrance rule. Mirrors src/motion.js's [data-anim] contract rather than
-  // inventing a second one, so a preview animates exactly like a real SDK
-  // surface. --anim-delay is a per-element custom property (the stagger), which
-  // is why this is a stylesheet and not an inline transition string.
   function installMotionStyle() {
     if (document.getElementById('preview-motion-vars')) return;
     var style = document.createElement('style');
@@ -39,9 +18,6 @@
     document.head.appendChild(style);
   }
 
-  // Stagger ceiling: past a handful of elements a per-index delay stops reading
-  // as rhythm and starts reading as lag, so it clamps (same shape as
-  // src/motion.js's Math.min(i, 6)).
   var STAGGER_MS = 40;
   var STAGGER_MAX = 8;
 
@@ -52,8 +28,6 @@
       el.style.setProperty('--anim-delay', (Math.min(i, STAGGER_MAX) * STAGGER_MS) + 'ms');
     }
     el.dataset.anim = 'in';
-    // Flip on the next frame so the browser paints the `in` state first;
-    // setting both in one frame yields no transition at all.
     requestAnimationFrame(function () {
       requestAnimationFrame(function () { el.dataset.anim = 'ready'; });
     });
@@ -74,9 +48,6 @@
     });
   }
 
-  // Per-page entrance targets. The effect vocabulary is gone: every entrance is
-  // now the one house reveal (fade + spring rise), because a preview page's job
-  // is to demonstrate the design system's motion, not a CDN library's presets.
   function presetForPage(file) {
     var presets = {
       'buttons.html': ['button, .btn, .btn-primary, .btn-ghost'],

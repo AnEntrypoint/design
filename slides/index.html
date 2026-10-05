@@ -30,23 +30,34 @@
   <link rel="stylesheet" href="../colors_and_type.css">
   <link rel="stylesheet" href="../app-shell.css">
 <style>
-  /* Slides consume panel tokens -> auto light/dark */
+  :root {
+    --slide-pad: 96px;
+    --slide-meta-size: 18px;
+    --slide-label-size: 22px;
+    --slide-hero-size: 160px;
+    --slide-closing-size: 280px;
+    --slide-h1-size: 160px;
+    --slide-sub-size: 34px;
+    --slide-quote-size: 120px;
+    --slide-quote-mark-size: 240px;
+    --slide-cmp-h-size: 96px;
+    --slide-cmp-p-size: 28px;
+    --slide-cmp-pad: 48px;
+    --slide-receipt-size: 28px;
+    --slide-closing-line-size: 32px;
+  }
   body { background: var(--panel-0); margin: 0; }
   deck-stage { display: block; }
   section {
     background: var(--panel-1);
     color: var(--panel-text);
-    padding: 96px;
+    padding: var(--slide-pad);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
-  /* Variant: elevated surface — deeper on light, lighter on dark */
   section.s-elev { background: var(--panel-2); }
   section.s-canvas { background: var(--panel-0); }
-  /* Variant: accent-filled slide — pairs bg with its contrast token
-     so light-theme (deep green) gets white text and dark-theme (mint)
-     gets ink text. Never hardcode #fff here — mint + white is invisible. */
   section.s-accent {
     background: var(--panel-accent);
     color: var(--panel-accent-fg);
@@ -61,7 +72,7 @@
     align-items: baseline;
     gap: 24px;
     font-family: var(--ff-mono);
-    font-size: 18px;
+    font-size: var(--slide-meta-size);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     padding-bottom: 12px;
@@ -71,7 +82,7 @@
 
   .s-hero {
     font-family: var(--ff-display);
-    font-size: 240px;
+    font-size: var(--slide-hero-size);
     line-height: 0.95;
     letter-spacing: -0.03em;
     font-weight: 700;
@@ -79,7 +90,7 @@
   }
   .s-h1 {
     font-family: var(--ff-display);
-    font-size: 160px;
+    font-size: var(--slide-h1-size);
     line-height: 1;
     letter-spacing: -0.02em;
     font-weight: 700;
@@ -87,14 +98,14 @@
   }
   .s-label {
     font-family: var(--ff-mono);
-    font-size: 22px;
+    font-size: var(--slide-label-size);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--panel-accent);
   }
   .s-sub {
     font-family: var(--ff-body);
-    font-size: 34px;
+    font-size: var(--slide-sub-size);
     line-height: 1.4;
     margin-top: 32px;
     max-width: 32ch;
@@ -103,7 +114,7 @@
   }
   .s-footer {
     font-family: var(--ff-mono);
-    font-size: 18px;
+    font-size: var(--slide-meta-size);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     display: flex;
@@ -113,7 +124,7 @@
   }
   .s-quote {
     font-family: var(--ff-display);
-    font-size: 120px;
+    font-size: var(--slide-quote-size);
     line-height: 1.05;
     font-style: italic;
     max-width: 22ch;
@@ -128,7 +139,7 @@
     min-height: 640px;
   }
   .cmp > div {
-    padding: 48px;
+    padding: var(--slide-cmp-pad);
     border-radius: 12px;
     box-shadow: var(--panel-shadow);
   }
@@ -136,7 +147,7 @@
   .cmp .cmp-after { background: var(--panel-accent); color: var(--panel-accent-fg); }
   .cmp .cmp-l {
     font-family: var(--ff-mono);
-    font-size: 22px;
+    font-size: var(--slide-label-size);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     margin-bottom: 24px;
@@ -145,7 +156,7 @@
   .cmp .cmp-after .cmp-l { color: var(--panel-accent-fg); opacity: 0.8; }
   .cmp .cmp-h {
     font-family: var(--ff-display);
-    font-size: 96px;
+    font-size: var(--slide-cmp-h-size);
     line-height: 1;
     letter-spacing: -0.02em;
     margin-bottom: 16px;
@@ -155,7 +166,7 @@
   .cmp .cmp-after .cmp-h { color: var(--panel-accent-fg); }
   .cmp .cmp-p {
     font-family: var(--ff-body);
-    font-size: 28px;
+    font-size: var(--slide-cmp-p-size);
     line-height: 1.45;
     color: var(--panel-text-3);
   }
@@ -163,7 +174,7 @@
 
   .receipt {
     font-family: var(--ff-mono);
-    font-size: 28px;
+    font-size: var(--slide-receipt-size);
     max-width: 900px;
     background: var(--panel-2);
     border-radius: 12px;
@@ -179,7 +190,7 @@
   .receipt-row > span:nth-child(1) {
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    font-size: 22px;
+    font-size: var(--slide-label-size);
     width: 320px;
     flex-shrink: 0;
     color: var(--panel-text-2);
@@ -190,10 +201,43 @@
     color: var(--panel-text);
   }
 :root:root .pv1{display:flex;align-items:center;height:100%}
-.s-quote-mark{font-family:var(--ff-display);font-size:240px;line-height:0.8;margin-bottom:-40px;color:var(--panel-accent)}
-.s-hero-closing{font-size:280px;color:var(--panel-accent-fg)}
-.s-closing-line{font-family:var(--ff-mono);font-size:32px;margin-top:32px;color:var(--panel-accent-fg);opacity:0.85}</style>
+.s-quote-mark{font-family:var(--ff-display);font-size:var(--slide-quote-mark-size);line-height:0.8;margin-bottom:-40px;color:var(--panel-accent)}
+.s-hero-closing{font-size:var(--slide-closing-size);color:var(--panel-accent-fg)}
+.s-closing-line{font-family:var(--ff-mono);font-size:var(--slide-closing-line-size);margin-top:32px;color:var(--panel-accent-fg);opacity:0.85}
+@media (max-width: 700px) {
+  :root {
+    --slide-pad: 56px;
+    --slide-meta-size: 36px;
+    --slide-label-size: 38px;
+    --slide-hero-size: 132px;
+    --slide-closing-size: 260px;
+    --slide-h1-size: 120px;
+    --slide-sub-size: 54px;
+    --slide-quote-size: 92px;
+    --slide-quote-mark-size: 180px;
+    --slide-cmp-h-size: 76px;
+    --slide-cmp-p-size: 44px;
+    --slide-cmp-pad: 36px;
+    --slide-receipt-size: 40px;
+    --slide-closing-line-size: 48px;
+  }
+  .cmp { grid-template-columns: 1fr; min-height: 0; }
+  .receipt-row { flex-wrap: wrap; gap: 8px; }
+  .receipt-row > span:nth-child(1) { width: 100%; }
+  .receipt-row > span:nth-child(2) { text-align: left; }
+}
+</style>
 <script type="module" src="../src/kits/slides/deck-stage.js"></script>
+<script>
+  const portrait = matchMedia('(max-width: 700px)');
+  const fitDeck = () => {
+    const deck = document.querySelector('deck-stage');
+    deck.setAttribute('width', portrait.matches ? '1080' : '1920');
+    deck.setAttribute('height', portrait.matches ? '1920' : '1080');
+  };
+  addEventListener('DOMContentLoaded', fitDeck);
+  portrait.addEventListener('change', fitDeck);
+</script>
 </head>
 <body>
 <deck-stage width="1920" height="1080">
@@ -202,10 +246,10 @@
   <div class="s-dateline"><span>247420 · an entrypoint</span><span class="spread"></span><span>apr 20 · 2026 · live</span></div>
   <div>
     <div class="s-label" style="margin-bottom:24px">template deck</div>
-    <div class="s-hero">a design system you can read<br/>in direct sunlight.</div>
+    <div class="s-hero">a design system you can read in direct sunlight.</div>
     <div class="s-sub">what changed in the 2026 restyle and what ships next.</div>
   </div>
-  <div class="s-footer"><span>deck 001</span><span>247420 / mmxxvi</span></div>
+  <div class="s-footer"><span>deck 001</span><span>247420 design system</span></div>
 </section>
 
 <section data-label="Section Intro">
@@ -271,7 +315,7 @@
       <div class="s-closing-line">questions? open a pr.</div>
     </div>
   </div>
-  <div class="s-footer"><span>fin</span><span>247420 / mmxxvi</span></div>
+  <div class="s-footer"><span>fin</span><span>247420 design system</span></div>
 </section>
 
 </deck-stage>

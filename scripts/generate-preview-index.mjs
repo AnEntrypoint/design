@@ -1,66 +1,57 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { readdirSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { PREVIEWS, PREVIEW_GROUPS, previewByName } from './preview-catalog.mjs'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const previewDir = join(root, 'preview')
 
 const files = readdirSync(previewDir)
   .filter(f => f.endsWith('.html') && f !== 'index.html')
+  .map(f => f.replace(/\.html$/, ''))
   .sort()
 
-const EXTRA_LINKS = [
-  { href: '../slides/index.html', label: 'slides deck (external demo surface)' },
-]
-
-function titleFor(file) {
-  const src = readFileSync(join(previewDir, file), 'utf8')
-  const m = src.match(/ds-demo-label[^>]*>([^<]+)</)
-  if (m) return m[1].trim()
-  const t = src.match(/<title>([^<]+)<\/title>/)
-  if (t) return t[1].trim()
-  return file.replace(/\.html$/, '').replace(/-/g, ' ')
+const uncatalogued = files.filter(name => !previewByName.has(name))
+const missing = PREVIEWS.map(p => p.name).filter(name => !files.includes(name))
+if (uncatalogued.length || missing.length) {
+  throw new Error(`preview catalog out of sync with preview/*.html: no catalog entry for [${uncatalogued.join(', ')}], no file for [${missing.join(', ')}]`)
 }
 
-const rows = files.map(f => {
-  const title = titleFor(f)
-  return `      <li><a href="./${f}">${title}</a></li>`
+const EXTRA_LINKS = [
+  { href: '../slides/index.html', title: 'Slide deck', description: 'A 16:9 deck built with the same tokens and chrome as the kits.' },
+]
+
+const row = ({ href, title, description }) => `      <li><a href="${href}">${title}</a><span class="idx-desc">${description}</span></li>`
+
+const sections = PREVIEW_GROUPS.map(group => {
+  const rows = PREVIEWS.filter(p => p.group === group).map(p => row({ href: `./${p.name}.html`, title: p.title, description: p.description })).join('\n')
+  return `<h2>${group}</h2>\n<ul>\n${rows}\n</ul>`
 }).join('\n')
 
-const extraRows = EXTRA_LINKS.map(({ href, label }) => `      <li><a href="${href}">${label}</a></li>`).join('\n')
+const extraRows = EXTRA_LINKS.map(row).join('\n')
 
 const html = `<!doctype html>
 <html lang="en" data-theme="auto" class="ds-247420"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>247420 -- component preview index</title>
+<title>Component preview index</title>
 <link rel="stylesheet" href="../colors_and_type.css">
 <link rel="stylesheet" href="../app-shell.css">
-<style>body{padding:var(--space-4);background:var(--panel-0);color:var(--panel-text);max-width:640px;margin:0 auto}
+<style>body{padding:var(--space-4);background:var(--panel-0);color:var(--panel-text);max-width:720px;margin:0 auto}
 ul{list-style:none;padding:0;margin:0}
-li{padding:var(--space-2) 0;border-bottom:1px solid var(--panel-2)}
-/* --accent-ink, never --panel-accent. The bare lead accent is a FILL: it
-   measures 1.07:1 against paper, so every link on this page was effectively
-   invisible in the light theme. --accent-ink is the readable text tone of the
-   same accent (8.85:1 on paper, and the bright lime itself on ink). This is
-   the exact split AGENTS.md documents, and this page was violating it on the
-   SDK's own front door. */
-a{color:var(--accent-ink);text-decoration:none;font-family:var(--ff-ui,var(--ff-body))}
-a:hover{text-decoration:underline}
+li{display:flex;flex-direction:column;gap:var(--space-1);padding:var(--space-2) 0;border-bottom:1px solid var(--panel-2)}
+a{color:var(--accent-ink);text-decoration:underline;font-family:var(--ff-ui,var(--ff-body));font-weight:600}
+a:hover{text-decoration-thickness:2px}
+.idx-desc{color:var(--fg-2);font-size:var(--fs-sm)}
 h1{font-size:var(--fs-h2);margin:var(--space-2) 0 var(--space-1)}
 h2{font-size:var(--fs-h4);margin:var(--space-5) 0 var(--space-2);color:var(--fg-2)}
 .idx-lede{color:var(--fg-2);margin:0 0 var(--space-4)}
-/* Page-local rather than extending .ds-demo-label, which other demo pages
-   share and which deliberately carries only size/weight/margin. This is the
-   mono kicker treatment that used to sit in an inline style attribute here. */
 .idx-kicker{font-family:var(--ff-mono);text-transform:uppercase;letter-spacing:var(--tr-label);color:var(--fg-3);font-size:var(--fs-tiny)}
 </style>
 </head><body>
 <div class="ds-demo-label idx-kicker">247420 / preview index</div>
-<h1>component previews</h1>
-<p class="idx-lede">Every component specimen in the design system. Each page renders one primitive in isolation so you can see it, measure it, and copy its markup.</p>
-<ul>
-${rows}
-</ul>
-<h2>other demo surfaces</h2>
+<h1>Component previews</h1>
+<p class="idx-lede">${files.length} specimen pages, each rendering one primitive or token set in isolation so you can see it, measure it and copy its markup.</p>
+${sections}
+<h2>Other demo surfaces</h2>
 <ul>
 ${extraRows}
 </ul>

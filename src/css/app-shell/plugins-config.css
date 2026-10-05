@@ -1,7 +1,3 @@
-/* ============================================================
-   PluginsConfig — plugin/extension list + detail modal.
-   ============================================================ */
-
 .ds-plugins-overlay {
   position: fixed; inset: 0; z-index: var(--z-modal);
   background: color-mix(in oklab, var(--ink) 35%, transparent);
@@ -87,10 +83,6 @@
 }
 .ds-plugins-version { font-size: var(--fs-micro); color: var(--fg-3); }
 
-/* Same track/knob proportions as the shared .ds-toggle primitive
-   (states-interactions.css) -- kept as its own class since ds-plugins-toggle
-   is a plain <button>+.on instead of .ds-toggle's [aria-checked] contract,
-   but sized and colored to match it exactly rather than drifting. */
 .ds-plugins-toggle {
   flex: 0 0 auto; width: 40px; height: 22px; border-radius: var(--r-pill, 999px); border: none; padding: 0;
   background: var(--rule); position: relative; cursor: pointer;

@@ -217,7 +217,7 @@ function App() {
         ],
         status: Status({
             left: ['gm inspector', '- ' + countFor(sessions) + ' sessions', '- ' + countFor(treeNodes) + ' tree nodes', '- store ' + storeState.phase],
-            right: ['247420 / mmxxvi', '- static sample data']
+            right: ['sample data']
         })
     });
 }

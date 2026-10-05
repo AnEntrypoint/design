@@ -23,10 +23,7 @@
 .btn-ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 var(--bw-hair) var(--fg); }
 .btn-ghost:hover { background: color-mix(in oklab, var(--fg) 12%, transparent); }
 .btn:active, .btn-primary:active, .btn-ghost:active { box-shadow: none; }
-/* Disabled state: --fg-3 (the tuned tertiary-text token, AA-clear against
-   every panel tier) instead of a blind opacity halving -- opacity multiplies
-   the SURROUNDING contrast too, so a light-on-dark button can drop under 3:1
-   even though "disabled" only needs to stay legible, not full-strength. */
+
 .btn:disabled, .btn-primary:disabled, .btn-ghost:disabled,
 .btn.is-disabled, .btn-primary.is-disabled, .btn-ghost.is-disabled {
   background: var(--bg-2); color: var(--fg-3); border-color: var(--rule);
@@ -42,9 +39,6 @@
   padding: 0 var(--space-2); font-size: var(--fs-tiny); gap: var(--space-1);
 }
 
-/* Link-styled button: an underline (not just color) is the affordance that
-   separates "this navigates" from "this triggers an action" -- .btn-ghost's
-   outline reads as a secondary ACTION button, not a link, at a glance. */
 .btn-link {
   display: inline-flex; align-items: center; gap: var(--space-1);
   background: none; border: none; box-shadow: none; padding: 0;
@@ -70,9 +64,6 @@
   .btn-lg, .btn-lg.btn-primary, .btn-lg.btn-ghost { min-height: 44px; }
 }
 
-/* App chrome is compact/dense (see --fs-h1-app etc in colors_and_type.css) --
-   the marketing-scale hover lift/shadow reads as an oversized flourish at
-   this density, so app-typescale buttons opt out of it deliberately. */
 [data-typescale="app"] .btn:hover,
 [data-typescale="app"] .btn-primary:hover,
 [data-typescale="app"] .btn-ghost:hover { transform: none; box-shadow: none; }
@@ -97,20 +88,10 @@
 .ds-icon-btn-base { width: 32px; height: 32px; }
 .ds-icon-btn-lg { width: 40px; height: 40px; }
 .ds-icon-btn-xl { width: 48px; height: 48px; }
-/* Touch floor for the BASE button vocabulary, not just the handful of
-   components that each declared their own. This sheet already gives 44px to
-   .row-act and .ds-filter-pill, files.css to .ds-bulkbar .btn, and
-   data-density.css to .ds-sub-btn and .ds-session-row -- five per-component
-   copies of one rule, with .btn/.btn-primary/.btn-ghost/.ds-icon-btn (the
-   vocabulary nearly every consumer actually uses) covered by none of them.
-   Measured on a real consumer: 55 of 59 visible buttons on one screen were
-   under 44px, across ten distinct heights.
-   Coarse pointers only, so mouse-driven dense toolbars are untouched. */
+
 @media (pointer: coarse) {
   .btn, .btn-primary, .btn-ghost, .ds-dropdown-trigger { min-height: 44px; }
-  /* Icon buttons were bumped to 32px here, which is larger than the base but
-     still short of the target the same sheet applies elsewhere. Square, so
-     both axes move together. */
+
   .ds-icon-btn, .ds-icon-btn-xs, .ds-icon-btn-sm, .ds-icon-btn-base {
     min-width: 44px; min-height: 44px;
   }
@@ -119,12 +100,7 @@
 .ds-icon-btn-ghost:hover { background: var(--fg); color: var(--bg); }
 .ds-icon-btn-primary { background: var(--accent); color: var(--accent-fg); }
 .ds-icon-btn-primary:hover { background: var(--fg); color: var(--accent-ink); }
-/* --warn-fg (not a bare --ink/--on-color literal): --ink only clears AA
-   against dark theme's lighter --warn (#FF5A52, 6.27:1); light theme's
-   --warn is a darker red (#C41C0C) where --ink measures just 2.92:1, well
-   under the 4.5:1 floor. --warn-fg is the theme-paired token (light: paper
-   text 5.97:1, dark: ink text 6.27:1) -- same fix as .btn-primary.danger in
-   app-shell/files.css, which had this exact light-theme regression live. */
+
 .ds-icon-btn-danger { background: var(--warn); color: var(--warn-fg); }
 .ds-icon-btn-danger:hover { filter: brightness(0.92); }
 .ds-icon-btn:active { transform: translateY(1px); }
@@ -139,22 +115,13 @@
   border-radius: var(--r-pill);
   background: var(--bg-3); color: var(--fg-2);
 }
-/* --fs-nano (11px), not --fs-pico (10px): --fs-pico sits below the 11px
-   legibility floor other small-scale labels in this system respect (see
-   .ds-stat-lbl, .ds-session-row-id), and this size is used live for the
-   workspace rail item-count badge (atoms.js Badge size="sm"). */
+
 .ds-badge.ds-badge--sm { min-width: var(--icon-xs); height: var(--icon-xs); padding: 0 var(--space-1); font-size: var(--fs-nano); }
 .ds-badge.ds-badge--lg { min-width: 22px; height: 22px; padding: 0 var(--space-2); font-size: var(--fs-tiny); }
 .ds-badge.tone-green, .ds-badge.tone-success {
   background: var(--green-tint); color: var(--green-deep);
 }
-/* tone-live is its own hue (sky), split out of the success/green group:
-   "live/broadcasting now" and "operation succeeded" are different facts and
-   read identically when both borrow the brand's accent green — a LIVE badge
-   next to an "ok" chip must not look like the same state. --sky is already
-   used for informational surfaces (ds-alert-info, audio-file icons) and is
-   never pinned by the thebird brand's `--accent:var(--green)!important`
-   override, so it stays visually distinct under every accent preset. */
+
 .ds-badge.tone-live {
   background: color-mix(in oklab, var(--sky) 22%, var(--bg)); color: var(--sky);
 }
@@ -164,13 +131,13 @@
 .ds-badge.tone-wip, .ds-badge.tone-neutral {
   background: var(--bg-3); color: var(--fg-2);
 }
-.ds-badge.tone-purple  { background: var(--purple-tint); color: var(--purple-deep); }
-.ds-badge.tone-mascot  { background: var(--mascot-tint); color: var(--ink); }
+.ds-badge.tone-purple { background: var(--purple-tint); color: var(--purple-deep); }
+.ds-badge.tone-mascot { background: var(--mascot-tint); color: var(--ink); }
 .ds-badge.tone-sun, .ds-badge.tone-yellow {
   background: var(--sun); color: var(--ink);
 }
-.ds-badge.tone-blue    { background: var(--accent-tint); color: var(--accent-ink); }
-.ds-badge.tone-orange  { background: color-mix(in oklab, var(--flame) 22%, var(--bg)); color: var(--flame); }
+.ds-badge.tone-blue { background: var(--accent-tint); color: var(--accent-ink); }
+.ds-badge.tone-orange { background: color-mix(in oklab, var(--flame) 22%, var(--bg)); color: var(--flame); }
 
 .chip {
   display: inline-flex; align-items: center; gap: var(--space-1-75);
@@ -191,24 +158,12 @@
 .chip.tone-green, .chip.tone-success, .chip.tone-ok {
   background: var(--green-tint); color: var(--green-deep);
 }
-/* tone-live: its own sky hue, split from tone-ok/tone-success — see the
-   .ds-badge.tone-live comment above for the rationale. A small pulsing dot
-   precedes the label so "live" reads as an active broadcast state, not a
-   static status chip. */
+
 .chip.tone-live {
   background: color-mix(in oklab, var(--sky) 16%, var(--bg));
   color: var(--sky);
 }
-/* The dot FLOWS; it is not absolutely positioned with padding reserved for it.
-   It used to be `position:absolute; left:10px` with `padding-left:22px` on the
-   chip, while the right padding stayed at the .chip--sm default of 8px -- so a
-   tone-live chip carried 22px of space on the left against 8px on the right and
-   its label sat 14px off centre, measured on the running page. It was the only
-   tone that did this, so in a row of chips that one looked broken.
-   .ds-filter-pill::before in this same kit already does it the right way: a
-   static dot with a margin, which the chip's own inline-flex centring then
-   treats as part of the label group. Same shape here, and the padding goes back
-   to symmetric. */
+
 .chip.tone-live::before {
   content: '';
   flex: 0 0 auto;
@@ -232,14 +187,14 @@
 .chip.tone-dim {
   background: var(--bg-3); color: var(--fg-3);
 }
-.chip.tone-purple  { background: var(--purple-tint); color: var(--purple-deep); }
-.chip.tone-mascot  { background: var(--mascot-tint); color: var(--ink); }
+.chip.tone-purple { background: var(--purple-tint); color: var(--purple-deep); }
+.chip.tone-mascot { background: var(--mascot-tint); color: var(--ink); }
 .chip.tone-sun, .chip.tone-yellow {
   background: var(--sun); color: var(--ink);
 }
-.chip.tone-disabled { background: var(--bg-3);        color: var(--fg-3); }
-.chip.tone-blue     { background: var(--accent-tint); color: var(--accent-ink); }
-.chip.tone-orange   { background: color-mix(in oklab, var(--flame) 30%, var(--sun) 70%); color: var(--ink); }
+.chip.tone-disabled { background: var(--bg-3); color: var(--fg-3); }
+.chip.tone-blue { background: var(--accent-tint); color: var(--accent-ink); }
+.chip.tone-orange { background: color-mix(in oklab, var(--flame) 30%, var(--sun) 70%); color: var(--ink); }
 
 .chip.ds-chip-removable { padding-right: var(--space-1); }
 .ds-chip-remove-btn {
@@ -265,12 +220,8 @@
   margin: 1px;
 }
 .ds-pill.tone-accent { background: var(--accent-tint); color: var(--accent-ink); }
-.ds-pill.tone-muted  { background: transparent; color: var(--fg-3); box-shadow: inset 0 0 0 1px var(--rule); }
+.ds-pill.tone-muted { background: transparent; color: var(--fg-3); box-shadow: inset 0 0 0 1px var(--rule); }
 
-/* .glyph-* sizes (14/18/22px) are for small inline text-adjacent glyphs
-   (single characters/icons sitting in a text flow), a different scale and
-   purpose than the .ds-icon-btn-* tap-target scale (22/26/32/40/48px) below --
-   the -sm/-lg naming overlap is coincidental, not a shared system. */
 .glyph {
   display: inline-flex; align-items: center; justify-content: center;
   width: 18px; height: 18px;
@@ -282,12 +233,6 @@
 .glyph-base { width: 18px; height: 18px; }
 .glyph-lg { width: 22px; height: 22px; }
 
-/* Shared empty-state base -- hero-content.css's .empty and community.css's
-   .fd-empty previously duplicated this full rule set; both are joined into
-   this selector list so the shared declarations live in one place, with
-   each keeping its own file-local rule for context-specific extras
-   (background/radius/font-size for .empty; padding for .fd-empty). New
-   consumers can add .ds-empty-state directly instead of a fresh copy. */
 .ds-empty-state, .empty, .fd-empty {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: var(--space-2);
@@ -301,9 +246,6 @@
 .ds-empty-state-msg { color: var(--fg-2); font-size: var(--fs-body); }
 .ds-empty-state-hint { color: var(--fg-3); font-size: var(--fs-tiny); max-width: 48ch; }
 
-/* .ds-tooltip — shared floating bubble (overlay-primitives/tooltip.js appends
-   one instance to <body> and repositions it via useFloating). Fade timing
-   matches the component's own 350ms hover-intent delay. */
 .ds-tooltip {
   position: fixed;
   z-index: var(--z-top);
@@ -329,21 +271,16 @@
   background: var(--fg);
   transform: rotate(45deg);
 }
-.ds-tooltip[data-placement^="top"]::after    { bottom: -3px; left: 50%; margin-left: -3px; }
+.ds-tooltip[data-placement^="top"]::after { bottom: -3px; left: 50%; margin-left: -3px; }
 .ds-tooltip[data-placement^="bottom"]::after { top: -3px; left: 50%; margin-left: -3px; }
-.ds-tooltip[data-placement^="left"]::after   { right: -3px; top: 50%; margin-top: -3px; }
-.ds-tooltip[data-placement^="right"]::after  { left: -3px; top: 50%; margin-top: -3px; }
+.ds-tooltip[data-placement^="left"]::after { right: -3px; top: 50%; margin-top: -3px; }
+.ds-tooltip[data-placement^="right"]::after { left: -3px; top: 50%; margin-top: -3px; }
 .ds-tooltip.kind-danger { background: var(--warn); color: var(--warn-fg); }
 .ds-tooltip.kind-danger::after { background: var(--warn); }
 @media (prefers-reduced-motion: reduce) {
   .ds-tooltip { transition: none; }
 }
 
-/* -- Menubar -------------------------------------------------------------
-   Row of closed triggers (mirrors .ds-dp-trigger's affordance); without
-   this the wrapper and its item divs fall back to block-level UA defaults,
-   stacking the triggers vertically and rendering them as filled buttons
-   abutting any adjacent status text. */
 .ds-menubar { display: inline-flex; align-items: center; gap: var(--space-1); }
 .ds-menubar-item { display: inline-flex; }
 .ds-menubar-trigger {

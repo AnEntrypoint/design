@@ -1,10 +1,3 @@
-/* ============================================================
-   Slider — generic single-value range input
-   Same overlay approach as .vx-vad-range (community.css): a real, fully
-   transparent <input type="range"> sits on top of a custom track/fill/thumb
-   so no browser's native thumb chrome ever paints, while pointer/keyboard/
-   a11y semantics stay on the real input underneath.
-   ============================================================ */
 .ds-slider { display: flex; flex-direction: column; gap: var(--space-1); width: 100%; }
 .ds-slider.is-disabled { opacity: 0.5; pointer-events: none; }
 .ds-slider-track {

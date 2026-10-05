@@ -10,13 +10,6 @@
   <link rel="canonical" href="https://anentrypoint.github.io/design/ui_kits/os/">
   <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
   <link rel="stylesheet" href="../../colors_and_type.css">
-  <!-- wm.css must load BEFORE theme.css: theme.css's .wm-max/.wm-min rules are
-       overrides (border-radius, focus-band geometry, print) layered on top of
-       wm.css's base geometry (.wm-win.wm-max{width:100%!important}, .wm-win.wm-min
-       .wm-body{display:none}) -- theme.css alone has no bare base rule for either
-       state outside its @media print block. Without wm.css linked, maximize only
-       applies theme.css's partial override (height changes, width does not) and
-       minimize never hides the window body at all. -->
   <link rel="stylesheet" href="../../src/kits/os/wm.css">
   <link rel="stylesheet" href="../../src/kits/os/theme.css">
   <link rel="stylesheet" href="../../src/kits/os/app-panes.css">

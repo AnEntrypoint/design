@@ -19,17 +19,11 @@ const swatchTokens = [
 
 const items = [
     { id: 'a', label: 'the mascot',   caption: '/\\_/\\\n( o.o )\n > ^ <',      tone: 'panel-2', glyph: '(=)' },
-    { id: 'b', label: 'the prompt',   caption: '> run\n$ _',                    tone: 'panel-2', glyph: '$' },
-    { id: 'c', label: 'the seal',     caption: '(( 247 ))\n(( 420 ))',          tone: 'panel-2', glyph: 'O' },
-    { id: 'd', label: 'the arrow',    caption: '- - ->\n---->\n----->',         tone: 'panel-2', glyph: '->' },
-    { id: 'e', label: 'the rule',     caption: '---------\n---------',         tone: 'panel-2', glyph: '-' },
-    { id: 'f', label: 'the corner',   caption: '+------\n|\n|',                tone: 'panel-2', glyph: '[#]' },
-    { id: 'g', label: 'the stack',    caption: '[###]\n [##]\n  [#]',          tone: 'panel-2', glyph: '[]' },
-    { id: 'h', label: 'the wave',     caption: '~~~~~~~\n~~~~~~~',              tone: 'panel-2', glyph: '~' },
-    { id: 'i', label: 'the target',   caption: '. . .\n.(o).\n. . .',          tone: 'panel-2', glyph: '(o)' },
-    { id: 'j', label: 'the ladder',   caption: '|- - -|\n|- - -|',             tone: 'panel-2', glyph: '=' },
-    { id: 'k', label: 'the spark',    caption: '\\ | /\n-- * --\n/ | \\',       tone: 'panel-2', glyph: '*' },
-    { id: 'l', label: 'the terminus', caption: '[ x ]\n[ x ]',                  tone: 'panel-2', glyph: '[x]' }
+    { id: 'b', label: 'the prompt',   caption: '> run\n$ _',                    tone: 'panel-1', glyph: '$' },
+    { id: 'd', label: 'the arrow',    caption: '- - ->\n---->\n----->',         tone: 'panel-3', glyph: '->' },
+    { id: 'g', label: 'the stack',    caption: '[###]\n [##]\n  [#]',          tone: 'panel-3', glyph: '[]' },
+    { id: 'i', label: 'the target',   caption: '. . .\n.(o).\n. . .',          tone: 'panel-3', glyph: '(o)' },
+    { id: 'k', label: 'the spark',    caption: '\\ | /\n-- * --\n/ | \\',       tone: 'panel-1', glyph: '*' },
 ];
 
 const state = { open: null, density: 'comfy' };
@@ -133,7 +127,7 @@ function App() {
         ],
         status: Status({
             left: ['gallery', '- ' + items.length + ' tiles', '- density=' + state.density],
-            right: ['247420 / mmxxvi']
+            right: ['sample tiles']
         })
     });
 }

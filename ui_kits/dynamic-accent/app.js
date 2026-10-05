@@ -53,7 +53,7 @@ function App() {
                 SwatchGrid(true)
             )
         ],
-        status: Status({ left: ['dynamic accent', '- 8 source hues', '- light + dark'], right: ['247420 / mmxxvi'] })
+        status: Status({ left: ['dynamic accent', '- 8 source hues', '- light + dark'], right: ['static demo'] })
     });
 }
 

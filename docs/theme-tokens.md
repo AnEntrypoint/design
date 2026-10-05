@@ -2,7 +2,7 @@
 
 Generated from `colors_and_type.css` via `node scripts/generate-tokens-json.mjs && node scripts/generate-theme-tokens-doc.mjs`. Do not hand-edit -- re-run after any token change.
 
-229 root tokens across 20 groups. Source snapshot: 2026-10-05T08:14:13.944Z.
+229 root tokens across 20 groups. Source snapshot: 2026-10-05T08:56:48.158Z.
 
 ## colors-type
 

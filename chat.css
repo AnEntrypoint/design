@@ -1,16 +1,4 @@
-/* chat.css — chat-specific styles, including the base .chat-* rules used by
-   Chat()/ChatMessage() (chat/threads.js, chat/message.js): .chat, .chat-head,
-   .chat-thread, .chat-msg, .chat-avatar, .chat-bubble, .chat-stack,
-   .chat-empty. This file also carries the AgentChat kit styles (the reusable
-   multi-agent orchestration chat surface, .agentchat-*). */
 
-/* Base chat surface — the default (non-flat) messenger layout: left/right
-   avatar-disc + colored-bubble turns. .chat-msg-flat further down overrides
-   these to the claude.ai/code full-width turn style; these are the rules it
-   overrides FROM, and were previously entirely undefined, so the default
-   layout rendered on raw flex/browser defaults (unstyled bubble shape, no
-   avatar depth, no defined thread padding) until a Chat() consumer supplied
-   its own colliding class names. */
 .chat {
   display: flex;
   flex-direction: column;
@@ -36,9 +24,6 @@
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-3) var(--space-4);
-  /* A short thread must not stretch its one message across the whole
-     viewport height — pack content to the bottom (where the composer is)
-     instead of centering it in a sea of empty space above and below. */
   justify-content: flex-end;
 }
 .chat-empty {
@@ -70,9 +55,6 @@
   justify-content: center;
   font-size: var(--fs-tiny);
   font-weight: var(--fw-medium);
-  /* Depth over a flat solid-color disc: a hairline inset ring plus the same
-     soft shadow --panel-shadow uses elsewhere, so avatars read as a real
-     surface element instead of a wireframe placeholder. */
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--fg) 10%, transparent), 0 1px 2px color-mix(in oklab, var(--fg) 10%, transparent);
 }
 .chat-stack {
@@ -87,9 +69,6 @@
   padding: var(--space-2) var(--space-2-75);
   background: var(--bg-2);
   color: var(--fg);
-  /* r-2, not a pill — a pill-capsule bubble read as a generic chat-template
-     shape inconsistent with every other rounded element in the app (which
-     all use the r-0..r-3 scale, never 999px). */
   border-radius: var(--r-2);
   line-height: var(--lh-base, 1.5);
   word-break: break-word;
@@ -104,17 +83,9 @@
   min-height: 0;
   flex: 1;
   gap: var(--space-2, 8px);
-  /* The chat tab opts out of .ws-main's padding (mainFlush) so the thread can
-     manage its own --measure centering, but that left every direct child -
-     controls row, heading, empty-state, composer - flush against the column
-     edge with zero gutter (the crumb bar above keeps its own padding, so the
-     content below visibly touched the edge the crumb text did not). A
-     uniform inline gutter here restores breathing room for every row without
-     disturbing --measure centering (it centers within this padded box). */
   padding-inline: var(--space-5);
 }
 
-/* agent + model picker, new/stop, status — wraps on narrow widths */
 .agentchat-controls {
   display: flex;
   align-items: center;
@@ -124,21 +95,12 @@
 .agentchat-controls .select,
 .agentchat-controls [role="combobox"] { min-width: 130px; max-width: 240px; }
 .agentchat-controls .ds-select { min-width: 130px; max-width: 240px; }
-/* One shared control metric for the most-seen chrome row (mirrors the
-   .ds-dash-toolbar precedent): selects, buttons, export acts all 32px / r-1. */
-/* The 28px right pad is OFF-SCALE ON PURPOSE: it is not rhythm but clearance
-   for the native select's dropdown arrow, which the UA draws at a fixed inset.
-   Snapping to --space-5 (32px) or --space-4 (24px) either wastes a column of
-   text width or lets long option labels run under the arrow. */
-.agentchat-controls .ds-select { min-height: 32px; padding: var(--space-1) 28px var(--space-1) var(--space-2-5); font-size: var(--fs-sm); border-radius: var(--r-1); }
+.agentchat-controls .ds-select { --select-arrow-clearance: 28px; min-height: 32px; padding: var(--space-1) var(--select-arrow-clearance) var(--space-1) var(--space-2-5); font-size: var(--fs-sm); border-radius: var(--r-1); }
 .agentchat-controls .btn, .agentchat-controls .btn-primary { padding: var(--space-1-5) var(--space-2-75); min-height: 32px; border-radius: var(--r-1); font-weight: 500; }
 @media (pointer: coarse) {
   .agentchat-controls .ds-select, .agentchat-controls .btn, .agentchat-controls .btn-primary { min-height: 44px; }
 }
 
-/* Narrow viewports: let the agent/model selects share the row two-up, then
-   stack full-width on the smallest screens, and drop the status to its own
-   line so nothing is squeezed below a usable tap size. */
 @media (max-width: 640px) {
   .agentchat-controls .select,
   .agentchat-controls .ds-select,
@@ -151,12 +113,6 @@
   .agentchat-controls [role="combobox"] { flex-basis: 100%; }
 }
 
-/* The .4em/.5em gaps on this status line, .agentchat-head below, and the
-   narrow-viewport .agentchat-controls override are em-based ON PURPOSE, not
-   un-migrated literals: each is the gap between a label and its own inline
-   text/disc, so it must track that element's font-size (these rows are scaled
-   by font-size alone at narrow widths). A --space-* px rung would hold the gap
-   fixed while the type around it shrank. */
 .agentchat-status {
   display: inline-flex;
   align-items: center;
@@ -166,7 +122,6 @@
   font-size: var(--fs-tiny);
   color: var(--fg-3);
 }
-/* status disc — a CSS-drawn dot, not a glyph; pulses while streaming */
 .agentchat-status .status-dot-disc {
   flex: none; width: 8px; height: 8px; border-radius: 50%;
   background: var(--fg-3);
@@ -175,7 +130,6 @@
   background: var(--accent);
 }
 
-/* working-directory bar */
 .agentchat-cwd {
   display: flex;
   align-items: center;
@@ -189,8 +143,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* 60ch overflows narrow phones; clamp to the viewport so the path ellipsizes
-     instead of pushing the row wider than the screen. */
   max-width: min(60ch, 60vw);
 }
 .agentchat-cwd-btn {
@@ -218,9 +170,6 @@
 .agentchat-cwd-input[aria-invalid='true'] { border-color: var(--flame); box-shadow: inset 0 0 0 var(--bw-hair) var(--flame); }
 .agentchat-cwd-input[aria-busy='true'] { border-color: var(--fg-3); box-shadow: inset 0 0 0 var(--bw-hair) var(--fg-3); }
 
-/* cwd practicality upgrade: editing mode stacks the input row plus any
-   optional roots/recent/browse rows the host wires, instead of a single flat
-   row - each sub-row wraps independently at narrow widths. */
 .agentchat-cwd-editing { flex-direction: column; align-items: stretch; }
 .agentchat-cwd-row { display: flex; align-items: center; gap: var(--space-2, 8px); flex-wrap: wrap; }
 .agentchat-cwd-roots, .agentchat-cwd-recent {
@@ -249,7 +198,6 @@
 .agentchat-cwd-browse-item:hover, .agentchat-cwd-browse-item:focus-visible { background: var(--bg-3, var(--bg)); color: var(--fg); }
 .agentchat-cwd-browse-loading, .agentchat-cwd-browse-empty { padding: var(--space-1-75) var(--space-2); font-size: var(--fs-tiny); color: var(--fg-3); }
 
-/* head + thread */
 .agentchat-head {
   display: flex;
   align-items: baseline;
@@ -257,11 +205,6 @@
 }
 .agentchat-title { font-size: inherit; margin: 0; }
 .agentchat-sub { font-size: var(--fs-tiny); color: var(--fg-3); }
-/* Optional inline content viewer beside the thread (sidePanel prop) - a
-   docstudio-cue addition (its chat view keeps a document/PDF preview open
-   next to the conversation rather than in a separate tab). SplitPanel (an
-   existing kit primitive) owns the resizable layout; these rules only shape
-   the two panes' internal structure. */
 .agentchat.has-side-panel { gap: 0; }
 .agentchat.has-side-panel > .ds-ep-split { flex: 1; min-height: 0; }
 .agentchat-main-col { display: flex; flex-direction: column; min-height: 0; height: 100%; gap: var(--space-2, 8px); }
@@ -281,12 +224,9 @@
 .agentchat-side-panel-close:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .agentchat-side-panel-body { flex: 1; min-height: 0; overflow: auto; }
 @media (max-width: 900px) {
-  /* A resizable side-by-side split is impractical below tablet width - stack
-     the preview under the thread instead of horizontally squeezing both. */
   .agentchat.has-side-panel > .ds-ep-split.horiz { flex-direction: column; }
   .agentchat-side-panel { border-left: none; border-top: var(--bw-hair) solid var(--bg-3); max-height: 45vh; }
 }
-/* Thread wrapper hosts the absolutely-positioned jump-to-latest button. */
 .agentchat-thread-wrap { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .agentchat-thread {
   flex: 1;
@@ -297,13 +237,9 @@
   gap: calc(var(--space-2, 8px) * var(--density, 1));
 }
 
-/* Jump-to-latest: hidden until the thread scroll listener adds .show. */
 .agentchat-jump {
   position: absolute; right: 16px; bottom: 12px; z-index: var(--z-raised);
   display: none; align-items: center; gap: .35em;
-  /* em, not --space-*: this pill must scale with its own --fs-tiny text so the
-     capsule stays proportional when a host overrides the chat font size. A px
-     rung would fix the padding while the label grew/shrank inside it. */
   padding: .4em .8em; font: inherit; font-size: var(--fs-tiny); cursor: pointer;
   border-radius: var(--r-pill); border: var(--bw-hair) solid var(--rule);
   background: var(--bg-2); color: var(--fg-2, var(--fg));
@@ -313,25 +249,17 @@
 .agentchat-jump:hover { background: var(--bg-3); }
 .agentchat-jump:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-/* Streaming caret: a thin blinking bar at the live edge of an assistant turn. */
 .chat-stream-caret {
-  /* margin-left:1px is OFF-SCALE ON PURPOSE — a hairline optical nudge that
-     separates the caret bar from the last glyph without reading as a space
-     character. --space-hair (2px) is already wide enough to look like one. */
-  display: inline-block; width: 2px; height: 1.05em; margin-left: 1px;
+  display: inline-block; width: 2px; height: 1.05em; --caret-glyph-gap: 1px; margin-left: var(--caret-glyph-gap);
   vertical-align: text-bottom; background: var(--accent, var(--fg));
   animation: chat-caret-blink 1s step-end infinite;
 }
 @keyframes chat-caret-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .chat-stream-caret { animation: none; opacity: .8; } }
 
-/* Per-message hover-revealed action row (copy / retry / edit). */
 .chat-msg-actions { display: flex; gap: var(--space-hair); margin-top: var(--space-half); opacity: 0; transition: opacity var(--dur-snap, .12s) var(--ease, ease); }
 .chat-msg:hover .chat-msg-actions, .chat-msg:focus-within .chat-msg-actions { opacity: 1; }
 
-/* Flat (community) rows float the action pill at the top-right corner,
-   matching stoat's MessageToolbar (top:-18px; right:16px; box-shadow pill)
-   instead of sitting in normal flow below the bubble. */
 .chat-msg.chat-msg-flat { position: relative; }
 .chat-msg-actions.chat-msg-actions-float {
   position: absolute; top: calc(-1 * var(--space-3)); right: var(--space-2);
@@ -352,12 +280,6 @@
 .chat-msg-action:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; opacity: 1; }
 .chat-msg-action.is-copied { color: var(--accent-ink); opacity: 1; }
 
-/* Empty state: a fresh thread is an invitation, not a void.
-   The em-based gap/padding through this block and the suggestion chips below
-   are OFF the --space-* px scale ON PURPOSE: the empty state is typeset copy
-   whose rhythm must track its own font-size (hosts scale this panel down on
-   narrow viewports via font-size alone). Fixed px rungs here would decouple
-   the chip padding from the label and break the capsule proportions. */
 .agentchat-empty {
   margin: auto;
   display: flex;
@@ -390,14 +312,8 @@
 }
 .agentchat-empty-suggestion:hover, .chat-empty-suggestion:hover { background: color-mix(in srgb, var(--accent, var(--fg)) 12%, transparent); }
 .agentchat-empty-suggestion:focus-visible, .chat-empty-suggestion:focus-visible { outline: 2px solid var(--accent, var(--fg)); outline-offset: var(--focus-offset); }
-/* Follow-up chips (contextual, based on the last turn) vs empty-state seed
-   chips (generic starter ideas) previously shared identical DOM shape with no
-   visual signal distinguishing them - a dashed border reads as "derived from
-   context" without introducing a new color/shape language. */
 .agentchat-followup { border-style: dashed; }
 
-/* Guided install path in the empty state: copy line + monospaced command rows
-   (each with its own copy button) + a recheck button. No animation. */
 .agentchat-install {
   margin-top: var(--space-4, 16px);
   display: flex;
@@ -430,7 +346,6 @@
 .agentchat-install-copy:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
 .agentchat-install-actions { display: flex; justify-content: flex-start; }
 
-/* Host-supplied transcript export actions riding the controls row. */
 .agentchat-export-act {
   cursor: pointer; padding: var(--space-1) var(--space-2-5); min-height: 32px;
   border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-1, 8px);
@@ -440,10 +355,6 @@
 .agentchat-export-act:hover { background: var(--bg-2); color: var(--fg); }
 .agentchat-export-act:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
 
-/* "working" tail: a long silent tool call shouldn't read as frozen.
-   em gap/padding here and on .chat-thinking below is deliberate — both tails
-   are inline status text sized off --fs-tiny, and their inset must shrink with
-   the type, not sit on a fixed px rung. */
 .agentchat-working {
   display: flex;
   align-items: center;
@@ -453,8 +364,6 @@
   font-size: var(--fs-tiny);
 }
 .agentchat-working-text { color: var(--fg-3); }
-/* Self-contained dots (chat-thinking-dots lives in a kit sheet not bundled
-   into this DS distribution, so the agentchat tail draws its own). */
 .agentchat-working .chat-thinking-dots { display: inline-flex; gap: var(--space-half); }
 .agentchat-working .chat-thinking-dots span {
   width: 5px; height: 5px; border-radius: 50%;
@@ -470,10 +379,6 @@
 @media (prefers-reduced-motion: reduce) {
   .agentchat-working .chat-thinking-dots span { animation: none; opacity: .7; }
 }
-/* Standalone thinking part (ThinkingNode renders .chat-bubble.chat-thinking with
-   .chat-thinking-dots + .chat-thinking-text OUTSIDE the .agentchat-working tail).
-   Without these base rules the dots are invisible empty spans and the text has
-   no muted tone. Reuse the agentchat-dot-fade keyframe. */
 .chat-thinking { display: flex; align-items: center; gap: .5em; color: var(--fg-3); font-size: var(--fs-tiny); background: none; padding: .3em .2em; }
 .chat-thinking-text { color: var(--fg-3); }
 .chat-thinking-dots { display: inline-flex; gap: var(--space-half); }
@@ -488,8 +393,6 @@
   .chat-thinking-dots span { animation: none; opacity: .7; }
 }
 
-/* Responsive: the control cluster + cwd bar must stay usable on phones/tablets.
-   The cwd path can't eat the row beside its label + buttons on a narrow screen. */
 .agentchat-controls { flex-wrap: wrap; }
 .agentchat-cwd-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: min(60ch, 60vw); }
 @media (max-width: 900px) {
@@ -499,67 +402,27 @@
   .agentchat-cwd-text { max-width: 42vw; }
   .agentchat-controls { gap: .4em; }
 }
-/* 360px: buttons fill full width so they remain tappable at the narrowest phones */
 @media (max-width: 400px) {
   .agentchat-controls .btn, .agentchat-controls .btn-primary,
   .agentchat-controls button { flex: 1 1 100%; }
 }
-/* Coarse-pointer (touch): raise cwd button to 44px minimum tap target */
 @media (pointer: coarse) {
   .agentchat-cwd-btn, .agentchat-cwd-chip, .agentchat-cwd-browse-item { min-height: 44px; }
 }
 
-/* ----------------------------------------------------------------------------
-   Global status disc — a CSS-drawn status indicator (no text glyph) usable
-   outside .agentchat-status (session rows, dashboard cards). Tone via modifier.
----------------------------------------------------------------------------- */
-/* Single canonical status disc — one source for live/error/connecting/stale
-   everywhere (crumb dot, conversation row, dashboard card, composer status).
-   The app's index.html disc/pulse override is deleted in favour of this. Only
-   the -live disc pulses; -stale is deliberately static (a stuck session must NOT
-   read as busy). Pulse colour is derived from --accent via color-mix so it
-   tracks the theme instead of a hardcoded rgba. */
 .status-dot-disc {
   display: inline-block; width: 8px; height: 8px; border-radius: 50%;
   background: var(--fg-3); flex: 0 0 auto;
 }
-/* Each variant carries a non-colour channel (fill vs halo vs hollow ring) so the
-   states stay distinguishable for colour-blind users and when stale/connecting
-   would otherwise share a hue. Mirrors the rail-tone shape differentiation. */
-/* One canonical stale tone (disc + word + rail share it) — a muted grey-warn,
-   deliberately desaturated so it is NOT the saturated --amber used by
-   connecting/connecting-stream (which would re-collide hues).
-
-   The mix is grey-dominant, NOT warn-dominant: at 70% --warn this measured
-   1.09:1 against --bg in dark theme (and 1.28:1 on a panel) as the `idle` word
-   in .ds-dash-status and .seg.is-idle — text that is present but effectively
-   unreadable. --fg-3 is the tier-3 TEXT tone and already carries a legible
-   contrast, so leading with it keeps the warn hue as a tint while restoring
-   readability. Measured after the change in a live browser. */
 :root { --stale: color-mix(in oklab, var(--fg-3) 78%, var(--warn)); }
-/* Live: a persistent faint concentric ring (resting shape channel, independent
-   of motion) with the pulse layered on top — so even at the pulse trough the
-   disc reads as solid-fill + ring, never a bare solid that aliases stale. */
 .status-dot-disc.status-dot-live { background: var(--accent-ink); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-ink) 30%, transparent); }
 .status-dot-disc.status-dot-error { background: var(--flame); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--flame) 38%, transparent); }
 .status-dot-disc.status-dot-connecting { background: transparent; box-shadow: inset 0 0 0 2px var(--amber); }
-/* Stale: a muted ring with a hollow centre — silhouette distinct from live's
-   filled disc and connecting's amber hollow ring (hue + inset core). */
 .status-dot-disc.status-dot-stale { background: transparent; box-shadow: inset 0 0 0 1px var(--stale), inset 0 0 0 3px var(--bg); }
 
-/* ----------------------------------------------------------------------------
-   ConversationList — left-rail "Chats" column.
----------------------------------------------------------------------------- */
 .ds-sessions { display: flex; flex-direction: column; min-height: 0; height: 100%; }
-/* agentgui's search-results export row sits as a sibling ABOVE ConversationList
-   (not threaded through any of its props) - the wrapper must replicate the
-   same flex-column layout .ds-sessions itself uses so ConversationList's own
-   internal scroll region isn't broken by an extra non-flex ancestor. */
 .agentgui-search-rail-wrap { display: flex; flex-direction: column; min-height: 0; height: 100%; }
 .agentgui-search-export-row { flex: 0 0 auto; padding: var(--space-2) var(--space-3) 0; }
-/* One row: quiet icon new-chat beside the search. The list's new-chat must not
-   repeat the rail's primary CTA - two identical green buttons on screen at
-   once read as a layout mistake, and the rail action already owns 'new'. */
 .ds-session-head { flex: 0 0 auto; display: flex; flex-direction: row; align-items: center; gap: var(--space-2); padding: var(--space-3); border-bottom: var(--bw-hair) solid var(--bg-3); }
 .ds-session-new {
   display: inline-flex; align-items: center; justify-content: center; gap: 0;
@@ -572,11 +435,8 @@
 }
 .ds-session-new > span { display: none; }
 .ds-session-new:hover { background: var(--bg-2); color: var(--fg); }
-/* Rail filter uses the shared .ds-search-input primitive (provides bg/border/
-   radius/focus-ring); only the rail layout + touch floor live here. */
 .ds-session-head .ds-search-input { order: 1; flex: 1 1 auto; min-width: 0; min-height: 36px; padding: 0 var(--space-2-5); }
 .ds-session-new:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
-/* Touch floor (must FOLLOW the base rules - same specificity, order decides). */
 @media (pointer: coarse) {
   .ds-session-new { width: 44px; min-height: 44px; }
   .ds-session-head .ds-search-input { min-height: 44px; }
@@ -591,8 +451,6 @@
 .ds-session-loadmore:hover { color: var(--fg); border-color: var(--fg-3); }
 .ds-session-loadmore:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 @media (pointer: coarse) { .ds-session-loadmore { min-height: 44px; } }
-/* Grouped rows (Today/Yesterday/...) lay out like the flat list; the section
-   label sticks to the top of the scroll area for Claude-Desktop-style headers. */
 .ds-session-group { display: flex; flex-direction: column; }
 .ds-session-group-rows { display: flex; flex-direction: column; gap: var(--space-hair); }
 .ds-session-group-label { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--bg-1, var(--bg)); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); text-transform: uppercase; letter-spacing: var(--tr-label); padding: var(--space-2) var(--space-2) var(--space-1); }
@@ -608,8 +466,6 @@
 .ds-session-row.rail-green::before, .ds-session-row.rail-purple::before, .ds-session-row.rail-flame::before {
   content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: var(--r-hair);
 }
-/* Rail tones MUST match .row.rail-* in app-shell.css so the same semantic state
-   reads as one colour across the conversation list and content rows. */
 .ds-session-row.rail-green::before { background: var(--accent-ink); }
 .ds-session-row.rail-purple::before { background: var(--purple-2); }
 .ds-session-row.rail-flame::before { background: var(--flame); }
@@ -618,15 +474,10 @@
 .ds-session-sub { font-size: var(--fs-tiny); color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-session-meta { display: flex; align-items: center; gap: var(--space-2); flex: 0 0 auto; }
 .ds-session-agent { font-size: var(--fs-tiny); color: var(--fg-3); }
-/* New-activity cue is a hollow accent RING so it stays shape-distinct from the
-   running live disc (a solid pulsing accent dot) for colour-blind / reduced-motion users. */
 .ds-session-unread { width: 8px; height: 8px; border-radius: 50%; background: transparent; box-shadow: inset 0 0 0 1.5px var(--accent); display: inline-block; flex: none; }
 .ds-session-state { padding: var(--space-5) var(--space-3); text-align: center; color: var(--fg-3); font-size: var(--fs-sm); }
 .ds-session-state-error { color: var(--flame); }
 
-/* Fork/branch tree nesting — child sessions indent under their parent with a
-   collapse toggle and a small branch glyph, mirroring pi-web's SessionSidebar
-   tree without reimplementing its inline-style React component. */
 .ds-session-row-nested { position: relative; }
 .ds-session-tree-toggle {
   flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
@@ -637,7 +488,6 @@
 .ds-session-tree-toggle:hover { color: var(--fg); }
 .ds-session-fork-icon { flex: 0 0 auto; display: inline-flex; color: var(--fg-3); }
 
-/* Hover-revealed rename/delete row actions. */
 .ds-session-row-actions { flex: 0 0 auto; display: none; align-items: center; gap: var(--space-1); }
 .ds-session-row:hover .ds-session-row-actions,
 .ds-session-row:focus-within .ds-session-row-actions { display: flex; }
@@ -650,8 +500,6 @@
 .ds-session-row-action-danger:hover { background: color-mix(in srgb, var(--flame) 12%, var(--bg-2)); color: var(--flame); border-color: var(--flame); }
 @media (pointer: coarse) { .ds-session-row-action { min-width: 44px; min-height: 44px; } }
 
-/* Inline rename — the row's title area swaps for a text input at the same
-   height; no modal, matches the row-in-place edit pattern used elsewhere. */
 .ds-session-rename-input {
   flex: 1; min-width: 0; font-size: var(--fs-sm); font-family: inherit; color: var(--fg);
   background: var(--bg); border: var(--border-w) solid var(--accent); border-radius: var(--r-1);
@@ -659,8 +507,6 @@
 }
 .ds-session-rename-input:focus-visible { outline: none; box-shadow: var(--focus-ring-inset); }
 
-/* Inline delete confirm — same row height, two flat buttons, no modal;
-   mirrors SessionDashboard's arm-then-confirm bulk-stop control. */
 .ds-session-confirm-msg { flex: 1; min-width: 0; font-size: var(--fs-sm); color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-session-confirm-actions { flex: 0 0 auto; display: flex; gap: var(--space-1); }
 .ds-session-confirm-delete, .ds-session-confirm-cancel {
@@ -673,76 +519,13 @@
 .ds-session-confirm-cancel:hover { background: var(--bg-3); color: var(--fg); }
 @media (pointer: coarse) { .ds-session-confirm-delete, .ds-session-confirm-cancel { min-height: 44px; } }
 
-/* ----------------------------------------------------------------------------
-   SessionDashboard — grid of live-session cards.
----------------------------------------------------------------------------- */
 .ds-dash { display: flex; flex-direction: column; min-height: 0; }
 
-/* Stop is a quiet destructive control in chrome, not a page-level red CTA;
-   it only goes loud while ARMED (the one-shot press-again confirm). */
-
-/* --ink, not --paper, on the armed fill: --warn (#FF5A52) is a light-ish red,
-   so paper-on-warn measures 2.72:1 (below the 4.5:1 floor) while ink-on-warn
-   measures 6.27:1. This is the same --accent/--accent-ink split the token layer
-   documents -- a saturated fill needs the dark text tone, not the light one. */
-
-/* Compact density — one line per session. The comfortable card stacks title +
-   head + meta + actions as four flex rows and measured 208px tall on a real
-   dashboard, so a 439px viewport showed two sessions at once; a command center
-   whose job is scanning many sessions cannot afford a third of a screen each.
-   Compact keeps every fact and drops only the per-card action row (reachable by
-   opening the session), laying head and meta side by side instead of stacked.
-   The grid also collapses to a single column: a min-240px card grid beside
-   one-line rows would put unrelated sessions shoulder to shoulder and destroy
-   the vertical scan the density exists to create. */
-
-/* nowrap, not wrap: with wrapping allowed a long value pushes the next cluster
-   onto its own line and the row grows. Measured that way -- rows came out 37 /
-   55 / 75 / 176px instead of one height, the 176px case being a long phase
-   label that expanded the head to 498px and squeezed meta to 202px so its
-   contents stacked. Every child now elides instead of wrapping, which is what
-   keeps a density a density. */
-
-/* The head carries status + agent + model; it may shrink and elide rather than
-   expand past its content and starve the meta cluster. */
-
-/* meta takes the remaining width and stays on one line, so a long cwd elides
-   rather than wrapping the row to two lines and defeating the density. */
-
-/* The selected/active affordances are inset shadows on the comfortable card;
-   with no border to sit inside, compact carries them as a leading rule. */
-
-/* Visual weight follows the status the host already computes -- it does NOT
-   invent a severity. A dense list where every row paints identically makes the
-   reader scan all of them; the point of ranking rows is that the eye should
-   land on the one that needs attention. `error` is reserved by the host for
-   something genuinely wrong (a blocked gate, an unparseable state, a dispatch
-   that never completed), `running` for live work, `stale` for idle -- so those
-   three get three weights and nothing else changes. */
-/* Measured baseline before choosing these: .ds-dash-agent is already
-   font-weight 600 / color --fg, and .ds-dash-cwd is already --fg-3. So the
-   differentiator cannot BE --fg-3 (that is the default) -- error must rise
-   above the baseline and idle must fall below it. */
-
-/* Idle recedes by weight and by the tier-2 tone -- NOT by opacity, which would
-   scale every child including the status word and drop it under the contrast
-   floor. --fg-2 stays a real text tone. */
-
-/* running tone unified on --accent (the later is-running rule + the live disc all
-   use --accent); the dead var(--green) duplicate that lived here was removed. */
-
-/* ----------------------------------------------------------------------------
-   ContextPane — compact right-hand context panel for the chat surface.
----------------------------------------------------------------------------- */
 .ds-context { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3); }
 .ds-context .panel { background: var(--bg-2); border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-2); }
 .ds-context .row .meta { font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--fg-2); }
 .ds-context .row .sub { font-size: var(--fs-xs); color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-context-actions { display: flex; gap: var(--space-2); }
-/* Lighter fact groups for secondary context blocks (conversation/last turn/
-   recent files): a small caps label + Row list with no card chrome, so a
-   2-row fact doesn't compete visually with the primary bordered panel above
-   it. Separated from neighbors by a hairline rule, not a border box. */
 .ds-context-group { padding-top: var(--space-3); border-top: var(--bw-hair) solid var(--rule); }
 .ds-context-group-label {
   font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3);
@@ -751,12 +534,6 @@
 }
 .ds-context-group .row + .row { margin-top: var(--space-hair); }
 
-/* ----------------------------------------------------------------------------
-   ContextMeter / ContextTreemap / ContextXRayPanel — token/cost breakdown
-   surfaces added alongside ContextPane. Tone classes share one small
-   vocabulary (system/user/assistant/other) across all three components so a
-   segment's color pairs up wherever it appears.
----------------------------------------------------------------------------- */
 .ds-context-meter { display: flex; flex-direction: column; gap: var(--space-1); }
 .ds-context-meter-track {
   display: flex; width: 100%; height: 8px; border-radius: var(--r-hair);
@@ -792,14 +569,6 @@
 .ds-context-xray-row { display: flex; justify-content: space-between; font-size: var(--fs-tiny); color: var(--fg-2); }
 .ds-context-xray-empty { padding: var(--space-3); color: var(--fg-3); font-size: var(--fs-sm); }
 
-/* ============================================================================
-   Cohesion sweep (gui-cohesion.js): one-product polish across surfaces.
-============================================================================ */
-
-/* --- A1/A2/E3: per-block code copy. The <pre> is wrapped in .chat-code-block
-   (position:relative) so the copy button sits top-right and reveals on hover/
-   focus-within, matching the .chat-msg-actions pattern. The structured CodeNode
-   head + preview head place the button inline (always visible). --- */
 .chat-code-block { position: relative; }
 .chat-code-copy {
   position: absolute; top: 6px; right: 6px;
@@ -813,36 +582,22 @@
 .chat-code-block:hover .chat-code-copy, .chat-code-block:focus-within .chat-code-copy { opacity: 1; }
 .chat-code-copy.is-copied { color: var(--accent-ink); border-color: var(--accent); }
 .chat-code-copy:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; opacity: 1; }
-/* Head-placed copy (structured CodeNode + FilePreviewCode) is always visible. */
 .chat-code-head .spread { flex: 1; }
 .chat-code-copy-head { position: static; opacity: 1; }
 
-/* --- B1: streaming pre shell — monospaced bubble while a fenced block streams,
-   so it does not reflow prose->block on settle. --- */
 .chat-stream-pre pre { margin: 0; white-space: pre-wrap; word-break: break-word; font-family: var(--ff-mono); font-size: var(--fs-sm); }
-/* Persistent minimal chrome so a fenced block does not pop a border + lang tab +
-   copy button only on settle - the streaming slab already reads as a code block. */
 .chat-stream-pre { position: relative; }
 .chat-stream-pre pre {
   border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1);
   padding: var(--space-3); background: color-mix(in oklab, var(--fg) 4%, transparent);
 }
 
-/* .cm-composer-wrap / the reply-preview banner now live in
-   src/css/app-shell/chat-polish.css (the always-loaded app-shell barrel) so
-   every consumer of either sheet gets one definition instead of two
-   divergent ones cascading against each other. */
-
-/* --- A5: composer context line (agent / model / cwd at point of typing). --- */
 .chat-composer-context {
   display: block; width: 100%; text-align: left; padding: var(--space-1) var(--space-3) 0;
   background: none; border: none; cursor: default; color: var(--fg-3);
   font-family: var(--ff-mono); font-size: var(--fs-tiny);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-/* Below ~480px a single nowrap line silently truncates most of the agent /
-   model / cwd context (no way to recover it - no title attr on the container,
-   only on individual bits). Let it wrap instead of clipping. */
 @media (max-width: 480px) {
   .chat-composer-context { white-space: normal; overflow: visible; text-overflow: clip; }
 }
@@ -850,16 +605,8 @@ button.chat-composer-context { cursor: pointer; }
 button.chat-composer-context:hover { color: var(--fg-2); }
 button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-/* Composer send/cancel button row: a non-wrapping cluster pinned to the
-   bottom-right of the flex-end composer (was unstyled, so the send button
-   could wrap below the textarea instead of anchoring like claude.ai/code). */
 .chat-composer-toolbar { display: flex; align-items: center; gap: var(--space-1); flex: 0 0 auto; margin-left: auto; align-self: flex-end; }
-/* File-picker input stays in the DOM (so .click() works) but never visible or
-   in the tab order -- the visible affordance is the paperclip button above it. */
 .chat-composer-attach-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-/* Unify the toolbar cluster on one 32px / --r-1 square metric (the round 40px
-   ghost buttons + 36px square send read as two button systems; the kit moved
-   .btn* off --r-pill). chat.css loads after app-shell.css so this wins by order. */
 .chat-composer-toolbar .composer-btn,
 .chat-composer-toolbar .send { width: 32px; height: 32px; border-radius: var(--r-1); }
 @media (pointer: coarse) {
@@ -867,46 +614,21 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .chat-composer-toolbar .send { width: 44px; height: 44px; }
 }
 
-/* --- B2: follow-up chips below the last settled assistant turn. --- */
 .agentchat-followups { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--space-3); }
 
-/* --- C1: stale/idle dashboard status (static, NOT pulsing). --- */
-
-/* --- C2: dashboard sort/filter toolbar + stream-state line. --- */
-/* The toolbar is part of the ONE header row (count | heartbeat ... filter,
-   sort, errors-only, stop): compact controls that align on a shared 32px
-   height, never a stacked full-width form column. */
-
-/* --- C3: per-card select checkbox. --- */
-
-/* --- C5: active dashboard card (current conversation). --- */
-
-/* Stale/idle card: a positive amber inset bar (mirrors is-active) so a stuck
-   agent is flagged in a dense grid, not merely faded near-invisibly. The word
-   'idle' co-carries state, so this stays colour-blind safe. */
-
-/* Active identity always wins over stale amber when both classes are present. */
-
-/* --- H3: dashboard live disc pulses; stale/error do not (handled by H1). --- */
-
-/* --- C6: per-tab conversation-list caption. --- */
 .ds-session-caption { padding: var(--space-2) var(--space-3) 0; font-size: var(--fs-tiny); color: var(--fg-3); }
 
-/* --- F1: context-pane empty state. --- */
 .ds-context-empty { padding: var(--space-4) var(--space-3); color: var(--fg-3); font-size: var(--fs-sm); line-height: 1.5; }
 
-/* --- E1: inline file preview pane (split view, non-modal). --- */
 .ds-preview-pane { display: flex; flex-direction: column; min-height: 0; height: 100%; overflow: hidden; }
 .ds-preview-pane:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: calc(var(--focus-offset) * -1); }
 .ds-preview-pane .ds-preview-body { flex: 1; min-height: 0; overflow: auto; }
 .ds-preview-pane-empty { align-items: center; justify-content: center; color: var(--fg-3); font-size: var(--fs-sm); }
 .ds-preview-code-wrap { display: flex; flex-direction: column; min-height: 0; }
 .ds-preview-code-head { flex: 0 0 auto; }
-/* --- E2: prev/next stepper in preview head. --- */
 .ds-preview-step { display: inline-flex; gap: var(--space-hair); }
 .ds-preview-step .ds-file-act { min-width: 40px; padding: 0 var(--space-1-75); font-family: var(--ff-body); font-size: var(--fs-tiny); }
 
-/* --- D1: file grid "show more" row. --- */
 .ds-file-more { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); justify-content: center; }
 .ds-file-more-count { font-size: var(--fs-tiny); color: var(--fg-3); }
 .ds-file-more-btn {
@@ -915,10 +637,8 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   font-family: var(--ff-body); font-size: var(--fs-tiny);
 }
 .ds-file-more-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
-/* --- D3: locked/no-access file row. --- */
 .ds-file-row.is-locked { opacity: .6; }
 
-/* --- D4: roots picker segmented control. --- */
 .ds-roots-picker { display: inline-flex; gap: var(--space-hair); padding: var(--space-hair); background: var(--bg-2); border-radius: var(--r-1); }
 .ds-roots-tab {
   padding: var(--space-1) var(--space-2-5); min-height: 32px; border: none; border-radius: var(--r-1);
@@ -929,11 +649,12 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .ds-roots-tab.active { background: var(--bg); color: var(--fg); }
 .ds-roots-tab:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
 
-/* --- H4: touch targets. On a coarse pointer / narrow screen the hover-revealed
-   action rows are made permanently visible and small controls floor to 44px so
-   they are reachable by finger. --- */
 @media (pointer: coarse), (max-width: 640px) {
-  .chat-msg-actions { opacity: 1; }
+  .chat-msg-actions { opacity: 1; pointer-events: auto; }
+  .chat-msg .chat-msg-actions.chat-msg-actions-float {
+    position: static; align-self: flex-start; padding: 0;
+    background: none; box-shadow: none; border: 0;
+  }
   .chat-code-copy { opacity: 1; min-width: 48px; min-height: 44px; }
   .chat-tool-copy { opacity: 1; min-width: 44px; min-height: 44px; }
   .chat-msg-action { min-width: 44px; height: 44px; }
@@ -942,9 +663,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .agentchat-install-copy { min-height: 44px; min-width: 44px; }
 }
 
-/* --- SessionMeta: middot-separated session metadata strip. Class is
-   .ds-session-meta-strip (.ds-session-meta is taken by ConversationList row
-   meta above). Wraps at narrow widths. --- */
 .ds-session-meta-strip {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2);
   font-size: var(--fs-tiny); color: var(--fg-3);
@@ -964,14 +682,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .ds-session-meta-copy, .ds-session-meta-action { min-height: 44px; min-width: 44px; }
 }
 
-/* ============================================================================
-   Logic/predictability sweep (2026-06-10): composer ergonomics, turn notices,
-   windowed thread, dashboard stopping/external states, cwd validation.
-============================================================================ */
-
-/* Enter-to-send hint: visible at rest so a new user with an empty composer
-   can discover Enter-vs-Shift+Enter without having to focus it first;
-   hidden under 420px to save rows. */
 .chat-composer-hint {
   display: block; width: 100%; order: 5; padding: var(--space-hair) var(--space-1) 0;
   font-size: var(--fs-micro); color: var(--fg-3);
@@ -980,22 +690,16 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .chat-composer .chat-composer-hint { display: none; }
 }
 
-/* Transient composer note (paste/drop not supported), aria-live polite. */
 .chat-composer-note {
   padding: var(--space-1) var(--space-3); font-size: var(--fs-tiny); color: var(--fg-2);
 }
 
-/* Streaming elapsed-time counter: ticks m:ss while a turn is in flight.
-   Tabular-nums so the digits don't jitter the layout every second. */
 .chat-composer-elapsed {
   order: 5; padding: var(--space-hair) var(--space-1) 0;
   font-size: var(--fs-micro); color: var(--fg-3);
   font-variant-numeric: tabular-nums; font-feature-settings: 'tnum';
 }
 
-/* Detected-attachment badge: a dismissible pill above the textarea, styled
-   like the composer-note treatment (same tone/scale) rather than inventing
-   new chrome. */
 .chat-composer-detected-badge {
   display: flex; align-items: center; gap: var(--space-2, 8px);
   padding: var(--space-1) var(--space-3); font-size: var(--fs-tiny); color: var(--fg-2);
@@ -1014,10 +718,8 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .chat-composer-detected-dismiss { min-height: 44px; min-width: 44px; }
 }
 
-/* Drag-over ring: token accent, never a hex. */
 .chat-composer.dragover { outline: var(--focus-w) solid var(--focus-color); outline-offset: calc(var(--focus-offset) * -1); border-radius: var(--r-2); }
 
-/* ChatSuggestions — blank-thread composer-priming CTA. */
 .chat-suggestions {
   display: flex; flex-direction: column; align-items: center; text-align: center;
   gap: var(--space-2); padding: var(--space-6) var(--space-3);
@@ -1044,7 +746,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .chat-suggestions-chip { min-height: 44px; }
 }
 
-/* Per-bit composer context: only the bit that owns a control is a button. */
 .chat-composer-context-bit {
   display: inline; padding: 0; margin: 0;
   background: none; border: none; cursor: pointer;
@@ -1056,17 +757,12 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .chat-composer-context-bit { min-height: 44px; }
 }
 
-/* Out-of-band turn notices: neutral tone (NOT error red) — a stopped or
-   incomplete turn must not read as a finished answer. */
 .chat-msg-notice {
   margin-top: var(--space-1); padding: var(--space-1-75) var(--space-2-5);
   border: var(--bw-hair) solid var(--rule); border-radius: var(--r-2);
   background: var(--bg-2); color: var(--fg-2); font-size: var(--fs-tiny);
 }
 .chat-msg-notice.is-incomplete { border-style: dashed; }
-/* Error is the one genuine failure state among these notices — reserving
-   the destructive tone for it (unlike stopped/incomplete, which are neutral
-   "not a finished answer" states, not failures). */
 .chat-msg-notice.is-error {
   border-color: var(--danger); color: var(--danger-ink, var(--danger));
   display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;
@@ -1079,13 +775,11 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-msg-retry-btn:hover { background: var(--danger); color: var(--bg); }
 .chat-msg-retry-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-/* Tail-window streaming head ('streaming · N KB so far'). */
 .chat-stream-head {
   padding: var(--space-hair) 0 var(--space-1-75); font-family: var(--ff-mono);
   font-size: var(--fs-micro); color: var(--fg-3);
 }
 
-/* Windowed thread: 'show N earlier turns' control at the top. */
 .agentchat-earlier {
   display: flex; align-items: center; justify-content: center;
   gap: var(--space-3); padding: var(--space-2) var(--space-3);
@@ -1102,60 +796,11 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .agentchat-earlier-btn { min-height: 44px; }
 }
 
-/* Inline cwd validation line (checking / error) under the cwd input. */
 .agentchat-cwd-hint { font-size: var(--fs-tiny); color: var(--fg-3); }
 .agentchat-cwd-hint.is-error { color: var(--flame); }
 .agentchat-cwd-hint.is-checking { color: var(--fg-2); font-style: italic; }
 
-/* Dashboard: shared session title heading (same string as the rails). */
-
-/* Stopping state: in-flight cancel reads distinctly from running/error. */
-
-/* External (observed, not owned) session card: no stop control exists. */
-
-/* One connection vocabulary: offline (is-lost kept as legacy alias). */
-
-/* ============================================================
-   10th run - Claude-Code-web design-language parity
-   ============================================================ */
-
-/* Flat full-width chat turns (claude.ai/code), replacing the messenger
-   avatar-disc + colored-bubble layout. AgentChat passes flat:true; the demo
-   Chat keeps the bubble layout. Turns are full-width to --measure; the user vs
-   assistant distinction is a role label + a faint assistant background. */
-/* Center the flat turn at the reading measure so a wide content column does not
-   dump a one-sided dead gutter (claude.ai/code centers the thread). Padding
-   scales through --density so data-density=compact tightens the thread. */
-/* width: 100% (not shrink-to-content) so every row spans the full thread
-   regardless of message length -- the inner .chat-stack still caps at
-   --measure for a readable line length, but the ROW itself (background tint,
-   click target) must stay full-width or short messages visually indent from
-   both edges instead of sitting flush like every other row (a Discord/
-   stoat/Revolt row-list convention; the claude.ai/code source this variant
-   was built for is a single-column reading surface where shrink-to-content
-   doesn't matter).
-   Was ALSO carrying max-width:var(--measure); margin-inline:auto -- directly
-   contradicting the comment above (capping+centering the ROW is the opposite
-   of "full-width... flush like every other row"), and redundant with
-   .chat-stack's own max-width:var(--measure) below, which already owns
-   reading-measure line length. On any thread wider than --measure (the
-   common case -- confirmed live on community-app at 1100px vs. --measure's
-   ~714px) this centered the row with large auto margins, visibly breaking
-   the flush-row look the file's own convention calls for. It was also the
-   source of a genuine "message box moves on hover" bug: those auto margins
-   are the ONLY thing in this rule with no explicit non-auto value, so any
-   layout recalculation that touches this row (confirmed live via CDP:
-   identical matched CSS rules and custom-property values before/after
-   hover, yet the flex auto-margin distribution resolved differently) had
-   nothing to anchor it, letting the row visibly jump. Dropping both
-   properties fixes the row width to match the documented Discord-style
-   convention and removes the auto margins entirely, so there is nothing
-   left for any recalculation to disturb. */
 .chat-msg-flat { display: block; width: 100%; padding: calc(var(--space-3) * var(--density, 1)) var(--space-4); margin-block: 0; background: none; border-radius: var(--r-2); }
-/* .chat-msg.you's row-reverse is a messenger-bubble convention (own turns
-   flip to the right); a flat message-row list (stoat/Discord/Revolt
-   convention) keeps every row's avatar on the same left edge regardless of
-   author, so this override wins back the base .chat-msg row direction. */
 .chat-msg-flat.you { flex-direction: row; }
 .chat-msg-flat.them { background: color-mix(in oklab, var(--fg) 3%, transparent); }
 .chat-msg-flat.you { background: none; }
@@ -1165,38 +810,14 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-msg-flat.you .chat-role { color: var(--accent-ink); }
 .chat-msg-flat .chat-bubble { background: none; border: none; border-radius: 0; padding: 0; max-width: 100%; box-shadow: none; transform: none; }
 .chat-msg-flat.you .chat-bubble { background: none; color: inherit; }
-/* Flat user turns reset their bubble to transparent, but the messenger rule
-   (.chat-msg.you .chat-bubble code) tints inline code on --accent-fg, which is
-   invisible/wrong on the bare page surface. Reset to the neutral fg-10% tint the
-   sibling assistant turns get (wins over app-shell.css by later source order). */
 .chat-msg-flat.you .chat-bubble code { background: color-mix(in oklab, var(--fg) 10%, transparent); }
-/* Flat turns strip the bubble padding, so the role label sat 4px above the first
-   paragraph and the .them tint hugged text flush. Restore reading rhythm + give
-   the tinted assistant row inner breathing room so it reads as a card. */
 .chat-msg-flat .chat-role { margin-bottom: var(--space-2); }
 .chat-msg-flat .chat-md { line-height: var(--lh-long); }
 .chat-msg-flat .chat-md p { margin: var(--space-2) 0; }
-/* The `+ 2px` is an OFF-SCALE optical correction, not a rhythm step: the tinted
-   assistant row needs marginally more inset than the untinted .you row so the
-   fill does not appear to crowd the text. Expressing it as a --space-* rung
-   would make it a visible step rather than the sub-perceptual nudge intended. */
-.chat-msg-flat.them { padding-block: calc(var(--space-3) * var(--density, 1) + 2px); }
-/* Consecutive same-author turns (stoat/for-web MessageContainer's `tail`
-   variant, Container.tsx): drop from the full inter-group gap to a hairline
-   pad so the run reads as one block, matching for-web's 2px 0 tail row vs
-   its 12px messageGroupSpacing default between distinct author groups. */
+.chat-msg-flat.them { --optical-inset: 2px; padding-block: calc(var(--space-3) * var(--density, 1) + var(--optical-inset)); }
 .chat-msg-flat.chat-msg-tail,
 .chat-msg-flat.chat-msg-tail.them { padding-block: var(--space-half, 2px); }
-/* Inline backtick code (renderInline tags <code class=chat-tick>) - was a dead
-   class relying on the generic .chat-bubble code rule, so notices / non-bubble
-   surfaces got unstyled monospace. Self-style it regardless of container. */
-/* 1px vertical is OFF-SCALE ON PURPOSE — inline code sits INSIDE a line of running
-   prose; any larger vertical pad makes the tinted box overlap the lines above and
-   below. Horizontal is on the scale. */
-.chat-tick { font-family: var(--ff-mono); font-size: .92em; background: color-mix(in oklab, var(--fg) 10%, transparent); padding: 1px var(--space-1-75); border-radius: var(--r-1); }
-/* ||text|| spoiler (renderInline + markdown.js's marked extension both tag
-   <span class=chat-spoiler>) — stoat for-web's RenderSpoiler: opaque/blurred
-   until clicked, then stays revealed (no re-hide on leave). */
+.chat-tick { font-family: var(--ff-mono); font-size: .92em; background: color-mix(in oklab, var(--fg) 10%, transparent); --inline-chip-pad-y: 1px; padding: var(--inline-chip-pad-y) var(--space-1-75); border-radius: var(--r-1); }
 .chat-spoiler {
   border-radius: var(--r-1);
   padding: 0 var(--space-1-75);
@@ -1213,23 +834,10 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   background: color-mix(in oklab, var(--fg) 10%, transparent);
 }
 .chat-spoiler.is-revealed * { opacity: 1; pointer-events: auto; }
-/* Structured tool/code output earns more width than running prose (claude.ai/code
-   lets diffs/tables break out wider than the reading measure). A flat turn that
-   contains a tool card or code block widens its stack past --measure; prose-only
-   turns stay clamped. (The row itself has no max-width to widen since the fix
-   above -- only .chat-stack carries the reading-measure cap now.) */
 .chat-msg-flat:has(.chat-tool) .chat-stack,
 .chat-msg-flat:has(.chat-bubble.chat-code) .chat-stack { max-width: calc(var(--measure) + 14ch); }
-/* Hover tint exceeds each role's REST tint so the row gives feedback (and the
-   ladder stays monotonic): assistant 5% > its 3% rest; user 4% > transparent. */
 .chat-msg-flat.them:hover { background: color-mix(in oklab, var(--fg) 5%, transparent); }
 .chat-msg-flat.you:hover { background: color-mix(in oklab, var(--fg) 4%, transparent); }
-/* A turn whose only assistant content is a bordered tool card or code block
-   already carries its own --bg surface + rule border; the turn-level .them tint
-   would stack a second, wider-than-measure surface behind it. Suppress it so the
-   card is the single surface (claude.ai/code keeps tool cards on bare canvas).
-   Selectors mirror the breakout pair above so suppression + widening always
-   cover the same turns. */
 .chat-msg-flat.them:has(.chat-tool),
 .chat-msg-flat.them:has(.chat-bubble.chat-code),
 .chat-msg-flat.them:has(.chat-tool):hover,
@@ -1237,10 +845,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-msg-flat:hover .chat-bubble { transform: none; box-shadow: none; background: none; }
 .chat-msg-flat .chat-avatar { display: none; }
 
-/* Tool-call card: a bordered, status-toned, scannable card (claude.ai/code),
-   not the raw mascot-tinted details dump. The node keeps the .chat-bubble
-   class, so these rules de-frame it and restyle. Placed after the flat-bubble
-   reset so they win on equal specificity. */
 .chat-msg .chat-tool {
   display: block; max-width: 100%; padding: 0; margin: var(--space-1) 0;
   background: var(--bg); color: var(--fg);
@@ -1268,15 +872,8 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 }
 .chat-msg .chat-tool.tool-running .chat-tool-status { color: var(--accent-ink); background: color-mix(in oklab, var(--accent) 12%, transparent); }
 .chat-msg .chat-tool.tool-error .chat-tool-status { color: var(--flame); background: color-mix(in oklab, var(--flame) 12%, transparent); }
-/* Completed tool: a positive (success) tone so done reads distinctly from the
-   neutral pill and from the accent-toned running pill. --success/--green-2
-   measures under 4.5:1 as TEXT on paper/bg-2 (fine at 12%-tint fill/non-text
-   use) - --green is the text-safe deep tone, same split the accent/accent-ink
-   pair already uses. */
 .chat-msg .chat-tool.tool-done .chat-tool-status { color: var(--green); background: color-mix(in oklab, var(--success) 12%, transparent); }
 .chat-tool-body { border-top: var(--bw-hair) solid var(--rule); padding: var(--space-2) var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); }
-/* details' intrinsic min-content sizing: an unbroken token in the pre must not
-   widen the tool card past the bubble column. */
 .chat-msg .chat-tool, .chat-tool-body, .chat-tool-section { min-width: 0; max-width: 100%; }
 .chat-tool-section { display: flex; flex-direction: column; gap: var(--space-1); }
 .chat-tool-section-label { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-tiny); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tr-caps); color: var(--fg-3); }
@@ -1299,17 +896,12 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-thinking-settled > summary { cursor: pointer; color: var(--fg-3); font-size: var(--fs-tiny); }
 .chat-thinking-body { margin-top: var(--space-1); padding-left: var(--space-3); border-left: var(--bw-hair) solid var(--rule); color: var(--fg-2); font-size: var(--fs-tiny); white-space: pre-wrap; }
 .chat-image-blocked { color: var(--fg-3); font-style: italic; }
-/* Nested fold for an args/result body past LONG_BODY_THRESHOLD (agent-nodes.js)
-   -- collapsed by default so a huge result's <pre> never enters the DOM until
-   the user expands it, independent of the outer card's own open/closed state. */
 .chat-tool-longbody { margin: 0; }
 .chat-tool-longbody > .chat-tool-pre { margin-top: var(--space-1); }
 .chat-tool-longbody-summary { cursor: pointer; font-size: var(--fs-tiny); color: var(--fg-3); padding: var(--space-1) 0; user-select: none; }
 .chat-tool-longbody-summary:hover { color: var(--fg-2); }
 .chat-tool-longbody[open] > .chat-tool-longbody-summary { color: var(--fg-2); }
 
-/* Fenced-code language tab on every rendered-markdown block (not just the
-   structured CodeNode). injectCodeCopy reads the language- class. */
 .chat-code-block { position: relative; }
 .chat-code-lang {
   position: absolute; top: 0; left: 0; z-index: var(--z-raised);
@@ -1320,7 +912,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 }
 .chat-code-block pre { padding-top: calc(var(--space-3) + 4px); }
 
-/* Motion + microinteraction polish (all reduced-motion guarded). */
 .ds-session-row { transition: background var(--dur-snap) var(--ease), box-shadow var(--dur-snap) var(--ease); }
 @media (prefers-reduced-motion: no-preference) {
   .agentchat-thread { scroll-behavior: smooth; }
@@ -1335,24 +926,8 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 }
 @keyframes ds-arm-pulse { 0% { opacity: 0.55; } 100% { opacity: 1; } }
 
-/* Error card carries the strongest left-bar tone (flame > stale amber > active
-   accent), placed last so its inset bar wins source order over is-active/is-stale.
-   The full-perimeter border-color (line ~396) stays for extra severity emphasis. */
-
-/* A newly-arrived AND errored card: keep the LEFT inset bar flame (severity
-   precedence, never accent) while restoring the is-new arrival outline as a
-   full-perimeter accent glow that does not collide with the flame bar. Placed
-   after both is-new and is-error so it wins source order. */
-
 @keyframes ds-card-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-/* Live command-center: status-bucket groups + header breakdown + heartbeat. */
-
-/* Shape-channel discs mirror the .status-dot-disc vocabulary (solid /
-   solid+halo / hollow ring) so a colour-blind user can scan the breakdown by
-   shape, not hue alone. CSS-drawn discs, not glyphs (glyph policy clean). */
-
-/* Conversation-rail loading skeleton (cold ccsniff walk). */
 .ds-session-row-skeleton { display: flex; flex-direction: column; gap: var(--space-1-75); padding: var(--space-2) var(--space-3); }
 .ds-session-row-skeleton .ds-skel { border-radius: var(--r-1); }
 .ds-session-row-skeleton .ds-skel-title { height: 12px; width: 70%; }
@@ -1360,7 +935,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 @media (prefers-reduced-motion: no-preference) {
 }
 
-/* Agent-picker list loading skeleton (shares the .ds-skel shimmer base above). */
 .ds-agent-list-skeleton { display: flex; flex-direction: column; gap: var(--space-2); }
 .ds-agent-row-skeleton { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); }
 .ds-agent-row-skeleton .ds-skel { border-radius: var(--r-1); }
@@ -1371,8 +945,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 @media (prefers-reduced-motion: no-preference) {
 }
 
-/* File code preview: paint Prism tokens (the bundle scoped them to the chat
-   block only) + an optional non-selectable line-number gutter. */
 .ds-preview-code code { color: var(--fg); }
 .ds-preview-code .token.comment, .ds-preview-code .token.prolog, .ds-preview-code .token.doctype, .ds-preview-code .token.cdata { color: var(--fg-3); }
 .ds-preview-code .token.punctuation { color: var(--fg-2); }
@@ -1384,7 +956,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .ds-preview-code.has-gutter code { display: block; min-width: 0; overflow-x: auto; }
 .ds-preview-gutter { user-select: none; text-align: right; padding: 0 var(--space-2) 0 0; color: var(--fg-3); border-right: var(--bw-hair) solid var(--rule); font-family: var(--ff-mono); white-space: pre; line-height: inherit; }
 
-/* Image preview: fit/actual control + alpha checkerboard. */
 .ds-preview-media-controls { display: flex; gap: var(--space-2); padding: var(--space-2); justify-content: center; }
 .ds-preview-media-alpha {
   background-image: linear-gradient(45deg, var(--bg-3) 25%, transparent 25%), linear-gradient(-45deg, var(--bg-3) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--bg-3) 75%), linear-gradient(-45deg, transparent 75%, var(--bg-3) 75%);
@@ -1392,14 +963,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 }
 .ds-preview-media.is-actual { max-width: none; max-height: none; }
 
-/* ----------------------------------------------------------------------------
-   Compact-button tiers — ONE spec for the small quiet rect buttons that eight
-   surfaces used to clone with drifting metrics/tones. chat.css loads after
-   app-shell.css in the bundle, so these same-specificity rules win by order.
-   Tier A (toolbar-grade, 32px) matches .ds-file-toolbar .btn, the reference;
-   tier B (inline-row-grade, 24px) for actions inside dense row strips.
-   Hover/focus/active-state rules on the originals still apply.
----------------------------------------------------------------------------- */
 .row-act, .agentchat-export-act, .ds-file-more-btn {
   min-height: 32px; padding: var(--space-1-5) var(--space-2-75); border-radius: var(--r-1);
   font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 500;
@@ -1423,15 +986,10 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .agentchat-install-copy, .ds-upload-act, .ds-session-meta-copy { min-height: 44px; }
 }
 
-/* 11th run: ultrawide widens the reading measure where there is room. */
 @media (min-width: 1600px) {
   .agentchat-thread { --measure: 84ch; }
 }
 
-/* Stop/cancel composer control: re-tone the accent send button as a quiet
-   neutral control so 'stop generating' reads as distinct from accent send.
-   Flame/warn stay reserved (flame=error STATUS, warn=destructive ACTION); a
-   neutral quiet tone is the claude-code-aligned read for an in-flight stop. */
 .chat-composer .send.cancel {
   background: var(--bg-3);
   color: var(--fg);
@@ -1443,14 +1001,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 }
 .chat-composer .send.cancel:active { filter: brightness(0.96); }
 
-/* ChatMinimap — scroll-position density overview beside a chat thread.
-   Purely token-driven (no raw color literals — see lintTokensOrThrow). Dot
-   position/tooltip offsets are set imperatively in JS (chat-minimap.js) since
-   they are per-render numeric layout, not a static rule. */
 .chat-minimap {
-  /* --chat-minimap-w is written per instance by minimap.js (the rail width is
-     a prop); the fallback is the component's own default so the rail is never
-     zero-width if the property is missing. */
   width: var(--chat-minimap-w, 36px);
   position: relative;
   flex-shrink: 0;
@@ -1469,9 +1020,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   border-top: var(--bw-hair) solid var(--rule);
   border-bottom: var(--bw-hair) solid var(--rule);
   pointer-events: none;
-  /* Minimap internal order: centerline < viewport < dot < tooltip. All four
-     live inside the one raised widget, so they share its rung and differ
-     only by a local offset. */
   z-index: var(--z-raised-1);
 }
 .chat-minimap-centerline {
@@ -1514,9 +1062,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   border-left: 2px solid var(--fg-3);
   border-radius: var(--r-1);
   padding: calc(var(--space-1) / 2) var(--space-2);
-  /* Top of the minimap's internal order. Deliberately NOT --z-tooltip: it is
-     clipped to the minimap rail rather than floating over the app, so it must
-     not outrank real overlays that may cover the rail. */
   z-index: var(--z-raised-3);
   pointer-events: none;
   opacity: 0.45;

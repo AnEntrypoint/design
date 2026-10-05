@@ -107,9 +107,9 @@ export function resolveSheet(rel) {
 const TOKEN_SOURCE = 'colors_and_type.css';
 
 export const COLOR_RE = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(|\bokl(?:ch|ab)\(/;
-export const SPACING_RE = /\b(?:margin|padding|gap|row-gap|column-gap)(?:-(?:top|right|bottom|left|inline|block|inline-start|inline-end|block-start|block-end))?\s*:\s*[^;}]*?\d[\d.]*(?:px|em|rem)\b/;
-export const RADIUS_RE = /(?:-webkit-|-moz-)?border-radius\s*:\s*[^;}]*?\d[\d.]*(?:px|%|em|rem|vw|vh|vmin|vmax|ch)\b/;
-export const FONTSIZE_RE = /\bfont-size\s*:\s*[^;}]*?\d[\d.]*(?:px|em|rem)\b/;
+export const SPACING_RE = /(?<![\w-])(?:margin|padding|gap|row-gap|column-gap)(?:-(?:top|right|bottom|left|inline|block|inline-start|inline-end|block-start|block-end))?\s*:\s*[^;}]*?\d[\d.]*(?:px|em|rem)\b/;
+export const RADIUS_RE = /(?<![\w-])(?:-webkit-|-moz-)?border-radius\s*:\s*[^;}]*?\d[\d.]*(?:px|%|em|rem|vw|vh|vmin|vmax|ch)\b/;
+export const FONTSIZE_RE = /(?<![\w-])font-size\s*:\s*[^;}]*?\d[\d.]*(?:px|em|rem)\b/;
 const ZINDEX_RE = /\bz-index\s*:\s*-?\d/;
 const TRANSITION_ALL_RE = /\btransition(?:-property)?\s*:\s*[^;}]*\ball\b/;
 const IMPORTANT_RE = /!\s*important/;
@@ -255,7 +255,7 @@ export function lintSpacingOrThrow() {
         extraPaths: extraCssFiles(),
         extraEnv: 'DS_LINT_EXTRA_SPACING_BASELINE',
         noun: `raw margin/padding/gap literal(s) bypassing the --space-* scale from ${TOKEN_SOURCE}`,
-        fix: 'Use --space-N tokens for new declarations.',
+        fix: 'Use --space-N tokens for new declarations. If a value is genuinely off-scale, name it as a custom property on the same rule, e.g. `--bubble-inset-x: 14px; padding: var(--bubble-inset-x);`, never an unnamed literal.',
     });
 }
 
@@ -278,7 +278,7 @@ function throwIfConsumerSheetsOverBudget({ label, noun, fix, extraEnv, extra }) 
     throw new Error(`[${label}] FAIL: ${extra.length} ${noun} in CONSUMER sheets registered via DS_LINT_EXTRA_CSS_FILES/DS_LINT_EXTRA_JS_DIRS, over this project's budget of ${budget}:\n  `
         + extra.join('\n  ')
         + `\n[${label}] ${fix}`
-        + `\n[${label}] These files are not part of the kit, so the kit's own frozen baseline does not cover them. If every one above is genuinely load-bearing, set ${extraEnv}=${extra.length} in YOUR lint invocation, with a comment saying why. Do not re-freeze the kit's baseline, which would leave the KIT a slot of slack it did not earn.`);
+        + `\n[${label}] These files are not part of the kit, so the kit's own frozen baseline does not cover them. If every one above is genuinely load-bearing, set ${extraEnv}=${extra.length} in YOUR lint invocation, in a variable named for the reason. Do not re-freeze the kit's baseline, which would leave the KIT a slot of slack it did not earn.`);
 }
 
 export function ratchetOrThrow({ label, flag, baselineFile, violations, noun, fix, scope, extraPaths, extraEnv }) {
@@ -320,7 +320,7 @@ export function lintFontSizeOrThrow() {
         extraPaths: extraCssFiles(),
         extraEnv: 'DS_LINT_EXTRA_FONTSIZE_BASELINE',
         noun: `raw font-size literal(s) bypassing the --fs-* type scale from ${TOKEN_SOURCE}`,
-        fix: 'Use a --fs-pico/--fs-nano/--fs-micro/--fs-tiny/--fs-xs/--fs-sm/--fs-body/--fs-lg/--fs-xl (or --fs-h*/--fs-hero/--fs-mega) token. If the value is genuinely off-scale (an ICON size matched to its chip box, or an em-relative inline size that must track its parent), leave the literal and add a comment in the sheet saying which, so the next reader does not "fix" it.',
+        fix: 'Use a --fs-pico/--fs-nano/--fs-micro/--fs-tiny/--fs-xs/--fs-sm/--fs-body/--fs-lg/--fs-xl (or --fs-h*/--fs-hero/--fs-mega) token. If the value is genuinely off-scale (an ICON size matched to its chip box, or an em-relative inline size that must track its parent), name it as a custom property on the same rule, e.g. `--chip-icon-size: 13px; font-size: var(--chip-icon-size);`. A literal assigned to a custom property declaration is accepted; the name is the explanation.',
     });
 }
 
@@ -335,7 +335,7 @@ export function lintImportantOrThrow() {
         extraPaths: extraCssFiles(),
         extraEnv: 'DS_LINT_EXTRA_IMPORTANT_BASELINE',
         noun: '`!important` declaration(s)',
-        fix: 'Beat the losing rule on specificity or source order instead. An `!important` cannot be overridden by a consumer theming the SDK without another `!important`, so each one is a permanent hole in the themability this lint file exists to protect. If it is genuinely load-bearing (a utility reset, a print/forced-colors/reduced-motion override that must win), say so in a comment on the line.',
+        fix: 'Beat the losing rule on specificity or source order instead. An `!important` cannot be overridden by a consumer theming the SDK without another `!important`, so each one is a permanent hole in the themability this lint file exists to protect. If it is genuinely load-bearing (a utility reset, a print/forced-colors/reduced-motion override that must win), encode the reason in the selector (for example a print/forced-colors scope) rather than prose.',
     });
 }
 

@@ -62,8 +62,10 @@ component stylesheet must consume `var(--token-name)`, never a raw color/size
 literal). To add or change a token:
 
 1. Add the `--token-name: value;` declaration to the right section of
-   `colors_and_type.css` (grouped by comment headers — colors, type scale,
-   spacing, panel surfaces, etc.).
+   `colors_and_type.css` (grouped by block — colors, type scale,
+   spacing, panel surfaces, etc.; a literal that is genuinely off-scale is named
+   as a custom property on its own rule, e.g. `--bubble-inset-x: 14px;
+   padding: var(--bubble-inset-x);`, never explained with a comment).
 2. Regenerate the derived artifacts: `npm run tokens` (writes `tokens.json`,
    a flat machine-readable snapshot) and `npm run tokens:doc` (also refreshes
    the theme-tokens documentation).
@@ -105,8 +107,8 @@ and aggregates one pass/fail report:
 - **`lint-rtl-physical-properties.mjs`** — no physical `left`/`right`
   CSS property where a logical `inline-start`/`inline-end` equivalent would
   auto-mirror under `[dir="rtl"]`.
-- **`lint-empty-catch.mjs`** — hard zero: no empty `catch {}` block (a comment
-  inside does not count) and no empty `.catch(() => {})`. Best-effort calls go
+- **`lint-empty-catch.mjs`** — hard zero: no empty `catch {}` block
+  (nothing inside counts) and no empty `.catch(() => {})`. Best-effort calls go
   through `attempt()` / `attemptAsync()`, and `.catch(ignoreFailure)`, from
   `src/best-effort.js`; the helper name is the statement of intent.
 

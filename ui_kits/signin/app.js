@@ -236,7 +236,7 @@ function Form() {
 
 function App() {
     const headings = {
-        signin: ['sign in',     'welcome back. pick a provider or use email.'],
+        signin: ['sign in',     'pick a provider or use email.'],
         signup: ['create',      'join the 247420 portfolio. one account, every kit.'],
         magic:  ['magic link',  "we'll email you a one-tap sign-in link. no password."],
         reset:  ['reset',       'enter your email to receive a reset link.']
@@ -266,7 +266,7 @@ function App() {
         ],
         status: Status({
             left: ['auth', '- ' + state.mode, state.error ? '- error' : '- ok'],
-            right: ['247420 / mmxxvi']
+            right: ['no real auth']
         })
     });
 }

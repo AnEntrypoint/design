@@ -1,65 +1,73 @@
 <!doctype html>
 <html lang="en" data-theme="auto" class="ds-247420"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>247420 -- component preview index</title>
+<title>Component preview index</title>
 <link rel="stylesheet" href="../colors_and_type.css">
 <link rel="stylesheet" href="../app-shell.css">
-<style>body{padding:var(--space-4);background:var(--panel-0);color:var(--panel-text);max-width:640px;margin:0 auto}
+<style>body{padding:var(--space-4);background:var(--panel-0);color:var(--panel-text);max-width:720px;margin:0 auto}
 ul{list-style:none;padding:0;margin:0}
-li{padding:var(--space-2) 0;border-bottom:1px solid var(--panel-2)}
-/* --accent-ink, never --panel-accent. The bare lead accent is a FILL: it
-   measures 1.07:1 against paper, so every link on this page was effectively
-   invisible in the light theme. --accent-ink is the readable text tone of the
-   same accent (8.85:1 on paper, and the bright lime itself on ink). This is
-   the exact split AGENTS.md documents, and this page was violating it on the
-   SDK's own front door. */
-a{color:var(--accent-ink);text-decoration:none;font-family:var(--ff-ui,var(--ff-body))}
-a:hover{text-decoration:underline}
+li{display:flex;flex-direction:column;gap:var(--space-1);padding:var(--space-2) 0;border-bottom:1px solid var(--panel-2)}
+a{color:var(--accent-ink);text-decoration:underline;font-family:var(--ff-ui,var(--ff-body));font-weight:600}
+a:hover{text-decoration-thickness:2px}
+.idx-desc{color:var(--fg-2);font-size:var(--fs-sm)}
 h1{font-size:var(--fs-h2);margin:var(--space-2) 0 var(--space-1)}
 h2{font-size:var(--fs-h4);margin:var(--space-5) 0 var(--space-2);color:var(--fg-2)}
 .idx-lede{color:var(--fg-2);margin:0 0 var(--space-4)}
-/* Page-local rather than extending .ds-demo-label, which other demo pages
-   share and which deliberately carries only size/weight/margin. This is the
-   mono kicker treatment that used to sit in an inline style attribute here. */
 .idx-kicker{font-family:var(--ff-mono);text-transform:uppercase;letter-spacing:var(--tr-label);color:var(--fg-3);font-size:var(--fs-tiny)}
 </style>
 </head><body>
 <div class="ds-demo-label idx-kicker">247420 / preview index</div>
-<h1>component previews</h1>
-<p class="idx-lede">Every component specimen in the design system. Each page renders one primitive in isolation so you can see it, measure it, and copy its markup.</p>
+<h1>Component previews</h1>
+<p class="idx-lede">30 specimen pages, each rendering one primitive or token set in isolation so you can see it, measure it and copy its markup.</p>
+<h2>Color</h2>
 <ul>
-      <li><a href="./buttons.html">247420 / components / buttons</a></li>
-      <li><a href="./colors-core.html">colors core / 247420 preview</a></li>
-      <li><a href="./colors-lore.html">colors lore / 247420 preview</a></li>
-      <li><a href="./colors-semantic.html">colors semantic / 247420 preview</a></li>
-      <li><a href="./content.html">247420 / content primitives</a></li>
-      <li><a href="./data-density.html">data density / 247420</a></li>
-      <li><a href="./dateline.html">dateline / 247420 preview</a></li>
-      <li><a href="./dropzone.html">dropzone / 247420 preview</a></li>
-      <li><a href="./editor-primitives.html">247420 / editor primitives</a></li>
-      <li><a href="./file-grid.html">file grid / 247420 preview</a></li>
-      <li><a href="./file-row.html">file row / 247420 preview</a></li>
-      <li><a href="./file-toolbar.html">file toolbar / 247420 preview</a></li>
-      <li><a href="./file-viewer.html">file viewer / 247420 preview</a></li>
-      <li><a href="./header.html">header preview</a></li>
-      <li><a href="./icons-unicode.html">icons unicode / 247420 preview</a></li>
-      <li><a href="./index-row.html">index row / 247420 preview</a></li>
-      <li><a href="./inputs.html">inputs / 247420 preview</a></li>
-      <li><a href="./manifesto.html">manifesto preview</a></li>
-      <li><a href="./panel-rows.html">panel rows / 247420 preview</a></li>
-      <li><a href="./rules.html">rules / 247420 preview</a></li>
-      <li><a href="./spacing.html">spacing / 247420 preview</a></li>
-      <li><a href="./stamps-lore.html">stamps lore / 247420 preview</a></li>
-      <li><a href="./stamps.html">stamps / 247420 preview</a></li>
-      <li><a href="./theme-ink.html">theme ink / 247420 preview</a></li>
-      <li><a href="./theme-map.html">247420 / theme token map</a></li>
-      <li><a href="./type-display.html">type display / 247420 preview</a></li>
-      <li><a href="./type-mono.html">type mono / 247420 preview</a></li>
-      <li><a href="./type-prose.html">type prose / 247420 preview</a></li>
-      <li><a href="./type-scale.html">type scale / 247420 preview</a></li>
-      <li><a href="./wordmarks.html">wordmarks / 247420 preview</a></li>
+      <li><a href="./colors-core.html">Core colors</a><span class="idx-desc">The four base swatches: paper, ink and their two shades each.</span></li>
+      <li><a href="./colors-lore.html">Palette tokens</a><span class="idx-desc">The raw palette: brand green plus the legacy-named gray, yellow and red tokens.</span></li>
+      <li><a href="./colors-semantic.html">Semantic colors</a><span class="idx-desc">Role tokens (link, warn, on-color) that components use instead of raw hex.</span></li>
+      <li><a href="./theme-ink.html">Ink theme</a><span class="idx-desc">The dark theme: how paper and ink invert while the accent stays put.</span></li>
 </ul>
-<h2>other demo surfaces</h2>
+<h2>Type and spacing</h2>
 <ul>
-      <li><a href="../slides/index.html">slides deck (external demo surface)</a></li>
+      <li><a href="./type-display.html">Display type</a><span class="idx-desc">Hero and section headlines in the system sans, with size and tracking.</span></li>
+      <li><a href="./type-mono.html">Mono type</a><span class="idx-desc">Labels, meta text and body in the platform monospace.</span></li>
+      <li><a href="./type-prose.html">Prose type</a><span class="idx-desc">Long-form paragraph styling: measure, leading and emphasis.</span></li>
+      <li><a href="./type-scale.html">Type scale</a><span class="idx-desc">Every font-size step from mega down to micro, rendered at size.</span></li>
+      <li><a href="./spacing.html">Spacing scale</a><span class="idx-desc">The 8pt spacing steps with their pixel values.</span></li>
+      <li><a href="./rules.html">Rules</a><span class="idx-desc">Single, double and dotted hairlines and when to use each.</span></li>
+</ul>
+<h2>Components</h2>
+<ul>
+      <li><a href="./buttons.html">Buttons</a><span class="idx-desc">Every button variant, size and state, with the tokens each uses.</span></li>
+      <li><a href="./inputs.html">Inputs</a><span class="idx-desc">Hairline text fields: label, placeholder, focus and error states.</span></li>
+      <li><a href="./index-row.html">Index row</a><span class="idx-desc">The numbered list row used for works, posts and projects.</span></li>
+      <li><a href="./panel-rows.html">Panel rows</a><span class="idx-desc">Trio, duo and flush panel rows that step down on container width.</span></li>
+      <li><a href="./data-density.html">Data density</a><span class="idx-desc">Dense table, meter and list components for operational screens.</span></li>
+      <li><a href="./editor-primitives.html">Editor primitives</a><span class="idx-desc">Building blocks for editors: toolbars, toasts, aspect ratios and more.</span></li>
+      <li><a href="./content.html">Content primitives</a><span class="idx-desc">Hero, panel, list and manifesto blocks used on content pages.</span></li>
+      <li><a href="./header.html">Header</a><span class="idx-desc">The sticky top bar and breadcrumb with nav hover states.</span></li>
+      <li><a href="./stamps.html">Stamps</a><span class="idx-desc">Four rotated status stamp variants.</span></li>
+      <li><a href="./dateline.html">Dateline</a><span class="idx-desc">The brand dateline strip shown at the top of a page.</span></li>
+</ul>
+<h2>File browser</h2>
+<ul>
+      <li><a href="./file-row.html">File row</a><span class="idx-desc">One file: type rail, icon, name, meta and actions.</span></li>
+      <li><a href="./file-grid.html">File grid</a><span class="idx-desc">A stack of file rows with directories first and a selected state.</span></li>
+      <li><a href="./file-toolbar.html">File toolbar</a><span class="idx-desc">Breadcrumb, upload actions and item count.</span></li>
+      <li><a href="./file-viewer.html">File viewer</a><span class="idx-desc">Full-bleed modal preview with syntax highlighting and actions.</span></li>
+      <li><a href="./dropzone.html">Drop zone</a><span class="idx-desc">Upload target with idle and drag-over states and no dashed border.</span></li>
+</ul>
+<h2>Brand</h2>
+<ul>
+      <li><a href="./wordmarks.html">Wordmarks</a><span class="idx-desc">Typographic project wordmarks; there are no pictorial marks.</span></li>
+      <li><a href="./manifesto.html">Manifesto block</a><span class="idx-desc">Numbered statement paragraphs as used on the homepage.</span></li>
+      <li><a href="./stamps-lore.html">Brand stamps</a><span class="idx-desc">The full set of brand stamps, including the playful ones.</span></li>
+</ul>
+<h2>Reference</h2>
+<ul>
+      <li><a href="./icons-unicode.html">Unicode glyph set</a><span class="idx-desc">The small set of plain unicode symbols allowed in copy.</span></li>
+      <li><a href="./theme-map.html">Theme token map</a><span class="idx-desc">Every root token, its default value and which sheets consume it.</span></li>
+</ul>
+<h2>Other demo surfaces</h2>
+<ul>
+      <li><a href="../slides/index.html">Slide deck</a><span class="idx-desc">A 16:9 deck built with the same tokens and chrome as the kits.</span></li>
 </ul>
 </body></html>

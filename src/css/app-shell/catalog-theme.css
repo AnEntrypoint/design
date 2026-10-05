@@ -1,11 +1,3 @@
-
-/* ============================================================
-   Catalog / demo shell — a shared, compact framing for the preview/*.html
-   component galleries, so each preview stops hand-rolling its own <style>
-   (body padding, section margins, demo boxes). Mirrors webgeist's dense
-   catalog: a 240px sticky sidebar + capped main + a hairline-bordered,
-   flex-wrapping .ds-demo cell that packs variants inline and reflows.
-   ============================================================ */
 .ds-catalog { display: flex; min-height: 100vh; gap: 0; }
 .ds-catalog-side {
   width: 240px; flex-shrink: 0;
@@ -28,8 +20,6 @@
 .ds-catalog-section { margin-bottom: var(--space-5); padding-top: var(--space-3); border-top: var(--bw-hair) solid var(--rule); }
 .ds-catalog-section > h2 { font-size: var(--fs-h3-app); margin: 0 0 var(--space-3); }
 
-/* The gallery cell: a hairline-bordered, flex-wrapping bin that packs a
-   component's variants inline and reflows — the signature "showcase" frame. */
 .ds-demo {
   border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-1);
@@ -41,9 +31,6 @@
 .ds-demo-label { font-size: var(--fs-xs); font-weight: 500; margin: 0 0 var(--space-1); }
 .ds-demo-desc { font-size: var(--fs-tiny); color: var(--fg-3); margin: 0 0 var(--space-2); }
 
-/* Per-preview backlink to the full token map/doc — names which token
-   families the specimen above it demonstrates, then links out to the
-   generated theme-map for the resolved values. */
 .tokens-backlink { font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--fg-3); margin-top: var(--space-hair); }
 .tokens-backlink a { color: inherit; }
 
@@ -53,8 +40,6 @@
   .ds-catalog-main { padding: var(--space-3); }
 }
 
-/* -- File browser UX affordances ---------------------------- */
-/* Toolbar filter input — compact search box. */
 .ds-filter-input {
   width: clamp(120px, 22vw, 220px);
   padding: var(--space-2) var(--space-2-75);
@@ -64,36 +49,18 @@
 }
 .ds-filter-input:focus-visible { outline: none; box-shadow: var(--focus-ring-inset); }
 
-/* Loading skeleton: FileSkeleton renders `.ds-file-grid.ds-file-skeleton` with
-   `.ds-file-row.ds-file-row-skeleton` rows whose inner `.ds-skel` children shimmer
-   (via .ds-skel::after). The container therefore inherits the .ds-file-grid layout
-   and must NOT be a single 48px gradient bar (that collapsed every row and double-
-   shimmered). The dead .ds-file-grid-loading rule + unused ds-skeleton-shimmer
-   keyframe were removed; only the inner .ds-skel children animate. */
-
-/* Drag-to-move drop target highlight on a directory row -- RESTYLED:
-   borderless, the tonal --accent-tint fill alone carries the feedback. */
 .ds-file-row.ds-drop-target {
   background: var(--accent-tint);
 }
 .ds-file-row[draggable="true"] { cursor: grab; }
 .ds-file-row[draggable="true"]:active { cursor: grabbing; }
 
-/* (A stale duplicate multi-select block used to live here: an absolute-overlay
-   .ds-file-check hidden until hover, plus .ds-file-check.on / .ds-file-row.selected
-   / .ds-bulk-bar rules NO component ever emits. Being later in source at equal
-   specificity it clobbered the real in-flow checkbox at ~1243 - the shipped
-   multi-select rendered invisible-until-hover with clipped brackets. The live
-   rules are the earlier block; only the still-load-bearing bits remain below.) */
 .ds-file-row { position: relative; }
-/* Touch / coarse-pointer devices have no hover — keep the per-row action
-   buttons (rename/delete/download) visible so the file manager is fully
-   reachable without a pointer (e.g. an iPad in landscape). */
+
 @media (hover: none), (pointer: coarse) {
   .ds-file-actions { opacity: 1; }
 }
 
-/* Keyboard-shortcuts hint — compact two-column legend. */
 .ds-shortcuts-hint {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-1) var(--space-3);
@@ -106,14 +73,7 @@
 .ds-shortcuts-hint .ds-kbd { white-space: normal; max-width: 100%; }
 .ds-kbd-caps { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); }
 .ds-kbd-sep { color: var(--fg-3); font-size: var(--fs-micro); padding: 0 var(--space-hair); }
-/* .ds-kbd base definition lives in editor-primitives.css (canonical home —
-   it owns the fuller ds-kbd-group/ds-kbd-row family this key chip belongs
-   to); this file only carries the .ds-shortcuts-hint contextual overrides
-   above. */
 
-/* ============================================================
-   Theme toggle (segmented + compact) — bound to src/theme.js
-   ============================================================ */
 .ds-segmented {
   display: inline-flex; gap: 0; padding: var(--space-hair);
   background: var(--bg-2); border-radius: var(--r-pill);
@@ -126,10 +86,7 @@
   transition: color var(--dur-base) var(--ease), background var(--dur-base) var(--ease);
 }
 .ds-segmented .ds-seg-btn:hover { color: var(--fg); }
-/* Touch floor — a segmented control is a primary mode switch but renders ~30px
-   tall from its 4px padding, below the 44px minimum the rest of the system
-   holds. Grows the hit area only; the pill's visual size is unchanged at
-   fine-pointer sizes. */
+
 @media (pointer: coarse) {
   .ds-segmented .ds-seg-btn { min-height: 44px; padding-inline: var(--space-3); }
 }
@@ -142,11 +99,7 @@
   font-family: var(--ff-mono); font-size: var(--fs-xs);
   display: inline-flex; align-items: center; gap: var(--space-1-75);
 }
-/* CSS-drawn disc mark on the compact theme toggle: legibility fallback for
-   when BOTH the SVG glyph and text label are hidden (icon-only rail strip).
-   The glyph (.ds-theme-toggle-icon) already conveys mode whenever it is
-   visible, so the disc stays hidden alongside it and only shows in the
-   rail-collapsed state where responsive2-workspace.css hides the icon too. */
+
 .ds-theme-disc { display: none; }
 .ds-theme-disc[data-mode="auto"] {
   background: linear-gradient(90deg, var(--fg-3) 0 50%, transparent 50% 100%);

@@ -75,7 +75,7 @@ function App() {
                 ConfirmPairRow()
             )
         ],
-        status: Status({ left: ['buttons', '- 5 variants', '- 3 sizes'], right: ['247420 / mmxxvi'] })
+        status: Status({ left: ['buttons', '- 5 variants', '- 3 sizes'], right: ['static demo'] })
     });
 }
 

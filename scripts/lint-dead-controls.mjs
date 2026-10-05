@@ -27,7 +27,7 @@ const EMPTY_FUNCTION_HANDLER = new RegExp(
 );
 
 const PLACEHOLDER_HREF = /href\s*=\s*(["'])#\1/;
-const ALLOW_MARK = 'lint-dead-controls:allow';
+const ALLOW_MARK = 'data-specimen';
 
 const blankPreservingLength = (m, prefix) => prefix + ' '.repeat(m.length - prefix.length);
 const blankLineComments = (src) => src.replace(/(^|[^:])\/\/[^\n]*/g, blankPreservingLength);
@@ -84,8 +84,8 @@ export function lintDeadControlsOrThrow() {
             '\n\nA control that renders but cannot act is worse than one that is absent:\n' +
             'it invites a click and answers nothing. Give it a real handler or a real\n' +
             'destination, or stop rendering it as a control (drop the href / the\n' +
-            'button). If the no-op is genuinely intentional, say why in the handler\n' +
-            `body as a comment, or mark the line ${ALLOW_MARK}.`,
+            'button). If the no-op is genuinely intentional, pass a named handler whose\n' +
+            `name states the intent, or mark the element with the ${ALLOW_MARK} attribute.`,
         );
     }
     if (hits.length < BASELINE) {

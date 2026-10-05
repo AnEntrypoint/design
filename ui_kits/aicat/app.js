@@ -197,7 +197,7 @@ function App() {
         ],
         status: Status({
             left: ['aicat', '- ' + state.messages.length + ' turns', state.thinking ? '- thinking' : '- idle'],
-            right: ['247420 / mmxxvi']
+            right: ['sample data']
         })
     });
 }

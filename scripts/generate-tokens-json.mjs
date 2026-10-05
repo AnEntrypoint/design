@@ -35,29 +35,10 @@ function stripComments(text) {
     return text.replace(/\/\*[\s\S]*?\*\//g, '');
 }
 
-function extractSections(text) {
-    const sections = [];
-    const re = /\/\*\s*=+[\s\S]*?=+\s*\*\//g;
-    let m;
-    while ((m = re.exec(text))) {
-        const commentBody = m[0];
-        const lines = commentBody
-            .split('\n')
-            .map((l) => l.replace(/^\s*\/?\*+\s?/, '').replace(/\*+\/\s*$/, '').trim())
-            .filter((l) => l && !/^=+$/.test(l));
-        if (!lines.length) continue;
-        sections.push({ label: lines[0], offset: m.index + commentBody.length });
-    }
-    return sections;
-}
+const ROOT_GROUP_BY_ORDINAL = ['root', 'colors-type'];
 
-function categoryFor(offset, sections) {
-    let label = 'uncategorized';
-    for (const s of sections) {
-        if (s.offset <= offset) label = s.label;
-        else break;
-    }
-    return label;
+function rootGroupFor(ordinal) {
+    return ROOT_GROUP_BY_ORDINAL[Math.min(ordinal, ROOT_GROUP_BY_ORDINAL.length - 1)];
 }
 
 function slug(label) {
@@ -68,7 +49,6 @@ function slug(label) {
         .replace(/^-+|-+$/g, '') || 'root';
 }
 
-const sections = extractSections(css);
 const noCommentCss = stripComments(css);
 const blocks = splitBlocks(noCommentCss);
 
@@ -77,30 +57,30 @@ const DECL_RE = /--([a-zA-Z0-9-]+)\s*:\s*([^;]+);/g;
 const grouped = {};
 const flat = {};
 
-function recordToken(name, value, selectorLabel, charOffset) {
-    const category = selectorLabel === ':root'
-        ? categoryFor(charOffset, sections)
-        : `override:${selectorLabel}`;
-    const groupKey = slug(category === 'uncategorized' ? selectorLabel : category);
+function recordToken(name, value, selectorLabel, rootOrdinal) {
+    const groupKey = selectorLabel === ':root'
+        ? rootGroupFor(rootOrdinal)
+        : slug(`override:${selectorLabel}`);
     if (!grouped[groupKey]) grouped[groupKey] = {};
     if (!(name in grouped[groupKey])) grouped[groupKey][name] = value;
     if (selectorLabel === ':root' && !(name in flat)) flat[name] = value;
 }
 
+let rootOrdinal = -1;
 for (const block of blocks) {
     const sel = block.selector.replace(/\s+/g, ' ').trim();
     if (sel.startsWith('@media')) continue;
     if (!block.body.includes('--')) continue;
 
     let selectorLabel = sel;
-    if (sel === ':root' || sel.startsWith(':root:not(')) selectorLabel = ':root';
+    if (sel === ':root' || sel.startsWith(':root:not(')) { selectorLabel = ':root'; rootOrdinal++; }
 
     let m;
     DECL_RE.lastIndex = 0;
     while ((m = DECL_RE.exec(block.body))) {
         const name = `--${m[1]}`;
         const value = m[2].trim();
-        recordToken(name, value, selectorLabel, block.start);
+        recordToken(name, value, selectorLabel, rootOrdinal);
     }
 }
 

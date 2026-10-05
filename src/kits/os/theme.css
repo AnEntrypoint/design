@@ -1,22 +1,5 @@
-/* Fonts are declared once in the canonical theme (colors_and_type.css /
-   vendor/fonts.css), which every .ds-247420 consumer loads first. No @import
-   here — a second Inter-only import risked a weight-set FOUT mismatch. */
-
-/* The OS shell namespaces its surfaces as --os-* but those are pure ALIASES of
-   the canonical semantic tokens from colors_and_type.css. colors_and_type.css
-   is always loaded before this sheet for any .ds-247420 consumer, so the
-   canonical tokens are guaranteed present and the alias fallbacks are dropped —
-   a fallback here would silently re-introduce theme drift (a baked light value
-   that ignores [data-theme="ink"]). One theme drives both token namespaces. */
 :root {
-    /* --ff-ui is the OS-shell alias for the canonical body font; --ff-display
-       and --ff-mono are already canonical (colors_and_type.css), referenced
-       directly below — do not self-redefine them here (cycle). */
     --ff-ui: var(--ff-body);
-    /* --os-accent is used predominantly as TEXT/icon/border in the OS chrome,
-       so it tracks the readable --accent-ink tone (the electric lead is too
-       light for text on paper). --os-accent-fill is the saturated lead for the
-       rare solid fill; --os-accent-soft is the tint. */
     --os-accent: var(--accent-ink);
     --os-accent-fill: var(--accent);
     --os-accent-2: var(--accent-bright, var(--accent));
@@ -37,66 +20,26 @@
     --os-bar-h-mobile: 52px;
     --os-rail-w: 64px;
     --os-tap: 44px;
-    /* Unified menubar control height: every clickable control in the top bar
-       (home/apps buttons, workspace tabs, tray icon buttons) sits on this one
-       height so the bar reads as a single control language instead of a mix
-       of pill buttons, chips, and icon buttons each sized on their own. */
     --os-control-h: 28px;
     --os-font: var(--ff-ui);
     --os-display: var(--ff-display);
     --os-mono: var(--ff-mono);
 
-    /* ---- Unified spacing scale (--space-1..6) ----
-       colors_and_type.css already defines --space-1 (4px) through --space-6
-       (48px), plus finer hair/half/fractional rungs (--space-hair/half/0/1-5/
-       1-75/2-5/2-75/3-5), all loaded before this sheet for every .ds-247420
-       consumer. That IS the unified spacing scale this contract asks for — no
-       redeclaration here (a self-referencing `--space-1: var(--space-1)` would
-       be circular and resolve to invalid at computed-value time). New call
-       sites and the migrations below consolidate onto --space-1..6 directly. */
-
-    /* ---- Unified type scale (title / body / meta) ----
-       Maps onto the canonical --fs-* rail (colors_and_type.css) rather than
-       inventing new pixel values: title = display-weight heading size already
-       used by .os-drawer-title/.chat-empty-title (--fs-xl); body = the base
-       readable size already used by .chat-bubble/.app-pane (--fs-xs); meta =
-       the small secondary/timestamp size already used by .chat-meta/.os-clock
-       (--fs-nano). */
     --font-size-title: var(--fs-xl);
     --font-size-body: var(--fs-xs);
     --font-size-meta: var(--fs-nano);
 
-    /* ---- Unified corner-radius scale (sm / md / lg / pill) ----
-       Aliases of the canonical --r-* rail (colors_and_type.css: --r-0 4px,
-       --r-1 8px, --r-2 10px, --r-3 14px, --r-pill 999px) under the names this
-       token contract specifies, so windows/buttons/badges can standardize on
-       one vocabulary instead of picking --r-0 vs --r-1 vs --r-2 ad hoc. */
     --radius-sm: var(--r-1);
     --radius-md: var(--r-2);
     --radius-lg: var(--r-3);
     --radius-pill: var(--r-pill, 999px);
 
-    /* ---- Unified color / accent system ----
-       --accent-primary is the brand lead (#247420 in the thebird preset via
-       --os-accent, which already resolves through --accent-ink); kept as its
-       own token (rather than a bare alias) so non-.ds-247420 consumers of this
-       kit get the literal brand green called for by this contract even before
-       any brand-scoped override applies. --color-success/warning/danger alias
-       the existing canonical severity primitives (--green-2/--sun/--warn) so
-       severity language is consistent with what --success/--warn already mean
-       everywhere else in colors_and_type.css — not a second competing set. */
     --accent-primary: #247420;
     --color-success: var(--success, var(--green-2, #3A9A34));
     --color-warning: var(--sun, #F5C344);
     --color-danger: var(--warn, #C41C0C);
 }
 
-/* .os-root/.wm-root are `position: fixed; inset: 0`, independent of body's
- * box — but without this reset, body keeps the UA-default 8px margin and
- * neither html nor body claims the full viewport height, leaving an
- * unstyled sliver of page background around the fixed shell (the menubar/
- * taskbar/titlebar and any native scrollbar visibly fail to line up with
- * the page edge) and a spurious page-level scrollbar from the 8px overflow. */
 html, body {
     margin: 0;
     height: 100%;
@@ -108,24 +51,7 @@ html, body {
     text-rendering: optimizeLegibility;
 }
 
-/* ---- Desktop wallpaper ----
- * A flat --os-bg-0 fill behind the window layer reads as an empty/unfinished
- * void once windows are moved aside. A very subtle two-stop radial wash
- * (barely above the base tone, no imagery/texture asset to fetch or theme)
- * gives the desktop depth without competing with window chrome — scoped to
- * .ds-247420 .wm-root specifically (the actual desktop viewport BEHIND
- * windows), not the page background used by bare/non-OS surfaces.
- * A faint repeating dot-grid is layered on top of the wash: the radial wash
- * alone reads as a barely-perceptible tint over a large empty area (the
- * reported "huge empty dark canvas" below a single default window), while a
- * grid of low-opacity dots gives the eye actual anchor points across that
- * space without competing with window chrome or requiring an image asset. */
 .ds-247420 .wm-root {
-    /* Split into background-image/-color longhands, NOT the `background`
-       shorthand: some engines fail to parse a multi-layer gradient list
-       shorthand-form when any layer's color-stop uses color-mix() — the
-       whole declaration is dropped and the canvas silently renders flat.
-       The longhand form parses these same layers correctly. */
     background-image:
         radial-gradient(circle, color-mix(in oklab, var(--os-fg) 6%, transparent) 1px, transparent 1px),
         radial-gradient(ellipse 120% 80% at 20% -10%, color-mix(in oklab, var(--os-accent) 6%, transparent), transparent 60%),
@@ -137,15 +63,6 @@ html, body {
     .ds-247420 .wm-root { background: var(--os-bg-0); }
 }
 
-/* ---- Global focus-visible ring ----
-   Baseline accent-colored outline for every keyboard-focusable element
-   (inputs/textareas/buttons/links/contenteditable, including the terminal's
-   and chat composer's text entry) so focus is never invisible. Component-
-   level :focus-visible rules elsewhere in this sheet (chat composer textarea,
-   composer-btn, chat-empty-suggestion, fsb-row, ...) already set a matching
-   var(--os-accent) ring with layout-specific offset/inset and win by source
-   order + specificity; this is the catch-all every other focusable surface
-   falls back to. */
 .ds-247420 :focus-visible {
     outline: 2px solid var(--os-accent);
     outline-offset: 2px;
@@ -157,8 +74,6 @@ html, body {
     color: var(--os-fg);
     font: var(--fs-tiny) var(--os-font);
     height: var(--os-bar-h);
-    /* prefers-reduced-transparency handled below (near bottom of this file):
-       drops the blur + backing translucency to a solid --os-bg-2 fill. */
     padding: 0 var(--space-2-75);
     gap: var(--space-1-75);
     box-shadow: none;
@@ -170,9 +85,6 @@ html, body {
 .os-menubar > *, .os-taskbar > * { flex-shrink: 0; }
 .os-menubar .os-spacer { flex: 1 1 auto; min-width: 0; }
 .os-menubar .os-tray { margin-left: auto; }
-/* Many open windows must scroll within the bar, not overflow it. Mobile
-   already had this; promote it to all widths so a crowded desktop taskbar
-   scrolls horizontally instead of pushing buttons off-screen. */
 .os-taskbar { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
 .os-taskbar::-webkit-scrollbar { display: none; }
 
@@ -188,12 +100,6 @@ html, body {
     gap: var(--space-2);
     text-transform: lowercase;
 }
-/* Wordmark lockup: the mark echoes favicon.svg (rounded-square tile, accent
-   fill, monogram) instead of a bare accent dot, so the brand reads as an
-   actual logo mark next to the "thebird" text rather than plain type with a
-   decorative dot. Inlined as a data-URI (same technique renderFaviconTags
-   already uses for the <link rel="icon"> glyph case) since theme.css ships
-   standalone via unpkg with no guaranteed relative path to favicon.svg. */
 .os-brand::before {
     content: '';
     display: inline-block;
@@ -228,12 +134,6 @@ html, body {
 .os-btn:focus-visible { background: var(--panel-hover, var(--os-bg-2)); }
 .os-btn .ic { color: var(--os-accent); display: inline-flex; width: 16px; height: 16px; }
 .os-btn .ic svg { width: 16px; height: 16px; display: block; fill: none; stroke: currentColor; }
-/* Filled/duotone active-state icon treatment: an active nav icon otherwise
- * looks visually IDENTICAL to its inactive sibling (only the container
- * background changes) — a soft `fill:currentColor` wash behind the same
- * stroke-only glyph gives active items real duotone weight, matching the
- * "filled/duotone treatment for active items" ask. fill-opacity keeps the
- * glyph legible over the wash rather than solid-filling the whole path. */
 .os-btn.active .ic svg, .os-btn[aria-pressed="true"] .ic svg { fill: currentColor; fill-opacity: 0.18; }
 
 .os-menu {
@@ -243,12 +143,6 @@ html, body {
     border-radius: var(--radius-lg, var(--r-3, 18px));
     padding: var(--space-2, 8px);
     min-width: 220px;
-    /* Uncapped, the menu grows to its widest label and — at the common
-     * tablet-range window widths (~810-1150px) where content columns are
-     * already narrow — reads as covering most of the open content instead
-     * of a dropdown. Cap to a comfortable reading width but never past
-     * the viewport (same "must not extend past the viewport" contract the
-     * height clamp below already applies). */
     max-width: min(320px, calc(100vw - var(--space-4, 16px)));
     top: calc(var(--os-bar-h) + var(--space-1, 4px));
     left: var(--space-2, 8px);
@@ -257,16 +151,10 @@ html, body {
     flex-direction: column;
     gap: var(--space-hair);
     pointer-events: auto;
-    /* Long app registries must scroll, not extend past the viewport. */
     max-height: calc(100vh - var(--os-bar-h) - 16px);
     max-height: calc(100dvh - var(--os-bar-h) - env(safe-area-inset-top, 0px) - 16px);
     overflow-y: auto;
     overscroll-behavior: contain;
-    /* Scroll-shadow affordance: dual-background trick -- the fade gradients
-     * are pinned to the scrollport (background-attachment: local) so they
-     * only appear once there is actually more content to reveal in that
-     * direction, cueing that the menu is scrollable rather than just
-     * clipped at the viewport edge. */
     background-image:
         linear-gradient(var(--os-bg-1), var(--os-bg-1)),
         linear-gradient(var(--os-bg-1), var(--os-bg-1)),
@@ -278,12 +166,6 @@ html, body {
     background-attachment: local, local, scroll, scroll;
 }
 .os-menu.open { display: flex; }
-/* Dimming scrim behind the open apps menu — same var(--scrim) fixed-inset
- * pattern as .tb-sess-overlay, but as a pseudo-element (not a sibling DOM
- * node) since buildAppsMenu() in shell-chrome.js emits only the menu itself.
- * pointer-events:none so existing click-outside-to-close handling (thebird
- * JS) keeps working unmodified; the scrim sits one layer below the menu's
- * own z-index but still above .wm-root's windows. */
 .os-menu.open::before {
     content: '';
     position: fixed;
@@ -302,10 +184,6 @@ html, body {
 }
 .os-menu .os-btn:hover { background: var(--panel-hover, var(--os-bg-2)); color: var(--os-fg); }
 
-/* Collapsible "System" apps group inside the apps menu. thebird's os-shell.js
- * builds the group structurally and toggles only the list's display; the static
- * layout (column flow + indent + arrow alignment) lives here so no visual rule
- * leaks back into thebird JS (zero-design-CSS contract). */
 .os-menu-group { display: flex; flex-direction: column; gap: var(--space-hair); }
 .os-menu-system-toggle { display: flex; align-items: center; gap: var(--space-1-75); }
 .os-menu-system-arrow { display: inline-flex; align-items: center; transition: transform 120ms ease; }
@@ -340,17 +218,12 @@ html, body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* No text-transform here: .os-task-label carries the app/window's own
-     * dynamic title (shell.js refreshTaskbar), and a user- or app-supplied
-     * string (filename, acronym, URL) must render as-authored rather than
-     * get silently lowercased by brand-voice CSS. */
 }
 .os-task { min-height: 28px; }
 .os-task:hover { background: var(--panel-hover, var(--os-bg-2)); color: var(--os-fg); }
 .os-task .ic { flex: none; display: inline-flex; width: 14px; height: 14px; }
 .os-task .ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; }
 .os-task-label { overflow: hidden; text-overflow: ellipsis; }
-/* Empty taskbar reads as an intentional strip, not a stray blurred bar. */
 .os-task-empty { font-size: var(--fs-nano); color: var(--os-fg-3); padding: 0 var(--space-2-5); font-family: var(--os-font); }
 .os-task.focused {
     background: var(--panel-select, color-mix(in oklab, var(--os-accent) 30%, var(--os-bg-1)));
@@ -359,14 +232,6 @@ html, body {
     box-shadow: inset 4px 0 0 var(--os-accent), inset 0 0 0 1px color-mix(in oklab, var(--os-accent) 40%, transparent);
 }
 
-/* Window-chrome overrides of wm.css.
- *
- * wm.css is loaded by the consumer as a SEPARATE raw sheet (it is not part of
- * the dist bundle), so its load order relative to this file is not guaranteed.
- * These rules therefore carry the `.ds-247420` scope class: at (0,2,0) they
- * beat wm.css's bare (0,1,0) `.wm-*` rules on SPECIFICITY, which is order-
- * independent — replacing the `!important` wall that previously did the same
- * job by force. Do not un-scope these; the scope IS the override mechanism. */
 .ds-247420 .wm-win {
     position: absolute;
     background: var(--os-bg-1);
@@ -376,14 +241,6 @@ html, body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    /* Open/maximize/restore transitions: transform+opacity are interpolable
-     * (unlike wm-min's `display:none`, which cannot transition at all — a
-     * real minimize/restore animation needs wm.js to defer the display swap
-     * until this transition ends, tracked as its own follow-up). A freshly
-     * mounted .wm-win starts from CSS-animation-in via @starting-style so it
-     * scales/fades into place instead of snapping to full size, and every
-     * maximize/restore toggle (a real geometry change, not a display swap)
-     * eases instead of jumping. */
     transition: opacity 160ms ease, transform 160ms cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 160ms ease;
 }
 @supports (transition-behavior: allow-discrete) {
@@ -399,14 +256,6 @@ html, body {
   .ds-247420 .wm-win { transition: none; }
 }
 
-/* Minimize/restore/close: wm.js's animateMinimize()/animateClose() (wm.js)
- * apply these classes BEFORE the real wm-min toggle / el.remove(), holding
- * them for exactly the duration below so the display:none / DOM-removal
- * that neither CSS nor `transition` can animate happens only after the
- * visual scale+fade has actually played out. Direction: minimize collapses
- * toward the taskbar (down+shrink); close shrinks in place; restore is the
- * minimize keyframe in reverse. Not scoped to .ds-247420 -- these classes
- * are always renderWindow()-authored, own their state fully. */
 .wm-win.wm-minimizing {
   transition: opacity 200ms ease, transform 200ms cubic-bezier(0.4, 0, 1, 1);
   opacity: 0;
@@ -447,10 +296,6 @@ html, body {
     gap: var(--space-2-5);
     transition: background 120ms ease;
 }
-/* Focused vs. unfocused titlebar differentiation: stacked windows otherwise
- * share one flat gray bar and blur together. The focused window's bar picks
- * up the accent-tinted panel shade and full-strength title text; unfocused
- * bars stay on the plain background with dimmed title opacity. */
 .ds-247420 .wm-win.wm-focused .wm-bar {
     background: color-mix(in oklab, var(--os-accent) 10%, var(--os-bg-2));
 }
@@ -460,16 +305,8 @@ html, body {
     letter-spacing: 0.005em;
     text-align: center;
     font-weight: 600;
-    /* 0.72, not 0.65: measured live against the unfocused titlebar's actual
-     * background (rgb(77,77,82)) the opacity-blended effective contrast at
-     * 0.65 was 4.25:1 -- below WCAG AA's 4.5:1 floor for normal text. 0.72
-     * clears it with margin (~4.8:1) while staying visually dimmer than the
-     * focused window's full-opacity title. */
     opacity: 0.72;
     transition: opacity 120ms ease;
-    /* No text-transform here: the titlebar renders the window's own dynamic
-     * title (renderWindow({title}) / setTitle(t) in wm.js) — a user- or
-     * app-supplied filename/acronym/URL must not be silently lowercased. */
 }
 .ds-247420 .wm-win.wm-focused .wm-title {
     color: var(--os-fg);
@@ -494,17 +331,11 @@ html, body {
 }
 .ds-247420 .wm-btn:hover { background: var(--panel-hover, var(--os-bg-2)); color: var(--os-fg); }
 .ds-247420 .wm-btn svg { width: 13px; height: 13px; display: block; fill: none; stroke: currentColor; }
-/* Hover-only color differentiation on the close button (independent of the
- * armed/confirm state below) so it reads as the destructive action at a
- * glance, matching the base wm.css rule. */
 .ds-247420 .wm-btn[title='close']:hover,
 .ds-247420 .wm-btn[aria-label='close']:hover {
     background: var(--color-danger);
     color: var(--paper);
 }
-/* Armed (first-click) confirm state for the window close button's
- * second-click-to-confirm idiom — an unrecoverable close gets a visible cue
- * before it commits, matching the launcher dock's instance-close treatment. */
 .ds-247420 .wm-btn.confirm { background: var(--color-danger); color: var(--paper); }
 .ds-247420 .wm-btn.confirm:hover { background: color-mix(in oklab, var(--color-danger) 85%, black); }
 
@@ -515,7 +346,6 @@ html, body {
     color: var(--os-fg-3);
     opacity: 0.4;
 }
-/* Resize grip via CSS gradient (matches wm.css); no decorative content glyph. */
 .wm-resize::after {
     content: '';
     position: absolute;
@@ -646,10 +476,6 @@ html, body {
 .os-root { position: fixed; inset: 0; display: flex; flex-direction: column; pointer-events: none; z-index: calc(var(--z-dock) + 2); }
 .os-menubar, .os-taskbar { pointer-events: auto; flex: 0 0 auto; }
 .os-taskbar { margin-top: auto; }
-/* Desktop default: the window layer sits BETWEEN the menubar and taskbar.
- * Scoped (0,2,0) to beat wm.css's bare `.wm-root{inset:0}` by specificity
- * rather than `!important`. The brand "bars overlay" block further below
- * re-asserts inset:0 for .ds-247420 at equal specificity + later source order. */
 .ds-247420 .wm-root { inset: var(--os-bar-h) 0 var(--os-bar-h) 0; }
 
 .app-pane { padding: var(--space-3, 16px); font: var(--fs-sm, 14px) var(--os-font); color: var(--os-fg); line-height: var(--lh-base, 1.55); overflow: auto; height: 100%; box-sizing: border-box; background: var(--os-bg-1); }
@@ -667,26 +493,17 @@ html, body {
 .app-pane.mono .row:hover { background: var(--panel-hover, var(--os-bg-2)); }
 .app-pane.mono .row.selected { background: var(--panel-select, var(--os-accent-soft)); box-shadow: inset 4px 0 0 var(--os-accent); }
 .app-pane.mono .head { color: var(--os-accent); margin-bottom: var(--space-2); padding-bottom: var(--space-2); font-weight: 600; letter-spacing: 0.02em; border-bottom: 1px solid var(--os-bg-3); }
-/* Visible fetch-error surface for polling app panes (files/monitor): a swallowed
- * rejection must not leave the pane silently frozen with no user-facing signal. */
 .app-pane.mono .row-error { color: var(--color-danger); padding: var(--space-2); }
 .app-pane.mono[data-component="monitor-app"].is-error { color: var(--color-danger); }
-/* Placeholder body shown immediately for a window spawned by an async app
- * factory, swapped for the real content on resolve — see openApp() in
- * shell.js. Prevents a slow factory from reading as a dead click. */
 .os-app-loading { display: flex; align-items: center; justify-content: center; gap: var(--space-2, 8px); color: var(--os-fg-3); }
 .os-app-loading-label { font-style: italic; }
 .app-pane.mono pre { background: var(--os-bg-2); padding: var(--space-2-5) var(--space-2-75); margin: var(--space-2) 0 0 0; max-height: 220px; overflow: auto; white-space: pre-wrap; font: var(--fs-nano) var(--os-mono); border-radius: var(--r-1, 6px); color: var(--os-fg); border: none; }
 .app-shell-pane { margin: 0; padding: var(--space-2); font: var(--fs-micro) var(--os-mono); color: var(--os-fg); background: var(--os-bg-0); height: 100%; overflow: auto; white-space: pre-wrap; box-sizing: border-box; }
 .app-canvas { width: 100%; height: 100%; background: var(--os-bg-0); display: block; cursor: default; }
-.app-canvas.x-display { background: #0b0d10; } /* intentional: fake CRT/terminal black screen, not a theme surface */
+.app-canvas.x-display { background: #0b0d10; }
 .app-frame { width: 100%; height: 100%; border: 0; background: var(--os-bg-0); }
 .app-iframe { width: 100%; height: 100%; border: 0; display: block; }
-.app-iframe.web { background: #ffffff; } /* intentional: white canvas for embedded external web content that expects white */
-/* Browser-pane empty state (about:blank): a bare framed iframe with no
- * content is a large dead rectangle -- this placeholder fills that space
- * with a real affordance until a navigation lands. Hidden the instant the
- * pane's own url stops being about:blank (docs/browser-pane.js). */
+.app-iframe.web { background: #ffffff; }
 .bp-empty {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -701,11 +518,6 @@ html, body {
   .app-text-cursor { animation: app-cursor-blink 0.5s step-end infinite; }
   @keyframes app-cursor-blink { 50% { opacity: 0; } }
 }
-/* (min-height: 501px): short-landscape windows (<501px tall) in this width
- * band are on the mobile contract, not tablet — see the matching guard on
- * the .wm-root tablet-inset rule below. Without the guard this block showed
- * the side-rail and rail-offset the menubar/taskbar while the mobile band
- * simultaneously tried to lay out rail-less full-screen windows. */
 @media (max-width: 1023px) and (min-width: 768px) and (min-height: 501px) {
     .os-side-rail { display: flex; }
     .ds-247420 .wm-root { left: calc(var(--os-rail-w) + env(safe-area-inset-left, 0px)); }
@@ -714,9 +526,6 @@ html, body {
     .os-menubar .os-instances { display: flex; }
     .os-menu {
         left: calc(var(--os-rail-w) + env(safe-area-inset-left, 0px) + var(--space-2, 8px));
-        /* The base rule's max-width doesn't know about the rail's left offset;
-         * re-derive it here so the menu still can't overflow the viewport's
-         * right edge on tablet-band windows (~810-1150px is the tightest). */
         max-width: min(320px, calc(100vw - var(--os-rail-w) - env(safe-area-inset-left, 0px) - var(--space-4, 16px)));
     }
 }
@@ -758,11 +567,6 @@ html, body {
     .ds-247420 .wm-root {
         inset: calc(var(--os-bar-h) + env(safe-area-inset-top, 0)) 0 calc(var(--os-bar-h) + env(safe-area-inset-bottom, 0)) 0;
     }
-    /* LOAD-BEARING !important: wm.css's own mobile block declares
-     * `.wm-win{left/top/width/height: ... !important}` (wm.css:157-165). An
-     * !important declaration can only be beaten by another !important one, so
-     * scoping alone cannot win here — these five must keep the flag. The
-     * non-!important properties in this rule do not, and were dropped. */
     .ds-247420 .wm-win {
         position: absolute;
         left: 0 !important;
@@ -770,8 +574,6 @@ html, body {
         width: 100% !important;
         height: 100% !important;
         border: none;
-        /* bare 0, not --r-0 (4px): a full-screen window has square corners.
-         * The radius lint intentionally does not flag unitless zero. */
         border-radius: 0;
         box-shadow: none;
     }
@@ -790,67 +592,22 @@ html, body {
     .ds-247420 .wm-resize, .ds-247420 .wm-edge { display: none; }
 }
 
-/* ---- data-attr theme/accent: deferred to the canonical theme ----
- * The OS shell no longer redefines surface or accent colors per theme. The
- * --os-* aliases above consume the canonical semantic tokens (--bg/--fg/
- * --accent), and colors_and_type.css already drives [data-theme] (paper/ink/
- * auto, with color-scheme + --danger tuning) and [data-accent] (green/purple/
- * mascot). Re-declaring the os surface or accent tokens per theme here only
- * re-introduced drift (ink vs canonical ink; purple vs canonical purple).
- * Density bar-height is genuinely OS-shell-specific, so it stays;
- * --os-accent-tint maps to the canonical accent tint. */
 :root { --os-accent-tint: var(--accent-tint); }
 :root[data-density="compact"]     { --os-tile-pad: 6px;  --os-gap: 6px;  }
 :root[data-density="comfortable"] { --os-tile-pad: 10px; --os-gap: 10px; }
 :root[data-density="spacious"]    { --os-tile-pad: 14px; --os-gap: 14px; }
 
-/* ============================================================
- * thebird brand layer (migrated from thebird's local thebird-brand.css
- * 2026-05-26). thebird ships ZERO design CSS — every rule below lives here
- * upstream and is delivered via the published package. Scoped to .ds-247420
- * (thebird's OS root carries that class). Brand identity: Inter + green accent
- * + uniform 34px bars + Windows-style right-side window controls.
- *
- * NOTE: this no longer globally overrides --paper. A global :root override
- * silently mutated the base theme for EVERY portfolio consumer (canonical
- * --paper is #F6F5F1; thebird wanted #F5F0E4). The warm-paper variant is now a
- * named preset [data-theme="thebird"] a consumer opts into, leaving the base
- * theme untouched. The [data-theme="thebird"] COLOR preset now lives in the
- * canonical colors_and_type.css (a first-class swappable theme); only the
- * OS-shell chrome (bar geometry, typography alias) stays here scoped to
- * .ds-247420.
- * ============================================================ */
 .ds-247420 {
     --ff-ui: var(--ff-body);
-    /* uniform bar height: 22px button + 6px+6px padding = 34px.
-     * The density presets above deliberately leave --os-bar-h alone: bar height
-     * is brand geometry, not a density axis. */
     --os-bar-h: 34px;
     --os-bar-h-mobile: 34px;
     --os-dock-h: 34px;
-    /* Brand identity, scoped so it never leaks to other portfolio consumers.
-     * The base theme's auto/paper/ink presets let --accent drift to the bright
-     * --green-2 (#3A9A34) in ink mode; thebird's brand accent is the deep green
-     * #247420 (--green) in EVERY resolved mode, and its paper is the warm
-     * #F5F0E4 variant. Re-assert both here rather than forcing the consumer to
-     * opt into [data-theme="thebird"], which the OS boots past with
-     * data-theme="auto". --accent-bright is pinned too so the ink-mode
-     * --accent: var(--accent-bright, ...) chain still resolves to brand green.
-     * The brand accent itself is pinned in the doubled-class rule below. */
     --paper: #F5F0E4;
 }
-/* colors_and_type.css defines --accent on [data-accent=...] and
- * [data-theme="ink"], attribute selectors at (0,1,0) on the same <html>
- * element. The doubled class lifts this to (0,2,0) so brand green wins
- * whatever the source order, with no !important. */
 .ds-247420.ds-247420 {
     --accent: var(--green);
     --accent-bright: var(--green);
 }
-/* Themed scrollbars for every scrollable node under the OS shell (panels,
- * sidebars, panes, modals) that doesn't already opt into its own scrollbar
- * styling — .chat-thread below keeps its bespoke version. Firefox via
- * scrollbar-width/-color, Chrome/Safari/Edge via ::-webkit-scrollbar. */
 .ds-247420, .ds-247420 * {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklab, var(--fg) 22%, transparent) transparent;
@@ -869,52 +626,23 @@ html, body {
 .ds-247420::-webkit-scrollbar-thumb:hover, .ds-247420 *::-webkit-scrollbar-thumb:hover {
     background: color-mix(in oklab, var(--fg) 30%, transparent);
 }
-/* Window titlebar matches the 34px bar height; clamp so menubar/taskbar/titlebar
- * heights are uniform. */
 .ds-247420 .wm-bar { height: 34px; min-height: 34px; box-sizing: border-box; padding-top: var(--space-1); padding-bottom: var(--space-1); }
-/* Bars overlay windows: .wm-root fills full viewport, menubar/taskbar paint on top.
- * Tilde key hides them via .bars-hidden on <html>.
- * Wins over the desktop `.ds-247420 .wm-root{inset:var(--os-bar-h)...}` above by
- * equal specificity + later source order (both are now (0,2,0)) — no flag needed. */
 .ds-247420 .wm-root { inset: 0; }
-/* With bars overlaying the wm-root, a maximized window's 34px titlebar would
- * sit exactly under the 34px menubar (untappable) and its body under the
- * taskbar; keep maximized windows between the bars on desktop/tablet. The
- * mobile band re-asserts its own contract in the responsive layer below.
- * The (min-height: 501px) guard keeps this rule out of the short-landscape
- * mobile band (768-1023 wide AND <500 tall): the mobile .wm-root already
- * carries the bar-inset there, so this between-the-bars geometry used to
- * DOUBLE-inset maximized windows — a restored wm-max window measured
- * y=104/h=240 instead of y=52/h=344 at 782x448 (witnessed live on thebird
- * 2026-07-29). Guarding here (same idiom as the tablet-band rules below)
- * instead of overriding inside the mobile band keeps the !important
- * ratchet flat — no new declaration was needed. */
 @media (min-width: 768px) and (min-height: 501px) {
-  /* LOAD-BEARING !important: wm.css declares `.wm-win.wm-max{top:0!important;
-   * height:100%!important}` (wm.css:137-143). Only another !important can beat
-   * an !important, regardless of specificity. */
   .ds-247420 .wm-win.wm-max {
     top: var(--os-bar-h) !important;
     height: calc(100% - (var(--os-bar-h) * 2)) !important;
   }
 }
-/* Instance filtering hides off-instance windows via class, not inline style.
- * The three-class selector out-ranks every window state class. */
 .ds-247420 .wm-win.wm-inst-hidden,
 .wm-win.wm-inst-hidden { display: none; }
-/* The tilde-key hide: (0,2,1) beats the .os-menubar/.os-taskbar display rules. */
 html.bars-hidden .os-menubar,
 html.bars-hidden .os-taskbar { display: none; }
 .ds-247420 .os-task { border-radius: var(--r-pill, 999px); }
 .os-brand { font-family: var(--ff-display); font-weight: 700; }
 
-/* thebird windows use Windows/Linux-style right-side controls (upstream theme
- * sets .wm-btns order:-1 for a macOS look; thebird overrides to natural DOM
- * order so controls render on the right). */
 .ds-247420 .wm-btns { order: 0; }
 
-/* OS-shell z-index layering: .os-root above .wm-root so its .os-menu dropdowns
- * paint above windows. */
 .ds-247420 .os-root { z-index: calc(var(--z-dock) + 2); }
 .ds-247420 .os-menubar { z-index: calc(var(--z-dock) + 1); position: relative; }
 .ds-247420 .os-taskbar { z-index: calc(var(--z-dock) + 1); position: relative; }
@@ -922,14 +650,12 @@ html.bars-hidden .os-taskbar { display: none; }
 .ds-247420 .wm-root { z-index: var(--z-window); }
 .ds-247420 .launcher-dock { z-index: var(--z-dock); }
 
-/* Touch/gesture hardening. */
 html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
 .ds-247420 .os-root, .ds-247420 .wm-root { touch-action: none; }
 .ds-247420 .wm-body { overscroll-behavior: contain; touch-action: auto; }
 .ds-247420 .wm-bar, .ds-247420 .wm-resize { -webkit-touch-callout: none; user-select: none; }
 .ds-247420 .os-menubar, .ds-247420 .os-taskbar, .ds-247420 .launcher-dock { user-select: none; -webkit-user-select: none; }
 
-/* Aero-snap drag preview. */
 .ds-247420 .wm-snap-preview {
   position: fixed;
   pointer-events: none;
@@ -938,15 +664,12 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   background: color-mix(in oklab, var(--os-accent) 20%, transparent);
   border: 2px solid var(--os-accent);
   border-radius: var(--r-0);
-  /* Animate only geometry, never `all` — `transition: all` animated display/
-   * opacity too, producing a one-frame ghost on show (jank-pass fix). */
   transition: left 80ms ease, top 80ms ease, width 80ms ease, height 80ms ease;
 }
 @media (prefers-reduced-motion: reduce) {
   .ds-247420 .wm-snap-preview { transition: none; }
 }
 
-/* Alt+Tab window switcher overlay. */
 .ds-247420 .wm-switcher {
   position: fixed;
   left: 50%;
@@ -961,10 +684,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   color: var(--os-fg);
   min-width: 280px;
   box-shadow: var(--shadow-overlay);
-  /* Uncapped, the switcher grew one row per open window with no bound —
-   * witnessed live at 27 windows on a 448px-tall viewport: the overlay
-   * measured y=-344 / h=1136, its top rows unreachable above the screen.
-   * Cap to the viewport between the bars and scroll the overflow. */
   max-height: calc(100dvh - (2 * var(--os-bar-h, 34px)) - 24px);
   overflow-y: auto;
 }
@@ -980,7 +699,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   color: var(--paper);
 }
 
-/* freddie-chat font family (upstream still ships Nunito; brand is Inter). */
 .ds-247420 freddie-chat,
 .ds-247420 freddie-chat .chat-bubble,
 .ds-247420 freddie-chat .chat-meta,
@@ -996,7 +714,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   font-weight: 700;
 }
 
-/* Session-switch crossfade. */
 .ds-247420 .wm-win { transition: opacity 140ms ease; }
 .tb-switching .ds-247420 .wm-win { opacity: 0.4; }
 @media (prefers-reduced-motion: reduce) {
@@ -1004,7 +721,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   .tb-switching .ds-247420 .wm-win { opacity: 1; }
 }
 
-/* ---- Session-UX surfaces: chips + modals + empty state ---- */
 .ds-247420 .os-instances { display: flex; gap: var(--space-1-75); align-items: center; flex: 0 1 auto; min-width: 0; height: var(--os-bar-h, 34px); overflow-x: auto; overflow-y: hidden; padding: 0 var(--space-1); scrollbar-width: none; }
 .ds-247420 .os-instances::-webkit-scrollbar { display: none; }
 
@@ -1032,10 +748,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .tb-sess-badge {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 16px; height: 14px; padding: 0 var(--space-1);
-  /* A neutral window-COUNT chip, not a notification/alert badge -- a small
-   * corner radius (--r-0, 4px) reads as a rectangular count pill, distinct
-   * from the fully-round .tb-sess-dot presence indicator elsewhere in this
-   * chip, so the two don't get visually conflated. */
   border-radius: var(--r-0);
   background: color-mix(in oklab, var(--fg) 14%, transparent);
   font-size: var(--fs-pico); font-weight: 600; line-height: 1;
@@ -1148,7 +860,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 }
 .tb-sess-empty-cta:hover { background: color-mix(in oklab, var(--accent-primary, var(--os-accent)) 85%, var(--fg)); }
 
-/* ---- Workspaces app — full-window session manager card grid ---- */
 .ds-247420 .tb-sessions-app { display: flex; flex-direction: column; height: 100%; font-family: var(--ff-ui); color: var(--fg); background: var(--bg); }
 .ds-247420 .tb-sessions-bar { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2-5) 14px; border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent); }
 .ds-247420 .tb-sessions-title { font-weight: 600; font-size: var(--fs-xs); }
@@ -1172,15 +883,10 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .tb-sessions-card-actions { display: flex; gap: var(--space-1-75); margin-top: var(--space-1); }
 .ds-247420 .tb-sessions-card-actions button { flex: 1; height: 24px; font-size: var(--fs-nano); padding: 0 var(--space-2); border-radius: var(--radius-sm, var(--r-0)); border: 1px solid color-mix(in oklab, var(--fg) 16%, transparent); background: transparent; color: inherit; cursor: pointer; font-family: inherit; }
 .ds-247420 .tb-sessions-card-actions button:hover { background: color-mix(in oklab, var(--fg) 6%, transparent); }
-/* Baseline (non-hover) danger tint so the destructive action reads as
- * distinct at rest, not only on hover -- otherwise Delete is visually
- * identical to Active/Export until the pointer happens to land on it. */
 .ds-247420 .tb-sessions-card-actions button.danger { color: var(--color-danger); border-color: color-mix(in oklab, var(--color-danger) 40%, transparent); }
 .ds-247420 .tb-sessions-card-actions button.danger:hover { background: var(--color-danger); color: var(--on-color); border-color: var(--color-danger); }
 .ds-247420 .tb-sessions-empty-mid { padding: 40px; text-align: center; opacity: 0.6; font-size: var(--fs-tiny); }
 
-/* ---- prefers-contrast: more — strengthen borders + focus so the translucent
-   chrome stays legible under forced/high-contrast user settings. ---- */
 @media (prefers-contrast: more) {
   .ds-247420 .wm-win { border-color: var(--fg); }
   .ds-247420 .wm-bar { border-bottom: 1px solid var(--fg); }
@@ -1192,15 +898,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   .ds-247420 :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 }
 
-/* ---- print: a web-OS desktop has no meaningful print form. Suppress the
-   live chrome so a Ctrl+P does not waste pages on translucent panels. ---- */
-/* LOAD-BEARING !important throughout this block. Print must defeat two things
- * no selector can outrank: (1) wm.css's `.wm-win.wm-max{left/top/width/height
- * !important}` and its mobile `.wm-win{...!important}` band, and (2) the
- * INLINE styles createWM()/renderWindow() write directly onto .wm-win/.wm-canvas
- * for drag, resize and pan (element style attribute beats every stylesheet
- * rule). Flattening the desktop to static flow for print is only possible by
- * force. Do not remove. */
 @media print {
   .os-menubar, .os-taskbar, .wm-snap-preview,
   .tb-sess-overlay, .tb-switching, .wm-switcher { display: none !important; }
@@ -1209,14 +906,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   .wm-win.wm-min { display: none !important; }
 }
 
-/* ============================================================================
- *  Relocated from thebird (2026-05-30) — moves design CSS out of docs/*.js
- *  modules to enforce the zero-design-CSS-in-thebird rule.
- *  Source files: docs/chat-config.js, docs/fsbrowse-app.js, docs/wm.js,
- *  docs/apps.js (todo-app), docs/freddie-keys.js.
- * ============================================================================ */
-
-/* ---- chat-config strip (was: docs/chat-config.js ensureStyles) ---- */
 .ds-247420 .wm-body:has(> .freddie-chat-wrap) { display: flex; flex-direction: column; padding: 0; }
 .ds-247420 .freddie-chat-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; min-height: 0; }
 .ds-247420 .freddie-chat-wrap > freddie-chat { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -1243,7 +932,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .cc-check input { width: auto; }
 .ds-247420 .cc-empty { opacity: .5; font-style: italic; }
 
-/* ---- fsbrowse files app (was: docs/fsbrowse-app.js ensureStyles) ---- */
 .ds-247420 .fsb-root { position: absolute; inset: 0; display: flex; flex-direction: column; min-height: 0; font-size: var(--fs-tiny); color: var(--fg, inherit); }
 .ds-247420 .fsb-bar { flex: 0 0 auto; display: flex; align-items: center; gap: .4em; padding: .45em .6em; border-bottom: 1px solid color-mix(in oklab, var(--fg) 16%, transparent); flex-wrap: wrap; }
 .ds-247420 .fsb-crumbs { flex: 1; display: flex; align-items: center; gap: .2em; min-width: 0; overflow: auto; white-space: nowrap; }
@@ -1260,8 +948,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .fsb-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-247420 .fsb-size { opacity: .55; font-size: var(--fs-nano); font-variant-numeric: tabular-nums; flex: 0 0 auto; }
 .ds-247420 .fsb-actions { display: flex; gap: .3em; flex: 0 0 auto; opacity: 0; }
-/* Reveal row actions on hover OR keyboard focus-within OR coarse-pointer (touch),
- * so they aren't hover-only dead controls for keyboard/touch users. */
 .ds-247420 .fsb-row:hover .fsb-actions,
 .ds-247420 .fsb-row:focus-within .fsb-actions { opacity: 1; }
 @media (hover: none) { .ds-247420 .fsb-actions { opacity: 1; } }
@@ -1271,22 +957,12 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .fsb-view { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: .7em; white-space: pre-wrap; word-break: break-word; font: var(--fs-micro)/1.5 var(--os-mono, ui-monospace, monospace); background: var(--panel-1, transparent); }
 .ds-247420 .fsb-dropping { outline: 2px dashed var(--os-accent, #247420); outline-offset: -6px; }
 
-/* ---- wm canvas (infinite zoom/pan surface — was: docs/desktop-camera.js canvas.style.cssText) ----
- * .wm-root is the fixed clipping viewport; .wm-canvas is the inner transformed
- * layer that carries translate()/scale() updates per camera tick. Compositor-
- * promoted via will-change:transform so per-frame pan/zoom does GPU-only work. */
 .ds-247420 .wm-canvas { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
 
-/* ---- wm context menu (was: docs/wm.js showWindowMenu cssText) ---- */
-/* No var() fallbacks here: colors_and_type.css is guaranteed loaded first for
- * every .ds-247420 consumer (see the file header), and the old `#1a1a1a` /
- * `#fff` fallbacks were baked DARK values that would have rendered white text
- * on a near-white panel in paper mode had they ever fired. */
 .ds-247420 .wm-context-menu { position: fixed; background: var(--panel-2); border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent); border-radius: var(--r-0); z-index: var(--z-dropdown); font-family: var(--ff-ui); color: var(--fg); min-width: 140px; box-shadow: var(--shadow-3); padding: var(--space-1); }
 .ds-247420 .wm-context-menu-item { display: block; width: 100%; padding: 7px var(--space-2-5); border: none; border-radius: var(--r-0); background: none; color: inherit; font-family: inherit; text-align: left; cursor: pointer; font-size: var(--fs-tiny); }
 .ds-247420 .wm-context-menu-item:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); }
 
-/* ---- todo app (was: docs/apps.js todo-app cssText) ---- */
 .ds-247420 .tb-todo-bar { display: flex; gap: var(--space-1-75); margin-bottom: var(--space-2); }
 .ds-247420 .tb-todo-input { flex: 1; padding: var(--space-1-5) var(--space-2); border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent); border-radius: var(--r-0); font: inherit; background: var(--panel-1, transparent); color: var(--fg, inherit); }
 .ds-247420 .tb-todo-list { list-style: none; padding: 0; margin: var(--space-1-75) 0; }
@@ -1297,7 +973,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .tb-todo-text.is-done { text-decoration: line-through; color: color-mix(in oklab, var(--fg) 45%, transparent); }
 .ds-247420 .tb-todo-del { padding: var(--space-hair) var(--space-2); }
 
-/* ---- freddie keys panel (was: docs/freddie-keys.js cssText) ---- */
 .ds-247420 .fk-root { padding: var(--space-2-75); overflow: auto; height: 100%; font-family: var(--os-mono, monospace); font-size: var(--fs-micro); }
 .ds-247420 .fk-status { margin-top: var(--space-2); color: color-mix(in oklab, var(--fg) 60%, transparent); min-height: 1.2em; }
 .ds-247420 .fk-row { display: grid; grid-template-columns: 140px 1fr auto auto; gap: var(--space-1-75); align-items: center; margin: var(--space-hair) 0; }
@@ -1310,20 +985,10 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .fk-host-title { margin-top: 14px; font-size: var(--fs-nano); color: color-mix(in oklab, var(--fg) 60%, transparent); }
 .ds-247420 .fk-summary { font-size: var(--fs-pico); color: color-mix(in oklab, var(--fg) 60%, transparent); margin: var(--space-1-75) 0; }
 
-/* ============================================================================
- *  Freddie chat redesign (2026-05-30) — extends ds-chat / freddie-chat with
- *  agent-loop chrome: tool-call cards, thinking indicator, system/centered
- *  roles, suggestion chips on empty state, cancel-while-generating button.
- *  Drives the {role: 'tool'|'system'|'thinking'} + parts:[{kind:'tool'|...}]
- *  shape that freddie's agent machine now produces.
- * ============================================================================ */
-
-/* Centered chrome for system/tool/thinking — full row, no avatar column. */
 .ds-247420 .chat-msg.centered { grid-template-columns: 1fr; padding: var(--space-1) 12%; }
 .ds-247420 .chat-msg.centered .chat-stack { align-items: center; }
 .ds-247420 .chat-msg.system .chat-bubble { background: transparent; border: 0; font-style: italic; opacity: 0.65; font-size: var(--fs-micro); padding: var(--space-1) var(--space-2); text-align: center; max-width: 100%; }
 
-/* Tool-call card — collapsible details with status icon + name + label. */
 .ds-247420 .chat-tool { display: block; background: var(--panel-1, color-mix(in oklab, var(--fg) 4%, transparent)); border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent); border-radius: var(--r-0); padding: 0; max-width: min(640px, 92%); overflow: hidden; font-size: var(--fs-micro); }
 .ds-247420 .chat-tool[open] { background: var(--panel-1, color-mix(in oklab, var(--fg) 6%, transparent)); }
 .ds-247420 .chat-tool.tool-error { border-color: color-mix(in oklab, var(--color-danger) 60%, transparent); }
@@ -1344,7 +1009,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .chat-tool-pre { margin: 0; padding: var(--space-1-75) var(--space-2); background: color-mix(in oklab, var(--fg) 4%, transparent); border-radius: var(--r-0); max-height: 200px; overflow: auto; font: var(--fs-nano)/1.45 var(--os-mono, ui-monospace, monospace); white-space: pre-wrap; word-break: break-word; }
 .ds-247420 .chat-tool-pre.is-error { color: var(--color-danger); }
 
-/* Thinking indicator — typing dots + label, transient (assistant-side). */
 .ds-247420 .chat-thinking { display: inline-flex; align-items: center; gap: var(--space-2); background: transparent; border: 0; padding: var(--space-1) var(--space-2); opacity: 0.7; font-size: var(--fs-micro); }
 .ds-247420 .chat-thinking-dots { display: inline-flex; gap: var(--space-half); }
 .ds-247420 .chat-thinking-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--fg); opacity: 0.4; animation: chat-thinking-fade 1.2s infinite ease-in-out; }
@@ -1356,58 +1020,27 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   .ds-247420 .chat-tool.tool-running .chat-tool-icon { animation: none; }
 }
 
-/* Empty-state suggestion chips — clickable prompts. */
 .ds-247420 .chat-empty-suggestions { display: flex; flex-wrap: wrap; gap: var(--space-1-75); justify-content: center; margin-top: var(--space-2-75); max-width: 480px; }
 .ds-247420 .chat-empty-suggestion { all: unset; cursor: pointer; font-size: var(--fs-micro); padding: var(--space-1-75) var(--space-2-5); border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent); border-radius: var(--r-pill, 999px); background: var(--panel-1, transparent); transition: background 120ms ease, border-color 120ms ease; }
 .ds-247420 .chat-empty-suggestion:hover { background: color-mix(in oklab, var(--os-accent, #247420) 10%, transparent); border-color: var(--os-accent, #247420); }
 .ds-247420 .chat-empty-suggestion:focus-visible { outline: 2px solid var(--os-accent, #247420); outline-offset: 2px; }
 
-/* Cancel-while-generating button replaces send. */
 .ds-247420 .chat-composer .send.cancel { background: var(--color-danger); color: var(--on-color); }
 .ds-247420 .chat-composer .send.cancel:hover { background: color-mix(in oklab, var(--color-danger) 80%, black); }
 
-/* ============================================================================
- *  Jank pass 2 (2026-05-30) — outer-layer scroll containment + iframe gesture
- *  blocking + backdrop blur. Compositor-promotion on .wm-win drag/resize was
- *  already addressed in pass 1 (commit 7e057b6); these are the rules pass 1
- *  did not surface.
- * ============================================================================ */
-
-/* Scroll containment on the desktop frame too — pass 1 only set
- * overscroll-behavior on .wm-body. Touch-trackpad two-finger pan over the
- * desktop could leak to document.body in some Chromium versions, briefly
- * rubber-banding the page while the camera also panned. */
 .ds-247420 .wm-root,
 .ds-247420 .wm-canvas { overscroll-behavior: contain; }
 
-/* Block iframe pointer-events while a wm window is being dragged/resized so
- * mid-gesture cursor crossings into an iframe child don't swallow the drag
- * (the iframe captures pointerover and the outer wm pointermove stops firing).
- * .wm-dragging / .wm-resizing classes are toggled by docs/wm.js for gesture
- * duration only. */
 .ds-247420 .wm-dragging iframe,
 .ds-247420 .wm-resizing iframe,
 .ds-247420 body:has(.wm-win.wm-dragging) iframe,
 .ds-247420 body:has(.wm-win.wm-resizing) iframe { pointer-events: none; }
 
-/* Subtle backdrop blur behind modal overlays — depth cue without compounding
- * paint cost since the blur layer is GPU-composited. Respect reduced-motion
- * by falling back to plain dim. Shared with the overlay-primitives backdrops
- * below (.ov-cmd-backdrop / .ov-lightbox-backdrop / .ov-auth-backdrop) so
- * every full-viewport modal in the kit reads as one consistent "on top of
- * dimmed content" language instead of some floating over undimmed chrome. */
 .ds-247420 .tb-sess-overlay,
 .ds-247420 .ov-cmd-backdrop,
 .ds-247420 .ov-lightbox-backdrop,
 .ds-247420 .ov-auth-backdrop { background: var(--scrim-strong); }
 
-/* Shared full-viewport dimming scrim for the overlay-primitives components
- * (CommandPalette, VideoLightbox, AuthModal) — these three ship a *-backdrop
- * root element (command-palette.js / full-screen.js / auth-modal.js) but had
- * zero CSS anywhere in the kit, so they rendered undimmed, competing with
- * whatever page content sat behind them instead of reading as on-top. Same
- * position:fixed/inset:0/var(--z-modal)/var(--scrim) shape as .tb-sess-overlay
- * above — one scrim implementation, not three near-duplicates. */
 .ov-cmd-backdrop,
 .ov-lightbox-backdrop,
 .ov-auth-backdrop {
@@ -1416,16 +1049,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   display: flex; align-items: center; justify-content: center;
 }
 
-/* -----------------------------------------------------------------------
-   prefers-reduced-transparency — distinct from prefers-reduced-motion
-   above: a user can want full animation but zero see-through/blur panel
-   chrome (vestibular-motion sensitivity vs. low-vision/legibility need are
-   different accessibility needs, so this is its own media query, not folded
-   into the motion one). Every backdrop-blur/translucent-panel effect in this
-   kit drops to a solid, fully-opaque backing fill — the blur adds nothing
-   once nothing shows through it, so it is dropped alongside the alpha for
-   one less GPU compositing pass, not just left as dead blur-on-opaque.
-   ----------------------------------------------------------------------- */
 @media (prefers-reduced-transparency: reduce) {
   .os-menubar, .os-taskbar {
     background: var(--os-bg-2);
@@ -1434,13 +1057,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   }
   .ds-247420 .tb-sess-overlay { background: var(--scrim-strong); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
-
-/* -----------------------------------------------------------------------
- *  Freddie chat — jank pass 3 (2026-05-31)
- *  Pins layout, spacing, focus, scrollbar, role-distinct bubbles, focus ring,
- *  overflow-wrap, empty-state typography, composer chrome, suggestion list.
- *  Visual code lives in this kit; thebird only wires state.
- * ----------------------------------------------------------------------- */
 
 .ds-247420 freddie-chat,
 .ds-247420 ds-chat,
@@ -1451,12 +1067,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   min-height: 0;
   height: 100%;
   overflow: hidden;
-  /* zero the legacy `.chat` card treatment (app-shell.css chat-polish.css,
-     which the bundle scopes to `.ds-247420 .chat` = (0,2,0)) leaking onto the
-     host element, which also carries the `.chat` class. The
-     `freddie-chat.chat` / `ds-chat.chat` compound selectors here are (0,2,1) —
-     strictly higher — so these win on SPECIFICITY alone, independent of which
-     sheet loads first. That is why no !important is needed. */
   margin: 0;
   padding: 0;
   gap: 0;
@@ -1586,11 +1196,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 }
 
 .ds-247420 .chat-bubble {
-  /* --panel-1 aliases the same --bg-2 the window body already sits on
-     (.wm-body uses --os-bg-1 = --bg-2), so an incoming bubble on --panel-1
-     read as near-invisible against its own window. --panel-2 (--bg-3) is
-     the next real step up the existing panel scale — visible separation,
-     no new token. */
   background: var(--panel-2, color-mix(in oklab, var(--fg) 10%, transparent));
   color: var(--fg);
   border: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
@@ -1767,16 +1372,11 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 
 .ds-247420 .aicat-face {
   font-family: var(--os-mono, ui-monospace, monospace);
-  /* pico (10px) + line-height:1 = 3 lines at 30px, inside the 32px chip --
-     nano/1.2 (13.2px/line, 39.6px total) clipped the ear/whisker rows
-     against the chip's overflow:hidden. */
   font-size: var(--fs-pico);
   line-height: 1;
   margin: 0;
 }
 
-/* gm memory browser — recall hits rendered as interactive, prunable cards
-   (thebird's gm app, docs/apps.js recall panel). */
 .ds-247420 .gm-recall-hits {
   display: flex;
   flex-direction: column;
@@ -1815,65 +1415,23 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   padding: var(--space-hair) var(--space-2);
 }
 
-/* ============================================================
- * thebird RESPONSIVE PERFECTION layer (desk / tablet / mobile).
- * Appended LAST so the .ds-247420-scoped rules here win by SOURCE ORDER at
- * equal (0,2,0) specificity over the earlier brand overrides
- * (.ds-247420 .wm-root{inset:0} at the "bars overlay" block,
- * .ds-247420 .wm-bar{height:34px}, the unconditional
- * .ds-247420 .os-instances{display:flex}) that were silently defeating the
- * @media(max-width:767px)/(768-1023px) contracts. Every rule below is a
- * measured fix for a confirmed responsive-audit finding.
- *
- * Because every competing rule is now equally scoped, source order alone
- * decides — so this layer needs no !important except where it must beat
- * wm.css's own !important declarations or wm.js's inline styles.
- *
- * View classes: desktop >1023px (free-float windows, full menubar);
- * tablet 768..1023px (side-rail, wm-root left-offset); mobile <=767px AND
- * short landscape phones (full-screen windows, collapsed menubar, bottom
- * scroll-snap taskbar). Touch sizing is driven by (pointer:coarse) so it
- * also covers the landscape-phone band that width-only queries miss.
- * ============================================================ */
-
-/* --- mobile bar height: the kit intends a touch-friendly 52px; the brand
- * layer pinned --os-bar-h-mobile to 34px which left no room for 44px tap
- * targets in the bar. Restore 52px on mobile/touch. --- */
 @media (max-width: 767px), (max-height: 500px) and (orientation: landscape) {
   .ds-247420 { --os-bar-h-mobile: 52px; --os-bar-h: 52px; }
 }
 
-/* --- mobile + landscape-phone full-screen windows. The earlier
- * .ds-247420 .wm-root{inset:0!important} forced windows over the bars so the
- * titlebar close button landed under the menubar (occluded, untappable) and
- * window content underlapped the taskbar. Re-assert the bar-inset at scoped
- * specificity so windows sit BETWEEN the bars. --- */
 @media (max-width: 767px), (max-height: 500px) and (orientation: landscape) {
   .ds-247420 .wm-root {
     inset: calc(var(--os-bar-h) + env(safe-area-inset-top, 0px)) 0
            calc(var(--os-bar-h) + env(safe-area-inset-bottom, 0px)) 0;
   }
-  /* LOAD-BEARING !important on the geometry four: wm.css's mobile band
-   * (wm.css:157-165) declares left/top/width/height with !important, and
-   * wm.js writes left/top/width/height as INLINE styles during drag/resize.
-   * Neither can be beaten by specificity — only by !important. The remaining
-   * properties here need no flag. */
   .ds-247420 .wm-win {
     position: absolute;
     left: 0 !important; top: 0 !important;
     width: 100% !important; height: 100% !important;
     border: none;
-    /* bare 0: full-screen window has square corners (not --r-0's 4px) */
     border-radius: 0;
     box-shadow: none;
   }
-  /* A maximized window on the mobile band is just the full-screen window the
-   * rule above already describes — the desktop/tablet `.wm-win.wm-max`
-   * between-the-bars rule is kept out of this band by its own
-   * (min-height: 501px) guard (see its comment above), so no override is
-   * needed here and the !important ratchet stays flat. */
-  /* titlebar must host a 44px close button -> 44px bar (beats the 34px brand
-   * clamp by later source order at equal specificity) */
   .ds-247420 .wm-bar {
     height: 44px; min-height: 44px;
     padding: 0 var(--space-2-5); align-items: center;
@@ -1881,99 +1439,59 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   }
   .ds-247420 .wm-bar .wm-title { pointer-events: auto; }
   .ds-247420 .wm-bar .wm-btns { pointer-events: auto; }
-  /* hide min+max on mobile full-screen; keep close at 44x44 fully inside the bar */
   .ds-247420 .wm-btns .wm-btn:nth-child(1),
   .ds-247420 .wm-btns .wm-btn:nth-child(2) { display: none; }
-  /* LOAD-BEARING !important on width/height: wm.css's `@media (pointer:coarse)`
-   * sets `.wm-btn{min-width:44px;min-height:44px}` and this must also beat the
-   * (0,3,0) `.ds-247420 .wm-btns .wm-btn` coarse-pointer rule below, which is
-   * later in source order. Colors/radius need no flag. */
   .ds-247420 .wm-btns .wm-btn:nth-child(3) {
     width: 44px !important; height: 44px !important;
     border-radius: var(--r-1);
     background: var(--os-bg-3); color: var(--os-fg);
   }
   .ds-247420 .wm-resize, .ds-247420 .wm-edge { display: none; }
-  /* collapse the menubar workspace cluster on mobile. `.os-menubar
-   * .os-instances` is (0,3,0) here, beating the unconditional (0,2,0)
-   * `.ds-247420 .os-instances{display:flex}` on specificity. */
   .ds-247420 .os-menubar .os-instances,
   .ds-247420 .os-instances { display: none; }
   .ds-247420 .os-menubar [data-role="add"],
   .ds-247420 .tb-sess-add { display: none; }
 }
 
-/* --- landscape-phone (short + wide + touch): also hide the side-rail that the
- * 768-1023 tablet band would otherwise show, and force the mobile menubar. --- */
 @media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
   .ds-247420 .os-side-rail { display: none; }
 }
 
-/* --- tablet (768..1023): the side-rail offset for .wm-root was defeated by
- * the scoped inset:0; re-asserted here at equal (0,2,0) specificity but later
- * source order, which is enough now that the earlier rule is also scoped.
- * `inset` alone carries the left offset — the separate `left` declaration it
- * used to be paired with was redundant with this shorthand.
- * The (min-height: 501px) guard excludes the short-landscape overlap band
- * (768-1023 wide AND <500 tall): both this query and the mobile band's
- * (max-height: 500px)+(orientation: landscape) match there, and this rule —
- * later in source order — used to override the mobile bar-inset, dropping
- * .wm-root to top:0 so full-screen windows covered the menubar and their
- * close buttons landed under it occluded and untappable (witnessed live on
- * thebird at 782x448: elementFromPoint on the chat close button hit
- * .os-clock, menubar z 601 over window z 102). Short-landscape is the
- * phone/mobile contract, not tablet. --- */
 @media (min-width: 768px) and (max-width: 1023px) and (min-height: 501px) {
   .ds-247420 .wm-root {
     inset: 0 0 0 var(--os-rail-w);
   }
 }
 
-/* --- universal touch tap-target floor (pointer:coarse covers tablets AND
- * landscape phones that width-only queries miss). Every interactive control
- * the audit measured below 44px is lifted to the --os-tap (44px) token. --- */
 @media (pointer: coarse) {
-  /* window chrome */
   .ds-247420 .wm-btns .wm-btn { min-width: var(--os-tap, 44px); min-height: var(--os-tap, 44px); }
   .ds-247420 .wm-resize { width: var(--os-tap, 44px); height: var(--os-tap, 44px); }
   .ds-247420 .os-btn { min-height: var(--os-tap, 44px); }
-  /* taskbar tasks (also widen and snap on the whole touch band, not mobile-only) */
   .ds-247420 .os-task {
     min-height: var(--os-tap, 44px); min-width: 120px;
     padding: var(--space-2-5) 14px; scroll-snap-align: start;
   }
   .ds-247420 .os-taskbar { scroll-snap-type: x proximity; }
-  /* menubar workspace controls (when shown on tablet) */
   .ds-247420 .os-menubar .tb-sess-x { min-width: var(--os-tap, 44px); min-height: var(--os-tap, 44px); }
   .ds-247420 .tb-sess-chip { min-height: var(--os-tap, 44px); }
   .ds-247420 .tb-sess-add { min-height: var(--os-tap, 44px); }
-  /* modal controls */
   .ds-247420 .tb-sess-modal-input { height: var(--os-tap, 44px); min-height: var(--os-tap, 44px); }
   .ds-247420 .tb-sess-modal-btn { min-height: var(--os-tap, 44px); }
   .ds-247420 .tb-sess-modal-x { min-width: var(--os-tap, 44px); min-height: var(--os-tap, 44px); }
-  /* files-app rows + per-row actions */
   .ds-247420 .fsb-row { min-height: var(--os-tap, 44px); }
   .ds-247420 .fsb-act {
     min-width: var(--os-tap, 44px); min-height: var(--os-tap, 44px);
     display: inline-flex; align-items: center; justify-content: center;
   }
-  /* chat composer controls */
   .ds-247420 .chat-composer .send { width: var(--os-tap, 44px); height: var(--os-tap, 44px); }
   .ds-247420 .cc-toggle { min-height: var(--os-tap, 44px); }
-  /* sessions grid card checkbox */
   .ds-247420 .tb-sessions-card-check { width: var(--os-tap, 44px); height: var(--os-tap, 44px); flex: 0 0 var(--os-tap, 44px); }
 }
 
-/* --- files-app row actions must reveal on coarse pointers too (the existing
- * trigger keyed only on hover:none, which fails on hybrid touch+hover
- * tablets that also report a hover-capable pointer). --- */
 @media (hover: none), (pointer: coarse) {
   .ds-247420 .fsb-actions { opacity: 1; }
 }
 
-/* --- modals: a content-tall card had no max-height and the overlay did not
- * scroll, so the footer (primary action) was stranded off-canvas. Cap the
- * card to the visible viewport, scroll the body, honor safe-area. --- */
 .ds-247420 .tb-sess-overlay {
   overflow-y: auto;
   padding: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px))
@@ -1982,15 +1500,8 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .tb-sess-modal { max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); display: flex; flex-direction: column; }
 .ds-247420 .tb-sess-modal-body { overflow-y: auto; min-height: 0; }
 
-/* --- browser-pane: the generic .app-pane 16px prose padding stranded the
- * iframe 16px on every side; the browser pane is full-bleed. --- */
-/* (0,3,0) beats the generic `.app-pane` (0,1,0) prose padding on specificity. */
 .ds-247420 .app-pane.browser-app { padding: 0; }
 
-/* --- chat send-queue indicator + per-item cancel list (F2): a rapid
- * double/triple send while a turn is busy queues silently with no undo
- * beyond a fading count; clicking the indicator reveals queued texts with
- * a per-row remove control. --- */
 .ds-247420 .tb-chat-queue-indicator-hidden { display: none; }
 .ds-247420 .tb-chat-queue-indicator {
   cursor: pointer;
@@ -2046,8 +1557,6 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   .tb-sess-overlay { animation: none; }
 }
 
-/* The OS kit does not link app-shell.css, so the shell's body-level skip link
-   would otherwise render as a UA-default blue link. */
 .skip-link {
   position: absolute;
   top: 0;

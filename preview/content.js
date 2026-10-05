@@ -1,10 +1,3 @@
-// Rendered specimens for the content.js family.
-//
-// These are the REAL components, imported and rendered — not hand-written
-// markup that imitates their output. That distinction is the whole point: a
-// hand-copied specimen silently drifts the moment the component changes, and
-// then documents something the SDK no longer does. Anything on this page is by
-// construction what the component actually emits today.
 import * as webjsx from 'webjsx';
 import {
     Panel, Row, RowLink, Hero, Marquee, Install, CliBlock, Receipt,
@@ -14,10 +7,9 @@ import {
 } from '../src/components/content.js';
 
 const h = webjsx.createElement;
+const inertSpecimenHandler = () => {};
 const root = document.getElementById('root');
 
-// Each specimen states what it is, so the page reads as a catalogue rather
-// than a wall of anonymous widgets.
 function spec(name, note, ...children) {
     return h('section', { key: name },
         h('h2', {}, name),
@@ -33,7 +25,7 @@ const view = () => h('div', { class: 'spec-page' },
         Hero({
             title: 'the creative department of the internet.',
             body: 'ships fast, breaks things on purpose, documents honestly.',
-            accent: 'humor is load-bearing.',
+            accent: 'all of it open source.',
             badges: ['35 exports', '1 module', 'live'],
         })),
 
@@ -45,7 +37,7 @@ const view = () => h('div', { class: 'spec-page' },
             children: [
                 Row({ key: 'a', code: '001', title: 'static row', sub: 'no handler', meta: 'inert' }),
                 Row({ key: 'b', code: '002', title: 'clickable row', sub: 'has onClick', meta: 'button',
-                    onClick: () => { /* specimen: the affordance is the subject, not the destination */ } }),
+                    onClick: inertSpecimenHandler }),
                 RowLink({ key: 'c', code: '003', title: 'link row', meta: 'anchor', href: './index.html' }),
             ],
         })),
@@ -79,7 +71,7 @@ const view = () => h('div', { class: 'spec-page' },
                 { code: '002', title: 'zellous', sub: 'push-to-talk', meta: '2024', body: 'so does this one.', href: '#', source: '#' },
             ],
             openedIndex: 0,
-            onToggle: () => { /* specimen: static at index 0 so the open state is visible on load */ },
+            onToggle: inertSpecimenHandler,
         })),
 
     spec('WritingList', 'Dated post rows.',
@@ -92,7 +84,7 @@ const view = () => h('div', { class: 'spec-page' },
         Manifesto({ paragraphs: [
             { text: 'ship the rough draft.' },
             { text: 'document honestly.' },
-            { text: 'humor is load-bearing.', dim: true },
+            { text: 'ship early and say plainly what is unfinished.', dim: true },
         ] })),
 
     spec('Install + CliBlock', 'Copyable command surfaces.',
@@ -117,12 +109,12 @@ const view = () => h('div', { class: 'spec-page' },
                 { name: 'kind', label: 'kind', type: 'select', options: ['tool', 'site', 'library'] },
             ],
             submit: 'create',
-            onSubmit: () => { /* specimen: submit is prevented by Form itself; nothing to post */ },
+            onSubmit: inertSpecimenHandler,
         })),
 
     spec('FilterPills', 'Single-select pill row.',
         FilterPills({ options: [{ id: 'all', label: 'all' }, { id: 'live', label: 'live' }, { id: 'wip', label: 'wip' }], selected: 'all',
-            onSelect: () => { /* specimen: the resting appearance is the subject */ } })),
+            onSelect: inertSpecimenHandler })),
 
     spec('Alert', 'All four tones.',
         Panel({ children: [

@@ -10,7 +10,7 @@ const root = document.getElementById('root');
 const slides = [
     {
         kind: 'title',
-        eyebrow: '247420 · mmxxvi',
+        eyebrow: '247420 design system',
         title: 'the deck',
         sub: 'a 16:9 slide template built from the SDK chrome.'
     },
@@ -42,8 +42,8 @@ const slides = [
     {
         kind: 'title',
         eyebrow: 'fin',
-        title: 'two-four-seven · four-twenty',
-        sub: 'always open, always a little high.'
+        title: 'thank you',
+        sub: 'tokens, components and kits for dense, tonal interfaces.'
     }
 ];
 
@@ -180,7 +180,7 @@ function App() {
         ],
         status: Status({
             left: ['slide deck', '- slide ' + (state.i + 1) + '/' + slides.length, '- </> to nav'],
-            right: ['247420 / mmxxvi']
+            right: ['3 modes: auto, paper, ink']
         })
     });
 }

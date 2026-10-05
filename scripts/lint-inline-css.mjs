@@ -123,7 +123,7 @@ export function lintInlineCssOrThrow() {
             ? `${files.length} HTML files with inline <style>, ${jsFiles.length} JS files with style.cssText`
             : `${files.length} HTML files with inline <style>`,
         noun: 'raw color/radius/spacing/font-size literal(s) inside inline <style> blocks bypassing the token scales in colors_and_type.css',
-        fix: 'Use the token (var(--space-N) / var(--fs-N) / var(--r-N) / a color token). An inline <style> block is ordinary CSS and gets no exemption for living in an HTML file. If the value is genuinely off-scale because the page is a SPECIMEN demonstrating that exact value (a swatch box dimension, a deliberately off-ladder type size), leave the literal and add a comment at the site saying so, and re-freeze the baseline DOWNWARD to whatever you reached.',
+        fix: 'Use the token (var(--space-N) / var(--fs-N) / var(--r-N) / a color token). An inline <style> block is ordinary CSS and gets no exemption for living in an HTML file. If the value is genuinely off-scale because the page is a SPECIMEN demonstrating that exact value (a swatch box dimension, a deliberately off-ladder type size), name it as a custom property on the same rule (e.g. `--swatch-size: 37px; width: var(--swatch-size);`), which the gate accepts, and re-freeze the baseline DOWNWARD to whatever you reached.',
     });
 }
 

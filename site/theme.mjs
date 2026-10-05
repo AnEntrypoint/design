@@ -2,6 +2,7 @@ import { renderPageHtml } from '../src/page-html.js';
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PREVIEWS } from '../scripts/preview-catalog.mjs';
 
 const TOTAL_KITS_TOKEN = '{{TOTAL_KITS}}';
 const COUNT_SOURCE_BY_HREF = { '#all': 'all', '#kits': 'kits', '#decks': 'decks', '#previews': 'previews', '#docs': 'docs' };
@@ -30,14 +31,13 @@ function countManifestComponents() {
 
 const isBareOrdinal = (code) => /^\d+$/.test(String(code).trim());
 
-const titleCase = (hyphenated) => String(hyphenated).split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-
-function toRows(items) {
+function toRows(items, categories) {
+  const categoryLabel = new Map((categories || []).map((c) => [c.key, c.label]));
   return (items || []).map((it) => ({
     code: it.code && !isBareOrdinal(it.code) ? it.code : '',
     title: it.title || it.name,
     sub: it.sub || it.desc || '',
-    meta: it.cta || it.meta || 'open',
+    meta: it.cta || it.meta || categoryLabel.get(it.category) || 'open',
     href: it.href || '#',
     category: it.category,
   }));
@@ -49,7 +49,7 @@ function toPanel(section, id, itemsKey = 'items') {
     id: section.id || id,
     title: section.heading,
     count: section.count || section[itemsKey].length,
-    items: toRows(section[itemsKey]),
+    items: toRows(section[itemsKey], section.categories),
     layout: section.layout || null,
     categories: section.categories || null,
   };
@@ -61,10 +61,10 @@ function itemCount(home, section) {
 
 function liveCountFor(home, key) {
   const sources = {
-    all: () => itemCount(home, 'kits') + itemCount(home, 'decks') + itemCount(home, 'previews') + itemCount(home, 'docs'),
+    all: () => itemCount(home, 'kits') + itemCount(home, 'decks') + PREVIEWS.length + itemCount(home, 'docs'),
     kits: () => itemCount(home, 'kits'),
     decks: () => itemCount(home, 'decks'),
-    previews: () => itemCount(home, 'previews'),
+    previews: () => PREVIEWS.length,
     docs: () => itemCount(home, 'docs'),
   };
   return sources[key] ? sources[key]() : null;
@@ -93,13 +93,13 @@ function previewsPanel(previews) {
   return {
     id: 'previews',
     title: previews.heading || 'previews',
-    count: previews.items.length,
-    items: previews.items.map((name) => ({
+    count: PREVIEWS.length,
+    items: PREVIEWS.map((p) => ({
       code: '',
-      title: titleCase(name),
-      sub: 'Component/token reference preview',
-      meta: 'open',
-      href: base + name + '.html',
+      title: p.title,
+      sub: p.description,
+      meta: p.group,
+      href: base + p.name + '.html',
     })),
   };
 }
@@ -112,6 +112,8 @@ export default {
     if (!home) throw new Error('site/content/pages/home.yaml missing or has no id: home');
     const hero = home.hero || null;
     const totalKits = countKitFoldersWithIndexHtml();
+    const listedKits = itemCount(home, 'kits');
+    if (listedKits !== totalKits) throw new Error(`home.yaml lists ${listedKits} kits but ui_kits/ has ${totalKits} folders with an index.html`);
     const totalComponents = countManifestComponents();
     const interpolate = (s) => typeof s === 'string'
       ? s.replaceAll(TOTAL_KITS_TOKEN, String(totalKits)).replaceAll(TOTAL_COMPONENTS_TOKEN, String(totalComponents))
@@ -137,7 +139,7 @@ export default {
       }
     }
 
-    if (home.previews && home.previews.items && home.previews.items.length) panels.push(previewsPanel(home.previews));
+    if (home.previews) panels.push(previewsPanel(home.previews));
 
     const html = renderPageHtml({
       cssHref: './dist/247420.css',
@@ -160,13 +162,12 @@ export default {
       examples: home.examples && home.examples.items ? home.examples.items.map((e) => ({
         label: e.name || e.title, desc: e.desc, href: e.href,
       })) : null,
-      marquee: { items: ['Open source', 'Design tokens', 'WCAG AA verified', 'No bundler required'], sep: '/' },
       quickstart: home.quickstart && home.quickstart.lines ? { heading: home.quickstart.heading, lines: home.quickstart.lines } : null,
       sidebar: buildSidebar(home),
       statusLeft: home.status_left || ['main', '- utf-8', '- lf'],
       statusRight: [
         'anentrypoint-design@latest',
-        (home.kits && home.kits.items ? home.kits.items.length : 0) + ' kits',
+        totalKits + ' kits',
       ],
       seo: {
         description: interpolate(site.description || site.tagline || site.title),

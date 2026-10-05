@@ -208,7 +208,7 @@ function App() {
         ],
         status: Status({
             left: ['terminal', '- live ' + (live.phase === 'ready' ? liveTranscript.length : 0) + ' lines', demo.looping ? '- demo playing' : '- demo still'],
-            right: ['247420 / mmxxvi']
+            right: ['simulated output']
         })
     });
 }

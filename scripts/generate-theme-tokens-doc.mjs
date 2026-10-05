@@ -187,34 +187,15 @@ const html = `<!doctype html>
 <link rel="stylesheet" href="../colors_and_type.css">
 <link rel="stylesheet" href="../app-shell.css">
 <style>
-/* Layout for this generated page lives here, not in style= attributes: an
-   inline layout string escapes every media query and is invisible to the
-   density rules (scripts/lint-inline-styles.mjs). Every value is a token, so
-   the block also stays clean under scripts/lint-inline-css.mjs. */
 body{padding:var(--space-4);background:var(--panel-0);color:var(--panel-text);max-width:var(--measure-wide);margin:0 auto}
 .tm-head{font-family:var(--ff-mono);text-transform:uppercase;letter-spacing:var(--tr-label);color:var(--fg-3)}
 .tm-group{margin-top:var(--space-4)}
 .tm-list{list-style:none;padding:0;margin:0}
-/* wrap, not nowrap. The consumers column is an unbounded comma-joined list of
-   every sheet consuming the token, so on a narrow viewport it is always the
-   longest thing in the row. A non-wrapping flex row with two fixed min-width
-   floors below cannot absorb that: the row overflowed the body by ~167px and
-   the page scrolled sideways. Wrapping lets the consumers span drop to its own
-   line instead of pushing the row past the viewport. */
 .tm-row{padding:var(--space-1) 0;border-bottom:1px solid var(--panel-2);display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:baseline}
 .tm-name{min-width:var(--tm-name-w)}
 .tm-value{color:var(--fg-3);min-width:var(--tm-value-w)}
-/* min-width:0 overrides the flex item default of min-width:auto, which
-   otherwise refuses to shrink a flex item below its longest unbreakable
-   content — the other half of the same overflow. */
 .tm-consumers{font-size:var(--fs-micro);color:var(--fg-3);min-width:0;overflow-wrap:anywhere}
-/* Column widths are page-local layout constants, not design-system scale
-   values — there is no --space-* rung for "wide enough for the longest token
-   name". Declared as custom properties so they stay overridable and off the
-   raw-literal path. */
 .tm-list{--tm-name-w:220px;--tm-value-w:160px}
-/* Below the combined width of the two floors plus padding, the floors are
-   themselves the overflow. Drop them and let the columns size to content. */
 @media (max-width:520px){.tm-list{--tm-name-w:0;--tm-value-w:0}}
 </style>
 </head><body>

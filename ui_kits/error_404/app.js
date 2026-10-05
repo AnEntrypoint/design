@@ -33,7 +33,7 @@ function App() {
         ],
         status: Status({
             left: ['not found', '- 404', '- ' + (path || 'no path given')],
-            right: ['247420 / mmxxvi']
+            right: ['static page']
         })
     });
 }

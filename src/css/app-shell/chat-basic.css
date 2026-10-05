@@ -1,7 +1,3 @@
-
-/* ============================================================
-   Chat — minimal styles (placeholder for full chat surface)
-   ============================================================ */
 .ds-chat { display: flex; flex-direction: column; gap: var(--space-2-75); padding: var(--space-4); }
 .ds-chat-msg { padding: var(--space-2-75) 18px; background: var(--bg-2); border-radius: var(--r-3); max-width: min(90vw, 36em); }
 .ds-chat-msg.user { background: var(--accent-tint); color: var(--fg); align-self: flex-end; }

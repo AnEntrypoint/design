@@ -1,6 +1,3 @@
-/* ============================================================
-   Carousel — horizontal (or vertical) scroll-snap content carousel
-   ============================================================ */
 .ds-carousel {
   display: flex;
   align-items: center;

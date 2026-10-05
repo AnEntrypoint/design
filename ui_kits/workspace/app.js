@@ -133,7 +133,7 @@ function App() {
         main: state.tab === 'chat' ? ChatTab() : LiveTab(),
         status: Status({
             left: ['workspace', '- ' + (sessions.length) + ' conversations', '- ' + (liveSessions.length) + ' live'],
-            right: ['247420 / mmxxvi', '- demo'],
+            right: ['demo data'],
         }),
         stableFrame: true,
     });

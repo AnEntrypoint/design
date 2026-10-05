@@ -40,10 +40,6 @@
   min-width: 0;
   max-width: var(--measure);
 }
-/* .wide opt-in: widens the reading column past the default measure cap for
-   articles whose content (tables, code, diagrams) benefits from more
-   horizontal room than plain prose. Never the default -- a page opts in by
-   adding the class, per-page, alongside has-toc. */
 #ds-article-host.has-toc.wide {
   max-width: calc(var(--article-toc-rail-w) + var(--article-toc-gutter-nonrhythm) + var(--article-measure-wide));
 }

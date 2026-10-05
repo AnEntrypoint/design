@@ -1,13 +1,3 @@
-// Rendered specimens for the editor-primitives.js family.
-//
-// Real imported components, not markup that imitates them — see preview/
-// content.js for why that distinction is the whole point of these pages.
-//
-// Overlay components (Dialog, Drawer, Toast, ContextMenu) render in their OPEN
-// state here on purpose: their closed state is nothing, and a specimen of
-// nothing documents nothing. The hooks (useContextMenu, useMediaQuery,
-// useLongPress) have no visual form and are covered by docs/component-props.md
-// instead.
 import * as webjsx from 'webjsx';
 import {
     Toolbar, ToolbarRow, Tabs, TreeView, TreeItem, PropertyGrid, PropertyField,
@@ -18,6 +8,7 @@ import {
 import { Btn, Icon } from '../src/components/shell.js';
 
 const h = webjsx.createElement;
+const inertSpecimenHandler = () => {};
 const root = document.getElementById('root');
 
 function spec(name, note, ...children) {
@@ -27,8 +18,6 @@ function spec(name, note, ...children) {
         ...children);
 }
 
-// A bounded box for the specimens that fill their container (SplitPanel, Dock,
-// Drawer), so they do not collapse to zero height on a plain page.
 function box(...children) {
     return h('div', { class: 'spec-box' }, ...children);
 }
@@ -44,7 +33,7 @@ const view = () => h('div', { class: 'spec-page' },
     spec('Tabs', 'Active tab is driven by `active`, not internal state.',
         Tabs({ items: [{ id: 'a', label: 'source' }, { id: 'b', label: 'output' }, { id: 'c', label: 'diff' }],
             active: 'a', 'aria-label': 'view',
-            onChange: () => { /* specimen: the resting appearance is the subject */ } })),
+            onChange: inertSpecimenHandler })),
 
     spec('TreeView + TreeItem', 'depth drives the indent; hasChildren draws the twisty.',
         TreeView({ children: [
@@ -74,7 +63,7 @@ const view = () => h('div', { class: 'spec-page' },
             { id: 'left', icon: Icon('menu'), label: 'left' },
             { id: 'split', icon: Icon('columns'), label: 'split' },
             { id: 'right', icon: Icon('menu'), label: 'right' },
-        ], value: 'split', onChange: () => { /* specimen: resting appearance */ } })),
+        ], value: 'split', onChange: inertSpecimenHandler })),
 
     spec('SplitPanel', 'Two panes with a draggable divider.',
         box(SplitPanel({ orientation: 'horizontal', initial: '40%', children: [
@@ -119,9 +108,9 @@ const view = () => h('div', { class: 'spec-page' },
     spec('Pager', 'Prev/next, and the numbered form.',
         h('div', { class: 'spec-stack' },
             Pager({ key: 'pg1', page: 2, pageCount: 7, total: 68, itemLabel: 'rows',
-                onPage: () => { /* specimen: resting appearance */ } }),
+                onPage: inertSpecimenHandler }),
             Pager({ key: 'pg2', page: 3, pageCount: 9, numbered: true,
-                onPage: () => { /* specimen: resting appearance */ } }))),
+                onPage: inertSpecimenHandler }))),
 
     spec('JsonViewer', 'Plain and tree modes.',
         h('div', { class: 'spec-stack' },
@@ -133,18 +122,18 @@ const view = () => h('div', { class: 'spec-page' },
         DiagnosticsPanel({ title: 'diagnostics', sections: [
             { title: 'runtime', rows: [{ label: 'node', value: '24.15.0' }, { label: 'chrome', value: '150' }] },
             { title: 'gates', rows: [{ label: 'lint', value: '16/16' }, { label: 'a11y', value: '0 blocking' }] },
-        ], onRefresh: () => { /* specimen: resting appearance */ } })),
+        ], onRefresh: inertSpecimenHandler })),
 
     spec('Dialog', 'Shown open. The closed state renders nothing.',
         Dialog({ title: 'confirm', open: true, dismissible: true,
             children: h('p', {}, 'dialog body copy.'),
             actions: [{ label: 'cancel', kind: 'ghost' }, { label: 'confirm', kind: 'primary' }],
-            onClose: () => { /* specimen: stays open so the specimen is visible */ } })),
+            onClose: inertSpecimenHandler })),
 
     spec('Drawer', 'Shown open, anchored left.',
         box(Drawer({ side: 'left', open: true, ariaLabel: 'example drawer',
             children: h('p', {}, 'drawer body.'),
-            onClose: () => { /* specimen: stays open so the specimen is visible */ } }))),
+            onClose: inertSpecimenHandler }))),
 
     spec('Toast', 'All four kinds.',
         h('div', { class: 'spec-stack' },

@@ -11,8 +11,8 @@ const ERROR_RATE_DANGER_PCT = 1;
 const kpis = [
     ['24,891', 'requests · 24h', { delta: '+12.4%', tone: 'up',   spark: [8, 11, 9, 14, 16, 15, 19, 22, 20, 24] }],
     ['184ms',  'avg latency · p50', { delta: '-6.1%', tone: 'down', invert: true, spark: [220, 210, 205, 198, 190, 188, 184, 186, 182, 184] }],
-    ['0.42%',  'error rate · 5xx+4xx', { delta: '+0.08%', tone: 'up', invert: 0.42 > ERROR_RATE_DANGER_PCT, spark: [0.2, 0.25, 0.3, 0.28, 0.35, 0.3, 0.38, 0.4, 0.36, 0.42] }],
-    ['94.7%',  'cache hit · edge', { delta: '+1.2%', tone: 'up', spark: [90, 91, 92, 91, 93, 92, 94, 93, 95, 94.7] }]
+    ['0.42%',  'error rate · 5xx+4xx', { delta: '+0.08%', tone: 'up', invert: 0.42 > ERROR_RATE_DANGER_PCT }],
+    ['94.7%',  'cache hit · edge', { delta: '+1.2%', tone: 'up' }]
 ];
 
 const channelBreakdown = [
@@ -86,10 +86,10 @@ function App() {
         side: Side({
             sections: [
                 { group: 'views', items: [
-                    { glyph: Icon('activity', { size: 14 }), label: 'overview',      count: kpis.length,             key: 'o', href: '#p-metrics' },
-                    { glyph: Icon('rows', { size: 14 }), label: 'endpoints',     count: tableRows.length,        key: 'r', href: '#p-endpoints' },
-                    { glyph: Icon('info', { size: 14 }), label: 'events',        count: events.length,           key: 'e', href: '#p-events' },
-                    { glyph: Icon('page', { size: 14 }), label: 'changelog',     count: changelog.length,        key: 'c', href: '#p-changelog' }
+                    { glyph: Icon('activity', { size: 14 }), label: 'overview',      key: 'o', href: '#p-metrics' },
+                    { glyph: Icon('rows', { size: 14 }), label: 'endpoints',     key: 'r', href: '#p-endpoints' },
+                    { glyph: Icon('info', { size: 14 }), label: 'events',        key: 'e', href: '#p-events' },
+                    { glyph: Icon('page', { size: 14 }), label: 'changelog',     key: 'c', href: '#p-changelog' }
                 ] },
                 { group: 'env', items: [
                     { glyph: h('span', { class: 'ds-dot ds-dot-on' }), label: 'production', count: 'eu', key: 'p', color: 'var(--panel-accent)', href: '#p-environment' },
@@ -101,21 +101,21 @@ function App() {
             h('div', { class: 'ds-app-surface ds-section-pad', 'data-density': 'comfortable' },
                 Heading({ level: 1, children: 'production overview' }),
                 Lede({ children: 'traffic, endpoint latency and recent deploys for the last 24 hours.' }),
-                Panel({ id: 'p-metrics', title: 'live metrics', count: kpis.length, class: 'ds-panel-gap', children: Kpi({ items: kpis }) }),
+                Panel({ id: 'p-metrics', title: 'live metrics', class: 'ds-panel-gap', children: Kpi({ items: kpis }) }),
                 h('div', { class: 'ds-panel-duo' },
-                    Panel({ title: 'traffic by channel', count: channelBreakdown.length, class: 'ds-panel-flush', children: BarChart({ items: channelBreakdown }) }),
-                    Panel({ id: 'p-endpoints', title: 'top endpoints', count: tableRows.length, class: 'ds-panel-flush', children: Table({ headers: tableHeaders, rows: tableRows, striped: true }) })
+                    Panel({ title: 'traffic by channel', class: 'ds-panel-flush', children: BarChart({ items: channelBreakdown }) }),
+                    Panel({ id: 'p-endpoints', title: 'top endpoints', class: 'ds-panel-flush', children: Table({ headers: tableHeaders, rows: tableRows, striped: true }) })
                 ),
                 h('div', { class: 'ds-panel-trio' },
                     Panel({ id: 'p-environment', title: 'environment', class: 'ds-panel-flush', children: Receipt({ rows: receipt }) }),
-                    Panel({ id: 'p-events', title: 'recent events', count: events.length, class: 'ds-panel-flush', children: EventsPanel() }),
-                    Panel({ id: 'p-changelog', title: 'changelog', count: changelog.length, class: 'ds-panel-flush', children: Changelog({ entries: changelog }) })
+                    Panel({ id: 'p-events', title: 'recent events', class: 'ds-panel-flush', children: EventsPanel() }),
+                    Panel({ id: 'p-changelog', title: 'changelog', class: 'ds-panel-flush', children: Changelog({ entries: changelog }) })
                 )
             )
         ],
         status: Status({
             left: ['dashboard', '- ' + kpis.length + ' kpis', '- ' + tableRows.length + ' endpoints'],
-            right: ['247420 / mmxxvi', '- live']
+            right: ['sample data']
         })
     });
 }

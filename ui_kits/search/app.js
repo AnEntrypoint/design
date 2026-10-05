@@ -93,7 +93,7 @@ function App() {
         ],
         status: Status({
             left: ['search', '- kind=' + state.kind, '- ' + rows.length + ' rows'],
-            right: ['247420 / mmxxvi']
+            right: ['sample index']
         })
     });
 }

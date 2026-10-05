@@ -18,7 +18,7 @@ sections:
     lede: "each page is an async function receiving h0 (host object). pass your freddie host and render anywhere."
     items:
       - name: home
-        desc: kpi overview: sessions, tools, skills, uptime. entry point for the dashboard.
+        desc: "kpi overview: sessions, tools, skills, uptime. entry point for the dashboard."
         benefit: instant system health at a glance
       - name: chat
         desc: full agent chat with streaming SSE, tool-call disclosure, message history
@@ -30,34 +30,34 @@ sections:
         desc: searchable tool registry showing toolset, check status, required env
         benefit: know exactly what your agent can do
       - name: models
-        desc: provider probe panel: live model list per provider with one-click probe-all
+        desc: "provider probe panel: live model list per provider with one-click probe-all"
         benefit: see which LLM backends are reachable
       - name: cron
-        desc: cron job manager: create, enable, disable, delete scheduled agent tasks
+        desc: "cron job manager: create, enable, disable, delete scheduled agent tasks"
         benefit: automate agent work on a schedule
       - name: skills
-        desc: skill registry browser: namespace, description, source per skill
+        desc: "skill registry browser: namespace, description, source per skill"
         benefit: discover and extend agent capabilities
       - name: config
-        desc: config editor: all config keys with inline save
+        desc: "config editor: all config keys with inline save"
         benefit: tune agent behaviour without restarting
       - name: env
-        desc: environment variable manager: list, set, delete provider keys and secrets
+        desc: "environment variable manager: list, set, delete provider keys and secrets"
         benefit: manage credentials in one place
       - name: projects
-        desc: multi-project switcher: create isolated project workspaces, set active
+        desc: "multi-project switcher: create isolated project workspaces, set active"
         benefit: run multiple agents with separate state
       - name: agents
-        desc: agent overview: total agents, active count, recent activity
+        desc: "agent overview: total agents, active count, recent activity"
         benefit: monitor agent fleet at a glance
       - name: analytics
-        desc: session analytics: token usage, model distribution, cost estimates
+        desc: "session analytics: token usage, model distribution, cost estimates"
         benefit: track spend and throughput over time
       - name: batch
-        desc: batch job runner: submit prompt lists, monitor progress, download results
+        desc: "batch job runner: submit prompt lists, monitor progress, download results"
         benefit: run large-scale agent tasks in parallel
       - name: gateway
-        desc: gateway platform panel: list connected platforms, status, send test messages
+        desc: "gateway platform panel: list connected platforms, status, send test messages"
         benefit: manage multi-platform message routing
   - heading: usage
     lede: "import named exports directly. each page receives h0 from your freddie host."

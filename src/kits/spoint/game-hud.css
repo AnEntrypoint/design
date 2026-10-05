@@ -1,5 +1,3 @@
-/* Game-HUD kit styles. Scoped under .ds-247420 at build time.
-   Colors from semantic tokens (no raw literals) per the token-lint gate. */
 .sp-hud { pointer-events: none; font-family: var(--ff-mono); }
 .sp-hud-crosshair {
   position: fixed;
@@ -12,7 +10,6 @@
 }
 .sp-hud-ammo {
   position: fixed;
-  /* Fixed chrome clears notch/home-indicator on cutout devices. */
   bottom: calc(50px + env(safe-area-inset-bottom, 0px));
   right: calc(20px + env(safe-area-inset-right, 0px));
   font-size: 24px;

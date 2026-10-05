@@ -18,6 +18,7 @@ import { lintDuplicateSelectorsOrThrow } from './lint-duplicate-selectors.mjs';
 import { lintEmptyCatchOrThrow } from './lint-empty-catch.mjs';
 import { lintInlineCssOrThrow } from './lint-inline-css.mjs';
 import { lintDeadControlsOrThrow } from './lint-dead-controls.mjs';
+import { lintYamlParseOrThrow } from './lint-yaml-parse.mjs';
 
 const CHECKS = [
     ['tokens', lintTokensOrThrow],
@@ -37,6 +38,7 @@ const CHECKS = [
     ['duplicate-selectors', lintDuplicateSelectorsOrThrow],
     ['empty-catch', lintEmptyCatchOrThrow],
     ['dead-controls', lintDeadControlsOrThrow],
+    ['yaml-parse', lintYamlParseOrThrow],
 ];
 
 export function runLintCss() {

@@ -22,16 +22,16 @@ const PALETTE = [
     { name: 'ink',       v: 'var(--ink)' },
     { name: 'ink-2',     v: 'var(--ink-2)' },
     { name: 'ink-3',     v: 'var(--ink-3)' },
-    { name: 'green',     v: 'var(--green)' },
+    { name: 'green (brand)',     v: 'var(--green)' },
     { name: 'green-2',   v: 'var(--green-2)' },
-    { name: 'purple',    v: 'var(--purple)' },
-    { name: 'purple-2',  v: 'var(--purple-2)' },
-    { name: 'mascot',    v: 'var(--mascot)' },
-    { name: 'mascot-2',  v: 'var(--mascot-2)' },
-    { name: 'sun',       v: 'var(--sun)' },
-    { name: 'flame',     v: 'var(--flame)' },
-    { name: 'sky',       v: 'var(--sky)' },
-    { name: 'warn',      v: 'var(--warn)' }
+    { name: 'purple (neutral gray)',    v: 'var(--purple)' },
+    { name: 'purple-2 (neutral gray)',  v: 'var(--purple-2)' },
+    { name: 'mascot (mid gray)',    v: 'var(--mascot)' },
+    { name: 'mascot-2 (light gray)',  v: 'var(--mascot-2)' },
+    { name: 'sun (yellow)',       v: 'var(--sun)' },
+    { name: 'flame (alias of warn)',     v: 'var(--flame)' },
+    { name: 'sky (dark gray)',       v: 'var(--sky)' },
+    { name: 'warn (red)',      v: 'var(--warn)' }
 ];
 
 const SEMANTIC = [
@@ -65,8 +65,8 @@ function Swatch(name, v, big) {
 }
 
 function PaletteGrid() {
-    return Panel({ id: 'palette', title: 'lore palette', count: PALETTE.length + ' colors', class: 'ds-panel-gap', children: [
-        h('p', { class: 'ds-panel-caption' }, 'fixed brand colors: the same hex in light and dark.'),
+    return Panel({ id: 'palette', title: 'palette tokens', count: PALETTE.length + ' colors', class: 'ds-panel-gap', children: [
+        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens. purple, mascot and sky keep their historical names but are neutral grays; flame is an alias of warn. dark themes retune some of them.'),
         h('div', { class: 'ds-swatch-grid-sm' },
             ...PALETTE.map(p => Swatch(p.name, p.v, false))
         )
@@ -88,7 +88,7 @@ function TypeScalePanel() {
             ...TYPE_SCALE.map(t =>
                 h('div', { class: 'ds-type-row' },
                     h('span', { class: 'ds-type-row-label' }, t.name),
-                    h('div', { class: (t.cls ? t.cls + ' ' : '') + 'ds-type-sample', style: '--sample-size:' + t.size }, 'two-four-seven four-twenty')
+                    h('div', { class: (t.cls ? t.cls + ' ' : '') + 'ds-type-sample', style: '--sample-size:' + t.size }, 'the quick brown fox jumps over the lazy dog')
                 )
             )
         )
@@ -114,7 +114,7 @@ const moreState = {
     xrayOpenId: null,
 };
 
-const NAV_SECTION_IDS = ['palette', 'semantic', 'type-scale', 'primitives', 'restyle', 'backfill'];
+const NAV_SECTION_IDS = ['palette', 'semantic', 'type-scale', 'primitives', 'inputs', 'overlays'];
 const navState = { activeId: NAV_SECTION_IDS[0] };
 
 function observeSections() {
@@ -174,7 +174,7 @@ function PrimitivesPanel() {
 }
 
 function RestylePanel() {
-    return Panel({ id: 'restyle', title: 'restyle 2026: new primitives', class: 'ds-panel-gap', children:
+    return Panel({ id: 'inputs', title: 'inputs: slider, otp, hover card, date picker', class: 'ds-panel-gap', children:
         h('div', { class: 'ds-prim-panel' },
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'slider'),
@@ -231,7 +231,7 @@ function RowTag(kind) {
 
 function BackfillPanel() {
     const totalTokens = CONTEXT_SEGMENTS.reduce((n, s) => n + s.value, 0);
-    return Panel({ id: 'backfill', title: 'backfill: range, overlays, collab, context', class: 'ds-panel-gap', children:
+    return Panel({ id: 'overlays', title: 'range, overlays, collab, context', class: 'ds-panel-gap', children:
         h('div', { class: 'ds-prim-panel' },
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'date range'), RowTag('live'),
@@ -320,8 +320,8 @@ function App() {
                     { glyph: '-', label: 'semantic',   key: 's', href: '#semantic',   active: navState.activeId === 'semantic' },
                     { glyph: '-', label: 'type scale', key: 't', href: '#type-scale', active: navState.activeId === 'type-scale' },
                     { glyph: '-', label: 'primitives', key: 'r', href: '#primitives', active: navState.activeId === 'primitives' },
-                    { glyph: '-', label: 'restyle 2026', key: 'x', href: '#restyle',  active: navState.activeId === 'restyle' },
-                    { glyph: '-', label: 'backfill', key: 'b', href: '#backfill',     active: navState.activeId === 'backfill' }
+                    { glyph: '-', label: 'inputs', key: 'x', href: '#inputs',  active: navState.activeId === 'inputs' },
+                    { glyph: '-', label: 'overlays', key: 'b', href: '#overlays',     active: navState.activeId === 'overlays' }
                 ] }
             ]
         }),
@@ -341,8 +341,8 @@ function App() {
             )
         ],
         status: Status({
-            left: ['system primer', '- ' + PALETTE.length + ' lore colors', '- ' + SEMANTIC.length + ' semantic'],
-            right: ['247420 / mmxxvi']
+            left: ['system primer', '- ' + PALETTE.length + ' palette tokens', '- ' + SEMANTIC.length + ' semantic'],
+            right: ['tokens from colors_and_type.css']
         })
     });
 }

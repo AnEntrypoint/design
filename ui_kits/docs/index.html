@@ -30,13 +30,9 @@
   <link rel="stylesheet" href="../../colors_and_type.css">
   <link rel="stylesheet" href="../../app-shell.css">
 
-
 </head>
 <body data-screen-label="03 Docs">
 <div class="app">
-  <!-- Matches what AppShell() emits for the JS-rendered kits. This page hand-
-       rolls the shell markup statically, so it does not inherit the skip link
-       and had no way past the sidebar nav for a keyboard user. -->
   <a href="#app-main" class="skip-link">skip to main content</a>
   <header class="app-topbar">
     <span class="brand">247420 gm docs</span>
@@ -89,7 +85,7 @@
         <p>the rest of this document explains how to install it, how to wire it up, and how to stay out of its way.</p>
 
         <h2 id="install">install</h2>
-        <p>one command. you've probably seen this kind of thing before.</p>
+        <p>one command installs it.</p>
         <pre><span class="c"># via claude code plugin marketplace</span>
 <span class="k">claude</span> plugin marketplace add AnEntrypoint/gm-cc
 <span class="k">claude</span> plugin install -s user gm@gm-cc</pre>
@@ -122,12 +118,6 @@
   </div>
 </div>
 <script>
-// The breadcrumb leaf and sidebar active state are static markup with no JS
-// anywhere on this page, so they never track which section is actually in
-// view -- both stay pinned to whatever section happened to be marked active
-// at author time ("introduction"). Sync both to the nearest heading crossing
-// the viewport's top band, same pattern a router-driven page would use for
-// scroll-spy, without needing a router.
 (function () {
   var sections = Array.prototype.slice.call(document.querySelectorAll('main h2[id], main h1[id]'));
   var leaf = document.querySelector('.app-crumb .leaf');
@@ -145,11 +135,6 @@
 })();
 </script>
 <script>
-// Per-block copy button for the static <pre> code samples, matching the
-// chat surface's injectCodeCopy affordance (chat-message-parts/inline.js) so
-// docs code reads consistently with chat/aicat code blocks -- but reimplemented
-// standalone here rather than importing the ds/ module graph for one function,
-// since this page carries no importmap/JS module dependency otherwise.
 (function () {
   function copy(text, btn) {
     function done() {

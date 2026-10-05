@@ -1,0 +1,36 @@
+export const PREVIEW_GROUPS = ['Color', 'Type and spacing', 'Components', 'File browser', 'Brand', 'Reference'];
+
+export const PREVIEWS = [
+  { name: 'colors-core', group: 'Color', title: 'Core colors', description: 'The four base swatches: paper, ink and their two shades each.' },
+  { name: 'colors-lore', group: 'Color', title: 'Palette tokens', description: 'The raw palette: brand green plus the legacy-named gray, yellow and red tokens.' },
+  { name: 'colors-semantic', group: 'Color', title: 'Semantic colors', description: 'Role tokens (link, warn, on-color) that components use instead of raw hex.' },
+  { name: 'theme-ink', group: 'Color', title: 'Ink theme', description: 'The dark theme: how paper and ink invert while the accent stays put.' },
+  { name: 'type-display', group: 'Type and spacing', title: 'Display type', description: 'Hero and section headlines in the system sans, with size and tracking.' },
+  { name: 'type-mono', group: 'Type and spacing', title: 'Mono type', description: 'Labels, meta text and body in the platform monospace.' },
+  { name: 'type-prose', group: 'Type and spacing', title: 'Prose type', description: 'Long-form paragraph styling: measure, leading and emphasis.' },
+  { name: 'type-scale', group: 'Type and spacing', title: 'Type scale', description: 'Every font-size step from mega down to micro, rendered at size.' },
+  { name: 'spacing', group: 'Type and spacing', title: 'Spacing scale', description: 'The 8pt spacing steps with their pixel values.' },
+  { name: 'rules', group: 'Type and spacing', title: 'Rules', description: 'Single, double and dotted hairlines and when to use each.' },
+  { name: 'buttons', group: 'Components', title: 'Buttons', description: 'Every button variant, size and state, with the tokens each uses.' },
+  { name: 'inputs', group: 'Components', title: 'Inputs', description: 'Hairline text fields: label, placeholder, focus and error states.' },
+  { name: 'index-row', group: 'Components', title: 'Index row', description: 'The numbered list row used for works, posts and projects.' },
+  { name: 'panel-rows', group: 'Components', title: 'Panel rows', description: 'Trio, duo and flush panel rows that step down on container width.' },
+  { name: 'data-density', group: 'Components', title: 'Data density', description: 'Dense table, meter and list components for operational screens.' },
+  { name: 'editor-primitives', group: 'Components', title: 'Editor primitives', description: 'Building blocks for editors: toolbars, toasts, aspect ratios and more.' },
+  { name: 'content', group: 'Components', title: 'Content primitives', description: 'Hero, panel, list and manifesto blocks used on content pages.' },
+  { name: 'header', group: 'Components', title: 'Header', description: 'The sticky top bar and breadcrumb with nav hover states.' },
+  { name: 'stamps', group: 'Components', title: 'Stamps', description: 'Four rotated status stamp variants.' },
+  { name: 'dateline', group: 'Components', title: 'Dateline', description: 'The brand dateline strip shown at the top of a page.' },
+  { name: 'file-row', group: 'File browser', title: 'File row', description: 'One file: type rail, icon, name, meta and actions.' },
+  { name: 'file-grid', group: 'File browser', title: 'File grid', description: 'A stack of file rows with directories first and a selected state.' },
+  { name: 'file-toolbar', group: 'File browser', title: 'File toolbar', description: 'Breadcrumb, upload actions and item count.' },
+  { name: 'file-viewer', group: 'File browser', title: 'File viewer', description: 'Full-bleed modal preview with syntax highlighting and actions.' },
+  { name: 'dropzone', group: 'File browser', title: 'Drop zone', description: 'Upload target with idle and drag-over states and no dashed border.' },
+  { name: 'wordmarks', group: 'Brand', title: 'Wordmarks', description: 'Typographic project wordmarks; there are no pictorial marks.' },
+  { name: 'manifesto', group: 'Brand', title: 'Manifesto block', description: 'Numbered statement paragraphs as used on the homepage.' },
+  { name: 'stamps-lore', group: 'Brand', title: 'Brand stamps', description: 'The full set of brand stamps, including the playful ones.' },
+  { name: 'icons-unicode', group: 'Reference', title: 'Unicode glyph set', description: 'The small set of plain unicode symbols allowed in copy.' },
+  { name: 'theme-map', group: 'Reference', title: 'Theme token map', description: 'Every root token, its default value and which sheets consume it.' },
+];
+
+export const previewByName = new Map(PREVIEWS.map((p) => [p.name, p]));
