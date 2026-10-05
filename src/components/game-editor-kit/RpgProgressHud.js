@@ -1,15 +1,6 @@
 import * as webjsx from '../../../vendor/webjsx/index.js'
 const h = webjsx.createElement
 
-/**
- * A single labeled horizontal fill bar (XP / health / mana share this shape).
- * @param {Object} [props]
- * @param {number} [props.value=0]
- * @param {number} [props.max=1]
- * @param {string} [props.color='var(--accent,#262626)']
- * @param {string} [props.label] - text drawn over the bar, e.g. "72/100".
- * @param {string} [props.className]
- */
 export function StatBar(props = {}) {
   const {
     value = 0,
@@ -80,13 +71,6 @@ export function LevelBadge(props = {}) {
   }, String(level))
 }
 
-/**
- * Current quest title and objective progress.
- * @param {Object} [props]
- * @param {string} [props.title]
- * @param {number} [props.progress=0]
- * @param {number} [props.target=0]
- */
 export function QuestPanel(props = {}) {
   const { title, progress = 0, target = 0 } = props
   if (!title) return null
@@ -120,18 +104,6 @@ export function QuestPanel(props = {}) {
   )
 }
 
-/**
- * One ability slot: icon glyph, optional keybind badge, dimmed + countdown
- * overlay while on cooldown, muted + lock glyph while unlocked === false.
- * @param {Object} [props]
- * @param {string} [props.id]
- * @param {string} [props.name]
- * @param {string} [props.icon] - single glyph/emoji; defaults to name's first letter.
- * @param {string|number} [props.hotkey]
- * @param {boolean} [props.unlocked=true]
- * @param {number} [props.cooldownRemaining=0] - seconds left.
- * @param {number} [props.cooldownMax=0] - total cooldown duration in seconds.
- */
 export function AbilitySlot(props = {}) {
   const {
     id,
@@ -216,11 +188,6 @@ export function AbilitySlot(props = {}) {
   )
 }
 
-/**
- * Row of ability slots.
- * @param {Object} [props]
- * @param {Array<Object>} [props.abilities=[]] - see AbilitySlot props, one per entry.
- */
 export function AbilityBar(props = {}) {
   const { abilities = [] } = props
   if (abilities.length === 0) return null
@@ -233,27 +200,6 @@ export function AbilityBar(props = {}) {
   }, ...abilities.map(a => AbilitySlot(a)))
 }
 
-/**
- * RpgProgressHud: level/XP, health/mana, current quest and ability
- * cooldowns for an RPG-style progression game. Pure presentation: the
- * consumer owns all game state and re-renders this on every update via
- * its own applyDiff (webjsx) cycle, mirroring anentrypoint-design's
- * `renderGameHud`/kits-spoint convention.
- *
- * @param {Object} [props]
- * @param {number} [props.level=1]
- * @param {number} [props.xp=0]
- * @param {number} [props.xpToNext=100]
- * @param {number} [props.health=100]
- * @param {number} [props.maxHealth=100]
- * @param {number} [props.mana=100]
- * @param {number} [props.maxMana=100]
- * @param {string} [props.questTitle] - omit/null hides the quest panel.
- * @param {number} [props.questProgress=0]
- * @param {number} [props.questTarget=0]
- * @param {Array<Object>} [props.abilities=[]] - see AbilitySlot props.
- * @param {string} [props.className]
- */
 export function RpgProgressHud(props = {}) {
   const {
     level = 1,

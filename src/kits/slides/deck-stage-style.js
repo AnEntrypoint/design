@@ -28,9 +28,6 @@ export const STYLESHEET = `
       visibility: hidden;
     }
     ::slotted([data-deck-active]) { opacity: 1; pointer-events: auto; visibility: visible; }
-    /* These stack only against each other: :host is position:fixed, so the
-       shadow root is its own stacking context and the old max-int values
-       bought nothing over the scale's rungs. Controls sit above tap zones. */
     .tapzones {
       position: fixed; inset: 0; display: flex; z-index: var(--z-raised); pointer-events: none;
     }

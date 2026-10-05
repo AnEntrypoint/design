@@ -7,6 +7,12 @@
   position: relative; isolation: isolate;
 }
 .ds-hero-head { display: grid; gap: var(--space-3); justify-items: start; }
+.ds-hero-main { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); min-width: 0; }
+.ds-hero-side { min-width: 0; }
+@container (min-width: 900px) {
+  .ds-hero--split { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); column-gap: var(--space-7); align-items: center; }
+}
+.ds-hero--split .ds-hero-side .panel { margin: 0; }
 
 .ds-hero-aside {
   width: 100%;
@@ -74,11 +80,11 @@
 
 .ds-section { margin: var(--space-7) 0; }
 .ds-section > h2 { font-size: var(--fs-2xl); line-height: var(--lh-snug); margin: 0 0 var(--space-4); }
-.ds-section > .panel, .ds-hero ~ .panel { padding-inline: 0; }
+.ds-section > .panel, .ds-hero ~ .panel, .ds-hero-side .panel { padding-inline: 0; }
 .ds-section > .panel { padding-block: 0; margin-bottom: 0; }
-.ds-section .panel-head, .ds-hero ~ .panel .panel-head,
-.ds-section .panel-body, .ds-hero ~ .panel .panel-body { padding-inline: 0; }
-.ds-section .row, .ds-hero ~ .panel .row { margin-inline: calc(var(--space-3) * -1); }
+.ds-section .panel-head, .ds-hero ~ .panel .panel-head, .ds-hero-side .panel-head,
+.ds-section .panel-body, .ds-hero ~ .panel .panel-body, .ds-hero-side .panel-body { padding-inline: 0; }
+.ds-section .row, .ds-hero ~ .panel .row, .ds-hero-side .row { margin-inline: calc(var(--space-3) * -1); }
 
 * + .ds-section { margin-top: 0; }
 
@@ -122,7 +128,7 @@
 .cli .copy {
   padding: var(--space-2) var(--space-3); background: transparent; color: var(--paper);
   font-size: var(--fs-tiny); letter-spacing: var(--tr-tight); font-weight: 500;
-  cursor: pointer; box-shadow: inset 0 0 0 1px var(--rule-strong);
+  cursor: pointer; box-shadow: var(--ring-line-strong);
   border-radius: var(--r-pill);
 }
 .cli .copy:hover { background: var(--fg-3); }
@@ -152,7 +158,7 @@
   align-self: flex-end;
   padding: var(--space-2) var(--space-3); background: transparent; color: var(--paper);
   font-family: var(--ff-body); font-size: var(--fs-tiny); letter-spacing: var(--tr-tight); font-weight: 500;
-  cursor: pointer; box-shadow: inset 0 0 0 1px var(--rule-strong);
+  cursor: pointer; box-shadow: var(--ring-line-strong);
   border-radius: var(--r-pill); border: none;
 }
 .ds-quickstart-copy:hover { background: var(--fg-3); }
@@ -255,7 +261,7 @@ table td.is-num, table th.is-num { text-align: right; font-variant-numeric: tabu
 
 .ds-dot-live { color: var(--sky); }
 
-.ds-dot-warn { color: var(--amber); box-shadow: 0 0 0 2px color-mix(in oklab, var(--amber) 35%, transparent); }
+.ds-dot-warn { color: var(--amber); }
 .ds-dot-idle { color: var(--fg-3); }
 
 .kpi {

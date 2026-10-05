@@ -14,20 +14,20 @@ export function renderHostJoinLobby(opts = {}) {
   function _idle() {
     card.replaceChildren()
     card.append(
-      mk('h2', 'sp-lobby-title', 'Multiplayer'),
-      mk('p', 'sp-lobby-sub', 'Host a match others can join, or join with a code.')
+      mk('h2', 'sp-lobby-title', 'multiplayer'),
+      mk('p', 'sp-lobby-sub', 'host a match others can join, or join with a code.')
     )
-    const hostBtn = mk('button', 'sp-lobby-btn sp-lobby-btn-primary', 'Host a Game')
+    const hostBtn = mk('button', 'sp-lobby-btn sp-lobby-btn-primary', 'host a game')
     hostBtn.addEventListener('click', () => { hostBtn.disabled = true; hostBtn.textContent = 'Starting...'; onHost?.() })
     card.appendChild(hostBtn)
 
     const joinRow = mk('div', 'sp-lobby-join')
     const input = mk('input', 'sp-lobby-input')
     input.type = 'text'
-    input.placeholder = 'Enter room code or link'
+    input.placeholder = 'enter a room code or link'
     input.autocapitalize = 'characters'
-    const joinBtn = mk('button', 'sp-lobby-btn', 'Join')
-    const submit = () => { const v = (input.value || '').trim(); if (!v) { showError('Enter a code'); return } onJoin?.(v) }
+    const joinBtn = mk('button', 'sp-lobby-btn', 'join')
+    const submit = () => { const v = (input.value || '').trim(); if (!v) { showError('enter a code'); return } onJoin?.(v) }
     joinBtn.addEventListener('click', submit)
     input.addEventListener('keydown', e => { if (e.key === 'Enter') submit() })
     joinRow.append(input, joinBtn)
@@ -46,21 +46,21 @@ export function renderHostJoinLobby(opts = {}) {
   function showHosting(code, link) {
     card.replaceChildren()
     card.append(
-      mk('h2', 'sp-lobby-title', 'Hosting'),
-      mk('p', 'sp-lobby-sub', 'Share this so others can join:'),
+      mk('h2', 'sp-lobby-title', 'hosting'),
+      mk('p', 'sp-lobby-sub', 'share this so others can join:'),
       mk('div', 'sp-lobby-code', code)
     )
     const linkField = mk('input', 'sp-lobby-input sp-lobby-link')
     linkField.type = 'text'; linkField.readOnly = true; linkField.value = link
     card.appendChild(linkField)
-    const copyBtn = mk('button', 'sp-lobby-btn sp-lobby-btn-primary', 'Copy Join Link')
+    const copyBtn = mk('button', 'sp-lobby-btn sp-lobby-btn-primary', 'copy join link')
     copyBtn.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(link) } catch (_) { linkField.select(); document.execCommand && document.execCommand('copy') }
-      copyBtn.textContent = 'Copied'
-      setTimeout(() => { copyBtn.textContent = 'Copy Join Link' }, 1600)
+      copyBtn.textContent = 'copied'
+      setTimeout(() => { copyBtn.textContent = 'copy join link' }, 1600)
     })
     card.appendChild(copyBtn)
-    card.appendChild(mk('p', 'sp-lobby-sub', 'Waiting for players...'))
+    card.appendChild(mk('p', 'sp-lobby-sub', 'waiting for players...'))
   }
 
   function showError(msg) {

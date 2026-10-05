@@ -34,10 +34,9 @@
     --radius-lg: var(--r-3);
     --radius-pill: var(--r-pill, 999px);
 
-    --accent-primary: #247420;
-    --color-success: var(--success, var(--green-2, #3A9A34));
-    --color-warning: var(--sun, #F5C344);
-    --color-danger: var(--warn, #C41C0C);
+    --color-success: var(--success);
+    --color-warning: var(--sun);
+    --color-danger: var(--warn);
 }
 
 html, body {
@@ -492,10 +491,10 @@ html, body {
 .app-pane.mono pre { background: var(--os-bg-2); padding: var(--space-2-5) var(--space-2-75); margin: var(--space-2) 0 0 0; max-height: 220px; overflow: auto; white-space: pre-wrap; font: var(--fs-nano) var(--os-mono); border-radius: var(--r-1, 6px); color: var(--os-fg); border: none; }
 .app-shell-pane { margin: 0; padding: var(--space-2); font: var(--fs-micro) var(--os-mono); color: var(--os-fg); background: var(--os-bg-0); height: 100%; overflow: auto; white-space: pre-wrap; box-sizing: border-box; }
 .app-canvas { width: 100%; height: 100%; background: var(--os-bg-0); display: block; cursor: default; }
-.app-canvas.x-display { background: #0b0d10; }
+.app-canvas.x-display { background: var(--code-surface); }
 .app-frame { width: 100%; height: 100%; border: 0; background: var(--os-bg-0); }
 .app-iframe { width: 100%; height: 100%; border: 0; display: block; }
-.app-iframe.web { background: #ffffff; }
+.app-iframe.web { background: var(--on-color); }
 .bp-empty {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -729,7 +728,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   border-color: var(--os-accent);
   color: var(--fg);
 }
-.ds-247420 .tb-sess-chip.active .tb-sess-dot { background: var(--os-accent); box-shadow: 0 0 0 2px color-mix(in oklab, var(--os-accent) 30%, transparent); }
+.ds-247420 .tb-sess-chip.active .tb-sess-dot { background: var(--os-accent); }
 .ds-247420 .tb-sess-dot { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in oklab, var(--fg) 40%, transparent); flex: 0 0 6px; }
 .ds-247420 .tb-sess-label { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-247420 .tb-sess-badge {
@@ -800,7 +799,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   color: inherit;
   font-family: inherit; font-size: var(--fs-tiny);
 }
-.tb-sess-modal-input:focus { outline: none; border-color: var(--os-accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--os-accent) 20%, transparent); }
+.tb-sess-modal-input:focus { outline: none; border-color: var(--os-accent);}
 .tb-sess-modal-hint { font-size: var(--fs-nano); opacity: 0.7; }
 .tb-sess-modal-hint.error { color: var(--danger); opacity: 1; }
 .tb-sess-modal-msg { font-size: var(--fs-tiny); }
@@ -813,8 +812,8 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   transition: background 120ms ease, border-color 120ms ease;
 }
 .tb-sess-modal-btn:hover { background: color-mix(in oklab, var(--fg) 6%, transparent); }
-.tb-sess-modal-btn.primary { background: var(--accent-primary, var(--os-accent)); color: var(--on-color); border-color: var(--accent-primary, var(--os-accent)); }
-.tb-sess-modal-btn.primary:hover { background: color-mix(in oklab, var(--accent-primary, var(--os-accent)) 80%, var(--ink)); }
+.tb-sess-modal-btn.primary { background: var(--os-accent-fill); color: var(--accent-fg); border-color: var(--os-accent-fill); }
+.tb-sess-modal-btn.primary:hover { background: color-mix(in oklab, var(--os-accent-fill) 80%, var(--ink)); }
 .tb-sess-modal-btn.danger { background: var(--color-danger); color: var(--on-color); border-color: var(--color-danger); }
 .tb-sess-modal-btn.danger:hover { background: color-mix(in oklab, var(--color-danger) 80%, var(--ink)); }
 
@@ -839,13 +838,13 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .tb-sess-empty-sub { font-size: var(--fs-tiny); opacity: 0.7; margin-bottom: var(--space-3-5); }
 .tb-sess-empty-cta {
   height: 40px; padding: 0 var(--space-4);
-  background: var(--accent-primary, var(--os-accent)); color: var(--on-color);
+  background: var(--os-accent-fill); color: var(--accent-fg);
   border: 0; border-radius: var(--radius-pill, var(--r-pill, 999px));
   font-family: inherit; font-size: var(--fs-xs); font-weight: 600;
   cursor: pointer;
   transition: background var(--dur-snap) var(--ease);
 }
-.tb-sess-empty-cta:hover { background: color-mix(in oklab, var(--accent-primary, var(--os-accent)) 85%, var(--fg)); }
+.tb-sess-empty-cta:hover { background: color-mix(in oklab, var(--os-accent-fill) 85%, var(--fg)); }
 
 .ds-247420 .tb-sessions-app { display: flex; flex-direction: column; height: 100%; font-family: var(--ff-ui); color: var(--fg); background: var(--bg); }
 .ds-247420 .tb-sessions-bar { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2-5) 14px; border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent); }
@@ -854,13 +853,13 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .tb-sessions-spacer { flex: 1; }
 .ds-247420 .tb-sessions-btn { height: 28px; padding: 0 var(--space-2-75); border-radius: var(--radius-sm, var(--r-0)); border: 1px solid color-mix(in oklab, var(--fg) 20%, transparent); background: transparent; color: inherit; font-size: var(--fs-micro); font-weight: 500; cursor: pointer; font-family: inherit; }
 .ds-247420 .tb-sessions-btn:hover { background: color-mix(in oklab, var(--fg) 6%, transparent); }
-.ds-247420 .tb-sessions-btn.primary { background: var(--accent-primary, var(--os-accent)); color: var(--on-color); border-color: var(--accent-primary, var(--os-accent)); }
+.ds-247420 .tb-sessions-btn.primary { background: var(--os-accent-fill); color: var(--accent-fg); border-color: var(--os-accent-fill); }
 .ds-247420 .tb-sessions-btn.danger { background: var(--color-danger); color: var(--on-color); border-color: var(--color-danger); }
 .ds-247420 .tb-sessions-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .ds-247420 .tb-sessions-grid { flex: 1; overflow: auto; padding: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-2-75); align-content: start; }
 .ds-247420 .tb-sessions-card { padding: var(--space-2-75); border-radius: var(--radius-sm, var(--r-1, 10px)); border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent); background: color-mix(in oklab, var(--fg) 3%, transparent); display: flex; flex-direction: column; gap: var(--space-2); transition: border-color 120ms ease, transform 120ms ease; }
 .ds-247420 .tb-sessions-card:hover { border-color: var(--os-accent); }
-.ds-247420 .tb-sessions-card.active { border-color: var(--os-accent); box-shadow: 0 0 0 2px color-mix(in oklab, var(--os-accent) 30%, transparent); }
+.ds-247420 .tb-sessions-card.active { border-color: var(--os-accent); }
 .ds-247420 .tb-sessions-card-head { display: flex; align-items: center; gap: var(--space-2); }
 .ds-247420 .tb-sessions-card-check { width: 14px; height: 14px; cursor: pointer; flex: 0 0 14px; }
 .ds-247420 .tb-sessions-card-name { font-weight: 600; font-size: var(--fs-tiny); flex: 1; outline: none; padding: var(--space-hair) var(--space-1); border-radius: var(--radius-sm, var(--r-0)); }
@@ -911,7 +910,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .cc-acp-mode-wrap { display: flex; align-items: center; gap: .4em; }
 .ds-247420 .cc-acp-mode-wrap select { flex: 1; }
 .ds-247420 .cc-acp-status { opacity: .5; font-size: var(--fs-tiny); }
-.ds-247420 .cc-acp-status.cc-reachable { opacity: 1; color: var(--os-accent, #247420); }
+.ds-247420 .cc-acp-status.cc-reachable { opacity: 1; color: var(--os-accent); }
 .ds-247420 .cc-details > summary { cursor: pointer; opacity: .7; padding: .2em 0; }
 .ds-247420 .cc-skills,
 .ds-247420 .cc-plugins { display: flex; flex-wrap: wrap; gap: .3em .8em; padding: .3em 0; }
@@ -942,7 +941,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .fsb-act:hover { opacity: 1; background: color-mix(in oklab, var(--fg) 12%, transparent); }
 .ds-247420 .fsb-empty { opacity: .5; padding: 1.5em; text-align: center; font-style: italic; }
 .ds-247420 .fsb-view { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: .7em; white-space: pre-wrap; word-break: break-word; font: var(--fs-micro)/1.5 var(--os-mono, ui-monospace, monospace); background: var(--panel-1, transparent); }
-.ds-247420 .fsb-dropping { outline: 2px dashed var(--os-accent, #247420); outline-offset: -6px; }
+.ds-247420 .fsb-dropping { outline: 2px dashed var(--os-accent); outline-offset: -6px; }
 
 .ds-247420 .wm-canvas { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
 
@@ -967,7 +966,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 .ds-247420 .fk-title { font-weight: 600; margin-bottom: var(--space-2); }
 .ds-247420 .fk-nim-wrap { display: flex; gap: var(--space-1-75); align-items: center; margin: var(--space-1) 0 var(--space-2-5) 0; }
 .ds-247420 .fk-nim-in { font-family: var(--os-mono, monospace); font-size: var(--fs-nano); padding: var(--space-hair) var(--space-1); flex: 1; }
-.ds-247420 .fk-badge { font-size: var(--fs-pico); padding: var(--space-hair) var(--space-1-75); border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent); border-radius: var(--r-hair); color: var(--os-accent, #247420); }
+.ds-247420 .fk-badge { font-size: var(--fs-pico); padding: var(--space-hair) var(--space-1-75); border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent); border-radius: var(--r-hair); color: var(--os-accent); }
 .ds-247420 .fk-agent-title,
 .ds-247420 .fk-host-title { margin-top: 14px; font-size: var(--fs-nano); color: color-mix(in oklab, var(--fg) 60%, transparent); }
 .ds-247420 .fk-summary { font-size: var(--fs-pico); color: color-mix(in oklab, var(--fg) 60%, transparent); margin: var(--space-1-75) 0; }
@@ -1009,8 +1008,8 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
 
 .ds-247420 .chat-empty-suggestions { display: flex; flex-wrap: wrap; gap: var(--space-1-75); justify-content: center; margin-top: var(--space-2-75); max-width: 480px; }
 .ds-247420 .chat-empty-suggestion { all: unset; cursor: pointer; font-size: var(--fs-micro); padding: var(--space-1-75) var(--space-2-5); border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent); border-radius: var(--r-pill, 999px); background: var(--panel-1, transparent); transition: background 120ms ease, border-color 120ms ease; }
-.ds-247420 .chat-empty-suggestion:hover { background: color-mix(in oklab, var(--os-accent, #247420) 10%, transparent); border-color: var(--os-accent, #247420); }
-.ds-247420 .chat-empty-suggestion:focus-visible { outline: 2px solid var(--os-accent, #247420); outline-offset: 2px; }
+.ds-247420 .chat-empty-suggestion:hover { background: color-mix(in oklab, var(--os-accent) 10%, transparent); border-color: var(--os-accent); }
+.ds-247420 .chat-empty-suggestion:focus-visible { outline: 2px solid var(--os-accent); outline-offset: 2px; }
 
 .ds-247420 .chat-composer .send.cancel { background: var(--color-danger); color: var(--on-color); }
 .ds-247420 .chat-composer .send.cancel:hover { background: color-mix(in oklab, var(--color-danger) 80%, black); }
@@ -1087,7 +1086,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--os-accent, #247420);
+  background: var(--os-accent);
   flex-shrink: 0;
 }
 .ds-247420 .chat-head .ds-chat-title {
@@ -1158,7 +1157,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: color-mix(in oklab, var(--os-accent, #247420) 18%, transparent);
+  background: color-mix(in oklab, var(--os-accent) 18%, transparent);
   color: var(--fg);
   display: inline-flex;
   align-items: center;
@@ -1170,7 +1169,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   user-select: none;
 }
 .ds-247420 .chat-msg.you .chat-avatar {
-  background: var(--os-accent, #247420);
+  background: var(--os-accent);
   color: var(--on-color);
 }
 
@@ -1195,9 +1194,9 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   word-break: break-word;
 }
 .ds-247420 .chat-msg.you .chat-bubble {
-  background: var(--os-accent, #247420);
+  background: var(--os-accent);
   color: var(--on-color);
-  border-color: color-mix(in oklab, var(--os-accent, #247420) 60%, black);
+  border-color: color-mix(in oklab, var(--os-accent) 60%, black);
   border-bottom-right-radius: 4px;
 }
 .ds-247420 .chat-msg.them .chat-bubble {
@@ -1291,9 +1290,9 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   border-color: color-mix(in oklab, var(--fg) 22%, transparent);
 }
 .ds-247420 .chat-composer textarea:focus-visible {
-  outline: 2px solid var(--os-accent, #247420);
+  outline: 2px solid var(--os-accent);
   outline-offset: 0;
-  border-color: color-mix(in oklab, var(--os-accent, #247420) 60%, transparent);
+  border-color: color-mix(in oklab, var(--os-accent) 60%, transparent);
 }
 .ds-247420 .chat-composer-toolbar {
   display: flex;
@@ -1318,7 +1317,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   opacity: 1;
 }
 .ds-247420 .composer-btn:focus-visible {
-  outline: 2px solid var(--os-accent, #247420);
+  outline: 2px solid var(--os-accent);
   outline-offset: 2px;
   opacity: 1;
 }
@@ -1329,7 +1328,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   width: 36px;
   height: 32px;
   border-radius: var(--r-0);
-  background: var(--os-accent, #247420);
+  background: var(--os-accent);
   color: var(--on-color);
   display: inline-flex;
   align-items: center;
@@ -1337,11 +1336,11 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   transition: background 120ms ease, transform 60ms ease;
 }
 .ds-247420 .chat-composer .send:hover {
-  background: color-mix(in oklab, var(--os-accent, #247420) 88%, black);
+  background: color-mix(in oklab, var(--os-accent) 88%, black);
 }
 .ds-247420 .chat-composer .send:active { transform: scale(0.96); }
 .ds-247420 .chat-composer .send:focus-visible {
-  outline: 2px solid var(--os-accent, #247420);
+  outline: 2px solid var(--os-accent);
   outline-offset: 2px;
 }
 .ds-247420 .chat-composer .send:disabled,

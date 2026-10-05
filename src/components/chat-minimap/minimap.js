@@ -13,7 +13,7 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
         scrollRatio: 0,
         viewportRatio: 1,
         visible: false,
-        nodes: /** @type {Array<{topRatio:number, heightRatio:number, msg:any, index:number}>} */ ([]),
+        nodes:([]),
         hovered: false,
         mouseYRatio: null,
     };

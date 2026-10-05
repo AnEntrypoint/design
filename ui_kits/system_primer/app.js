@@ -22,16 +22,16 @@ const PALETTE = [
     { name: 'ink',       v: 'var(--ink)' },
     { name: 'ink-2',     v: 'var(--ink-2)' },
     { name: 'ink-3',     v: 'var(--ink-3)' },
-    { name: 'green (brand)',     v: 'var(--green)' },
+    { name: 'green',     v: 'var(--green)' },
     { name: 'green-2',   v: 'var(--green-2)' },
-    { name: 'purple (neutral gray)',    v: 'var(--purple)' },
-    { name: 'purple-2 (neutral gray)',  v: 'var(--purple-2)' },
-    { name: 'mascot (mid gray)',    v: 'var(--mascot)' },
-    { name: 'mascot-2 (light gray)',  v: 'var(--mascot-2)' },
-    { name: 'sun (yellow)',       v: 'var(--sun)' },
-    { name: 'flame (alias of warn)',     v: 'var(--flame)' },
-    { name: 'sky (dark gray)',       v: 'var(--sky)' },
-    { name: 'warn (red)',      v: 'var(--warn)' }
+    { name: 'purple',    v: 'var(--purple)' },
+    { name: 'purple-2',  v: 'var(--purple-2)' },
+    { name: 'mascot',    v: 'var(--mascot)' },
+    { name: 'mascot-2',  v: 'var(--mascot-2)' },
+    { name: 'sun',       v: 'var(--sun)' },
+    { name: 'flame',     v: 'var(--flame)' },
+    { name: 'sky',       v: 'var(--sky)' },
+    { name: 'warn',      v: 'var(--warn)' }
 ];
 
 const SEMANTIC = [
@@ -57,16 +57,32 @@ const TYPE_SCALE = [
     { name: 'micro', cls: 't-micro', size: 'var(--fs-micro)' }
 ];
 
+const hexProbe = document.createElement('span');
+const hexCanvas = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+const toHex = (n) => n.toString(16).padStart(2, '0');
+
+function resolveHex(v) {
+    root.appendChild(hexProbe);
+    hexProbe.style.color = v;
+    hexCanvas.clearRect(0, 0, 1, 1);
+    hexCanvas.fillStyle = getComputedStyle(hexProbe).color;
+    hexCanvas.fillRect(0, 0, 1, 1);
+    const [r, g, b] = hexCanvas.getImageData(0, 0, 1, 1).data;
+    hexProbe.remove();
+    return '#' + toHex(r) + toHex(g) + toHex(b);
+}
+
 function Swatch(name, v, big) {
     return h('div', { class: 'ds-swatch ds-swatch-col' },
         h('div', { class: 'ds-swatch-chip' + (big ? ' ds-swatch-chip--big' : ''), style: '--swatch:' + v }),
-        h('div', { class: 'ds-swatch-name' }, name)
+        h('div', { class: 'ds-swatch-name' }, name),
+        h('div', { class: 'ds-swatch-hex' }, resolveHex(v))
     );
 }
 
 function PaletteGrid() {
     return Panel({ id: 'palette', title: 'palette tokens', count: PALETTE.length + ' colors', class: 'ds-panel-gap', children: [
-        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens. purple, mascot and sky keep their historical names but are neutral grays; flame is an alias of warn. dark themes retune some of them.'),
+        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens with the value each one resolves to in the active theme. flame is an alias of warn.'),
         h('div', { class: 'ds-swatch-grid-sm' },
             ...PALETTE.map(p => Swatch(p.name, p.v, false))
         )
@@ -348,4 +364,6 @@ function App() {
 }
 
 const kit = mountKit({ root, view: App, screen: '16 System Primer' });
+new MutationObserver(() => kit.schedule()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-accent'] });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => kit.schedule());
 queueMicrotask(observeSections);

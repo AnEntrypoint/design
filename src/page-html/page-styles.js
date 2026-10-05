@@ -51,12 +51,7 @@ a.row:hover .ds-row-arrow { opacity: 1 }
   letter-spacing: 0.06em; color: var(--fg-3, #6b6b6b);
 }
 .ds-showcase-row { display: flex; flex-wrap: wrap; gap: var(--space-2, 8px); align-items: center; }
-.ds-showcase-btn-danger-group {
-  display: inline-flex; align-items: center;
-  margin-left: var(--space-3, 16px);
-  padding-left: var(--space-3, 16px);
-  border-left: 1px solid var(--rule, rgba(0,0,0,.12));
-}
+.ds-showcase-card caption { text-align: left; caption-side: top; color: var(--fg-2); padding-bottom: var(--space-2, 8px); }
 .ds-kit-card-grid {
   display: grid; gap: var(--space-2, 8px);
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -65,10 +60,10 @@ a.row:hover .ds-row-arrow { opacity: 1 }
   display: grid; gap: var(--space-1, 4px); align-content: start;
   padding: var(--space-3, 16px); background: var(--panel-1, var(--bg));
   border-radius: var(--r-2, 14px); color: inherit; text-decoration: none;
-  transition: transform var(--dur-base, .18s) var(--ease, ease), box-shadow var(--dur-base, .18s) var(--ease, ease);
+  transition: box-shadow var(--dur-base, .18s) var(--ease, ease);
   position: relative;
 }
-.ds-kit-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-1, 0 1px 2px rgba(0,0,0,.1)); }
+.ds-kit-card:hover { box-shadow: var(--shadow-1, 0 1px 2px rgba(0,0,0,.1)); }
 .ds-kit-card:focus-visible { outline: var(--focus-w, 2px) solid var(--focus-color, currentColor); outline-offset: var(--focus-offset, 2px); }
 .ds-kit-card-code {
   font-family: var(--ff-mono, monospace); font-size: var(--fs-micro, 12px);

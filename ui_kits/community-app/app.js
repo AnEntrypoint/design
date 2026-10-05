@@ -8,40 +8,40 @@ const CAT = ['var(--cat-green)', 'var(--cat-purple)', 'var(--cat-mascot)', 'var(
 const color = (id) => CAT[Math.abs([...String(id || '')].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)) % CAT.length];
 
 const channels = [
-    { id: 'general', name: 'general', type: 'text', position: 0 },
-    { id: 'announcements', name: 'announcements', type: 'announcement', position: 1 },
+    { id: 'design-review', name: 'design-review', type: 'text', position: 0 },
+    { id: 'releases', name: 'releases', type: 'announcement', position: 1 },
     { id: 'lounge', name: 'lounge', type: 'voice', position: 2 },
 ];
 const servers = [
-    { id: 'zellous', name: 'zellous' },
-    { id: 'spoint', name: 'spoint' },
-    { id: 'flatspace', name: 'flatspace' },
-    { id: 'mutagen', name: 'mutagen' },
+    { id: 'design', name: 'design system', abbr: 'ds' },
+    { id: 'games', name: 'game kit', abbr: 'gk' },
+    { id: 'files', name: 'file browser', abbr: 'fb' },
+    { id: 'notes', name: 'release notes', abbr: 'rn' },
 ];
 
 const VOICE_PEERS = [
-    { identity: 'sample-user-1', color: color('sample-user-1'), speaking: true },
-    { identity: 'sample-user-2', color: color('sample-user-2'), muted: true },
+    { identity: 'priya', color: color('priya'), speaking: true },
+    { identity: 'tomas', color: color('tomas'), muted: true },
 ];
 
 const SAMPLE_MESSAGES = [
-    { id: 'm1', userId: 'sample-user-1', username: 'sample-user-1', content: 'shipped the community adapter contract. mock lives in the kit, real one lives in the consumer.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
-    { id: 'm1b', userId: 'sample-user-1', username: 'sample-user-1', content: 'no backend anywhere in this kit -- state.js + a Set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
-    { id: 'm2', userId: 'sample-user-2', username: 'sample-user-2', content: 'so the kit never talks to a backend at all?', timestamp: Date.now() - 780000, delivered: true },
-    { id: 'm3', userId: 'you', username: 'you', content: 'right -- it only has to satisfy get/subscribe/actions.', timestamp: Date.now() - 700000, delivered: true, read: true },
+    { id: 'm1', userId: 'priya', username: 'priya', content: 'shipped the community adapter contract. the mock lives in the kit, the real one lives in the app that uses it.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
+    { id: 'm1b', userId: 'priya', username: 'priya', content: 'no backend anywhere in this kit. one state object and a set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
+    { id: 'm2', userId: 'tomas', username: 'tomas', content: 'so the kit never talks to a server at all?', timestamp: Date.now() - 780000, delivered: true },
+    { id: 'm3', userId: 'you', username: 'you', content: 'right. it only has to provide get, subscribe and actions.', timestamp: Date.now() - 700000, delivered: true, read: true },
     { id: 'm4', userId: 'you', username: 'you', type: 'code', lang: 'css', content: 'html { visibility: hidden; }\nhtml.ready { visibility: visible; }\n\n@media (prefers-reduced-motion: reduce) {\n  * { animation-duration: 0ms !important; }\n}', timestamp: Date.now() - 650000, delivered: true, read: true },
-    { id: 'm5', userId: 'sample-user-1', username: 'sample-user-1', content: '## review notes\n\nlooks solid. couple things:\n\n- short timeout fallback in case fonts hang\n- announce the `ready` class via `requestIdleCallback`\n- keep no-js fallback to `visibility: visible`\n\n> "ship the rough draft" -- but not the broken one.\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
-    { id: 'm6', userId: 'sample-user-2', username: 'sample-user-2', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'spot the new mascot -- final', timestamp: Date.now() - 480000, delivered: true },
-    { id: 'm7', userId: 'you', username: 'you', content: 'attaching the token sheet for review:', attachments: [{ type: 'file', src: './sample.pdf', name: 'token-sheet.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
-    { id: 'm8', userId: 'sample-user-1', username: 'sample-user-1', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'a coherent visual paradigm: layered surfaces, monospace labels, loud content inside quiet chrome.' }, timestamp: Date.now() - 360000, delivered: true },
-    { id: 'm9', userId: 'sample-user-2', username: 'sample-user-2', type: 'file', url: './sample.pdf', name: 'review-notes.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
+    { id: 'm5', userId: 'priya', username: 'priya', content: '## review notes\n\nlooks solid. a few things:\n\n- add a short timeout fallback in case the stylesheet hangs\n- set the `ready` class from `requestIdleCallback`\n- keep a no-js fallback of `visibility: visible`\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
+    { id: 'm6', userId: 'tomas', username: 'tomas', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'new mascot draft, final colours', timestamp: Date.now() - 480000, delivered: true },
+    { id: 'm7', userId: 'you', username: 'you', content: 'attaching the token sheet for review.', attachments: [{ type: 'file', src: './sample.pdf', name: 'token-sheet.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
+    { id: 'm8', userId: 'priya', username: 'priya', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'tokens, components and kits for dense, tonal interfaces.' }, timestamp: Date.now() - 360000, delivered: true },
+    { id: 'm9', userId: 'tomas', username: 'tomas', type: 'file', url: './sample.pdf', name: 'review-notes.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
 ];
 
-const TYPING_PEERS = [{ id: 'sample-user-1', name: 'sample-user-1', avatar: 'S', color: color('sample-user-1') }];
+const TYPING_PEERS = [{ id: 'priya', name: 'priya', avatar: 'P', color: color('priya') }];
 
 const state = {
     channels, categories: [], servers,
-    currentChannel: channels[0], currentServerId: 'zellous', homeMode: false,
+    currentChannel: channels[0], currentServerId: 'design', homeMode: false,
     messages: SAMPLE_MESSAGES.map((m) => ({ ...m })), typingUsers: TYPING_PEERS, chatInputValue: '', replyTarget: null,
     currentUser: { username: 'you' }, userId: 'you',
     isConnected: true,

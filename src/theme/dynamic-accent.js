@@ -61,12 +61,6 @@ const LIGHT_TONES = { primary: 40, onPrimary: 100, primaryContainer: 90, onPrima
 const DARK_TONES = { primary: 80, onPrimary: 20, primaryContainer: 30, onPrimaryContainer: 90 };
 const MAX_CHROMA = 48;
 
-/**
- * Generate a dynamic accent role set from a source hex color.
- * @param {string} sourceHex e.g. a server icon's dominant color
- * @param {boolean} [dark=false]
- * @returns {{primary:string, onPrimary:string, primaryContainer:string, onPrimaryContainer:string}}
- */
 export function dynamicAccentFromHex(sourceHex, dark = false) {
     const { hue, chroma: rawChroma } = hueChromaFromHex(sourceHex);
     const chroma = Math.min(rawChroma, MAX_CHROMA);
@@ -79,14 +73,6 @@ export function dynamicAccentFromHex(sourceHex, dark = false) {
     };
 }
 
-/**
- * Build an inline-style-ready CSS custom property map for a scoped subtree
- * (e.g. one server's rail item / header), so a dynamic accent never touches
- * the document-wide --accent/--accent-ink tokens.
- * @param {string} sourceHex
- * @param {boolean} [dark=false]
- * @returns {Record<string,string>} e.g. {'--dyn-accent': '#...', ...}
- */
 export function dynamicAccentStyleVars(sourceHex, dark = false) {
     const c = dynamicAccentFromHex(sourceHex, dark);
     return {

@@ -156,7 +156,7 @@ function App() {
         side: Side({
             sections: [
                 { group: 'slides', items: slides.map((s, i) => ({
-                    glyph: i === state.i ? '*' : '-',
+                    glyph: h('span', { class: i === state.i ? 'ds-dot ds-dot-on' : 'ds-dot ds-dot-off' }),
                     label: (i + 1) + ' · ' + (s.title || s.eyebrow || s.kind),
                     key: 's' + i,
                     active: i === state.i,

@@ -35,6 +35,9 @@
   --sky:         #404040;
   --warn:        #C41C0C;
   --warn-fg:     var(--paper);
+  --paper-warn:   #C41C0C;
+  --paper-amber:  #7C570F;
+  --paper-sky:    #404040;
   --code-string:  var(--green);
   --code-keyword: #2453C9;
   --code-fn:      #B84300;
@@ -309,6 +312,11 @@
 }
 
 [data-theme] {
+  --ring-accent:      inset 0 0 0 var(--bw-hair) var(--accent);
+  --ring-outer:       0 0 0 var(--bw-hair) color-mix(in oklab, var(--accent) 40%, transparent);
+  --ring-cutout:      0 0 0 var(--bw-rule) var(--bg);
+  --bar-accent:       inset var(--bw-rule) 0 0 var(--accent);
+  --bar-danger:       inset var(--bw-rule) 0 0 var(--flame);
   --panel-bg:     var(--bg);
   --panel-bg-2:   var(--bg-2);
   --panel-accent: var(--accent);
@@ -549,5 +557,15 @@
   --shadow-2: 0 1px 3px color-mix(in oklab, var(--fg) 10%, transparent);
   --shadow-3: 0 4px 8px -2px color-mix(in oklab, var(--fg) 12%, transparent);
   --shadow-overlay: 0 8px 16px -4px color-mix(in oklab, var(--fg) 16%, transparent);
+  --ring-line:        inset 0 0 0 var(--bw-hair) var(--rule);
+  --ring-line-strong: inset 0 0 0 var(--bw-hair) var(--rule-strong);
+  --edge-below:       0 var(--bw-hair) 0 var(--rule);
+  --edge-above:       0 calc(var(--bw-hair) * -1) 0 var(--rule);
+  --focus-ring-outer: 0 0 0 var(--focus-w) var(--focus-color);
+  --ring-accent:      inset 0 0 0 var(--bw-hair) var(--accent);
+  --ring-outer:       0 0 0 var(--bw-hair) color-mix(in oklab, var(--accent) 40%, transparent);
+  --ring-cutout:      0 0 0 var(--bw-rule) var(--bg);
+  --bar-accent:       inset var(--bw-rule) 0 0 var(--accent);
+  --bar-danger:       inset var(--bw-rule) 0 0 var(--flame);
   --z-popover:   var(--z-dropdown);
 }

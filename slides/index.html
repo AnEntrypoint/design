@@ -38,6 +38,7 @@
     --slide-closing-size: 280px;
     --slide-h1-size: 160px;
     --slide-sub-size: 34px;
+    --slide-sub-gap: 64px;
     --slide-quote-size: 120px;
     --slide-quote-mark-size: 240px;
     --slide-cmp-h-size: 96px;
@@ -107,7 +108,7 @@
     font-family: var(--ff-body);
     font-size: var(--slide-sub-size);
     line-height: 1.4;
-    margin-top: 32px;
+    margin-top: var(--slide-sub-gap);
     max-width: 32ch;
     color: var(--panel-text-2);
     font-weight: 400;
@@ -213,6 +214,7 @@
     --slide-closing-size: 260px;
     --slide-h1-size: 120px;
     --slide-sub-size: 54px;
+    --slide-sub-gap: 96px;
     --slide-quote-size: 92px;
     --slide-quote-mark-size: 180px;
     --slide-cmp-h-size: 76px;
@@ -242,17 +244,17 @@
 <body>
 <deck-stage width="1920" height="1080">
 
-<section class="s-elev" data-label="Title">
-  <div class="s-dateline"><span>247420 · an entrypoint</span><span class="spread"></span><span>apr 20 · 2026 · live</span></div>
+<section class="s-elev" data-label="title">
+  <div class="s-dateline"><span>247420 · AnEntrypoint</span><span class="spread"></span><span>apr 20 · 2026 · live</span></div>
   <div>
     <div class="s-label" style="margin-bottom:24px">template deck</div>
-    <div class="s-hero">a design system you can read in direct sunlight.</div>
-    <div class="s-sub">what changed in the 2026 restyle and what ships next.</div>
+    <div class="s-hero">247420 design system: the 2026 restyle</div>
+    <div class="s-sub">what changed in the palette, type and surfaces, and what ships next.</div>
   </div>
   <div class="s-footer"><span>deck 001</span><span>247420 design system</span></div>
 </section>
 
-<section data-label="Section Intro">
+<section data-label="section intro">
   <div class="s-dateline"><span>247420</span><span>01</span><span class="spread"></span><span>of 05</span></div>
   <div>
     <div class="s-label" style="margin-bottom:32px">chapter one</div>
@@ -261,7 +263,7 @@
   <div class="s-footer"><span>chapter</span><span>default styling</span></div>
 </section>
 
-<section class="s-canvas" data-label="Big Quote">
+<section class="s-canvas" data-label="big quote">
   <div class="s-dateline"><span>247420</span><span>quote</span><span class="spread"></span><span>principle</span></div>
   <div class="pv1">
     <div>
@@ -273,7 +275,7 @@
   <div class="s-footer"><span>quote</span><span>247420</span></div>
 </section>
 
-<section class="s-elev" data-label="Receipt">
+<section class="s-elev" data-label="receipt">
   <div class="s-dateline"><span>247420</span><span>receipt · repo figures</span><span class="spread"></span><span>live</span></div>
   <div>
     <div class="s-label" style="margin-bottom:32px">by the numbers (counted from this repo)</div>
@@ -281,15 +283,15 @@
       <div class="receipt-row"><span>components</span><span>230</span></div>
       <div class="receipt-row"><span>helpers</span><span>84</span></div>
       <div class="receipt-row"><span>ui kits</span><span>22</span></div>
-      <div class="receipt-row"><span>css lint gates</span><span>17</span></div>
+      <div class="receipt-row"><span>css lint gates</span><span>19</span></div>
       <div class="receipt-row"><span>serious a11y violations</span><span>0</span></div>
-      <div class="receipt-row"><span>component sheets</span><span>39</span></div>
+      <div class="receipt-row"><span>component sheets</span><span>41</span></div>
     </div>
   </div>
   <div class="s-footer"><span>receipt</span><span>247420</span></div>
 </section>
 
-<section data-label="Comparison">
+<section data-label="comparison">
   <div class="s-dateline"><span>247420</span><span>a vs b</span><span class="spread"></span><span>before / after</span></div>
   <div>
     <div class="cmp">
@@ -308,8 +310,8 @@
   <div class="s-footer"><span>comparison</span><span>before / after</span></div>
 </section>
 
-<section class="s-accent" data-label="End">
-  <div class="s-dateline"><span>247420 · an entrypoint</span><span class="spread"></span><span>end · q&amp;a</span></div>
+<section class="s-accent" data-label="end">
+  <div class="s-dateline"><span>247420 · AnEntrypoint</span><span class="spread"></span><span>end · q&amp;a</span></div>
   <div class="pv1">
     <div>
       <div class="s-hero s-hero-closing">gm.</div>

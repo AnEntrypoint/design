@@ -243,7 +243,7 @@ ChannelItem({ voiceActive: false | true })
 - [ ] Add deprecation notices to old prop documentation
 
 ### Phase 5: Validation
-- [ ] Run tests: `npm test` (or equivalent)
+- [ ] Run the lint gates: `npm run lint`
 - [ ] Build project: `npm run build:ci` or `node scripts/build.mjs`
 - [ ] Manual smoke test in browser
 - [ ] Check no console warnings for old props

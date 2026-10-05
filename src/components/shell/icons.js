@@ -105,16 +105,6 @@ function iconArgs(name, size) {
     if (name && typeof name === 'object') ({ name, size = 16 } = name);
     return { name, size };
 }
-/**
- * Renders a monochrome line icon from ICON_PATHS as a raw SVG markup string,
- * for raw-DOM call sites with no webjsx render in scope (e.g. `el.innerHTML
- * = iconMarkup('pause')`). Same path table and attribute contract as Icon().
- * Accepts either call shape: `iconMarkup('search', { size: 20 })` or
- * `iconMarkup({ name: 'search', size: 20 })`. An out-of-set name renders an
- * empty string (silent by design, matching Icon()'s empty-span fallback) --
- * extend ICON_PATHS above to add one.
- * @example iconButton.innerHTML = iconMarkup('play', { size: 14 });
- */
 export function iconMarkup(name, { size = 16 } = {}) {
     ({ name, size } = iconArgs(name, size));
     const inner = ICON_PATHS[name];

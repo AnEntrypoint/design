@@ -77,30 +77,6 @@ export function RowLink({ code, title, sub, meta, href = '#', key, target }) {
 }
 
 /**
- * One FIELD of a record: its label, its value, and whatever the app needs to
- * say about that value.
- *
- * This is the third row shape, and it exists because the other two do not fit
- * it. `Row` is a LIST row -- title/sub/meta describing one item in a
- * collection. `Receipt` is a static key/value table with nowhere to put a
- * control. A record's field needs both halves: a value that may be
- * interactive (click to edit, a provenance chip beside it) and annotations
- * that hang beneath it. Without this, every app displaying a record's fields
- * hand-rolls the same label/value row and its own separator, and the
- * separators then drift apart between apps.
- *
- * The separator is the kit's (`panel-row.css`), not the caller's, which is the
- * whole point: one rule owns where a field row ends, and the last row in a
- * group correctly has none.
- *
- * @param {any} label The field's human name.
- * @param {any} value The value, or whatever the caller renders in its place.
- * @param {any} trailing Rendered after the value -- chips, a source marker.
- * @param {any} notes Annotations rendered beneath the value.
- * @param {string} field Machine name, emitted as data-field for targeting.
- * @param {string} key webjsx list key.
- */
-/**
  * One entry in a LOG or timeline: a dense single line, with a coloured rail
  * marking what kind of thing happened.
  *

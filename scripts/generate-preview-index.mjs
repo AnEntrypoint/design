@@ -18,7 +18,7 @@ if (uncatalogued.length || missing.length) {
 }
 
 const EXTRA_LINKS = [
-  { href: '../slides/index.html', title: 'Slide deck', description: 'A 16:9 deck built with the same tokens and chrome as the kits.' },
+  { href: '../slides/index.html', title: 'slide deck', description: 'a 16:9 deck built with the same tokens and chrome as the kits.' },
 ]
 
 const row = ({ href, title, description }) => `      <li><a href="${href}">${title}</a><span class="idx-desc">${description}</span></li>`

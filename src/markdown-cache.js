@@ -26,11 +26,6 @@ let _stats = {
     cacheMisses: 0,
 };
 
-/**
- * Initialize markdown and Prism in parallel on first Chat component mount.
- * Subsequent calls return cached state (0ms).
- * @returns {Promise<{ markdown: boolean, prism: boolean }>}
- */
 export async function initializeCachesEagerly() {
     if (_initPromise) return _initPromise;
 
@@ -62,12 +57,6 @@ export async function initializeCachesEagerly() {
     return _initPromise;
 }
 
-/**
- * Render markdown with cached loader (ensures markdown is ready first).
- * Memoizes by content hash to avoid re-parsing identical markdown.
- * @param {string} text - Markdown source
- * @returns {Promise<string>} - Sanitized HTML
- */
 export async function renderMarkdownCached(text) {
     const t0 = performance.now();
     const hash = simpleHash(text || '');
@@ -99,11 +88,6 @@ export async function renderMarkdownCached(text) {
     return html;
 }
 
-/**
- * Highlight code block with cached Prism (ensures Prism is ready first).
- * @param {HTMLElement} el - DOM element containing <code> blocks
- * @returns {Promise<void>}
- */
 export async function highlightCodeBlockCached(el) {
     if (!_prismInitialized) {
         await ensurePrism();
@@ -113,10 +97,6 @@ export async function highlightCodeBlockCached(el) {
     await highlightAllUnder(el);
 }
 
-/**
- * Get cache initialization and performance stats.
- * @returns {Object} - { markdownInitialized, prismInitialized, initMs, renderStats, cacheStats }
- */
 export function getCacheStats() {
     const total = _stats.cacheHits + _stats.cacheMisses;
     return {

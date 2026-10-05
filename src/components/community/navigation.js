@@ -7,12 +7,13 @@ const h = webjsx.createElement;
 
 export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash' };
 
-export function ServerIcon({ id, name, icon, active, badge, onClick } = {}) {
+export function ServerIcon({ id, name, abbr, icon, active, badge, onClick } = {}) {
     return h('div', {
         class: 'cm-server-icon' + (active ? ' active' : ''),
         onclick: onClick,
         role: 'button',
         'aria-label': name,
+        title: name,
         'aria-pressed': active ? 'true' : 'false',
         tabindex: '0',
         'data-id': id,
@@ -24,17 +25,17 @@ export function ServerIcon({ id, name, icon, active, badge, onClick } = {}) {
         }
     },
         h('span', { class: 'cm-server-pill' }),
-        icon ? h('img', { src: icon, alt: name }) : Avatar({ name, shape: 'square', initialsCount: 2 }),
+        icon ? h('img', { src: icon, alt: name }) : Avatar({ name: abbr || name, shape: 'square', initialsCount: 2 }),
         badge ? h('span', { class: 'cm-server-badge' }, badge > 99 ? '99+' : String(badge)) : null
     );
 }
 
 export function ServerRail({ servers = [], activeId, onSelect, onAdd } = {}) {
     return h('div', { class: 'cm-server-rail', role: 'navigation', 'aria-label': 'servers' },
-        h('a', { class: 'cm-server-back', href: '../', title: 'Back', 'aria-label': 'back' }, Icon('chevron-left')),
+        h('a', { class: 'cm-server-back', href: '../', title: 'back', 'aria-label': 'back' }, Icon('chevron-left')),
         h('div', { class: 'cm-server-sep', 'aria-hidden': 'true' }),
         ...servers.map(s => ServerIcon({ ...s, active: s.id === activeId, onClick: () => onSelect && onSelect(s.id) })),
-        onAdd ? h('button', { class: 'cm-server-add', type: 'button', onclick: onAdd, title: 'Add server', 'aria-label': 'add server' }, '+') : null
+        onAdd ? h('button', { class: 'cm-server-add', type: 'button', onclick: onAdd, title: 'add server', 'aria-label': 'add server' }, '+') : null
     );
 }
 

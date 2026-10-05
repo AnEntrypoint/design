@@ -19,16 +19,16 @@ whole sheet in and every component looks scattered across 20+ sheets.
 
 - components in the manifest: 314
 - resolved to a defining module: 314
-- shared-base classes: 39
+- shared-base classes: 47
 - components with distinctive rules: 228
-  - owned by exactly 1 sheet (cleanly extractable today): 115
-  - owned by 2 sheets: 44
-  - owned by 3 or more sheets (need reorganizing before a subset is safe): 69
+  - owned by exactly 1 sheet (cleanly extractable today): 117
+  - owned by 2 sheets: 43
+  - owned by 3 or more sheets (need reorganizing before a subset is safe): 68
 
 ## Shared base
 
 ```
-active app app-body app-chrome app-main app-side app-side-shell app-status app-topbar brand btn btn-ghost btn-primary chat chat-avatar chat-bubble chat-composer chat-head chat-msg chat-stack cli code danger ds-247420 ds-file-act ds-file-row ds-select ds-session-row glyph is-active is-error kpi-card meta open panel row spread sub title
+active app app-body app-chrome app-main app-side app-side-shell app-status app-topbar brand btn btn-ghost btn-primary chat chat-avatar chat-bubble chat-composer chat-head chat-msg chat-stack cli cmd code danger ds-247420 ds-app-surface ds-file-act ds-file-row ds-section ds-select ds-session-row ds-skel ds-skel-icon ds-skel-meta ds-skel-title glyph group is-active is-error kpi-card meta open panel row spread sub title
 ```
 
 ## Components whose rules span 3 or more sheets
@@ -37,11 +37,10 @@ These are the ones that make a safe subset impossible to express today.
 
 | component | sheets | where |
 | --- | --- | --- |
-| mountCommunityApp | 13 | app-shell/base.css, app-shell/topbar.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/files.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-shell/kits-appended.css, editor-primitives.css, community-app.css, app-surfaces.css |
-| WorkspaceShell | 10 | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/files.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-shell/kits-appended.css, app-surfaces.css |
-| EventList | 8 | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/states-interactions.css, app-shell/kits-appended.css, community.css, chat.css, app-surfaces.css |
+| mountCommunityApp | 10 | app-shell/base.css, app-shell/topbar.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/row-print.css, editor-primitives.css, community-app.css, app-surfaces.css |
+| SearchInput | 8 | app-shell/base.css, app-shell/topbar.css, app-shell/states-interactions.css, app-shell/responsive2-workspace.css, app-shell/dashboard.css, chat.css, editor-primitives.css, app-surfaces.css |
+| WorkspaceShell | 7 | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-surfaces.css |
 | Kpi | 7 | app-shell/base.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, editor-primitives.css, app-surfaces.css |
-| SearchInput | 7 | app-shell/base.css, app-shell/topbar.css, app-shell/states-interactions.css, app-shell/dashboard.css, chat.css, editor-primitives.css, app-surfaces.css |
 | loadingState | 7 | app-shell/base.css, app-shell/primitives.css, app-shell/panel-row.css, app-shell/hero-content.css, app-shell/loading-alerts.css, app-shell/row-print.css, community.css |
 | AppShell | 6 | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-surfaces.css |
 | Row | 6 | app-shell/base.css, app-shell/panel-row.css, app-shell/row-print.css, chat.css, editor-primitives.css, app-surfaces.css |
@@ -49,46 +48,45 @@ These are the ones that make a safe subset impossible to express today.
 | Table | 6 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css, app-shell/kits-appended.css, community.css |
 | ChatMessage | 6 | app-shell/base.css, app-shell/chat-polish.css, chat.css, editor-primitives.css, app-surfaces.css, gm-prose.css |
 | ChatComposer | 6 | app-shell/primitives.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/states-interactions.css, app-shell/slider.css, chat.css |
-| ConversationList | 6 | app-shell/panel-row.css, app-shell/files.css, app-shell/states-interactions.css, app-shell/data-density.css, community.css, chat.css |
 | FileGrid | 6 | app-shell/base.css, app-shell/responsive.css, app-shell/files.css, chat.css, editor-primitives.css, app-surfaces.css |
 | FilePreviewCode | 6 | app-shell/files.css, app-shell/chat-polish.css, app-shell/row-print.css, app-shell/kits-appended.css, app-shell/plugins-config.css, chat.css |
-| ChannelCategory | 6 | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css, editor-primitives.css, app-surfaces.css |
 | machines | 6 | app-shell/base.css, app-shell/panel-row.css, app-shell/hero-content.css, app-shell/skills-config.css, community.css, app-surfaces.css |
-| PageHeader | 5 | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/kits-appended.css, app-surfaces.css |
+| Panel | 5 | app-shell/primitives.css, app-shell/panel-row.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css |
 | Chat | 5 | app-shell/hero-content.css, app-shell/chat-polish.css, chat.css, community-app.css, app-surfaces.css |
 | SessionDashboard | 5 | app-shell/topbar.css, app-shell/hero-content.css, app-shell/files.css, app-shell/dashboard.css, chat.css |
-| FileSkeleton | 5 | app-shell/responsive.css, app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css |
-| UserCard | 5 | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css, app-surfaces.css |
 | Field | 5 | app-shell/base.css, app-shell/states-interactions.css, app-shell/kits-appended.css, editor-primitives.css, app-surfaces.css |
 | emptyState | 5 | app-shell/base.css, app-shell/primitives.css, app-shell/panel-row.css, app-shell/hero-content.css, community.css |
+| Topbar | 4 | app-shell/topbar.css, app-shell/responsive.css, app-shell/responsive2-workspace.css, app-shell/row-print.css |
 | Crumb | 4 | app-shell/topbar.css, app-shell/files.css, app-shell/responsive2-workspace.css, app-shell/row-print.css |
-| Side | 4 | app-shell/topbar.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, community-app.css |
-| Panel | 4 | app-shell/primitives.css, app-shell/panel-row.css, app-shell/responsive.css, app-shell/kits-appended.css |
 | Hero | 4 | app-shell/base.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/sidebar-misc.css |
 | Install | 4 | app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, marketing.css |
 | Receipt | 4 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/row-print.css |
 | WorksList | 4 | app-shell/base.css, app-shell/panel-row.css, app-shell/hero-content.css, gm-prose.css |
 | Manifesto | 4 | app-shell/base.css, app-shell/panel-row.css, app-shell/hero-content.css, gm-prose.css |
+| PageHeader | 4 | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/kits-appended.css |
 | AICat | 4 | app-shell/hero-content.css, app-shell/chat-polish.css, chat.css, app-surfaces.css |
+| ConversationList | 4 | app-shell/panel-row.css, app-shell/states-interactions.css, app-shell/data-density.css, chat.css |
 | SessionCard | 4 | app-shell/topbar.css, app-shell/files.css, app-shell/dashboard.css, chat.css |
-| AgentListSkeleton | 4 | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css |
 | FileRow | 4 | app-shell/responsive.css, app-shell/files.css, app-shell/catalog-theme.css, chat.css |
 | BreadcrumbPath | 4 | app-shell/topbar.css, app-shell/responsive.css, app-shell/files.css, app-shell/responsive2-workspace.css |
+| ChannelCategory | 4 | app-shell/loading-alerts.css, community.css, editor-primitives.css, app-surfaces.css |
 | CommunityShell | 4 | app-shell/base.css, app-shell/row-print.css, community.css, app-surfaces.css |
 | Banner | 4 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/states-interactions.css, community.css |
 | config | 4 | app-shell/loading-alerts.css, community.css, chat.css, app-surfaces.css |
 | makePage | 4 | app-shell/loading-alerts.css, community.css, chat.css, app-surfaces.css |
-| Topbar | 3 | app-shell/topbar.css, app-shell/responsive.css, app-shell/row-print.css |
+| Side | 3 | app-shell/topbar.css, app-shell/sidebar-misc.css, community-app.css |
+| Status | 3 | app-shell/topbar.css, app-shell/responsive2-workspace.css, marketing.css |
 | WorkspaceRail | 3 | app-shell/primitives.css, app-shell/panel-row.css, app-shell/responsive2-workspace.css |
 | PanelFromItems | 3 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | CliBlock | 3 | app-shell/hero-content.css, app-shell/kits-appended.css, marketing.css |
 | Changelog | 3 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
-| Section | 3 | app-shell/base.css, app-shell/hero-content.css, app-surfaces.css |
 | BarChart | 3 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | HealthTable | 3 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | ProcessRegistryTable | 3 | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
+| EventList | 3 | app-shell/base.css, app-shell/files.css, app-shell/kits-appended.css |
 | Form | 3 | app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css |
 | AICatPortrait | 3 | app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/plugins-config.css |
+| AgentChat | 3 | app-shell/responsive2-workspace.css, chat.css, app-surfaces.css |
 | ContextPane | 3 | app-shell/panel-row.css, app-shell/responsive.css, chat.css |
 | SpreadsheetPreview | 3 | app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css |
 | GitDiffView | 3 | app-shell/chat-polish.css, app-shell/git-status.css, app-shell/plugins-config.css |
@@ -98,6 +96,7 @@ These are the ones that make a safe subset impossible to express today.
 | FilePreviewMedia | 3 | app-shell/files.css, app-shell/kits-appended.css, chat.css |
 | FilePreviewPane | 3 | app-shell/files.css, app-shell/row-print.css, chat.css |
 | Modal | 3 | app-shell/files.css, app-shell/row-print.css, app-shell/kits-appended.css |
+| UserCard | 3 | app-shell/loading-alerts.css, community.css, app-surfaces.css |
 | PttButton | 3 | app-shell/hero-content.css, community.css, community-app.css |
 | ThemeToggle | 3 | app-shell/catalog-theme.css, app-shell/responsive2-workspace.css, chat.css |
 | RadioGroup | 3 | app-shell/states-interactions.css, chat.css, editor-primitives.css |
@@ -119,18 +118,18 @@ These are the ones that make a safe subset impossible to express today.
 | IconButton | src/components/shell/atoms.js | (no distinctive rules) |
 | Badge | src/components/shell/atoms.js | app-shell/primitives.css, app-shell/panel-row.css |
 | Pill | src/components/shell/atoms.js | app-shell/primitives.css |
-| Topbar | src/components/shell/app-shell.js | app-shell/topbar.css, app-shell/responsive.css, app-shell/row-print.css |
+| Topbar | src/components/shell/app-shell.js | app-shell/topbar.css, app-shell/responsive.css, app-shell/responsive2-workspace.css, app-shell/row-print.css |
 | Crumb | src/components/shell/app-shell.js | app-shell/topbar.css, app-shell/files.css, app-shell/responsive2-workspace.css, app-shell/row-print.css |
-| Side | src/components/shell/app-shell.js | app-shell/topbar.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, community-app.css |
-| Status | src/components/shell/app-shell.js | app-shell/topbar.css, marketing.css |
+| Side | src/components/shell/app-shell.js | app-shell/topbar.css, app-shell/sidebar-misc.css, community-app.css |
+| Status | src/components/shell/app-shell.js | app-shell/topbar.css, app-shell/responsive2-workspace.css, marketing.css |
 | AppShell | src/components/shell/app-shell.js | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-surfaces.css |
-| WorkspaceShell | src/components/shell/workspace-shell.js | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/files.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-shell/kits-appended.css, app-surfaces.css |
+| WorkspaceShell | src/components/shell/workspace-shell.js | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-surfaces.css |
 | WorkspaceRail | src/components/shell/workspace-shell.js | app-shell/primitives.css, app-shell/panel-row.css, app-shell/responsive2-workspace.css |
 | Heading | src/components/shell/atoms.js | (no distinctive rules) |
 | Lede | src/components/shell/atoms.js | app-shell/base.css, app-shell/kits-appended.css |
 | Dot | src/components/shell/atoms.js | (no distinctive rules) |
 | Rail | src/components/shell/atoms.js | app-shell/primitives.css |
-| Panel | src/components/content/panel.js | app-shell/primitives.css, app-shell/panel-row.css, app-shell/responsive.css, app-shell/kits-appended.css |
+| Panel | src/components/content/panel.js | app-shell/primitives.css, app-shell/panel-row.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css |
 | Card | src/components/content/panel.js | (no distinctive rules) |
 | Row | src/components/content/row.js | app-shell/base.css, app-shell/panel-row.css, app-shell/row-print.css, chat.css, editor-primitives.css, app-surfaces.css |
 | RowLink | src/components/content/row.js | (no distinctive rules) |
@@ -147,18 +146,18 @@ These are the ones that make a safe subset impossible to express today.
 | WorksList | src/components/content/lists.js | app-shell/base.css, app-shell/panel-row.css, app-shell/hero-content.css, gm-prose.css |
 | WritingList | src/components/content/lists.js | (no distinctive rules) |
 | Manifesto | src/components/content/hero.js | app-shell/base.css, app-shell/panel-row.css, app-shell/hero-content.css, gm-prose.css |
-| Section | src/components/content/panel.js | app-shell/base.css, app-shell/hero-content.css, app-surfaces.css |
-| PageHeader | src/components/content/hero.js | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/kits-appended.css, app-surfaces.css |
+| Section | src/components/content/panel.js | app-shell/base.css |
+| PageHeader | src/components/content/hero.js | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/kits-appended.css |
 | Kpi | src/components/content/charts.js | app-shell/base.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, editor-primitives.css, app-surfaces.css |
 | Sparkline | src/components/content/charts.js | app-shell/hero-content.css |
 | BarChart | src/components/content/charts.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | Table | src/components/content/table.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css, app-shell/kits-appended.css, community.css |
 | HealthTable | src/components/content/table.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | ProcessRegistryTable | src/components/content/table.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
-| SearchInput | src/components/content/fields.js | app-shell/base.css, app-shell/topbar.css, app-shell/states-interactions.css, app-shell/dashboard.css, chat.css, editor-primitives.css, app-surfaces.css |
+| SearchInput | src/components/content/fields.js | app-shell/base.css, app-shell/topbar.css, app-shell/states-interactions.css, app-shell/responsive2-workspace.css, app-shell/dashboard.css, chat.css, editor-primitives.css, app-surfaces.css |
 | TextField | src/components/content/fields.js | app-shell/states-interactions.css |
 | Select | src/components/content/fields.js | app-shell/states-interactions.css |
-| EventList | src/components/content/lists.js | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/states-interactions.css, app-shell/kits-appended.css, community.css, chat.css, app-surfaces.css |
+| EventList | src/components/content/lists.js | app-shell/base.css, app-shell/files.css, app-shell/kits-appended.css |
 | HomeView | src/components/content/views.js | (no distinctive rules) |
 | ProjectView | src/components/content/views.js | app-shell/base.css, gm-prose.css |
 | Form | src/components/content/fields.js | app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css |
@@ -182,18 +181,18 @@ These are the ones that make a safe subset impossible to express today.
 | AICAT_FACE | src/components/chat/threads.js | (no distinctive rules) |
 | AICatPortrait | src/components/chat/threads.js | app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/plugins-config.css |
 | AICat | src/components/chat/threads.js | app-shell/hero-content.css, app-shell/chat-polish.css, chat.css, app-surfaces.css |
-| AgentChat | src/components/agent-chat/surface.js | chat.css, app-surfaces.css |
+| AgentChat | src/components/agent-chat/surface.js | app-shell/responsive2-workspace.css, chat.css, app-surfaces.css |
 | MESSAGE_CAP | src/components/agent-chat/thread-behaviour.js | (no distinctive rules) |
 | ChatMinimap | src/components/chat-minimap/minimap.js | chat.css |
 | CHAT_MINIMAP_WIDTH | src/components/chat-minimap/minimap.js | (no distinctive rules) |
-| ConversationList | src/components/sessions/conversation-list.js | app-shell/panel-row.css, app-shell/files.css, app-shell/states-interactions.css, app-shell/data-density.css, community.css, chat.css |
+| ConversationList | src/components/sessions/conversation-list.js | app-shell/panel-row.css, app-shell/states-interactions.css, app-shell/data-density.css, chat.css |
 | SessionCard | src/components/sessions/session-card.js | app-shell/topbar.css, app-shell/files.css, app-shell/dashboard.css, chat.css |
 | SessionDashboard | src/components/sessions/dashboard.js | app-shell/topbar.css, app-shell/hero-content.css, app-shell/files.css, app-shell/dashboard.css, chat.css |
 | SessionMeta | src/components/sessions/detail-bits.js | chat.css |
 | fmtDuration | src/components/sessions/format.js | (no distinctive rules) |
 | fmtTime | src/components/sessions/format.js | (no distinctive rules) |
 | fmtAgo | src/components/sessions/format.js | (no distinctive rules) |
-| AgentListSkeleton | src/components/sessions/detail-bits.js | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css |
+| AgentListSkeleton | src/components/sessions/detail-bits.js | chat.css |
 | ContextPane | src/components/context-pane/pane.js | app-shell/panel-row.css, app-shell/responsive.css, chat.css |
 | ContextMeter | src/components/context-pane/meter.js | chat.css |
 | ContextTreemap | src/components/context-pane/treemap.js | chat.css |
@@ -223,7 +222,7 @@ These are the ones that make a safe subset impossible to express today.
 | FileIcon | src/components/files/types.js | app-shell/files.css |
 | FileRow | src/components/files/entries.js | app-shell/responsive.css, app-shell/files.css, app-shell/catalog-theme.css, chat.css |
 | FileGrid | src/components/files/grid.js | app-shell/base.css, app-shell/responsive.css, app-shell/files.css, chat.css, editor-primitives.css, app-surfaces.css |
-| FileSkeleton | src/components/files/entries.js | app-shell/responsive.css, app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css |
+| FileSkeleton | src/components/files/entries.js | app-shell/responsive.css, app-shell/files.css |
 | sortFiles | src/components/files/types.js | (no distinctive rules) |
 | FileToolbar | src/components/files/chrome.js | app-shell/files.css |
 | RootsPicker | src/components/files/chrome.js | chat.css |
@@ -245,13 +244,13 @@ These are the ones that make a safe subset impossible to express today.
 | ServerIcon | src/components/community/navigation.js | community.css |
 | ServerRail | src/components/community/navigation.js | community.css, app-surfaces.css |
 | ChannelItem | src/components/community/navigation.js | community.css |
-| ChannelCategory | src/components/community/navigation.js | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css, editor-primitives.css, app-surfaces.css |
+| ChannelCategory | src/components/community/navigation.js | app-shell/loading-alerts.css, community.css, editor-primitives.css, app-surfaces.css |
 | VoiceUser | src/components/community/presence.js | community.css, community-app.css |
 | UserPanel | src/components/community/presence.js | community.css |
 | ChannelSidebar | src/components/community/navigation.js | community.css, app-surfaces.css |
 | MemberItem | src/components/community/presence.js | community.css |
 | MemberList | src/components/community/presence.js | community.css, app-surfaces.css |
-| UserCard | src/components/community/presence.js | app-shell/files.css, app-shell/states-interactions.css, community.css, chat.css, app-surfaces.css |
+| UserCard | src/components/community/presence.js | app-shell/loading-alerts.css, community.css, app-surfaces.css |
 | ChatHeader | src/components/community/chrome.js | community.css |
 | VoiceStrip | src/components/community/presence.js | community.css, app-surfaces.css |
 | CommunityShell | src/components/community/shell.js | app-shell/base.css, app-shell/row-print.css, community.css, app-surfaces.css |
@@ -416,7 +415,7 @@ These are the ones that make a safe subset impossible to express today.
 | refreshError | src/components/freddie/runtime.js | app-shell/loading-alerts.css, chat.css |
 | openCommandPalette | src/components/dashboard-shell.js | (no distinctive rules) |
 | closeCommandPalette | src/components/dashboard-shell.js | (no distinctive rules) |
-| mountCommunityApp | src/community-app.js | app-shell/base.css, app-shell/topbar.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/files.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-shell/kits-appended.css, editor-primitives.css, community-app.css, app-surfaces.css |
+| mountCommunityApp | src/community-app.js | app-shell/base.css, app-shell/topbar.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/row-print.css, editor-primitives.css, community-app.css, app-surfaces.css |
 | Calendar | src/components/calendar/calendar.js | app-shell/calendar.css |
 | DatePicker | src/components/calendar/date-picker.js | app-shell/calendar.css |
 | DateRangePicker | src/components/calendar/date-picker.js | app-shell/calendar.css |

@@ -1,3 +1,3 @@
-# Blog UI Kit: long-form writing surface
+# Blog UI Kit
 
-Sans long-form, flush-left, dateline bar on top, single column max 72ch.
+Long-form reading surface in the system sans: flush-left, a dateline bar on top and a single post column capped at `--measure`.

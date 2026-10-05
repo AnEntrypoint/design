@@ -30,7 +30,7 @@ function Metrics() {
             h('div', { class: 'ds-metric-lead-lbl' }, leadLabel),
             h('div', { class: 'ds-metric-lead-foot' },
                 Delta(leadMeta),
-                Sparkline({ values: leadMeta.spark, width: 240, height: 44, tone: 'up' }))),
+                Sparkline({ values: leadMeta.spark, width: 160, height: 44, tone: 'up' }))),
         h('div', { class: 'ds-metric-list' }, ...kpis.slice(1).map(([value, label, meta], i) =>
             h('div', { key: 'm' + i, class: 'ds-metric-item' },
                 h('span', { class: 'ds-metric-item-lbl' }, label),
@@ -49,7 +49,7 @@ const tableHeaders = ['endpoint', 'p95', 'status'];
 const ok = () => Badge({ tone: 'success', size: 'sm', children: 'ok' });
 const tableRows = [
     ['GET /api/users',     '92ms',  ok()],
-    ['POST /api/sessions', '218ms', Badge({ tone: 'success', size: 'sm', children: '2 errors' })],
+    ['POST /api/sessions', '218ms', Badge({ tone: 'sun', size: 'sm', children: '2 errors' })],
     ['GET /api/feed',      '144ms', ok()],
     ['POST /api/upload',   '1.4s',  Badge({ tone: 'flame', size: 'sm', children: '11 errors' })],
     ['DELETE /api/cache',  '38ms',  ok()]

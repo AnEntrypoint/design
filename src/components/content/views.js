@@ -10,7 +10,7 @@ const h = webjsx.createElement;
 export function HomeView({ state = {}, onNav, onToggleWork, works = [], posts = [], manifesto = [], currentlyShipping } = {}) {
     return [
         Hero({
-            eyebrow: 'an entrypoint',
+            eyebrow: 'AnEntrypoint',
             title: 'Small, useful tools, built in public.',
             body: '247420 is a creative collective of eight, scattered across three timezones. We have been shipping open-source tools for the web since 2018.',
             accent: 'Some become the future. Most don\'t. That\'s the deal.'

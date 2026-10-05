@@ -58,7 +58,7 @@ function ShippingBody() {
 function App() {
     return AppShell({
         topbar: Topbar({
-            brand: '247420', leaf: 'an entrypoint',
+            brand: '247420', leaf: 'AnEntrypoint',
             items: navItems,
             active: state.route,
             onNav: (label) => { state.route = label; render(); }
@@ -67,15 +67,15 @@ function App() {
         main: [
             Hero({
                 title: 'tools for agents and live rooms.',
-                body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser os shell. Every project is open source on github.',
+                body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser os shell. every project is open source on github.',
                 actions: [
                     h('a', { key: 'works', class: 'btn btn-primary', href: '#works' }, 'browse the works')
-                ]
-            }),
-            Panel({
-                title: 'currently shipping',
-                right: shipping.length + ' in flight',
-                children: ShippingBody()
+                ],
+                side: Panel({
+                    title: 'currently shipping',
+                    right: shipping.length + ' in flight',
+                    children: ShippingBody()
+                })
             }),
             Section({ id: 'works', title: 'works', children: WorksList({ works, openedIndex: state.opened, onToggle: (i) => { state.opened = i; render(); } }) }),
             Section({ id: 'writing', title: 'recent writing',

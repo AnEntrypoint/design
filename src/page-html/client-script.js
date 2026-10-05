@@ -38,21 +38,20 @@ function __esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'
 function showcaseNode(showcase) {
   if (!showcase) return null;
   const btnRow = h('div', { class: 'ds-showcase-row' },
-    C.Btn({ key: 'b1', variant: 'primary', children: 'Primary' }),
-    C.Btn({ key: 'b2', variant: 'default', children: 'Default' }),
-    C.Btn({ key: 'b3', variant: 'ghost', children: 'Ghost' }),
-    h('span', { key: 'b4-group', class: 'ds-showcase-btn-danger-group' },
-      C.Btn({ key: 'b4', variant: 'danger', children: 'Danger' })),
+    C.Btn({ key: 'b1', variant: 'primary', children: 'primary' }),
+    C.Btn({ key: 'b2', variant: 'default', children: 'default' }),
+    C.Btn({ key: 'b3', variant: 'ghost', children: 'ghost' }),
+    C.Btn({ key: 'b4', variant: 'danger', children: 'danger' }),
   );
   const chipRow = h('div', { class: 'ds-showcase-row' },
-    C.Chip({ key: 'c1', tone: 'green', children: 'Live' }),
-    C.Chip({ key: 'c2', tone: 'blue', children: 'Beta' }),
-    C.Chip({ key: 'c3', tone: 'purple', children: 'New' }),
+    C.Chip({ key: 'c1', tone: 'green', children: 'live' }),
+    C.Chip({ key: 'c2', tone: 'blue', children: 'beta' }),
+    C.Chip({ key: 'c3', tone: 'purple', children: 'new' }),
     C.Badge({ key: 'c4', tone: 'success', children: '0 violations' }),
   );
   const table = C.Table({
-    caption: 'Ship status for three representative kits, from the same manifest the kits panel below reads.',
-    headers: ['Kit', 'Status', 'A11y'],
+    caption: 'ship status for three representative kits, from the same manifest the kits panel below reads.',
+    headers: ['kit', 'status', 'a11y'],
     rows: [
       ['chat', 'shipped', 'pass'],
       ['dashboard', 'shipped', 'pass'],
@@ -67,11 +66,11 @@ function showcaseNode(showcase) {
       showcase.lede ? h('p', { class: 'ds-lede' }, showcase.lede) : null,
       h('div', { class: 'ds-showcase-grid' },
         h('div', { key: 'btns', class: 'ds-showcase-card' },
-          h('span', { class: 'ds-showcase-label' }, 'Buttons'), btnRow),
+          h('span', { class: 'ds-showcase-label' }, 'buttons'), btnRow),
         h('div', { key: 'chips', class: 'ds-showcase-card' },
-          h('span', { class: 'ds-showcase-label' }, 'Chips & badges'), chipRow),
+          h('span', { class: 'ds-showcase-label' }, 'chips & badges'), chipRow),
         h('div', { key: 'table', class: 'ds-showcase-card ds-showcase-card--wide' },
-          h('span', { class: 'ds-showcase-label' }, 'Table'), table),
+          h('span', { class: 'ds-showcase-label' }, 'table'), table),
       ),
     ].filter(Boolean),
   });

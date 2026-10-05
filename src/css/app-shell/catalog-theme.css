@@ -93,7 +93,7 @@
 .ds-segmented .ds-seg-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .ds-segmented .ds-seg-btn.is-on {
   background: var(--bg); color: var(--fg);
-  box-shadow: inset 0 0 0 var(--bw-hair, 1px) var(--rule);
+  box-shadow: var(--ring-line);
 }
 .ds-theme-toggle.btn {
   font-family: var(--ff-mono); font-size: var(--fs-xs);

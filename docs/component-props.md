@@ -270,7 +270,7 @@ One entry in a LOG or timeline: a dense single line, with a coloured rail markin
 
 **Kind:** component
 
-**Signature:** `eyebrow`, `title`, `body`, `accent`, `actions`, `badges`
+**Signature:** `eyebrow`, `title`, `body`, `accent`, `actions`, `badges`, `side`
 
 ### HeroFromPageData
 
@@ -1010,7 +1010,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state 
 
 **Kind:** component
 
-**Signature:** `id`, `name`, `icon`, `active`, `badge`, `onClick`
+**Signature:** `id`, `name`, `abbr`, `icon`, `active`, `badge`, `onClick`
 
 ### ServerRail
 

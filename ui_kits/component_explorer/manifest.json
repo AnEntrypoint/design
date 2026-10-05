@@ -990,6 +990,11 @@
           "name": "badges",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "side",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -4629,6 +4634,11 @@
         },
         {
           "name": "name",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "abbr",
           "default": null,
           "alias": null
         },

@@ -20,20 +20,19 @@ import {
 
 each FileRow takes `{ name, type, size, modified, onOpen, onAction }`. `type` is one of:
 
-| type      | rail color | glyph |
-| --------- | ---------- | ----- |
-| dir       | green      | ◫     |
-| image     | sky        | ◰     |
-| video     | purple     | ▰     |
-| audio     | mascot     | ◎     |
-| code      | green      | ⌘     |
-| text      | mascot     | §     |
-| archive   | flame      | ◐     |
-| document  | sun        | ▢     |
-| symlink   | sky        | ↗     |
-| other     | neutral    | ◌     |
+| type     | icon color token |
+| -------- | ---------------- |
+| dir      | --accent-ink |
+| image    | --mascot |
+| video    | --purple-2 |
+| audio    | --sky |
+| code     | --green-2 |
+| archive  | --flame |
+| document | --amber |
+| symlink  | --purple |
+| text, other | default |
 
-the rail color comes from `data-file-type` on the row; never apply `.rail-*` classes manually to file rows. css owns the mapping.
+the icon color comes from `data-file-type` on the row; the row rail itself is neutral. never apply `.rail-*` classes manually to file rows. css owns the mapping.
 
 ## from a real backend
 

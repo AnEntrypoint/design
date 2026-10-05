@@ -19,7 +19,7 @@
   position: absolute; top: 50%; left: calc(var(--ds-slider-pct, 0) * 1%);
   width: 18px; height: 18px;
   border-radius: var(--r-pill);
-  background: var(--bg-1);
+  background: var(--bg);
   border: var(--bw-hair) solid var(--accent);
   box-shadow: var(--shadow-1);
   transform: translate(-50%, -50%);
@@ -34,7 +34,7 @@
 }
 .ds-slider-range:focus-visible ~ .ds-slider-thumb,
 .ds-slider-track:has(.ds-slider-range:focus-visible) .ds-slider-thumb {
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 40%, transparent), var(--shadow-1);
+  box-shadow: var(--focus-ring-outer), var(--shadow-1);
 }
 @media (pointer: coarse) {
   .ds-slider-range { inset: auto 0; top: 50%; height: 44px; transform: translateY(-50%); }

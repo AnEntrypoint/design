@@ -74,7 +74,7 @@
 .ds-cal-day:hover { background: var(--bg-2); }
 .ds-cal-day:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-cal-day-outside { color: var(--fg-3); opacity: 0.55; }
-.ds-cal-day-today { font-weight: 700; box-shadow: inset 0 0 0 var(--bw-hair) var(--rule-strong); }
+.ds-cal-day-today { font-weight: 700; box-shadow: var(--ring-line-strong); }
 .ds-cal-day-selected {
   background: var(--accent);
   color: var(--accent-fg);

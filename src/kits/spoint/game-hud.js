@@ -2,14 +2,6 @@ export function Crosshair(h) {
   return h('div', { class: 'sp-hud-crosshair' }, '+')
 }
 
-/**
- * Ammo readout: `ammo/magazine`, or a reload-progress label while reloading.
- * @param {Object} [props]
- * @param {number} [props.ammo=0]
- * @param {number} [props.magazine=30]
- * @param {boolean} [props.reloading=false]
- * @param {number} [props.reloadProgress=0]
- */
 export function AmmoCounter(h, props = {}) {
   const { ammo = 0, magazine = 30, reloading = false, reloadProgress = 0 } = props
   return h('div', { class: 'sp-hud-ammo' },
@@ -19,11 +11,6 @@ export function AmmoCounter(h, props = {}) {
   )
 }
 
-/**
- * Bottom-center health bar with a threshold-colored fill and a numeric label.
- * @param {Object} [props]
- * @param {number} [props.hp=100]
- */
 export function HealthBar(h, props = {}) {
   const { hp = 100 } = props
   const hpClass = hp > 60 ? 'sp-hud-hp-high' : hp > 30 ? 'sp-hud-hp-mid' : 'sp-hud-hp-low'
@@ -33,13 +20,6 @@ export function HealthBar(h, props = {}) {
   )
 }
 
-/**
- * Top-right boost badge. Renders nothing while boostSec <= 0 (consumer can
- * check this before calling too; kept internal so composition stays a
- * one-liner in renderGameHud).
- * @param {Object} [props]
- * @param {number} [props.boostSec=0]
- */
 export function BoostIndicator(h, props = {}) {
   const { boostSec = 0 } = props
   if (boostSec <= 0) return null

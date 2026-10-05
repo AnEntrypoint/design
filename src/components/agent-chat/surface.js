@@ -17,7 +17,7 @@ export function AgentChat(props = {}) {
     messages = [], busy = false, draft = '', status, banners = [],
     cwd = '', cwdEditing = false, cwdDraft, cwdError, cwdChecking = false,
     cwdRoots, cwdRecent, cwdBrowse, defaultCwd,
-    agentName, placeholder,
+    agentName, title, placeholder,
     onSelectAgent, onSelectModel, onSend, onStop, onNewChat, onInput,
     onCwdEdit, onCwdSave, onCwdCancel, onCwdClear, onCwdDraft,
     onCwdBrowseToggle, onCwdBrowseCrumb, onCwdBrowseEnter, onCwdBrowsePick,
@@ -109,7 +109,7 @@ export function AgentChat(props = {}) {
 
   const mainColumn = h('div', { class: 'agentchat-main-col' },
     h('div', { class: 'agentchat-head' },
-      h('h1', { class: 'agentchat-title' }, name + (selectedModel ? ' · ' + selectedModel : '')),
+      h('h1', { class: 'agentchat-title' }, title || name + (selectedModel ? ' · ' + selectedModel : '')),
       h('span', { class: 'agentchat-sub', 'aria-hidden': busy ? 'true' : null },
         busy ? (status || 'streaming…') : (messages.length ? messages.length + (messages.length === 1 ? ' message' : ' messages') : ''))),
     threadBody,

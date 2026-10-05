@@ -55,7 +55,7 @@
   justify-content: center;
   font-size: var(--fs-tiny);
   font-weight: var(--fw-medium);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--fg) 10%, transparent), 0 1px 2px color-mix(in oklab, var(--fg) 10%, transparent);
+  box-shadow: var(--ring-line), 0 1px 2px color-mix(in oklab, var(--fg) 10%, transparent);
 }
 .chat-stack {
   display: flex;
@@ -415,8 +415,8 @@
   background: var(--fg-3); flex: 0 0 auto;
 }
 :root { --stale: color-mix(in oklab, var(--fg-3) 78%, var(--warn)); }
-.status-dot-disc.status-dot-live { background: var(--accent-ink); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-ink) 30%, transparent); }
-.status-dot-disc.status-dot-error { background: var(--flame); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--flame) 38%, transparent); }
+.status-dot-disc.status-dot-live { background: var(--accent-ink); }
+.status-dot-disc.status-dot-error { background: var(--flame); }
 .status-dot-disc.status-dot-connecting { background: transparent; box-shadow: inset 0 0 0 2px var(--amber); }
 .status-dot-disc.status-dot-stale { background: transparent; box-shadow: inset 0 0 0 1px var(--stale), inset 0 0 0 3px var(--bg); }
 
@@ -453,7 +453,7 @@
 @media (pointer: coarse) { .ds-session-loadmore { min-height: 44px; } }
 .ds-session-group { display: flex; flex-direction: column; }
 .ds-session-group-rows { display: flex; flex-direction: column; gap: var(--space-hair); }
-.ds-session-group-label { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--bg-1, var(--bg)); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); text-transform: uppercase; letter-spacing: var(--tr-label); padding: var(--space-2) var(--space-2) var(--space-1); }
+.ds-session-group-label { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--bg); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); text-transform: uppercase; letter-spacing: var(--tr-label); padding: var(--space-2) var(--space-2) var(--space-1); }
 .ds-session-row {
   position: relative; display: flex; align-items: center; gap: var(--space-2);
   width: 100%; padding: var(--space-2); min-height: 52px; margin-bottom: var(--space-hair);
@@ -462,7 +462,7 @@
 }
 .ds-session-row:hover { background: var(--bg-2); }
 .ds-session-row:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: calc(var(--focus-offset) * -1); }
-.ds-session-row.active { background: var(--accent-tint); box-shadow: inset 2px 0 0 var(--accent); }
+.ds-session-row.active { background: var(--accent-tint); box-shadow: var(--bar-accent); }
 .ds-session-row.rail-green::before, .ds-session-row.rail-purple::before, .ds-session-row.rail-flame::before {
   content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: var(--r-hair);
 }
@@ -514,7 +514,7 @@
   border-radius: var(--r-1); cursor: pointer;
 }
 .ds-session-confirm-delete { background: var(--flame); border: none; color: var(--bg); }
-.ds-session-confirm-delete:hover { filter: brightness(1.1); }
+.ds-session-confirm-delete:hover { background: color-mix(in oklab, var(--flame) 85%, var(--fg)); }
 .ds-session-confirm-cancel { background: var(--bg-2); border: var(--border-w) solid var(--border); color: var(--fg-2); }
 .ds-session-confirm-cancel:hover { background: var(--bg-3); color: var(--fg); }
 @media (pointer: coarse) { .ds-session-confirm-delete, .ds-session-confirm-cancel { min-height: 44px; } }
@@ -993,13 +993,13 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-composer .send.cancel {
   background: var(--bg-3);
   color: var(--fg);
-  box-shadow: inset 0 0 0 var(--bw-hair, 1px) var(--rule-strong, var(--rule));
+  box-shadow: var(--ring-line-strong);
 }
 .chat-composer .send.cancel:hover {
   background: color-mix(in oklab, var(--fg) 8%, var(--bg-3));
   filter: none;
 }
-.chat-composer .send.cancel:active { filter: brightness(0.96); }
+.chat-composer .send.cancel:active { background: color-mix(in oklab, var(--fg) 14%, var(--bg-3)); }
 
 .chat-minimap {
   width: var(--chat-minimap-w, 36px);

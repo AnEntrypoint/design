@@ -114,29 +114,9 @@ const ZINDEX_RE = /\bz-index\s*:\s*-?\d/;
 const TRANSITION_ALL_RE = /\btransition(?:-property)?\s*:\s*[^;}]*\ball\b/;
 const IMPORTANT_RE = /!\s*important/;
 
-const CRT_CANVAS_BLACK = '#0b0d10';
-const EMBEDDED_WEB_WHITE = '#ffffff';
-const THEBIRD_PRESET_TOKENS = ['#F5F0E4', '#EFE9DB', '#E3DAC7'];
-const BRAND_LEAD_FOR_UNSCOPED_CONSUMERS = '--accent-primary: #247420';
-const LIGHTBOX_LETTERBOX_BLACK = 'background: #000';
-const PRINT_PAPER_SIGNAL_PALETTE = ['--flame:#C53E00', '--amber:#7C570F', '--warn:#E0241A', '--sky:#404040'];
+const ALLOW = {};
 
-const ALLOW = {
-    'src/kits/os/theme.css': [
-        CRT_CANVAS_BLACK,
-        EMBEDDED_WEB_WHITE,
-        ...THEBIRD_PRESET_TOKENS,
-        BRAND_LEAD_FOR_UNSCOPED_CONSUMERS,
-    ],
-    'editor-primitives.css': [LIGHTBOX_LETTERBOX_BLACK],
-    'src/css/app-shell/plugins-config.css': ['border-radius: 11px'],
-    'app-surfaces.css': PRINT_PAPER_SIGNAL_PALETTE,
-};
-
-const RADIUS_ALLOW = {
-    'app-surfaces.css': ['border-radius: 999px'],
-    'src/kits/spoint/game-hud.css': ['border-radius: 4px', 'border-radius: 6px'],
-};
+const RADIUS_ALLOW = {};
 
 const lineMatchesAny = (table, rel, line) => (table[rel] || []).some((s) => line.includes(s));
 const isAllowed = (rel, line) => lineMatchesAny(ALLOW, rel, line);

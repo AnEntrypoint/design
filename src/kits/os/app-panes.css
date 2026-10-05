@@ -109,7 +109,7 @@
     min-height: 18px;
 }
 .browser-app-loading .browser-app-bar { box-shadow: inset 0 -2px 0 var(--os-accent); }
-.browser-app[data-error] .browser-app-status { color: var(--os-danger, #c0392b); }
+.browser-app[data-error] .browser-app-status { color: var(--color-danger); }
 
 @media (hover: none), (pointer: coarse) {
     .browser-app-bar { min-height: 52px; padding: 6px var(--space-2); }

@@ -429,6 +429,7 @@ export interface HeroProps {
     accent?: any;
     actions?: any;
     badges?: any;
+    side?: any;
 }
 export declare function Hero(props?: HeroProps): VNode;
 
@@ -1879,6 +1880,7 @@ export declare function modalError(error?: any): VNode;
 export interface ServerIconProps {
     id?: any;
     name?: any;
+    abbr?: any;
     icon?: any;
     active?: any;
     badge?: any;

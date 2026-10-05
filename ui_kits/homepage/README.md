@@ -1,7 +1,7 @@
-# 247420: Homepage UI Kit
+# Homepage UI Kit
 
-Portfolio index for 247420.xyz. Flush-left, dateline-header, index-card project list. One hero display line, one acid-accent stamp.
+Portfolio index for 247420.xyz. Hero, a currently-shipping panel, a works list, recent writing and principles, built from `Hero`, `Panel`, `Row`, `Section`, `WorksList`, `WritingList` and `Manifesto`.
 
 **Files**
-- `index.html`: the full page, interactive
-- `components.jsx`: Header, Dateline, Hero, ProjectRow, Footer, Manifesto
+- `index.html`: the page shell
+- `app.js`: the page content and its mount through `mountKit`

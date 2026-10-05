@@ -54,7 +54,7 @@
   text-transform: lowercase; letter-spacing: 0.02em; user-select: none;
   transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
   position: relative;
-  box-shadow: inset 0 0 0 1px var(--rule);
+  box-shadow: var(--ring-line);
 }
 .chat-msg.you .chat-avatar {
   background: color-mix(in oklab, var(--accent) 18%, var(--bg-3));
@@ -463,7 +463,8 @@
   text-transform: lowercase; letter-spacing: 0.02em;
 }
 
-.cm-composer-wrap { display: flex; flex-direction: column; width: 100%; gap: var(--space-1); }
+.cm-composer-wrap { display: flex; flex-direction: column; width: 100%; gap: var(--space-1); padding: 0 var(--space-3) var(--space-3); }
+.cm-composer-wrap .chat-typing-bar { padding-inline: 0; }
 
 .chat-reactions .chat-rxn-add {
   opacity: 0; justify-content: center;
@@ -472,6 +473,9 @@
 }
 .chat-reactions:hover .chat-rxn-add,
 .chat-reactions .chat-rxn-add:focus-visible { opacity: 1; }
+.chat-msg-flat .chat-reactions:not(:has(.rxn:not(.chat-rxn-add))) { height: 0; margin: 0; }
+.chat-msg-flat .chat-reactions:not(:has(.rxn:not(.chat-rxn-add))) .chat-rxn-add { position: absolute; right: var(--space-2-75); bottom: var(--space-1); }
+.chat-msg-flat:hover .chat-rxn-add { opacity: 1; }
 
 .chat-bubble.chat-bubble-typing {
   background: transparent;
@@ -548,10 +552,6 @@
 .chat-composer:has(textarea[aria-invalid="true"]) {
   border-color: var(--flame);
 }
-.chat-composer.is-error:focus-within,
-.chat-composer:has(textarea[aria-invalid="true"]):focus-within {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--flame) 22%, transparent);
-}
 .chat-composer textarea {
   flex: 1; min-width: 0; padding: var(--space-2) var(--space-1);
   background: none; color: var(--fg);
@@ -584,8 +584,8 @@
 }
 .composer-btn:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
 .composer-btn:active { transform: scale(0.88); }
-.chat-composer .send:hover { filter: brightness(0.92); }
-.chat-composer .send:active { filter: brightness(0.94); transform: scale(0.92); }
+.chat-composer .send:hover { background: color-mix(in oklab, var(--accent) 85%, var(--bg)); }
+.chat-composer .send:active { background: color-mix(in oklab, var(--accent) 78%, var(--bg)); transform: scale(0.92); }
 .chat-composer .send:focus-visible,
 .composer-btn:focus-visible {
   outline: var(--focus-w) solid var(--focus-color);
@@ -745,7 +745,6 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 
 .chat-composer.dragover {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 18%, transparent);
   background: color-mix(in oklab, var(--accent) 4%, var(--bg));
 }
 
@@ -764,7 +763,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   width: 100%; box-sizing: border-box;
   font: inherit; font-size: var(--fs-sm); color: var(--fg);
   background: var(--bg-2); border: 0;
-  box-shadow: inset 0 0 0 var(--bw-hair, 1px) var(--rule);
+  box-shadow: var(--ring-line);
   border-radius: var(--r-1);
   height: var(--ctl-sm, 32px);
   padding: 0 var(--space-2-5);
@@ -774,7 +773,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .ov-emoji-search:focus-visible,
 .ov-emoji-search:focus {
   outline: none;
-  box-shadow: inset 0 0 0 var(--bw-hair, 1px) var(--accent), 0 0 0 2px color-mix(in oklab, var(--accent) 18%, transparent);
+  box-shadow: var(--ring-accent);
 }
 .ov-emoji-tabs {
   display: flex; gap: var(--space-1);

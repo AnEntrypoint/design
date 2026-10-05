@@ -192,7 +192,7 @@
 }
 
 @media print {
-  .ds-247420 { --flame:#C53E00; --amber:#7C570F; --warn:#C41C0C; --sky:#404040; --bg:var(--paper); --fg:var(--ink); }
+  .ds-247420 { --flame:var(--paper-warn); --amber:var(--paper-amber); --warn:var(--paper-warn); --sky:var(--paper-sky); --bg:var(--paper); --fg:var(--ink); }
   .ds-247420 #app { min-height: auto; display: block; height: auto; }
   .ds-247420 .skip-link, .ds-247420 .status-dot, .ds-247420 .history-actions, .ds-247420 .chat-composer { display: none !important; }
   .ds-247420 .app, .ds-247420 .app-main, .ds-247420 .panel, .ds-247420 .chat, .ds-247420 .chat-thread {

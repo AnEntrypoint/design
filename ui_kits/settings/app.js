@@ -12,14 +12,14 @@ const root = document.getElementById('root');
 
 const state = {
     section: 'profile',
-    name: 'Sample user',
-    email: 'sample@example.test',
-    handle: '@sample',
-    bio: 'Maintainer. Reviews pull requests and publishes releases.',
+    name: 'Priya Raman',
+    email: 'priya@example.test',
+    handle: '@priya',
+    bio: 'maintainer. reviews pull requests and publishes releases.',
     theme: 'auto',
     motion: true,
     notify: { mentions: true, releases: true, marketing: false },
-    api_key: 'sk-sample-*******-c2a',
+    api_key: 'ds-live-*******-c2a',
     dirty: false,
     lastSaved: null,
     draft: null,
@@ -89,43 +89,43 @@ function clearDraft() {
 
 function DiscardConfirmModal({ onConfirm, onCancel }) {
     const draft = state.draft;
-    const timestamp = draft?.timestamp ? new Date(draft.timestamp).toLocaleString() : 'unknown time';
+    const timestamp = draft?.timestamp ? new Date(draft.timestamp).toLocaleString() : 'an unknown time';
     return Modal({
         onClose: onCancel,
         kind: 'small',
-        head: 'Discard unsaved changes?',
+        head: 'discard unsaved changes?',
         bodyClass: 'ds-modal-body ds-modal-body-form',
         body: [
-            h('p', { class: 'ds-modal-note' }, 'You have unsaved changes. A draft was saved at ' + timestamp + '.'),
+            h('p', { class: 'ds-modal-note' }, 'you have unsaved changes. a draft was saved at ' + timestamp + '.'),
             h('div', { class: 'ds-draft-preview' },
-                'Name: ' + state.name, h('br'), 'Email: ' + state.email, h('br'),
-                draft && draft.theme && draft.theme !== 'auto' ? ['Theme: ' + draft.theme, h('br')] : null
+                'name: ' + state.name, h('br'), 'email: ' + state.email, h('br'),
+                draft && draft.theme && draft.theme !== 'auto' ? ['theme: ' + draft.theme, h('br')] : null
             )
         ],
         actions: [
-            h('button', { class: 'btn', onclick: () => { restoreDraft(draft); onCancel(); } }, 'Restore draft'),
-            h('button', { class: 'btn btn-primary danger ds-btn-warn', onclick: onConfirm }, 'Discard & continue')
+            h('button', { class: 'btn', onclick: () => { restoreDraft(draft); onCancel(); } }, 'restore draft'),
+            h('button', { class: 'btn btn-primary danger ds-btn-warn', onclick: onConfirm }, 'discard and continue')
         ]
     });
 }
 
 function RestoreDraftModal({ onRestore, onDismiss }) {
     const draft = state.draft;
-    const timestamp = draft?.timestamp ? new Date(draft.timestamp).toLocaleString() : 'unknown time';
+    const timestamp = draft?.timestamp ? new Date(draft.timestamp).toLocaleString() : 'an unknown time';
     return Modal({
         onClose: onDismiss,
         kind: 'small',
-        head: 'Restore unsaved draft?',
+        head: 'restore unsaved draft?',
         bodyClass: 'ds-modal-body ds-modal-body-form',
         body: [
-            h('p', { class: 'ds-modal-note' }, 'A draft from a previous session was saved at ' + timestamp + '.'),
+            h('p', { class: 'ds-modal-note' }, 'a draft from a previous session was saved at ' + timestamp + '.'),
             h('div', { class: 'ds-draft-preview' },
-                'Name: ' + (draft?.name ?? '') , h('br'), 'Email: ' + (draft?.email ?? '')
+                'name: ' + (draft?.name ?? '') , h('br'), 'email: ' + (draft?.email ?? '')
             )
         ],
         actions: [
-            h('button', { class: 'btn', onclick: onDismiss }, 'Discard draft'),
-            h('button', { class: 'btn btn-primary', onclick: onRestore }, 'Restore draft')
+            h('button', { class: 'btn', onclick: onDismiss }, 'discard draft'),
+            h('button', { class: 'btn btn-primary', onclick: onRestore }, 'restore draft')
         ]
     });
 }
@@ -216,7 +216,7 @@ function ApiKeys() {
             h('div', { class: 'ds-btn-row' },
                 h('input', { class: 'input ds-key-input', value: state.api_key, readonly: true }),
                 h('button', { class: 'btn', onclick: () => { navigator.clipboard?.writeText(state.api_key); } }, 'copy'),
-                h('button', { class: 'btn', onclick: () => { state.api_key = 'sk-sample-' + shortUid(8) + '-' + shortUid(5); state.dirty = true; kit.render(); } }, 'rotate')
+                h('button', { class: 'btn', onclick: () => { state.api_key = 'ds-live-' + shortUid(8) + '-' + shortUid(5); state.dirty = true; kit.render(); } }, 'rotate')
             ) })
     ) });
 }
@@ -233,8 +233,8 @@ function Danger() {
 
 function DeleteConfirmModal({ onConfirm, onCancel }) {
     return ConfirmDialog({
-        title: 'Delete account?',
-        message: 'This permanently deletes your account and cannot be undone. There is no recovery.',
+        title: 'delete account?',
+        message: 'this permanently deletes your account and cannot be undone. there is no recovery.',
         confirmLabel: 'delete account',
         destructive: true,
         onConfirm,
@@ -273,15 +273,15 @@ function App() {
                     onCancel: () => { state.showConfirmDelete = false; kit.render(); },
                     onConfirm: () => { state.showConfirmDelete = false; state.section = 'profile'; kit.render(); }
                 }) : null,
-                state.dirty ? h('div', { class: 'ds-savebar' },
-                    h('span', { class: 'ds-savebar-note' }, 'unsaved changes · draft auto-saved'),
-                    h('button', { class: 'btn', onclick: () => { state.showConfirmDiscard = true; kit.render(); } }, 'discard'),
-                    h('button', { class: 'btn btn-primary', onclick: onSaveClick }, 'save')
-                ) : null
+                h('div', { class: 'ds-savebar' },
+                    h('span', { class: 'ds-savebar-note', role: 'status' }, state.dirty ? 'unsaved changes · draft auto-saved' : (state.lastSaved ? 'saved at ' + new Date(state.lastSaved).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : 'no unsaved changes')),
+                    h('button', { class: 'btn', disabled: !state.dirty, onclick: () => { state.showConfirmDiscard = true; kit.render(); } }, 'discard'),
+                    h('button', { class: 'btn btn-primary', disabled: !state.dirty, onclick: onSaveClick }, 'save')
+                )
             )
         ],
         status: Status({
-            left: ['settings', state.section, state.dirty ? 'dirty' : 'saved'],
+            left: ['settings', state.section, state.dirty ? 'unsaved changes' : (state.lastSaved ? 'saved' : 'no changes')],
             right: ['sample data']
         })
     });

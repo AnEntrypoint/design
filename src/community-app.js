@@ -39,6 +39,15 @@ function DropAnywhereOverlay({ active, fileCount } = {}) {
                 fileCount > 1 ? `drop ${fileCount} files` : 'drop file')));
 }
 
+const brandContext = (s, ch) => {
+    const server = (s.servers || []).find((sv) => sv.id === s.currentServerId);
+    const slash = () => h('span', { class: 'slash' }, ' / ');
+    return [
+        ...(server && !s.homeMode ? [slash(), h('span', { class: 'ca-brand-server' }, server.name)] : []),
+        h('span', { class: 'ca-brand-room' }, slash(), ch.name || 'general'),
+    ];
+};
+
 export function mountCommunityApp(root, adapter = {}) {
     if (!root) throw new Error('mountCommunityApp: root required');
     const get = typeof adapter.get === 'function' ? adapter.get : () => ({});
@@ -275,7 +284,7 @@ export function mountCommunityApp(root, adapter = {}) {
             DropAnywhereOverlay({ active: dropAnywhere.active, fileCount: dropAnywhere.fileCount }),
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
             h('header', { class: 'app-topbar' },
-                h('span', { class: 'brand' }, brandName, h('span', { class: 'slash' }, ' / '), h('span', {}, ch.name || 'general')),
+                h('span', { class: 'brand' }, brandName, ...brandContext(s, ch)),
                 h('span', {}),
                 h('nav', {},
                     h('a', { href: '../', title: 'Home', onclick: (e) => { if (A.goHome) { e.preventDefault(); A.goHome(); } } }, 'home'),

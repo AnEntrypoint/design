@@ -1,16 +1,16 @@
 id: home
-title: Home
+title: home
 
 showcase:
   heading: "live components"
-  lede: "These are the live Btn, Chip, Badge and Table components that every kit imports, rendered from the published SDK."
+  lede: "these are the live Btn, Chip, Badge and Table components that every kit imports, rendered from the published SDK."
 
 hero:
   heading: "247420"
-  subheading: "Tokens, components and kits for dense, tonal UI"
-  body: "One token file drives every color, radius, and spacing value across {{TOTAL_COMPONENTS}} components and {{TOTAL_KITS}} kits. Edit a token and every surface updates; no bundler is needed."
+  subheading: "tokens, components and kits for dense, tonal UI"
+  body: "one token file drives every color, radius, and spacing value across {{TOTAL_COMPONENTS}} components and {{TOTAL_KITS}} kits. edit a token and every surface updates; no bundler is needed."
   ctas:
-    - { label: "Browse kits", href: "#kits", primary: true }
+    - { label: "browse kits", href: "#kits", primary: true }
 
 sidebar:
   bins:
@@ -34,119 +34,119 @@ tabs:
   - { label: "previews",   href: "#previews" }
 
 kits:
-  heading: "UI kits"
+  heading: "ui kits"
   layout: cards
   categories:
-    - { key: "ai-chat",    label: "AI & Chat" }
-    - { key: "devtools",   label: "Devtools" }
-    - { key: "dashboards", label: "Dashboards" }
-    - { key: "apps",       label: "Apps" }
-    - { key: "shells",     label: "Shells" }
+    - { key: "ai-chat",    label: "ai & chat" }
+    - { key: "devtools",   label: "devtools" }
+    - { key: "dashboards", label: "dashboards" }
+    - { key: "apps",       label: "apps" }
+    - { key: "shells",     label: "shells" }
   items:
-    - { code: "01", title: "Homepage",     sub: "Marquee and works grid",                  desc: "An editorial banner over a quiet works-grid shell.",                href: "./ui_kits/homepage/", category: "apps" }
-    - { code: "02", title: "Project page", sub: "Hero, receipt, install, changelog",  desc: "A full case-study template for shipping a product story.",                      href: "./ui_kits/project_page/", category: "apps" }
-    - { code: "03", title: "Docs",         sub: "Long-form prose chrome",                desc: "Sidebar navigation, mono headings, and code blocks for documentation.",            href: "./ui_kits/docs/", category: "apps" }
-    - { code: "04", title: "Blog",         sub: "Dated index and reading view",            desc: "A dated post index with author bylines and a distraction-free reading view.",                            href: "./ui_kits/blog/", category: "apps" }
-    - { code: "06", title: "AICat",        sub: "AI assistant with a cat persona",         desc: "An animated ASCII cat portrait with thinking states and mood changes.",  href: "./ui_kits/aicat/", category: "ai-chat" }
-    - { code: "07", title: "File browser", sub: "Type-aware rails, drop zone, preview",   desc: "Every file-row primitive wired to a static demo backed by fsbrowse.", href: "./ui_kits/file_browser/", category: "devtools" }
-    - { code: "08", title: "Dashboard",    sub: "KPIs, tables, receipts, changelog",  desc: "KPIs, tables, and receipts tracked with a running changelog in one operations surface.", href: "./ui_kits/dashboard/", category: "dashboards" }
-    - { code: "09", title: "Terminal",     sub: "CLI prompt, command lines, log view", desc: "Five line kinds (comment, command, output, ok, warning) over a tonal log panel.", href: "./ui_kits/terminal/", category: "devtools" }
-    - { code: "10", title: "Settings",     sub: "Sectioned forms, toggles, save bar",  desc: "Every input primitive: fields, segmented buttons, and a danger panel.", href: "./ui_kits/settings/", category: "dashboards" }
-    - { code: "11", title: "Sign in",      sub: "Auth providers and magic link",         desc: "A narrow, tone-on-tone auth form with no shadows and no spinners.", href: "./ui_kits/signin/", category: "apps" }
-    - { code: "12", title: "Search",       sub: "Topbar query, faceted filters, rows", desc: "Faceted results ranking, reusing the same RowLink primitive every list uses.", href: "./ui_kits/search/", category: "devtools" }
-    - { code: "13", title: "404",          sub: "Plain heading, suggested routes",        desc: "One sentence on what was not found and a where-to-go list of links.",      href: "./ui_kits/error_404/", category: "apps" }
-    - { code: "14", title: "Gallery",      sub: "Visual grid, tonal cards, lightbox",  desc: "Tiles on shared panel tokens that open into a matching lightbox.", href: "./ui_kits/gallery/", category: "apps" }
-    - { code: "15", title: "OS shell",     sub: "Menubar, window manager, taskbar", desc: "A runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
-    - { code: "16", title: "Buttons",      sub: "Every variant, size, and state",   desc: "Primary, secondary, ghost, link, and danger, plus loading and disabled states.", href: "./ui_kits/buttons/", category: "devtools" }
-    - { code: "17", title: "Chat & community", sub: "Threads, composer, servers, voice, members", desc: "One chat and community app: message thread with reactions, code, images, files and link cards, plus a server rail, channels, voice strip and member list, all mountCommunityApp wired to an injected adapter.", href: "./ui_kits/community-app/", category: "ai-chat" }
-    - { code: "19", title: "System primer", sub: "Palette, type scale and primitives on one page", desc: "Every color token, type step and form primitive rendered side by side.", href: "./ui_kits/system_primer/", category: "devtools" }
-    - { code: "20", title: "Dynamic accent", sub: "Per-server accent generation", desc: "HCT tone-locked accents across six source hues, in light and dark.", href: "./ui_kits/dynamic-accent/", category: "devtools" }
-    - { code: "21", title: "GM inspector", sub: "Sessions, process tree, PRD editors", desc: "Operator surface for gm: session list, deviations, mutables and a query builder.", href: "./ui_kits/gm_inspector/", category: "devtools" }
-    - { code: "22", title: "Slide deck", sub: "16:9 deck with keyboard navigation", desc: "Slide template with counter and SDK chrome; the deck itself is under Decks.", href: "./ui_kits/slide_deck/", category: "apps" }
-    - { code: "23", title: "Component explorer", sub: "Searchable component reference", desc: "Every exported component with a prop table and live specimens where available.", href: "./ui_kits/component_explorer/", category: "devtools" }
-    - { code: "18", title: "Workspace",    sub: "Desktop-class chat-agent product", desc: "The flagship surface: WorkspaceShell, ConversationList, AgentChat, SessionDashboard.", href: "./ui_kits/workspace/", category: "ai-chat" }
+    - { code: "01", title: "homepage",     sub: "marquee and works grid",                  desc: "an editorial banner over a quiet works-grid shell.",                href: "./ui_kits/homepage/", category: "apps" }
+    - { code: "02", title: "project page", sub: "hero, receipt, install, changelog",  desc: "a product page template with hero, install steps and changelog.",                      href: "./ui_kits/project_page/", category: "apps" }
+    - { code: "03", title: "docs",         sub: "long-form prose chrome",                desc: "sidebar navigation, mono headings, and code blocks for documentation.",            href: "./ui_kits/docs/", category: "apps" }
+    - { code: "04", title: "blog",         sub: "dated index and reading view",            desc: "a dated post index with author bylines and a distraction-free reading view.",                            href: "./ui_kits/blog/", category: "apps" }
+    - { code: "06", title: "aicat",        sub: "AI assistant with a cat persona",         desc: "an animated ASCII cat portrait with thinking states and mood changes.",  href: "./ui_kits/aicat/", category: "ai-chat" }
+    - { code: "07", title: "file browser", sub: "type-aware rails, drop zone, preview",   desc: "every file-row primitive wired to a static demo backed by fsbrowse.", href: "./ui_kits/file_browser/", category: "devtools" }
+    - { code: "08", title: "dashboard",    sub: "kpis, tables, receipts, changelog",  desc: "kpis, tables and receipts tracked with a running changelog in one operations surface.", href: "./ui_kits/dashboard/", category: "dashboards" }
+    - { code: "09", title: "terminal",     sub: "CLI prompt, command lines, log view", desc: "five line kinds (comment, command, output, ok, warning) over a tonal log panel.", href: "./ui_kits/terminal/", category: "devtools" }
+    - { code: "10", title: "settings",     sub: "sectioned forms, toggles, save bar",  desc: "every input primitive: fields, segmented buttons, and a danger panel.", href: "./ui_kits/settings/", category: "dashboards" }
+    - { code: "11", title: "sign in",      sub: "auth providers and magic link",         desc: "a narrow, tone-on-tone auth form with no shadows and no spinners.", href: "./ui_kits/signin/", category: "apps" }
+    - { code: "12", title: "search",       sub: "topbar query, faceted filters, rows", desc: "faceted results ranking, reusing the same RowLink primitive every list uses.", href: "./ui_kits/search/", category: "devtools" }
+    - { code: "13", title: "404",          sub: "plain heading, suggested routes",        desc: "one sentence on what was not found and a where-to-go list of links.",      href: "./ui_kits/error_404/", category: "apps" }
+    - { code: "14", title: "gallery",      sub: "visual grid, tonal cards, lightbox",  desc: "tiles on shared panel tokens that open into a matching lightbox.", href: "./ui_kits/gallery/", category: "apps" }
+    - { code: "15", title: "os shell",     sub: "menubar, window manager, taskbar", desc: "a runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
+    - { code: "16", title: "buttons",      sub: "every variant, size, and state",   desc: "primary, secondary, ghost, link, and danger, plus loading and disabled states.", href: "./ui_kits/buttons/", category: "devtools" }
+    - { code: "17", title: "chat & community", sub: "threads, composer, servers, voice, members", desc: "one chat and community app: message thread with reactions, code, images, files and link cards, plus a server rail, channels, voice strip and member list, all mountCommunityApp wired to an injected adapter.", href: "./ui_kits/community-app/", category: "ai-chat" }
+    - { code: "19", title: "system primer", sub: "palette, type scale and primitives on one page", desc: "every color token, type step and form primitive rendered side by side.", href: "./ui_kits/system_primer/", category: "devtools" }
+    - { code: "20", title: "dynamic accent", sub: "per-server accent generation", desc: "HCT tone-locked accents across six source hues, in light and dark.", href: "./ui_kits/dynamic-accent/", category: "devtools" }
+    - { code: "21", title: "gm inspector", sub: "sessions, process tree, PRD editors", desc: "operator surface for gm: session list, deviations, mutables and a query builder.", href: "./ui_kits/gm_inspector/", category: "devtools" }
+    - { code: "22", title: "slide deck", sub: "16:9 deck with keyboard navigation", desc: "slide template with counter and SDK chrome; the deck itself is under decks.", href: "./ui_kits/slide_deck/", category: "apps" }
+    - { code: "23", title: "component explorer", sub: "searchable component reference", desc: "every exported component with a prop table and live specimens where available.", href: "./ui_kits/component_explorer/", category: "devtools" }
+    - { code: "18", title: "workspace",    sub: "desktop-class chat-agent product", desc: "the flagship surface: WorkspaceShell, ConversationList, AgentChat, SessionDashboard.", href: "./ui_kits/workspace/", category: "ai-chat" }
 
 decks:
-  heading: "Decks"
+  heading: "decks"
   items:
-    - { code: "01", title: "Deck template", sub: "16:9 stage with auto-fit", desc: "Title, lede, code, comparison, and manifesto slides.", href: "./slides/" }
+    - { code: "01", title: "deck template", sub: "16:9 stage with auto-fit", desc: "title, lede, code, comparison, and manifesto slides.", href: "./slides/" }
 
 docs:
-  heading: "Docs"
+  heading: "docs"
   items:
-    - { code: "md",  title: "Readme", sub: "Overview, manifesto, conventions",   desc: "Start here.",                          href: "https://github.com/AnEntrypoint/design/blob/main/README.md" }
-    - { code: "md",  title: "Skill",  sub: "Authoring rules for the agent",      desc: "Authoring rules for agents that build on the system.",    href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
-    - { code: "css", title: "Tokens", sub: "Colors, type, panel surface tokens", desc: "Canonical source of truth.",           href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
-    - { code: "md",  title: "Component props", sub: "Generated prop reference", desc: "Every exported component's signature and documented parameters.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/component-props.md" }
-    - { code: "live", title: "Component explorer", sub: "Interactive, searchable, live-rendered", desc: "The same {{TOTAL_COMPONENTS}} components as the reference above plus their helpers, each with a prop table. Live specimens exist for 4 of them (Btn, Chip, Badge, Table).", href: "./ui_kits/component_explorer/" }
-    - { code: "md",  title: "Changelog", sub: "Release history", desc: "What shipped in each published version.", href: "https://github.com/AnEntrypoint/design/blob/main/CHANGELOG.md" }
-    - { code: "md",  title: "Accessibility", sub: "WCAG AA compliance, keyboard navigation", desc: "Contrast ratios, focus-visible tokens, ARIA conventions, and the live audit baseline.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/accessibility.md" }
-    - { code: "md",  title: "Responsive breakpoints", sub: "The documented breakpoint scale in use", desc: "Verified mobile, tablet, and desktop behavior across kits.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/responsive.md" }
+    - { code: "md",  title: "readme", sub: "overview, manifesto, conventions",   desc: "start here.",                          href: "https://github.com/AnEntrypoint/design/blob/main/README.md" }
+    - { code: "md",  title: "skill",  sub: "authoring rules for the agent",      desc: "authoring rules for agents that build on the system.",    href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
+    - { code: "css", title: "tokens", sub: "colors, type, panel surface tokens", desc: "canonical source of truth.",           href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
+    - { code: "md",  title: "component props", sub: "generated prop reference", desc: "every exported component's signature and documented parameters.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/component-props.md" }
+    - { code: "live", title: "component explorer", sub: "interactive, searchable, live-rendered", desc: "the same {{TOTAL_COMPONENTS}} components as the reference above plus their helpers, each with a prop table. live specimens exist for 4 of them (Btn, Chip, Badge, Table).", href: "./ui_kits/component_explorer/" }
+    - { code: "md",  title: "changelog", sub: "release history", desc: "what shipped in each published version.", href: "https://github.com/AnEntrypoint/design/blob/main/CHANGELOG.md" }
+    - { code: "md",  title: "accessibility", sub: "WCAG AA compliance, keyboard navigation", desc: "contrast ratios, focus-visible tokens, ARIA conventions, and the live audit baseline.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/accessibility.md" }
+    - { code: "md",  title: "responsive breakpoints", sub: "the documented breakpoint scale in use", desc: "verified mobile, tablet, and desktop behavior across kits.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/responsive.md" }
 
 previews:
-  heading: "Previews"
+  heading: "previews"
   base: "./preview/"
 
 file_browser:
-  heading: "File browser"
+  heading: "file browser"
   count: "primitives"
   items:
-    - { code: "fb", title: "file_browser kit",   sub: "Drop, list, preview, dialogs",   desc: "The full surface, working with mock data.",  href: "./ui_kits/file_browser/", cta: "open" }
-    - { code: "fb", title: "FileRow",            sub: "Rail, icon, name, meta",      desc: "data-file-type sets the rail color; do not apply rail-* classes by hand.", href: "./preview/file-row.html", cta: "open" }
-    - { code: "fb", title: "FileGrid",           sub: "A stack of rows in a panel",       desc: "Directories sort first; the selected row gets the .active tone.", href: "./preview/file-grid.html", cta: "open" }
-    - { code: "fb", title: "DropZone",           sub: "Tonal upload target",            desc: "Swaps to --panel-select on dragover; preventDefault runs on document, so a drop outside the zone does not navigate.", href: "./preview/dropzone.html", cta: "open" }
-    - { code: "fb", title: "FileViewer",         sub: "Modal preview, keyed head",     desc: "Head and body both carry data-file-type so rails propagate inside the modal.", href: "./preview/file-viewer.html", cta: "open" }
-    - { code: "fb", title: "FileToolbar",        sub: "Actions, breadcrumb, upload",  desc: "Left-aligned actions, right-aligned count; UploadProgress sits underneath.", href: "./preview/file-toolbar.html", cta: "open" }
-    - { code: "fb", title: "fsbrowse",           sub: "Express + busboy backend",       desc: "Real-world wiring: the same SDK over a real filesystem.",     href: "https://github.com/AnEntrypoint/fsbrowse", cta: "source" }
+    - { code: "fb", title: "file_browser kit",   sub: "drop, list, preview, dialogs",   desc: "the full surface, working with mock data.",  href: "./ui_kits/file_browser/", cta: "open" }
+    - { code: "fb", title: "FileRow",            sub: "rail, icon, name, meta",      desc: "data-file-type sets the rail color; do not apply rail-* classes by hand.", href: "./preview/file-row.html", cta: "open" }
+    - { code: "fb", title: "FileGrid",           sub: "a stack of rows in a panel",       desc: "directories sort first; the selected row gets the .active tone.", href: "./preview/file-grid.html", cta: "open" }
+    - { code: "fb", title: "DropZone",           sub: "tonal upload target",            desc: "swaps to --panel-select on dragover; preventDefault runs on document, so a drop outside the zone does not navigate.", href: "./preview/dropzone.html", cta: "open" }
+    - { code: "fb", title: "FileViewer",         sub: "modal preview, keyed head",     desc: "head and body both carry data-file-type so rails propagate inside the modal.", href: "./preview/file-viewer.html", cta: "open" }
+    - { code: "fb", title: "FileToolbar",        sub: "actions, breadcrumb, upload",  desc: "left-aligned actions, right-aligned count; UploadProgress sits underneath.", href: "./preview/file-toolbar.html", cta: "open" }
+    - { code: "fb", title: "fsbrowse",           sub: "express + busboy backend",       desc: "real-world wiring: the same SDK over a real filesystem.",     href: "https://github.com/AnEntrypoint/fsbrowse", cta: "source" }
 
 quickstart:
-  heading: "Quick start"
+  heading: "quick start"
   lines:
-    - { kind: "cmt", text: "# Install via importmap (no bundler)" }
+    - { kind: "cmt", text: "# install via importmap (no bundler)" }
     - { kind: "cmd", text: "<script type='importmap'>{\"imports\":{\"anentrypoint-design\":\"https://cdn.jsdelivr.net/gh/AnEntrypoint/design@main/dist/247420.js\"}}</script>" }
-    - { kind: "cmt", text: "# Or clone the source" }
+    - { kind: "cmt", text: "# or clone the source" }
     - { kind: "cmd", text: "git clone https://github.com/AnEntrypoint/design.git" }
 
 desktop_os:
-  heading: "Desktop OS shell"
+  heading: "desktop os shell"
   count: "in-page window manager"
   items:
-    - { code: "os", title: "Live demo",           sub: "menubar, apps drawer, side rail, taskbar, floating windows", desc: "a runnable desktop shell with its own window manager and a 2-app registry",   href: "./ui_kits/os/",   cta: "open" }
+    - { code: "os", title: "live demo",           sub: "menubar, apps drawer, side rail, taskbar, floating windows", desc: "a runnable desktop shell with its own window manager and a 2-app registry",   href: "./ui_kits/os/",   cta: "open" }
     - { code: "os", title: "createDesktopShell",  sub: "menubar, apps launcher, taskbar, window manager",  desc: "mount any app registry into a draggable, resizable window manager",   href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/shell.js",   cta: "shell.js" }
     - { code: "os", title: "renderWindow / renderDock", sub: "pure paint-surface primitives",  desc: "the window chrome and dock rendering the shell composes, importable standalone", href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/wm.js", cta: "wm.js" }
-    - { code: "os", title: "Icon set",            sub: "SVG glyphs for menubar and taskbar",                    desc: "home, apps, search, settings, used by the shell and exposed for apps",   href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/icons.js",   cta: "icons.js" }
+    - { code: "os", title: "icon set",            sub: "SVG glyphs for menubar and taskbar",                    desc: "home, apps, search, settings, used by the shell and exposed for apps",   href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/icons.js",   cta: "icons.js" }
     - { code: "os", title: "theme.css",           sub: "OS chrome tokens: menubar, launcher, window manager",          desc: "scoped CSS module loaded by the shell, which keeps desktop visuals isolated",  href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/theme.css", cta: "theme.css" }
-    - { code: "os", title: "Import path",         sub: "anentrypoint-design/kits/os",                         desc: "subpath export, no bundler needed; pulls icons, shell, and every app paint surface",    href: "https://github.com/AnEntrypoint/design/blob/main/package.json",          cta: "exports" }
+    - { code: "os", title: "import path",         sub: "anentrypoint-design/kits/os",                         desc: "subpath export, no bundler needed; pulls icons, shell, and every app paint surface",    href: "https://github.com/AnEntrypoint/design/blob/main/package.json",          cta: "exports" }
 
 web_components:
-  heading: "Web components"
+  heading: "web components"
   count: "1 element"
   items:
-    - { code: "wc", title: "<ds-chat>",           sub: "Auto-registers when the SDK loads in a browser", desc: "Set el.messages = [...] or pass JSON via an attribute; listen for the 'send' event.",      href: "https://github.com/AnEntrypoint/design/blob/main/src/web-components/ds-chat.js", cta: "ds-chat.js" }
-    - { code: "wc", title: "registerChatElement", sub: "Manual register helper",                         desc: "Exported from the SDK root for SSR or late-mount, when customElements is gated. Custom-element auto-registration is opt-in, not forced on every consumer.",     href: "https://github.com/AnEntrypoint/design/blob/main/src/index.js",                  cta: "source" }
+    - { code: "wc", title: "<ds-chat>",           sub: "auto-registers when the SDK loads in a browser", desc: "set el.messages = [...] or pass JSON via an attribute; listen for the 'send' event.",      href: "https://github.com/AnEntrypoint/design/blob/main/src/web-components/ds-chat.js", cta: "ds-chat.js" }
+    - { code: "wc", title: "registerChatElement", sub: "manual register helper",                         desc: "exported from the SDK root for SSR or late-mount, when customElements is gated. custom-element auto-registration is opt-in, not forced on every consumer.",     href: "https://github.com/AnEntrypoint/design/blob/main/src/index.js",                  cta: "source" }
 
 api_exports:
-  heading: "Public API"
+  heading: "public api"
   count: "SDK surface"
   items:
-    - { code: "api", title: "h / applyDiff",                  sub: "webjsx createElement and diff",       desc: "Build vnodes with h() and render with applyDiff(root, [vnode]); no JSX pragma needed.",       href: "https://github.com/AnEntrypoint/design/blob/main/src/index.js",      cta: "index.js" }
+    - { code: "api", title: "h / applyDiff",                  sub: "webjsx createElement and diff",       desc: "build vnodes with h() and render with applyDiff(root, [vnode]); no JSX pragma needed.",       href: "https://github.com/AnEntrypoint/design/blob/main/src/index.js",      cta: "index.js" }
     - { code: "api", title: "installStyles / scope",          sub: "ds-247420 CSS scope and bootstrap",   desc: "installStyles() injects the prefixed CSS; scope = '.ds-247420' for selector composition.",  href: "https://github.com/AnEntrypoint/design/blob/main/src/styles.js",     cta: "styles.js" }
-    - { code: "api", title: "loadCss",                        sub: "Fetch the bundled CSS string",      desc: "Useful for shadow roots or custom style-injection paths.",                                  href: "https://github.com/AnEntrypoint/design/blob/main/src/styles.js",     cta: "styles.js" }
-    - { code: "api", title: "mount / mountKit",               sub: "Shell and ui_kit bootstrap",       desc: "mount(root, viewFn) wires applyDiff and motion; mountKit({root,view,screen}) wires a full kit.",   href: "https://github.com/AnEntrypoint/design/blob/main/src/bootstrap.js",  cta: "bootstrap.js" }
-    - { code: "api", title: "registerDeckStage / getDeckStage", sub: "16:9 deck stage API",             desc: "Register custom deck stages and fetch the active stage for slide transitions.",             href: "https://github.com/AnEntrypoint/design/blob/main/src/deck-stage.js", cta: "deck-stage.js" }
-    - { code: "api", title: "renderMarkdown",                 sub: "marked v15 + DOMPurify, lazy-loaded", desc: "Lazily loads marked and DOMPurify from a CDN; the only XSS gate for chat HTML.",                 href: "https://github.com/AnEntrypoint/design/blob/main/src/markdown.js",   cta: "markdown.js" }
-    - { code: "api", title: "ensurePrism / highlightAllUnder", sub: "Prism core plus per-language",         desc: "Injects Prism on first use; a ref-callback highlights code inside any subtree.",         href: "https://github.com/AnEntrypoint/design/blob/main/src/highlight.js",  cta: "highlight.js" }
-    - { code: "api", title: "renderPageHtml",                 sub: "Static page HTML template",         desc: "Shared head and body wrapper for kit pages: meta tags, importmap and the ds-247420 scope.",                href: "https://github.com/AnEntrypoint/design/blob/main/src/page-html.js",  cta: "page-html.js" }
-    - { code: "api", title: "components / motion / debug",    sub: "Namespaces from the default export", desc: "components.* are the C.* primitives; motion.animateTree; a debug registry at window.__debug.",  href: "https://github.com/AnEntrypoint/design/blob/main/src/components.js", cta: "components.js" }
+    - { code: "api", title: "loadCss",                        sub: "fetch the bundled CSS string",      desc: "useful for shadow roots or custom style-injection paths.",                                  href: "https://github.com/AnEntrypoint/design/blob/main/src/styles.js",     cta: "styles.js" }
+    - { code: "api", title: "mount / mountKit",               sub: "shell and ui_kit bootstrap",       desc: "mount(root, viewFn) wires applyDiff and motion; mountKit({root,view,screen}) wires a full kit.",   href: "https://github.com/AnEntrypoint/design/blob/main/src/bootstrap.js",  cta: "bootstrap.js" }
+    - { code: "api", title: "registerDeckStage / getDeckStage", sub: "16:9 deck stage API",             desc: "register custom deck stages and fetch the active stage for slide transitions.",             href: "https://github.com/AnEntrypoint/design/blob/main/src/deck-stage.js", cta: "deck-stage.js" }
+    - { code: "api", title: "renderMarkdown",                 sub: "marked v15 + DOMPurify, lazy-loaded", desc: "lazily loads marked and DOMPurify from a CDN; the only XSS gate for chat HTML.",                 href: "https://github.com/AnEntrypoint/design/blob/main/src/markdown.js",   cta: "markdown.js" }
+    - { code: "api", title: "ensurePrism / highlightAllUnder", sub: "prism core plus per-language",         desc: "injects Prism on first use; a ref-callback highlights code inside any subtree.",         href: "https://github.com/AnEntrypoint/design/blob/main/src/highlight.js",  cta: "highlight.js" }
+    - { code: "api", title: "renderPageHtml",                 sub: "static page HTML template",         desc: "shared head and body wrapper for kit pages: meta tags, importmap and the ds-247420 scope.",                href: "https://github.com/AnEntrypoint/design/blob/main/src/page-html.js",  cta: "page-html.js" }
+    - { code: "api", title: "components / motion / debug",    sub: "namespaces from the default export", desc: "components.* are the C.* primitives; motion.animateTree; a debug registry at window.__debug.",  href: "https://github.com/AnEntrypoint/design/blob/main/src/components.js", cta: "components.js" }
 
 features:
-  heading: "Why teams choose 247420"
+  heading: "properties"
   items:
-    - { name: "Layered panels", desc: "Nested tonal panels separate groups without borders.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css", cta: "panel-row.css" }
-    - { name: "Readable at a glance",   desc: "A disciplined type system reserves monospace for codes and labels and sans-serif for everything meant to be read, so interfaces stay legible under real workloads.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
-    - { name: "Instant status recognition", desc: "Color-coded indicator rails let users scan for status and category at a glance, without relying on borders that add visual noise.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css#L126", cta: "panel-row.css" }
-    - { name: "Retheme by tokens", desc: "A light theme takes 8-14 tokens; a dark theme takes about 36, each checked for contrast.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
-    - { name: "Automated accessibility scan (local)", desc: "npm run a11y runs axe-core on WCAG-tagged rules against every live-rendered kit (0 serious or critical violations across {{TOTAL_KITS}} kits). It is a local gate, not a CI step, and it skips best-practice checks such as skip links and heading structure. It is not a conformance claim.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/a11y-report.md", cta: "a11y-report.md" }
+    - { name: "layered panels", desc: "nested tonal panels separate groups without borders.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css", cta: "panel-row.css" }
+    - { name: "readable at a glance",   desc: "a disciplined type system reserves monospace for codes and labels and sans-serif for everything meant to be read, so interfaces stay legible under real workloads.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
+    - { name: "instant status recognition", desc: "color-coded indicator rails let users scan for status and category at a glance, without relying on borders that add visual noise.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css#L126", cta: "panel-row.css" }
+    - { name: "retheme by tokens", desc: "a light theme takes 8-14 tokens; a dark theme takes about 36, each checked for contrast.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
+    - { name: "automated accessibility scan (local)", desc: "npm run a11y runs axe-core on WCAG-tagged rules against every live-rendered kit (0 serious or critical violations across {{TOTAL_KITS}} kits). it is a local gate, not a CI step, and it skips best-practice checks such as skip links and heading structure. it is not a conformance claim.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/a11y-report.md", cta: "a11y-report.md" }
 
 status_left:
   - "main"

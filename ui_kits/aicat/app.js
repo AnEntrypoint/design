@@ -29,7 +29,7 @@ const PRESETS = [
     { q: 'show me the aicat picture', k: 'image', kind: 'image' },
     { q: 'link the design repo', k: 'link', kind: 'link card' },
     { q: 'attach a config file', k: 'file', kind: 'file' },
-    { q: 'tell me a joke about garbage collection', k: 'text', kind: 'text' }
+    { q: 'explain what a design token is', k: 'text', kind: 'text' }
 ];
 
 const REPLIES = {

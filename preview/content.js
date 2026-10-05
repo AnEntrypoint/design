@@ -127,7 +127,7 @@ const view = () => h('div', { class: 'spec-page' },
     spec('Avatar', 'Initial-derived colour.',
         Panel({ children: [
             Avatar({ key: 'v1', name: 'lanmower' }),
-            Avatar({ key: 'v2', name: 'an entrypoint' }),
+            Avatar({ key: 'v2', name: 'AnEntrypoint' }),
             Avatar({ key: 'v3', name: 'gm' }),
         ] })),
 

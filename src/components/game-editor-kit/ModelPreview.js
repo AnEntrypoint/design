@@ -1,5 +1,17 @@
-import * as THREE from 'https://esm.sh/three@r128'
-import { GLTFLoader } from 'https://esm.sh/three@r128/examples/jsm/loaders/GLTFLoader.js'
+const THREE_URL = 'https://esm.sh/three@r128'
+const GLTF_LOADER_URL = 'https://esm.sh/three@r128/examples/jsm/loaders/GLTFLoader.js'
+
+let THREE
+let GLTFLoader
+let threeLoading
+
+function loadThree() {
+  threeLoading ||= Promise.all([import(THREE_URL), import(GLTF_LOADER_URL)]).then(([three, gltf]) => {
+    THREE = three
+    GLTFLoader = gltf.GLTFLoader
+  })
+  return threeLoading
+}
 
 export class ModelPreview {
   constructor(container, opts = {}) {
@@ -18,16 +30,18 @@ export class ModelPreview {
     this.renderer = null
     this.controls = null
     this.model = null
-    this.raycaster = new THREE.Raycaster()
-    this.mouse = new THREE.Vector2()
     this.animationId = null
+    this.disposed = false
     this.dragging = false
     this.previousMousePosition = { x: 0, y: 0 }
 
-    this._init()
+    this.ready = loadThree().then(() => this._init())
   }
 
   _init() {
+    if (this.disposed) return
+    this.raycaster = new THREE.Raycaster()
+    this.mouse = new THREE.Vector2()
     this.container.style.cssText = 'position:relative;width:100%;height:100%;background:var(--bg-2);overflow:hidden'
 
     this.scene = new THREE.Scene()
@@ -129,6 +143,8 @@ export class ModelPreview {
 
   async loadModel(modelPath) {
     this.modelPath = modelPath
+    await this.ready
+    if (this.disposed) return
     const loader = new GLTFLoader()
 
     try {
@@ -202,6 +218,7 @@ export class ModelPreview {
   }
 
   exportPreview() {
+    if (!this.renderer) return
     const canvas = this.renderer.domElement
     const link = document.createElement('a')
     link.href = canvas.toDataURL('image/png')
@@ -210,6 +227,7 @@ export class ModelPreview {
   }
 
   dispose() {
+    this.disposed = true
     if (this.animationId) {
       cancelAnimationFrame(this.animationId)
     }
@@ -220,12 +238,14 @@ export class ModelPreview {
   }
 
   resize(width, height) {
+    if (!this.renderer) return
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(width, height)
   }
 
   setCameraDistance(distance) {
+    if (!this.camera) return
     this.cameraDistance = distance
     const currentDist = this.camera.position.length()
     this.camera.position.multiplyScalar(distance / currentDist)
@@ -233,15 +253,16 @@ export class ModelPreview {
 
   setBackgroundColor(color) {
     this.backgroundColor = color
+    if (!this.scene) return
     this.scene.background = new THREE.Color(color)
   }
 
   setKeyLightIntensity(intensity) {
-    this.keyLight.intensity = intensity
+    if (this.keyLight) this.keyLight.intensity = intensity
   }
 
   setFillLightIntensity(intensity) {
-    this.fillLight.intensity = intensity
+    if (this.fillLight) this.fillLight.intensity = intensity
   }
 }
 

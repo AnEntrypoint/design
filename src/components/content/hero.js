@@ -8,12 +8,12 @@ function heroStat(b, i) {
         (b && b.desc) ? h('span', { class: 'ds-hero-stat-l' }, String(b.desc)) : null);
 }
 
-export function Hero({ eyebrow, title, body, accent, actions, badges }) {
+export function Hero({ eyebrow, title, body, accent, actions, badges, side }) {
     const badgeList = Array.isArray(badges) ? badges.filter(Boolean) : [];
     const badgeRow = badgeList.length ? h('div', { class: 'ds-hero-stats' }, ...badgeList.map(heroStat)) : null;
     const actionRow = actions ? h('div', { class: 'ds-hero-actions' }, ...(Array.isArray(actions) ? actions : [actions])) : null;
     const aside = (badgeRow || actionRow) ? h('div', { class: 'ds-hero-aside' }, actionRow, badgeRow) : null;
-    return h('div', { class: 'ds-hero' },
+    const parts = [
         h('div', { class: 'ds-hero-head' },
             eyebrow ? h('span', { class: 'eyebrow' }, eyebrow) : null,
             h('h1', { class: 'ds-hero-title' }, title)
@@ -23,6 +23,11 @@ export function Hero({ eyebrow, title, body, accent, actions, badges }) {
             accent ? h('span', { class: 'ds-hero-accent' }, ' ' + accent) : null
         ) : null,
         aside
+    ].filter(Boolean);
+    if (!side) return h('div', { class: 'ds-hero' }, ...parts);
+    return h('div', { class: 'ds-hero ds-hero--split' },
+        h('div', { class: 'ds-hero-main' }, ...parts),
+        h('div', { class: 'ds-hero-side' }, side)
     );
 }
 

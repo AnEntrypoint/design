@@ -53,8 +53,8 @@ const ABOUT_CONTENT = {
     tagline: 'browser-native desktop-shell demo for the 247420 design system. window manager, taskbar and menubar, with no server behind it.',
     bullets: [
         'every component is rendered in a working kit',
-        'One token file drives every surface',
-        'axe-core WCAG-tagged scan gated in CI',
+        'one token file drives every surface',
+        'axe-core scan of WCAG-tagged rules, run locally',
         'webjsx + custom elements, no framework',
         'buildless: plain HTML + an import map',
     ],

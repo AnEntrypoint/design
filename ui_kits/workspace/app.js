@@ -16,8 +16,8 @@ const sessions = [
 ];
 
 let liveSessions = [
-    { sid: 's1', agentName: 'sample-agent', model: 'sample-model', cwd: 'kit', status: 'running', startedAt: Date.now() - 120000 },
-    { sid: 's4', agentName: 'sample-agent-2', model: 'sample-model-2', cwd: 'agentgui', status: 'error', startedAt: Date.now() - 900000 },
+    { sid: 's1', agentName: 'claude', model: 'sonnet', cwd: 'kit', status: 'running', startedAt: Date.now() - 120000 },
+    { sid: 's4', agentName: 'codex', model: 'gpt-5', cwd: 'agentgui', status: 'error', startedAt: Date.now() - 900000 },
 ];
 
 const state = {
@@ -25,27 +25,31 @@ const state = {
     selectedSid: 's1',
     draft: '',
     busy: false,
-    agent: 'sample-agent',
-    model: 'sample-model',
+    agent: 'claude',
+    model: 'sonnet',
     cwd: 'kit',
     cwdEditing: false,
     cwdDraft: '',
     messages: [
         { role: 'user', content: 'on the auth middleware refactor: where should the session-token check live?' },
-        { role: 'assistant', parts: [{ kind: 'md', text: 'Move it into a single `verifySession(req)` helper called from the route guard, not scattered per-route. Two call sites currently duplicate the check, and that is the bug risk.' }] },
+        { role: 'assistant', parts: [{ kind: 'md', text: 'move it into a single `verifySession(req)` helper called from the route guard, not scattered per-route. two call sites currently duplicate the check, and that is the bug risk.' }] },
     ],
 };
 
 const AGENTS = [
-    { id: 'sample-agent', name: 'sample-agent' },
+    { id: 'claude', name: 'claude' },
+    { id: 'codex', name: 'codex' },
 ];
 const MODELS = [
-    { id: 'sample-model', name: 'sample-model' },
+    { id: 'sonnet', name: 'sonnet' },
+    { id: 'opus', name: 'opus' },
+    { id: 'gpt-5', name: 'gpt-5' },
 ];
 
 function ChatTab() {
     return AgentChat({
         agents: AGENTS,
+        title: 'workspace',
         selectedAgent: state.agent,
         models: MODELS,
         selectedModel: state.model,
