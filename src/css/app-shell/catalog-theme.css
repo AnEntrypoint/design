@@ -57,7 +57,7 @@
 /* Toolbar filter input — compact search box. */
 .ds-filter-input {
   width: clamp(120px, 22vw, 220px);
-  padding: 7px 12px;
+  padding: var(--space-2) var(--space-2-75);
   background: var(--bg-2); border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-pill); color: var(--fg);
   font-family: inherit; font-size: var(--fs-xs);
@@ -96,7 +96,7 @@
 /* Keyboard-shortcuts hint — compact two-column legend. */
 .ds-shortcuts-hint {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 4px var(--space-3);
+  gap: var(--space-1) var(--space-3);
   padding: var(--space-3) var(--space-4);
   background: var(--bg-2); border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-2); font-size: var(--fs-xs);

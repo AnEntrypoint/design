@@ -102,7 +102,7 @@ export const kits = [
     screenLabel: '10 Settings',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: [],
+    stylesheets: ['editor-primitives.css'],
     importExtra: ['ds/'],
   },
   {
@@ -122,7 +122,7 @@ export const kits = [
     screenLabel: '16 System Primer',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: [],
+    stylesheets: ['editor-primitives.css'],
     importExtra: ['ds/'],
   },
   {
@@ -209,7 +209,7 @@ export const kits = [
     // classes this kit renders sit only in chat.css: .ds-file-more/-count/
     // -btn (FileGrid's overflow footer) and .ds-preview-step/-gutter/
     // -code-wrap/-code-head/-media-alpha (FileViewer + FilePreviewCode/Media).
-    stylesheets: ['chat.css'],
+    stylesheets: ['chat.css', 'editor-primitives.css'],
     importExtra: [],
     seo: {
       author: '247420 / AnEntrypoint',

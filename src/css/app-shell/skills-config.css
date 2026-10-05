@@ -12,7 +12,7 @@
 
 .ds-skills-group { margin-bottom: var(--space-2); }
 .ds-skills-group-label {
-  padding: var(--space-2) var(--space-2) 3px;
+  padding: var(--space-2) var(--space-2) var(--space-half);
   font-size: var(--fs-micro); font-weight: 600; color: var(--fg-3);
   letter-spacing: 0;
 }

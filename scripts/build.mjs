@@ -162,6 +162,7 @@ const appShellSplitFiles = [
     'carousel.css',
     'calendar.css',
     'collab.css',
+    'shared-blocks.css',
 ];
 let appShellContent = '';
 for (const name of appShellSplitFiles) {

@@ -26,7 +26,7 @@
    `top: -15px` the label below is lifted by, so the label clears the segments
    without a gap. Snapping the pad to --space-3 (16px) alone would desync the
    pair. */
-.ds-phasewalk { padding-top: 15px; }
+.ds-phasewalk { padding-top: var(--space-3); }
 .ds-phasewalk-lbl {
   position: absolute; top: -15px; left: 0;
   font-size: var(--fs-micro); color: var(--fg-3); white-space: nowrap;
@@ -61,6 +61,10 @@
 .ds-bar-bg { flex: 1; min-width: 60px; background: var(--bg-3); border-radius: var(--r-hair); height: 6px; overflow: hidden; }
 .ds-bar-fill { background: var(--fg-3); height: 100%; border-radius: var(--r-hair); }
 .ds-bar-fill.is-active { background: var(--accent); }
+.ds-progress { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-progress-label { color: var(--fg-2); font-size: var(--fs-tiny); }
+.ds-progress-track { background: var(--bg-3); border-radius: var(--r-hair); height: 6px; overflow: hidden; }
+.ds-progress-fill { background: var(--accent); height: 100%; border-radius: var(--r-hair); }
 .ds-bar-row-value { flex-shrink: 0; color: var(--fg-2); max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 400px) {
   .ds-bar-row-label { width: 72px; }

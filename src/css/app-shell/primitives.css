@@ -54,6 +54,10 @@
   color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px;
   cursor: pointer;
 }
+@media (pointer: coarse) {
+  .btn-link { min-height: 44px; min-width: 44px; justify-content: center; }
+  .btn-sm, .btn-sm.btn-primary, .btn-sm.btn-ghost { height: 44px; min-height: 44px; min-width: 44px; }
+}
 .btn-link:hover { color: var(--fg); }
 .btn-link:focus-visible {
   outline: var(--focus-w) solid var(--focus-color);
@@ -264,7 +268,7 @@
 
 .ds-pill {
   display: inline-block;
-  padding: 1px 7px;
+  padding: 1px var(--space-2);
   border-radius: var(--r-pill);
   font-size: var(--fs-micro);
   background: var(--bg-3); color: var(--fg-2);
@@ -303,6 +307,9 @@
 }
 .ds-empty-state--panel { background: var(--bg-2); border-radius: var(--r-1); }
 .ds-empty-state--compact { padding: var(--space-5) var(--space-3); }
+.ds-empty-state-glyph { color: var(--fg-3); line-height: 1; }
+.ds-empty-state-msg { color: var(--fg-2); font-size: var(--fs-body); }
+.ds-empty-state-hint { color: var(--fg-3); font-size: var(--fs-tiny); max-width: 48ch; }
 
 /* .ds-tooltip — shared floating bubble (overlay-primitives/tooltip.js appends
    one instance to <body> and repositions it via useFloating). Fade timing

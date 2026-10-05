@@ -107,7 +107,7 @@
 
 .ds-plugins-fact-grid {
   display: grid; grid-template-columns: minmax(96px, 130px) minmax(0, 1fr);
-  gap: 9px var(--space-3); font-size: var(--fs-sm);
+  gap: var(--space-2) var(--space-3); font-size: var(--fs-sm);
 }
 .ds-plugins-fact-label { color: var(--fg-3); }
 .ds-plugins-fact-value { color: var(--fg-2); }
@@ -123,7 +123,7 @@
 .ds-plugins-requires-list { display: flex; flex-wrap: wrap; gap: var(--space-1-75); }
 .ds-plugins-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-2);
-  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 2px 7px;
+  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: var(--space-hair) var(--space-2);
 }
 .ds-plugins-requires-empty { font-size: var(--fs-sm); color: var(--fg-3); }
 

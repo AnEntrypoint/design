@@ -7,7 +7,7 @@
 }
 .ds-git-row {
   display: flex; align-items: center; gap: var(--space-2-5);
-  width: 100%; padding: 7px 12px;
+  width: 100%; padding: var(--space-2) var(--space-2-75);
   background: none; border: var(--bw-hair) solid transparent; border-radius: var(--r-2);
   color: var(--fg); font: inherit; text-align: left; cursor: pointer;
   transition: background var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease);
@@ -36,7 +36,7 @@
 }
 .ds-git-row-tag {
   flex: 0 0 auto; font-size: var(--fs-micro); color: var(--fg-3);
-  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 1px 6px;
+  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 1px var(--space-1-75);
 }
 .ds-git-row-stats { flex: 0 0 auto; display: inline-flex; gap: var(--space-1-75); font-family: var(--ff-body); font-size: var(--fs-micro); }
 .ds-git-stat-add { color: var(--green-2); }
@@ -63,7 +63,7 @@
 .ds-git-diff-empty { padding: var(--space-3); color: var(--fg-3); font-size: var(--fs-sm); }
 .ds-git-hunk + .ds-git-hunk { border-top: var(--bw-hair) solid color-mix(in oklab, var(--paper) 12%, transparent); }
 .ds-git-hunk-header {
-  padding: 4px var(--space-3);
+  padding: var(--space-1) var(--space-3);
   color: var(--purple-2); font-family: var(--ff-mono); font-size: var(--fs-micro);
   background: color-mix(in oklab, var(--paper) 6%, transparent);
 }

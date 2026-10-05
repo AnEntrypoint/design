@@ -69,6 +69,15 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
     osRoot.append(menubar, appsMenu, taskbar);
     document.body.append(sideRail, drawer);
 
+    const skipLink = Object.assign(document.createElement('a'), { className: 'skip-link', href: '#os-main', textContent: 'skip to main content' });
+    const mainLandmark = Object.assign(document.createElement('main'), { id: 'os-main', tabIndex: 0 });
+    mainLandmark.setAttribute('aria-label', brand + ' desktop');
+    mainLandmark.append(Object.assign(document.createElement('h1'), { className: 'sr-only', textContent: brand }));
+    const windowHost = document.querySelector('.wm-root');
+    if (windowHost) windowHost.replaceWith(mainLandmark), mainLandmark.append(windowHost);
+    else osRoot.before(mainLandmark);
+    document.body.prepend(skipLink);
+
     // Apps menu keyboard operability (APG menu-button pattern), mirroring the
     // drawer's capture/restore-focus treatment below: opening moves focus onto
     // the first menuitem so Tab/arrow-keys start inside the now-visible menu
@@ -268,7 +277,7 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
         openDrawer, closeDrawer, openMenu, closeMenu, refreshApps,
         get activeInstanceId() { return activeInstanceId; },
         elements: { osRoot, menubar, taskbar, appsMenu, sideRail, drawer, instSwitch, homeBtn, appsBtn },
-        dispose() { clearInterval(clockTimer); clearInterval(taskTimer); window.removeEventListener('resize', onViewportResize); osRoot.remove(); sideRail.remove(); drawer.remove(); },
+        dispose() { clearInterval(clockTimer); clearInterval(taskTimer); window.removeEventListener('resize', onViewportResize); osRoot.remove(); skipLink.remove(); if (windowHost) mainLandmark.replaceWith(windowHost); else mainLandmark.remove(); sideRail.remove(); drawer.remove(); },
     };
 
     if (autoBoot && typeof autoBoot === 'string') openApp(autoBoot);

@@ -1048,7 +1048,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
    they are reachable by finger. --- */
 @media (pointer: coarse), (max-width: 640px) {
   .chat-msg-actions { opacity: 1; }
-  .chat-code-copy { opacity: 1; }
+  .chat-code-copy { opacity: 1; min-width: 48px; min-height: 44px; }
   .chat-tool-copy { opacity: 1; min-width: 44px; min-height: 44px; }
   .chat-msg-action { min-width: 44px; height: 44px; }
   .ds-dash-select { min-width: 44px; min-height: 44px; }
@@ -1415,6 +1415,19 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-tool-pre { margin: 0; padding: var(--space-2); background: var(--bg-2); border-radius: var(--r-1); font-family: var(--ff-mono); font-size: var(--fs-tiny); line-height: 1.45; overflow-x: auto; max-height: 320px; overflow-y: auto; }
 .chat-tool-pre.is-error { color: var(--flame); }
 .chat-tool-pre.chat-tool-empty { color: var(--fg-3); }
+.chat-approval-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+.chat-approval-btn { position: static; opacity: 1; min-height: 32px; }
+.chat-approval-btn.is-on { color: var(--accent-ink); border-color: var(--accent); }
+.chat-approval-note { color: var(--fg-3); font-size: var(--fs-tiny); }
+.chat-question-block { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-3); }
+.chat-question-header { color: var(--fg-3); font-size: var(--fs-tiny); }
+.chat-question-text { color: var(--fg); font-size: var(--fs-body); }
+.chat-question-opts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.chat-question-other { min-height: 32px; padding: var(--space-1) var(--space-2); background: var(--bg-2); color: var(--fg); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); font: inherit; font-size: var(--fs-tiny); }
+.chat-question-other:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
+.chat-thinking-settled > summary { cursor: pointer; color: var(--fg-3); font-size: var(--fs-tiny); }
+.chat-thinking-body { margin-top: var(--space-1); padding-left: var(--space-3); border-left: var(--bw-hair) solid var(--rule); color: var(--fg-2); font-size: var(--fs-tiny); white-space: pre-wrap; }
+.chat-image-blocked { color: var(--fg-3); font-style: italic; }
 /* Nested fold for an args/result body past LONG_BODY_THRESHOLD (agent-nodes.js)
    -- collapsed by default so a huge result's <pre> never enters the DOM until
    the user expands it, independent of the outer card's own open/closed state. */
@@ -1670,3 +1683,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-minimap-tooltip.is-user { border-left-color: color-mix(in oklab, var(--accent) 70%, transparent); }
 .chat-minimap-tooltip.is-assistant { border-left-color: color-mix(in oklab, var(--fg-3) 50%, transparent); }
 .chat-minimap-tooltip.is-nearest { opacity: 1; color: var(--fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-msg-actions, .chat-minimap-dot, .chat-minimap-tooltip { transition: none; }
+}

@@ -17,26 +17,13 @@ export function Btn(opts = {}) {
   const base = 'ds-gek-btn'
   const classes = [base, ghost && 'ds-gek-btn-ghost', dense && 'ds-gek-btn-dense', primary && 'ds-gek-btn-primary', danger && 'ds-gek-btn-danger', className].filter(Boolean).join(' ')
   const label = title || children.filter(c => typeof c === 'string').join(' ') || undefined
-  const bg = danger ? 'var(--danger,#cc3333)' : primary ? 'var(--accent,#2266dd)' : (ghost ? 'transparent' : 'var(--accent,#2266dd)')
-
   return h('button', {
     type: 'button',
     key,
     class: classes,
     title: title || undefined,
     'aria-label': label,
-    onclick: onClick,
-    style: `
-      padding: ${dense ? '2px 4px' : '4px 8px'};
-      background: ${ghost ? 'transparent' : bg};
-      color: ${ghost ? 'var(--fg,#ccc)' : 'var(--accent-fg,#fff)'};
-      border: ${ghost ? '1px solid var(--rule,#444)' : 'none'};
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 11px;
-      white-space: nowrap;
-      transition: all 100ms;
-    `
+    onclick: onClick
   }, ...children)
 }
 

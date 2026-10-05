@@ -576,6 +576,7 @@ body.canvas-host { background: transparent !important; }
   background: transparent; border: none; color: var(--fg-3); cursor: pointer;
   border-radius: var(--r-0);
 }
+@media (pointer: coarse) { .app-status-toggle { width: 44px; min-height: 44px; } }
 .app-status-toggle:hover { color: var(--fg); background: var(--bg-3); }
 .app-status-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .app-status.is-collapsed {

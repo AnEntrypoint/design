@@ -97,7 +97,6 @@ html.ds-247420 .ca-app .app-topbar .brand {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-html.ds-247420 .ca-app .app-topbar .brand .slash { color: var(--fg-3); }
 html.ds-247420 .ca-app .app-topbar nav {
   display: flex;
   align-items: center;
@@ -171,6 +170,11 @@ html.ds-247420 .ca-rail-servers a {
   font-size: var(--fs-sm, 14px);
   font-weight: var(--fw-semibold, 600);
   transition: background 0.1s, color 0.1s;
+}
+@media (pointer: coarse) {
+  html.ds-247420 .ca-rail-servers { padding-inline: 0; }
+  html.ds-247420 .ca-app .app-topbar nav a { min-width: 44px; justify-content: center; }
+  html.ds-247420 .ca-rail-servers a { width: 44px; height: 44px; flex: 0 0 auto; }
 }
 html.ds-247420 .ca-rail-servers a::before {
   content: '';
@@ -513,4 +517,13 @@ html.ds-247420 .ca-drop-overlay-label {
 @keyframes ca-drop-overlay-pulse {
   0%, 100% { border-color: var(--accent); }
   50% { border-color: color-mix(in oklab, var(--accent) 45%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.ds-247420 .ca-app .app-topbar nav a,
+  html.ds-247420 .ca-rail-servers a,
+  html.ds-247420 .ca-rail-servers a::before,
+  html.ds-247420 .ca-rail-server-add,
+  html.ds-247420 .ca-rail-server-explore,
+  html.ds-247420 .ca-rail-channels a { transition: none; }
 }

@@ -125,13 +125,13 @@ export function Calendar({ mode = 'single', selected, onSelect, month, onMonthCh
     return h('div', { class: 'ds-cal' },
         h('div', { class: 'ds-cal-head' },
             h('button', {
-                type: 'button', class: 'ds-cal-nav ds-cal-nav-prev',
+                type: 'button', class: 'ds-cal-nav',
                 'aria-label': 'previous month',
                 onclick: () => onMonthChange && onMonthChange(addMonths(monthDate, -1)),
             }, Icon('chevron-left', { size: 16 })),
             h('span', { class: 'ds-cal-title' }, monthLabel(monthDate, locale)),
             h('button', {
-                type: 'button', class: 'ds-cal-nav ds-cal-nav-next',
+                type: 'button', class: 'ds-cal-nav',
                 'aria-label': 'next month',
                 onclick: () => onMonthChange && onMonthChange(addMonths(monthDate, 1)),
             }, Icon('chevron-right', { size: 16 }))),

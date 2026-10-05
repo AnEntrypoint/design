@@ -147,7 +147,7 @@
 @media (max-width: 480px) {
   .app-status {
     font-size: var(--fs-micro);
-    padding: 4px var(--space-2);
+    padding: var(--space-1) var(--space-2);
     gap: var(--space-2);
   }
   .app-status > :last-child:not(:only-child) { display: none; }
@@ -156,12 +156,12 @@
 /* Tiny phone (≤360) topbar compact */
 @media (max-width: 360px) {
   .app-topbar {
-    padding: 8px var(--space-2);
+    padding: var(--space-2) var(--space-2);
     font-size: var(--fs-xs);
     gap: var(--space-2);
   }
   .app-chrome {
-    padding: 8px var(--space-2);
+    padding: var(--space-2) var(--space-2);
     font-size: var(--fs-xs);
     gap: var(--space-2);
   }

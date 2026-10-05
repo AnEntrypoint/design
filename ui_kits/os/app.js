@@ -48,7 +48,7 @@ function createDemoRegistry(apps) {
 }
 
 const canvas = document.getElementById('root');
-canvas.classList.add('wm-root', 'ds-app-surface');
+canvas.classList.add('wm-root');
 
 const wm = createDemoWm(canvas);
 

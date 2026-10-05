@@ -112,7 +112,7 @@
 .ds-247420 .field-error { color: var(--warn); }
 
 /* Boot splash: static text painted with the HTML, replaced by the first mount. */
-.ds-247420 .boot-splash { height: 100%; min-height: 60vh; display: flex; align-items: center; justify-content: center; color: var(--fg-3); font-size: .9rem; }
+.ds-247420 .boot-splash { height: 100%; min-height: 60vh; display: flex; align-items: center; justify-content: center; color: var(--fg-3); font-size: var(--fs-xs); }
 
 /* Chat control cluster in the crumb bar: model picker, +new, status. */
 .ds-247420 .chat-controls { display: flex; align-items: center; gap: .6em; flex-wrap: wrap; }
@@ -158,7 +158,7 @@
 .ds-247420 .health-summary { display: flex; flex-wrap: wrap; gap: .4em; margin: .6em 0; }
 .ds-247420 .health-chip {
   font-family: var(--ff-mono, ui-monospace, monospace);
-  font-size: .8rem; padding: .15em .55em; border-radius: var(--r-1, 8px);
+  font-size: var(--fs-tiny); padding: .15em .55em; border-radius: var(--r-1, 8px);
   background: color-mix(in srgb, var(--fg) 8%, transparent);
   color: var(--fg-2);
   border: var(--bw-hair, 1px) solid color-mix(in srgb, var(--fg) 12%, transparent);
@@ -176,7 +176,7 @@
 .ds-247420 .ds-status-chip {
   display: inline-flex; align-items: center; gap: .35em;
   font-family: var(--ff-mono, ui-monospace, monospace);
-  font-size: .8rem; padding: .15em .55em; border-radius: var(--r-1, 8px);
+  font-size: var(--fs-tiny); padding: .15em .55em; border-radius: var(--r-1, 8px);
   background: color-mix(in srgb, var(--fg) 8%, transparent);
   color: var(--fg-2);
   border: var(--bw-hair, 1px) solid color-mix(in srgb, var(--fg) 12%, transparent);
@@ -196,7 +196,7 @@
 /* Compact working-directory bar. */
 .ds-247420 .cwd-bar {
   display: flex; align-items: center; gap: .5em; flex-wrap: wrap;
-  padding: .15em 0 .5em; font-size: .85rem;
+  padding: .15em 0 .5em; font-size: var(--fs-xs);
 }
 .ds-247420 .cwd-bar-text {
   font-family: var(--ff-mono, ui-monospace, monospace);
@@ -237,17 +237,12 @@
    prop; hide it (streaming state shows via the title + busy banner). */
 .ds-247420 .chat-head .sub { display: none; }
 
-/* Event-list row hover + search-result flash. */
-.ds-247420 .ds-event-list .row[role="button"]:hover { background: color-mix(in srgb, var(--fg) 5%, transparent); }
 /* Opt-in like every other animation in the kit: the flash is declared only
    under no-preference, so a reduced-motion user gets the row without a 2s
    pulsing highlight. It animates background rather than transform, so the
    vestibular risk is low, but a repeating attention pull is still exactly the
    kind of thing the preference exists to suppress. The row is located by the
    scroll-into-view that accompanies it, so nothing is lost when it is absent. */
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-event-list .row.event-flash { animation: agentgui-event-flash 2s ease-out; }
-}
 
 
 /* Generic interactive focus ring for app-emitted controls. */
@@ -259,10 +254,6 @@
 .ds-247420 .agentgui-field-mb { margin: 0 0 .5em; }
 .ds-247420 .agentgui-field-my { margin: .5em 0; }
 
-@keyframes agentgui-event-flash {
-  0%   { background: color-mix(in srgb, var(--accent) 40%, transparent); }
-  100% { background: transparent; }
-}
 
 @media (min-width: 900px) {
   .ds-247420 .settings-grid { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); }
@@ -284,9 +275,6 @@
   .ds-247420 .cwd-bar { gap: .3em; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ds-247420 .ds-event-list .row.event-flash { animation: none; outline: 2px solid var(--accent-ink); }
-}
 
 @media print {
   /* Re-assert the paper-tuned signal tokens so token-derived foregrounds

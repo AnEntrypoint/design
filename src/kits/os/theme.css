@@ -2053,3 +2053,11 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   background: var(--panel-2);
   color: var(--panel-text);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .os-btn, .os-task, .os-rail-btn, .os-drawer, .os-drawer-tile, .tb-sess-modal-btn, .tb-sess-empty-cta,
+  .ds-247420 .wm-bar, .ds-247420 .wm-title, .ds-247420 .wm-btn, .ds-247420 .tb-sess-chip, .ds-247420 .tb-sess-x,
+  .ds-247420 .tb-sess-add, .ds-247420 .tb-sessions-card, .ds-247420 .chat-empty-suggestion,
+  .ds-247420 .chat-composer textarea, .ds-247420 .composer-btn, .ds-247420 .chat-composer .send { transition: none; }
+  .tb-sess-overlay { animation: none; }
+}

@@ -34,14 +34,14 @@
 
 .ds-mc-key-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); font-weight: 700;
-  padding: 1px 6px; border-radius: var(--r-1);
+  padding: 1px var(--space-1-75); border-radius: var(--r-1);
 }
 .ds-mc-key-chip.tone-ok { color: var(--green-2); background: var(--green-tint); }
 .ds-mc-key-chip.tone-fail { color: var(--fg-3); background: var(--bg-3); }
 
 .ds-mc-sampler {
   display: inline-block; margin: var(--space-hair) 0 var(--space-1) var(--space-2-75);
-  font-size: var(--fs-micro); padding: 1px 6px; border-radius: var(--r-1);
+  font-size: var(--fs-micro); padding: 1px var(--space-1-75); border-radius: var(--r-1);
 }
 .ds-mc-sampler.tone-ok { color: var(--green-2); background: var(--green-tint); }
 .ds-mc-sampler.tone-fail { color: var(--ink); background: var(--sun); }
@@ -74,7 +74,7 @@
 .ds-mc-model-id { font-family: var(--ff-mono); font-size: var(--fs-sm); font-weight: 600; }
 .ds-mc-model-via { font-size: var(--fs-micro); color: var(--fg-3); }
 .ds-mc-usable-chip {
-  font-size: var(--fs-micro); font-weight: 700; padding: 1px 6px; border-radius: var(--r-1);
+  font-size: var(--fs-micro); font-weight: 700; padding: 1px var(--space-1-75); border-radius: var(--r-1);
   margin-left: auto;
 }
 .ds-mc-usable-chip.tone-ok { color: var(--green-2); background: var(--green-tint); }
@@ -84,7 +84,7 @@
 .ds-mc-mode-grid { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 .ds-mc-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); font-weight: 600;
-  padding: 2px 7px; border-radius: var(--r-1);
+  padding: var(--space-hair) var(--space-2); border-radius: var(--r-1);
   border: var(--bw-hair) solid transparent;
 }
 .ds-mc-chip.tone-ok { color: var(--green-2); background: var(--green-tint); }

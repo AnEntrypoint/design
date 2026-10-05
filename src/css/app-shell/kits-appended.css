@@ -191,6 +191,13 @@
   transition: background var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
 }
 .ds-deck-dot--active { background: var(--accent); transform: scale(1.3); }
+@media (pointer: coarse) {
+  .ds-deck-progress { gap: 0; }
+  .ds-deck-dot {
+    width: 44px; height: 44px; background: radial-gradient(circle closest-side, var(--fg-3) calc(var(--space-1-5) / 2), transparent calc(var(--space-1-5) / 2 + 1px));
+  }
+  .ds-deck-dot--active { background: radial-gradient(circle closest-side, var(--accent) calc(var(--space-1-5) / 2), transparent calc(var(--space-1-5) / 2 + 1px)); }
+}
 /* Kit small-label voice — one local composition of the house `.t-label` recipe
    (base.css) for every eyebrow/label in the appended kit blocks below. These
    previously each restated the four declarations with drifted tracking
@@ -485,6 +492,7 @@
 .ds-table-sort-btn:hover { color: var(--fg); }
 .ds-table-sort-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 2px; }
 .ds-table-sort-btn.is-active { color: var(--accent-ink, var(--accent)); }
+.ds-table-sort-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 
 /* == appended: settings kit cleanup == */
@@ -805,7 +813,8 @@
 .ds-term-line-copy.is-copied { color: var(--accent); opacity: 1; pointer-events: auto; }
 @media (pointer: coarse) {
   /* No hover on touch -- always visible so the affordance is reachable. */
-  .ds-term-line-copy { opacity: 1; pointer-events: auto; }
+  .ds-term-line-copy { opacity: 1; pointer-events: auto; min-width: 44px; min-height: 44px; }
+  .ds-auth-forgot, .ds-auth-mode-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 }
 .ds-term-input-row { margin-top: var(--space-1-75); }
 .ds-term-input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--paper); caret-color: var(--brand-green); }

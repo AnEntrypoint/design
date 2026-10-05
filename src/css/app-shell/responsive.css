@@ -115,7 +115,7 @@
     /* 11px vertical is optical, not scale drift: --space-2-75 (12) would tip
        the intrinsic box past the 44px min-height floor below and make the
        floor dead, changing the mobile button rhythm. */
-    padding: 11px var(--space-3); font-size: var(--fs-tiny);
+    padding: var(--space-2-75) var(--space-3); font-size: var(--fs-tiny);
     min-height: 44px; /* Touch target minimum */
   }
 
@@ -171,7 +171,7 @@
   .row-form input,
   /* 11px block is the tuned inset that lines the textarea baseline up with the
      sibling input; --space-2-75 (12) would offset the two by 1px each side. */
-  .row-form textarea { padding: 11px var(--space-2-75); font-size: var(--fs-sm); }
+  .row-form textarea { padding: var(--space-2-75) var(--space-2-75); font-size: var(--fs-sm); }
 
   /* Hero Section — keep fluid base font-size, just unconstrain width on mobile. */
   .ds-hero { padding: var(--space-6) 0 var(--space-5); }
@@ -269,7 +269,7 @@
     /* 11px/14px are the tuned tablet bubble insets; neither is on the scale
        (11 sits between --space-2-5 and --space-2-75, 14 between --space-2-75
        and --space-3) and snapping visibly re-pitches every bubble in a thread. */
-    padding: 11px 14px; font-size: var(--fs-sm);
+    padding: var(--space-2-75) 14px; font-size: var(--fs-sm);
   }
   .chat-avatar { width: 32px; height: 32px; font-size: var(--fs-micro); }
 

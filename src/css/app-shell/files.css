@@ -74,7 +74,7 @@
      and the hairline borders it lands the row at ~50px, comfortably over the
      44px touch floor without the 52px a 12px pad would give. Snapping either
      way visibly re-pitches every row in a long listing. */
-  padding: 11px var(--space-3); background: var(--bg);
+  padding: var(--space-2-75) var(--space-3); background: var(--bg);
   border: var(--bw-hair) solid transparent;
   border-radius: var(--r-2); color: var(--fg);
   cursor: pointer;

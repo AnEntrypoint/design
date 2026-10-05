@@ -1998,3 +1998,13 @@ input.ov-set-control[type="range"] { padding: 0; accent-color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
     .ds-damage-number { transform: translate(-50%, -50%); }
 }
+
+.ds-gek-btn { padding: var(--space-1) var(--space-2); background: var(--accent); color: var(--accent-fg); border: none; border-radius: var(--r-1); cursor: pointer; font-size: var(--fs-nano); white-space: nowrap; transition: background-color var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease); }
+.ds-gek-btn-dense { padding: var(--space-half) var(--space-1); }
+.ds-gek-btn-primary { background: var(--accent); color: var(--accent-fg); }
+.ds-gek-btn-danger { background: var(--danger); color: var(--accent-fg); }
+.ds-gek-btn-ghost { background: transparent; color: var(--fg); border: var(--bw-hair) solid var(--rule); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-ep-tab-close, .ds-ep-btngrp-btn { transition: none; }
+}

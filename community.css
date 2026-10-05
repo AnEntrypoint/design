@@ -1938,6 +1938,10 @@
   color: var(--fg-2, var(--fg)); opacity: .7; font-size: var(--fs-sm);
 }
 .cm-tp-empty svg, .cm-forum-empty svg, .cm-channel-empty svg, .cm-member-empty svg { opacity: .6; }
+.cm-tp-empty-text, .cm-forum-empty-text, .cm-channel-empty-text, .cm-member-empty-text { max-width: 32ch; text-wrap: balance; }
+.cm-tp-item-author, .cm-forum-item-author { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-tp-item-time, .cm-forum-item-time { margin-left: auto; white-space: nowrap; }
+.cm-channel-skeleton, .cm-member-skeleton { pointer-events: none; }
 .cm-tp-reply {
   display: flex; gap: var(--space-1);
   padding: var(--space-2); border-top: var(--bw-hair) solid var(--rule);

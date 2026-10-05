@@ -166,3 +166,7 @@
     .wm-resize { display: none; }
     .wm-edge { display: none; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .wm-btn { transition: none; }
+}

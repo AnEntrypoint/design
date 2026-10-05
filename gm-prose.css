@@ -22,7 +22,7 @@
 :root {
   --article-toc-rail-w: 256px;
   --article-toc-gutter-nonrhythm: 44px;
-  --article-toc-header-gap: 16px;
+  --article-toc-header-gap: var(--space-3);
   --article-measure-wide: min(96%, 1600px);
 }
 #ds-article-host.has-toc {
@@ -137,50 +137,6 @@
   }
 }
 
-.ds-cli-block {
-  --ds-cli-block-fs-mono-halfrung: 12.5px;
-  display: block;
-  background: var(--panel-1);
-  border-radius: var(--r-0);
-  padding: var(--space-3) var(--space-3-5);
-  margin: var(--space-3) 0 var(--space-5) 0;
-  font-family: var(--ff-mono);
-  font-size: var(--ds-cli-block-fs-mono-halfrung);
-  line-height: 1.6;
-  color: var(--panel-text);
-  box-shadow: var(--panel-shadow);
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.ds-cli-block .ds-cli-comment {
-  color: var(--panel-text-3);
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 1.4em;
-  padding: var(--space-half) 0;
-  line-height: 1.6;
-}
-.ds-cli-block .ds-cli-comment:empty::before { content: '\00a0'; }
-.ds-cli-block .ds-cli-row {
-  display: flex;
-  gap: var(--space-2-5);
-  padding: var(--space-half) 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.ds-cli-block .ds-cli-row .prompt {
-  color: var(--panel-accent);
-  flex: 0 0 auto;
-  user-select: none;
-}
-.ds-cli-block .ds-cli-row .cmd {
-  color: var(--panel-text);
-  flex: 1 1 auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
 .panel .row { align-items: flex-start; padding: var(--space-3) var(--space-3-5); gap: var(--space-3); }
 .panel .row + .row { box-shadow: inset 0 1px 0 var(--rule); }
 .panel .row .code { padding-top: var(--space-hair); min-width: 28px; }
@@ -217,7 +173,7 @@
   background: var(--panel-2);
   color: var(--panel-text-2);
   border: 1px solid var(--panel-3);
-  font-size: 0.7rem;
+  font-size: var(--fs-nano);
   --tag-inset-rem-coupled-to-root-fontsize: 0.15rem 0.5rem;
   padding: var(--tag-inset-rem-coupled-to-root-fontsize);
   border-radius: var(--r-hair);
@@ -253,3 +209,7 @@
 }
 .ds-prose-endnote a { color: var(--panel-accent); text-decoration: none; }
 .ds-prose-endnote a:hover { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  #ds-article-host .toc a { transition: none; }
+}

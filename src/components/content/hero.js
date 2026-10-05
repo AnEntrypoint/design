@@ -69,7 +69,7 @@ export function HeroFromPageData(hero) {
         ? h('div', { class: 'ds-hero-actions' }, ...ctas.map((c, i) =>
             h('a', {
                 key: 'hc' + i,
-                class: (c.primary || i === 0) ? 'btn btn-accent' : 'btn btn-ghost',
+                class: (c.primary || i === 0) ? 'btn btn-primary' : 'btn btn-ghost',
                 href: c.href || '#',
             }, c.label || c.cta || 'go')))
         : null;
