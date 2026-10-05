@@ -371,7 +371,7 @@
 .ds-btn-row-tight { gap: var(--space-1-75, 6px); }
 
 .ds-btn-size-row { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-end; }
-.ds-btn-size-col { display: flex; flex-direction: column; gap: var(--space-1-75); align-items: flex-start; }
+.ds-btn-size-col { display: flex; flex-direction: column-reverse; gap: var(--space-1-75); align-items: flex-start; }
 .ds-key-input { flex: 1 1 160px; min-width: 0; font-family: var(--ff-mono); }
 .ds-toggle-btn { min-width: 78px; }
 

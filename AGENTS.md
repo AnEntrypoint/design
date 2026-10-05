@@ -56,7 +56,7 @@ Swallowed errors: never an empty `catch` or `.catch(()=>{})`; use `attempt`/`att
 
 ## CSS Lint Gates
 
-`npm run lint` runs 17 gates (`CHECKS` in `scripts/lint-css.mjs`; token gates in `lint-tokens.mjs`, shared ratchet code in `lint-shared.mjs`) over 41 component sheets. Hard zero: `tokens` (no raw colour), `radius` (`--r-*`), `zindex`, `transition-all`, `dark-parity`. Ratchets with frozen `scripts/lint-*.baseline.json`: `spacing` (119), `fontsize` (32), `important` (36), `inline-css` (6), `inline-styles` (10) (the files are the truth). The rest: `tokens-json`, `glyphs`, `null-children`, `classes`, `duplicate-selectors`, `empty-catch`, `dead-controls`.
+`npm run lint` runs 19 gates (`CHECKS` in `scripts/lint-css.mjs`; token gates in `lint-tokens.mjs`, shared ratchet code in `lint-shared.mjs`) over 41 component sheets. Hard zero: `tokens` (no raw colour), `radius` (`--r-*`), `zindex`, `transition-all`, `dark-parity`. Ratchets with frozen `scripts/lint-*.baseline.json`: `spacing` (119), `fontsize` (32), `important` (36), `inline-css` (6), `inline-styles` (10) (the files are the truth). The rest: `tokens-json`, `glyphs`, `null-children`, `classes`, `duplicate-selectors`, `empty-catch`, `dead-controls`.
 
 - **A barrel lints nothing on its own.** Root `app-shell.css` is an `@import` barrel over `src/css/app-shell/*.css`. `COMPONENT_SHEETS` lists ENTRY POINTS; `expandSheets()` resolves the `@import` graph and every scanner iterates the expansion.
 - **Barrel completeness is a hard gate:** `FULL_COVERAGE_DIRS` (`src/css/app-shell`) requires every `.css` there in the scan set: `@import` it in the root barrel (or list it in `COMPONENT_SHEETS`). `build.mjs` keeps its own `appShellSplitFiles` list, so a sheet can ship in `dist/247420.css` while a consumer `<link>`ing `app-shell.css` renders it unstyled; `CSS_PARTS` in `lint-duplicate-selectors` mirrors both.
@@ -70,6 +70,7 @@ Swallowed errors: never an empty `catch` or `.catch(()=>{})`; use `attempt`/`att
 - `lint-duplicate-selectors` flags a same-selector pair only at >=3 shared properties, >=70% overlap and a conflicting value.
 - `lint-tokens-json` runs inside `npm run lint` and compares whitespace-insensitively (multi-line `--shadow-*` values; CRLF vs LF).
 - **Every gate must be proven to FAIL:** inject a violation (confirm FAIL + exit 1), then a negative control (`var(--token, fallback)`) must not false-positive.
+- **Contrast is a gate, not a spot check.** `lint-contrast` computes `CONTRAST_PAIRS` (text 4.5, fill/-fg 4.5, focus ring 3) from plain-hex/oklch tokens across 14 theme modes; coloured text tokens must clear `--bg` and `--bg-2` (not `--bg-3`), and a fill pairs with its own `-fg` token (`--warn-fg`, `--danger-fg`, `--accent-fg`), never `--on-color`. Pairs through `color-mix()` stay in `a11y` (kits in light+dark, plus the badge/chip/button matrix in every theme mode).
 
 ## CSS Authoring Rules
 

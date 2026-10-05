@@ -19,10 +19,11 @@ html,body{background:var(--bg);color:var(--fg)}
   animation:ds-boot-spin .8s linear infinite}
 @media (prefers-reduced-motion: reduce){#root:empty::after{animation:none;opacity:.6}}
 @keyframes ds-boot-spin{to{transform:rotate(360deg)}}
-.ds-dyn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-3,12px)}
+.ds-dyn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-3,12px)}
 .ds-dyn-swatch{border:var(--bw-hair,1px) solid var(--rule,#8884);border-radius:var(--r-1,8px);overflow:hidden}
 .ds-dyn-swatch-primary,.ds-dyn-swatch-container{padding:var(--space-2,8px);font-size:var(--fs-tiny,12px)}
-.ds-dyn-swatch .ds-hint-sm{padding:var(--space-1,4px) var(--space-2,8px)}
+.ds-dyn-swatch-head{display:flex;justify-content:space-between;align-items:baseline;padding:var(--space-2,8px);font-size:var(--fs-sm,14px)}
+.ds-dyn-swatch-head code{font-size:var(--fs-tiny,12px);color:var(--fg-3)}
 </style>
 <script type="importmap">
 { "imports": {

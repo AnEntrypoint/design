@@ -161,7 +161,7 @@ function App() {
                             h('input', {
                                 type: 'text',
                                 value: live.input,
-                                placeholder: 'try `help`, `ls`, `cat readme.md`…',
+                                placeholder: 'try help, ls or cat readme.md',
                                 'aria-label': 'shell command input',
                                 class: 'ds-term-input',
                                 oninput: (e) => { live.input = e.target.value; },

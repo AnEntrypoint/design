@@ -16,7 +16,7 @@ const slides = [
     },
     {
         kind: 'lede',
-        title: 'no fonts to load.',
+        title: 'no fonts to load',
         body: 'display, narrow and body all resolve to system-ui; mono resolves to the platform ui-monospace. nothing is fetched, so nothing reflows. the rhythm is 8pt all the way down.'
     },
     {
@@ -35,7 +35,7 @@ const slides = [
     },
     {
         kind: 'split',
-        title: 'usable terminals are instant.',
+        title: 'usable terminals are instant',
         left: 'output appears the moment it exists. no reveal animation or typewriter effect.',
         right: 'showcase terminals can play a loop. they are clearly labelled "demo" and pause on prefers-reduced-motion.'
     },

@@ -126,7 +126,7 @@
   background: color-mix(in oklab, var(--sky) 22%, var(--bg)); color: var(--sky);
 }
 .ds-badge.tone-flame, .ds-badge.tone-error {
-  background: var(--flame); color: var(--on-color);
+  background: var(--flame); color: var(--warn-fg);
 }
 .ds-badge.tone-wip, .ds-badge.tone-neutral {
   background: var(--bg-3); color: var(--fg-2);
@@ -137,7 +137,7 @@
   background: var(--sun); color: var(--ink);
 }
 .ds-badge.tone-blue { background: var(--accent-tint); color: var(--accent-ink); }
-.ds-badge.tone-orange { background: color-mix(in oklab, var(--flame) 22%, var(--bg)); color: var(--flame); }
+.ds-badge.tone-orange { background: color-mix(in oklab, var(--flame) 8%, var(--bg)); color: var(--flame); }
 
 .chip {
   display: inline-flex; align-items: center; gap: var(--space-1-75);
@@ -172,10 +172,10 @@
   background: var(--sky);
 }
 .chip.tone-flame, .chip.tone-error, .chip.tone-miss {
-  background: var(--flame); color: var(--on-color);
+  background: var(--flame); color: var(--warn-fg);
 }
 .chip.tone-warn {
-  background: color-mix(in oklab, var(--amber) 22%, var(--bg));
+  background: color-mix(in oklab, var(--amber) 12%, var(--bg));
   color: var(--amber);
 }
 .chip.tone-wip, .chip.tone-neutral {

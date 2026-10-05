@@ -19,6 +19,7 @@ import { lintEmptyCatchOrThrow } from './lint-empty-catch.mjs';
 import { lintInlineCssOrThrow } from './lint-inline-css.mjs';
 import { lintDeadControlsOrThrow } from './lint-dead-controls.mjs';
 import { lintYamlParseOrThrow } from './lint-yaml-parse.mjs';
+import { lintContrastOrThrow } from './lint-contrast.mjs';
 
 const CHECKS = [
     ['tokens', lintTokensOrThrow],
@@ -27,6 +28,7 @@ const CHECKS = [
     ['zindex', lintZIndexOrThrow],
     ['transition-all', lintTransitionAllOrThrow],
     ['dark-parity', lintDarkParityOrThrow],
+    ['contrast', lintContrastOrThrow],
     ['spacing', lintSpacingOrThrow],
     ['fontsize', lintFontSizeOrThrow],
     ['important', lintImportantOrThrow],

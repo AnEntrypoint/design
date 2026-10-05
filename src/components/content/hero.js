@@ -2,14 +2,18 @@ import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon, iconMarkup } from '../shell/icons.js';
 const h = webjsx.createElement;
 
+function heroStat(b, i) {
+    const label = b && b.label != null ? b.label : b;
+    return h('span', { key: 'hb' + i, class: 'ds-hero-stat' },
+        h('strong', { class: 'ds-hero-stat-n' }, String(label)),
+        (b && b.desc) ? h('span', { class: 'ds-hero-stat-l' }, String(b.desc)) : null);
+}
+
 export function Hero({ eyebrow, title, body, accent, actions, badges }) {
     const badgeList = Array.isArray(badges) ? badges.filter(Boolean) : [];
-    const badgeRow = badgeList.length
-        ? h('div', { class: 'ds-hero-stats' }, ...badgeList.map((b, i) =>
-            h('span', { key: 'hb' + i, class: 'ds-hero-stat' }, String(b && b.label != null ? b.label : b))))
-        : null;
+    const badgeRow = badgeList.length ? h('div', { class: 'ds-hero-stats' }, ...badgeList.map(heroStat)) : null;
     const actionRow = actions ? h('div', { class: 'ds-hero-actions' }, ...(Array.isArray(actions) ? actions : [actions])) : null;
-    const aside = (badgeRow || actionRow) ? h('div', { class: 'ds-hero-aside' }, badgeRow, actionRow) : null;
+    const aside = (badgeRow || actionRow) ? h('div', { class: 'ds-hero-aside' }, actionRow, badgeRow) : null;
     return h('div', { class: 'ds-hero' },
         h('div', { class: 'ds-hero-head' },
             eyebrow ? h('span', { class: 'eyebrow' }, eyebrow) : null,
@@ -28,13 +32,7 @@ export function HeroFromPageData(hero) {
     const heading = hero.heading || hero.title || '';
     const badges = Array.isArray(hero.badges) ? hero.badges.filter(Boolean) : [];
     const ctas = Array.isArray(hero.ctas) ? hero.ctas.filter(Boolean) : [];
-    const badgeRow = badges.length
-        ? h('div', { class: 'ds-hero-stats' }, ...badges.map((b, i) =>
-            h('span', { key: 'hb' + i, class: 'ds-hero-stat' },
-                h('strong', { class: 'ds-hero-stat-n' }, String(b && b.label != null ? b.label : b)),
-                (b && b.desc) ? h('span', { class: 'ds-hero-stat-l' }, String(b.desc)) : null,
-            )))
-        : null;
+    const badgeRow = badges.length ? h('div', { class: 'ds-hero-stats' }, ...badges.map(heroStat)) : null;
     const ctaRow = ctas.length
         ? h('div', { class: 'ds-hero-actions' }, ...ctas.map((c, i) =>
             h('a', {
@@ -59,7 +57,7 @@ export function HeroFromPageData(hero) {
             hero.accent ? h('span', { class: 'ds-hero-accent' }, ' ' + hero.accent) : null,
         ) : null,
         (badgeRow || ctaRow || installRow)
-            ? h('div', { class: 'ds-hero-aside' }, badgeRow, installRow, ctaRow)
+            ? h('div', { class: 'ds-hero-aside' }, installRow, ctaRow, badgeRow)
             : null,
     );
 }

@@ -152,7 +152,7 @@ a.row:hover, button.row:hover, .row[role="button"]:hover {
 
 .row .meta { transition: color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease-spring); }
 a.row:hover .meta, .row[role="button"]:hover .meta { color: var(--accent-ink); transform: translateX(3px); }
-.row.active { background: color-mix(in oklab, var(--accent) 10%, var(--bg-2)); }
+.row.active { background: color-mix(in oklab, var(--accent) 4%, var(--bg-2)); }
 .row.active .title { color: var(--accent-ink); }
 
 .ds-session-row.active .ds-session-sub,
@@ -181,6 +181,7 @@ a.row:hover .meta, .row[role="button"]:hover .meta { color: var(--accent-ink); t
 .row:has(.meta.dim):has(.ds-row-arrow):not(:has(.code)) .title { grid-column: 1; }
 .row:has(.meta.dim):has(.ds-row-arrow):not(:has(.code)) .ds-row-arrow { grid-column: 2; }
 .row .meta.dim {
+  font-family: var(--ff-body); font-size: var(--fs-sm); color: var(--fg-3); opacity: 1;
   white-space: normal;
   min-width: 0;
   text-align: left;

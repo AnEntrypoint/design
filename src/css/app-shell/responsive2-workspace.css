@@ -267,7 +267,7 @@
 .ws-crumb { flex: 0 0 auto; min-height: calc(var(--app-crumb-h) + var(--space-3)); padding: 0 var(--space-5); display: flex; align-items: center; gap: var(--space-1); border-bottom: var(--bw-hair) solid var(--bg-3); }
 .ws-crumb-main { flex: 1 1 auto; min-width: 0; }
 
-.ws-main { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; padding: var(--space-4) var(--space-5); }
+.ws-main, .ws-main.ds-app-surface { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; padding: var(--space-4) var(--space-5); }
 .ws-main.ws-main--flush { padding: 0; }
 
 .ws-main:focus { outline: none; }

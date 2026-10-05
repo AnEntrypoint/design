@@ -275,7 +275,7 @@ textarea::placeholder {
 }
 
 .stamp.ink { background: var(--ink); border-color: var(--paper); color: var(--paper); }
-.stamp.acid { background: var(--accent); border-color: var(--accent-ink); color: var(--accent-ink); }
+.stamp.acid { background: var(--accent); border-color: var(--accent-ink); color: var(--accent-fg); }
 .stamp.purple { border-color: var(--purple-2); color: var(--purple-2); }
 .stamp.mascot { border-color: var(--mascot); color: var(--mascot-deep); }
 

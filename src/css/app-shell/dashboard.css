@@ -11,7 +11,7 @@
 .ds-dash-header .btn-primary.danger:hover {
   background: color-mix(in oklab, var(--warn) 12%, transparent); color: var(--warn);
 }
-.ds-dash-header .btn-primary.danger.is-armed { background: var(--warn); color: var(--ink); border-color: var(--warn); }
+.ds-dash-header .btn-primary.danger.is-armed { background: var(--warn); color: var(--warn-fg); border-color: var(--warn); }
 .ds-dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-2); padding: var(--space-3); }
 @media (min-width: 1500px) { .ds-dash-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
 .ds-dash-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); background: var(--bg-2); border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-1); }

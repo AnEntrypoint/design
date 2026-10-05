@@ -4,6 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { withPage, cdpAvailable, CDP_BASE } from './cdp.mjs';
 import { die } from './die.mjs';
+import { auditComponentMatrix } from './a11y-component-matrix.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const kitsDir = join(root, 'ui_kits');
@@ -13,7 +14,7 @@ const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:8899';
 
 const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
-const EMULATED_COLOR_SCHEME = 'light';
+const EMULATED_COLOR_SCHEMES = ['light', 'dark'];
 const EMULATED_REDUCED_MOTION = 'reduce';
 const SAMPLE_NODES_PER_RULE = 5;
 const SAMPLE_HTML_CHARS = 200;
@@ -45,13 +46,26 @@ const axeRunProjectedToPlainData = `
         }))
 `;
 
-async function auditKit(kit) {
+async function auditKitUnderScheme(kit, colorScheme) {
     const directoryUrlWithTrailingSlash = `${BASE_URL}/ui_kits/${kit}/`;
     return withPage(directoryUrlWithTrailingSlash, async (page) => {
         await page.addScriptFile(axePath);
-        const raw = await page.evaluate(axeRunProjectedToPlainData);
-        return { kit, ...raw };
-    }, { emulate: { colorScheme: EMULATED_COLOR_SCHEME, reducedMotion: EMULATED_REDUCED_MOTION } });
+        return page.evaluate(axeRunProjectedToPlainData);
+    }, { emulate: { colorScheme, reducedMotion: EMULATED_REDUCED_MOTION } });
+}
+
+async function auditKit(kit) {
+    const merged = { kit, passes: 0, violations: [] };
+    for (const scheme of EMULATED_COLOR_SCHEMES) {
+        const raw = await auditKitUnderScheme(kit, scheme);
+        merged.passes += raw.passes;
+        merged.violations.push(...raw.violations.map((v) => ({ ...v, help: `[${scheme}] ${v.help}` })));
+    }
+    return merged;
+}
+
+function describeMatrixFailure(f) {
+    return `${f.mode} on ${f.surface}: ${f.ratio}:1 ${f.fg} / ${f.bg} :: ${f.html}`;
 }
 
 function printBlockingDetail(results) {
@@ -173,7 +187,13 @@ async function main() {
         for (const i of improved) console.error(`  - ${i}`);
         die('[a11y-audit] Run: node scripts/a11y-audit.mjs --write-baseline');
     }
-    console.log('[a11y-audit] OK — no regression against baseline.');
+    const matrixFailures = await auditComponentMatrix(BASE_URL);
+    if (matrixFailures.length) {
+        console.error('[a11y-audit] FAIL — component matrix contrast:');
+        for (const f of matrixFailures) console.error(`  - ${describeMatrixFailure(f)}`);
+        die('[a11y-audit] Fix the token or the component pairing; the matrix has no baseline.');
+    }
+    console.log('[a11y-audit] OK — no regression against baseline; component matrix clean across all theme modes.');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

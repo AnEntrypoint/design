@@ -1,7 +1,6 @@
 import * as webjsx from 'webjsx';
 import { Topbar, Crumb, Side, AppShell, Status, Icon } from 'ds/components/shell.js';
 import { AICat, flashComposerNote, ChatComposer } from 'ds/components/chat.js';
-import { Row } from 'ds/components/content.js';
 import { mountKit } from 'ds/bootstrap.js';
 const h = webjsx.createElement;
 
@@ -25,8 +24,8 @@ const PRESETS = [
     { q: 'show me a small react component', k: 'code-react' },
     { q: 'show python prime sieve', k: 'code-py' },
     { q: 'explain prefers-reduced-motion', k: 'md-rm' },
-    { q: 'send the v0.0.27 token sheet', k: 'pdf' },
-    { q: 'paste the mascot art', k: 'image' },
+    { q: 'summarize the design tokens as a pdf', k: 'pdf' },
+    { q: 'show me the aicat picture', k: 'image' },
     { q: 'link the design repo', k: 'link' },
     { q: 'attach a config file', k: 'file' },
     { q: 'tell me a joke about garbage collection', k: 'text' }
@@ -108,8 +107,7 @@ function timeNow() { const d = new Date(); return String(d.getHours()).padStart(
 
 function PromptList(presets, heading) {
     return h('section', { class: 'aicat-prompts', 'aria-label': heading },
-        h('p', { class: 'eyebrow' }, heading),
-        ...presets.map((p) => Row({ key: 'pr-' + p.k, title: p.q, onClick: () => { if (!state.thinking) send(p.q); } }))
+        ...presets.map((p) => h('button', { key: 'pr-' + p.k, type: 'button', class: 'btn btn-ghost aicat-prompt', onclick: () => { if (!state.thinking) send(p.q); } }, p.q))
     );
 }
 

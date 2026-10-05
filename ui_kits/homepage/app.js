@@ -50,7 +50,7 @@ const state = { route: 'works', opened: 0 };
 
 function ShippingBody() {
     return h('div', {}, ...shipping.map((s) => Row({
-        key: s.name, leading: Dot({ tone: s.live ? 'on' : 'off' }),
+        key: s.name, cols: 'auto minmax(0, 1fr) auto', leading: Dot({ tone: s.live ? 'on' : 'off' }),
         title: s.name, sub: s.sub, meta: s.live ? 'live' : 'wip'
     })));
 }
@@ -67,8 +67,16 @@ function App() {
         main: [
             Hero({
                 title: 'tools for agents and live rooms.',
-                body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser os shell, and publishes all of it on github.',
-                accent: 'all of it open source.'
+                body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser os shell. Every project is open source on github.',
+                actions: [
+                    h('a', { key: 'works', class: 'btn btn-primary', href: '#works' }, 'browse the works'),
+                    h('a', { key: 'source', class: 'btn btn-ghost', href: GH }, 'source on github')
+                ],
+                badges: [
+                    { label: works.length, desc: 'projects' },
+                    { label: shipping.filter((s) => s.live).length, desc: 'live now' },
+                    { label: posts.length, desc: 'posts' }
+                ]
             }),
             Panel({
                 title: 'currently shipping',

@@ -6,8 +6,6 @@ export const PAGE_INLINE_STYLES = `
 .ds-tier-head { display: grid; gap: var(--space-2, 8px); margin-bottom: var(--space-1, 4px); justify-items: start }
 .ds-tier-head > h2.eyebrow { margin: 0; font-size: var(--fs-tiny, 11px); line-height: 1.2 }
 .ds-tier-lede { margin: 0; max-width: var(--measure, 68ch); color: var(--fg-3); font-size: var(--fs-sm, 15px) }
-.ds-tier-lead { border-radius: 0 var(--r-2, 14px) var(--r-2, 14px) 0; padding-left: calc(var(--space-3, 16px) + var(--bw-chunk, 6px)); position: relative }
-.ds-tier-lead::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: var(--bw-chunk, 6px); background: var(--accent); border-radius: var(--bw-chunk, 6px) 0 0 var(--bw-chunk, 6px) }
 .ds-tier-read .panel { background: var(--panel-1, var(--bg)) }
 .ds-tier-read .row .meta { color: var(--fg-3) }
 .page-body > :first-child { margin-top: 0 }
@@ -22,10 +20,6 @@ export const PAGE_INLINE_STYLES = `
 .row-benefit { font-style: italic; color: var(--fg-3); font-size: var(--fs-sm); margin-top: var(--space-1, 4px) }
 .ds-row-arrow { margin-left: auto; opacity: .5; transition: opacity var(--dur-snap, 80ms) var(--ease) }
 a.row:hover .ds-row-arrow { opacity: 1 }
-.ds-hero-stats { display: flex; flex-wrap: wrap; gap: var(--space-3, 16px) var(--space-5, 32px); margin-top: var(--space-2, 8px) }
-.ds-hero-stat { display: flex; align-items: baseline; gap: var(--space-2, 8px); border-bottom: none !important; padding-bottom: 0 !important }
-.ds-hero-stat-n { font-family: var(--ff-body); font-weight: 700; font-size: var(--fs-lg, 18px); color: var(--fg) }
-.ds-hero-stat-l { font-size: var(--fs-sm, 15px); color: var(--fg-3) }
 .ds-hero-accent { display: block; margin-top: var(--space-2, 8px); color: var(--fg-3) }
 .ds-feature { padding: var(--space-3, 16px) var(--space-4, 24px); background: var(--panel-1, var(--bg)); border-radius: var(--r-2, 14px); display: grid; gap: var(--space-1, 4px) }
 .ds-feature + .ds-feature { margin-top: var(--space-2, 8px) }

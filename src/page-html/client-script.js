@@ -105,7 +105,7 @@ function examplesNode(examples) {
       const kids = [];
       if (code) kids.push(h('span', { key: 'c', class: 'code' }, code));
       kids.push(h('span', { key: 't', class: 'title' }, String(e.label || e.name || e.href || '')));
-      if (e.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, ' — ' + e.desc));
+      if (e.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, e.desc));
       kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, 'open'));
       return h('a', { key: i, class: 'row', href: e.href || '#' }, ...kids);
     }),
@@ -201,7 +201,7 @@ function panelNode(panel, idx, rerender) {
         const kids = [];
         if (code) kids.push(h('span', { key: 'c', class: 'code' }, code));
         kids.push(h('span', { key: 't', class: 'title' }, String(it.title || it.name || '')));
-        if (it.sub || it.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, ' — ' + (it.sub || it.desc)));
+        if (it.sub || it.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, it.sub || it.desc));
         kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, it.meta || 'open'));
         return h('a', { key: i, class: 'row', href: it.href || '#' }, ...kids);
       });
@@ -315,10 +315,6 @@ function buildMainChildren(rerender) {
 
   const tierNodes = TIERS.map((t) => {
     const kids = [...t.ids.map(takePanel), ...t.extra()].filter(Boolean);
-    if (t.key === 'open' && kids.length) {
-      const lead = kids[0];
-      if (lead.props) lead.props.class = (lead.props.class || '') + ' ds-tier-lead';
-    }
     return tierNode(t, kids);
   });
   const leftoverPanels = [...panelsById.values()].map((p) => panelNode(p, 0, rerender));

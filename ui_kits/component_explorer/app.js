@@ -7,7 +7,7 @@ const h = webjsx.createElement;
 const root = document.getElementById('root');
 
 const manifest = await (await fetch('./manifest.json')).json();
-const components = manifest.components;
+const components = manifest.components.filter((c) => /^[A-Z][A-Za-z0-9]*[a-z]/.test(c.name));
 
 const byFile = new Map();
 for (const c of components) {
@@ -16,7 +16,7 @@ for (const c of components) {
 }
 const files = [...byFile.keys()].sort();
 
-const state = { q: '', selected: components[0].name };
+const state = { q: '', selected: (components.find((c) => c.name === 'Btn') || components[0]).name };
 
 function matches(c, q) {
     if (!q) return true;

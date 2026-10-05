@@ -30,6 +30,8 @@
   <link rel="stylesheet" href="../../colors_and_type.css">
   <link rel="stylesheet" href="../../app-shell.css">
 <style>
+  .post-column{width:100%;max-width:var(--measure);margin-inline:auto;}
+  .post-column .lede{max-width:none;}
   .post-meta{display:flex;gap:var(--space-2-5);flex-wrap:wrap;margin-bottom:var(--space-4);font-family:var(--ff-mono);font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:0.08em;color:var(--panel-text-2);}
   .post-meta .sep{color:var(--panel-text-3);}
   blockquote{margin:var(--space-3-5) 0;padding:var(--space-2-75) 18px;background:var(--panel-1);border-radius:var(--r-1);font-size:var(--fs-sm);color:var(--panel-text);line-height:1.55;}
@@ -62,16 +64,16 @@
     <span>247420</span><span class="sep">›</span>
     <span>writing</span><span class="sep">›</span>
     <span>lore</span><span class="sep">›</span>
-    <span class="leaf">we-were-here-first.md</span>
+    <span class="leaf">a-short-history-of-247420.md</span>
   </div>
   <div class="app-body no-side">
     <main class="app-main narrow" id="app-main" tabindex="0">
+      <article class="post-column">
       <div class="post-meta">
         <span>lore</span><span class="sep">·</span>
         <span>apr 14 2026</span><span class="sep">·</span>
         <span>by grendel</span><span class="sep">·</span>
-        <span>8 min read</span><span class="sep">·</span>
-        <span><span class="chip accent">draft</span></span>
+        <span>8 min read</span>
       </div>
       <h1>a short history of 247420</h1>
       <p class="lede">how the 247420 projects started, and what they have in common.</p>
@@ -85,20 +87,21 @@
         <p class="ds-prose-endnote">end. reply by opening a pr. <a href="https://github.com/AnEntrypoint/design">source</a></p>
       </div>
       <div class="post-index">
-        <h2>more from lore</h2>
+        <h2>more writing</h2>
         <div class="post-index-row">
-          <span class="post-index-title">we were here first</span>
-          <span class="post-index-meta">apr 14 2026 · by grendel</span>
+          <span class="post-index-title">gm v0.4 postmortem, or: why state machines</span>
+          <span class="post-index-meta">mar 22 2026</span>
         </div>
         <div class="post-index-row">
-          <span class="post-index-title">the cost of late-night fixes</span>
-          <span class="post-index-meta">feb 02 2026 · by mireille</span>
+          <span class="post-index-title">push-to-talk is a protocol, not a feature</span>
+          <span class="post-index-meta">feb 09 2026</span>
         </div>
         <div class="post-index-row">
-          <span class="post-index-title">why the design tokens exist</span>
-          <span class="post-index-meta">nov 19 2025 · by grendel</span>
+          <span class="post-index-title">why interfaces should state what they do</span>
+          <span class="post-index-meta">dec 11 2025</span>
         </div>
       </div>
+      </article>
     </main>
   </div>
 </div>

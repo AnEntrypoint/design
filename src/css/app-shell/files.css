@@ -477,7 +477,7 @@
   .ds-upload-act { min-height: 44px; min-width: 44px; }
 
   .ds-file-act, .ds-file-sort-btn, .ds-crumb-seg, .ds-file-filter-input { min-height: 44px; }
-  .ds-file-act { min-width: 44px; }
+  .ds-file-act, .ds-crumb-seg { min-width: 44px; }
   .ds-file-check, .ds-file-selectall, .ds-density-btn { min-height: 44px; min-width: 44px; }
 }
 

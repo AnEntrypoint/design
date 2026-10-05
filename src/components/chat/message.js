@@ -64,7 +64,7 @@ export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typ
         ? h('span', { class: 'tick' + (receipt === 'read' ? ' read' : ''), role: 'img', 'aria-label': receipt === 'read' ? 'message read' : 'message sent' }, Icon(receipt === 'read' ? 'check-check' : 'check', { size: 14 }))
         : null;
     const metaItems = [];
-    if (name && resolvedWho === 'them' && !isTail) metaItems.push(h('span', { class: 'who', key: 'w' }, name));
+    if (name && resolvedWho === 'them' && !isTail && !isFlat) metaItems.push(h('span', { class: 'who', key: 'w' }, name));
     if (time) metaItems.push(h('span', { class: 't', key: 'ti' }, time));
     if (tickNode) metaItems.push(tickNode);
     const meta = metaItems.length ? h('div', { class: 'chat-meta' }, ...metaItems) : null;

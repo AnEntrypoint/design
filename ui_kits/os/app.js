@@ -64,7 +64,7 @@ const ABOUT_CONTENT = {
 
 const registry = createDemoRegistry([
     {
-        id: 'about', name: 'about', icon: 'info', defaultSize: { w: 420, h: 320 },
+        id: 'about', name: 'about', icon: 'info', defaultSize: { w: 440, h: 400 },
         factory() {
             return { node: renderAboutApp(ABOUT_CONTENT).node };
         },
@@ -87,7 +87,7 @@ const registry = createDemoRegistry([
 
 createDesktopShell({ root: document.body, wm, registry, brand: '247420 / os', themeUrl });
 
-wm.open({ title: 'about', body: renderAboutApp(ABOUT_CONTENT).node, width: 460, height: 380, x: 80, y: 80 });
+wm.open({ title: 'about', body: renderAboutApp(ABOUT_CONTENT).node, width: 460, height: 450, x: 80, y: 80 });
 
 const monitorApp = registry.get('monitor');
 wm.open({ title: monitorApp.name, body: monitorApp.factory().node, width: monitorApp.defaultSize.w, height: monitorApp.defaultSize.h, x: 600, y: 120 });

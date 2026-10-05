@@ -26,8 +26,8 @@ function App() {
                 Lede({ children: path
                     ? 'nothing on this site is served at ' + path + '. the page may have moved, or the link may have a typo.'
                     : 'the address you opened does not match any page on this site. the page may have moved, or the link may have a typo.' }),
-                Panel({ title: 'pages that do exist', class: 'ds-panel-gap',
-                    children: h('div', {}, ...suggestions.map((s, i) => RowLink({ key: 's' + i, title: s.title, sub: s.sub, href: s.href })))
+                Panel({ title: 'where to go', class: 'ds-panel-gap',
+                    children: h('div', {}, ...suggestions.map((s, i) => RowLink({ key: 's' + i, title: s.title + ' ->', sub: s.sub, href: s.href })))
                 })
             )
         ],
