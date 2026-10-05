@@ -1,8 +1,3 @@
-// Mermaid diagram rendering — lazy-loads mermaid.js from CDN on first call.
-// No-op safe: absent/failed load leaves the fenced ```mermaid block as plain
-// (already Prism-highlighted) code, never a blank or broken area.
-// Mirrors highlight.js's lazy-CDN-module pattern (module cache + configurable
-// base URL + fail-soft).
 
 let _mermaid = null;
 let _ready = null;
@@ -10,9 +5,6 @@ let _ready = null;
 const DEFAULT_MERMAID_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 let _mermaidUrl = DEFAULT_MERMAID_URL;
 
-// Optional override (self-host / mirror / CSP-allowlisted proxy), same
-// contract as configurePrismCdn/configureMarkdownCdn: additive, forces a
-// fresh load on next use.
 export function configureMermaidCdn({ url } = {}) {
     _mermaidUrl = url || DEFAULT_MERMAID_URL;
     _mermaid = null;
@@ -45,10 +37,6 @@ export async function ensureMermaid() {
 }
 
 let _seq = 0;
-// Render one mermaid source string to sanitized-by-construction SVG markup
-// (mermaid's own securityLevel:'strict' escapes text nodes; no user HTML is
-// interpolated). Returns null on any failure so the caller can keep showing
-// the source block instead of an empty/broken pane.
 export async function renderMermaid(code) {
     const mermaid = await ensureMermaid();
     if (!mermaid) return null;
@@ -64,12 +52,6 @@ export async function renderMermaid(code) {
     }
 }
 
-// Find every ```mermaid fenced block already rendered as
-// <pre><code class="language-mermaid">...</code></pre> (or lang-mermaid, the
-// alternate class chat-message-parts.js's CodeNode uses) inside `root`, and
-// replace its content with a rendered SVG + a source/preview toggle button.
-// Idempotent (data-mermaid-wired guard). Fail-soft per block: an individual
-// diagram that fails to parse/render is left as its original code block.
 export async function renderMermaidBlocksUnder(root) {
     if (!root || !root.querySelectorAll) return;
     const blocks = root.querySelectorAll('code.language-mermaid, code.lang-mermaid');

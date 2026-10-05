@@ -63,7 +63,7 @@ const view = () => h('div', { class: 'spec-page' },
     spec('Table', 'Column-defined data table.',
         Table({
             columns: ['name', 'state', 'age'],
-            rows: [['gm', 'live', '2y'], ['zellous', 'live', '3y'], ['thebird', 'wip', '—']],
+            rows: [['gm', 'live', '2y'], ['zellous', 'live', '3y'], ['thebird', 'wip', 'n/a']],
         })),
 
     spec('EventList', 'Ranked event rows, with its own loading state.',

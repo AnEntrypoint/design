@@ -1,3 +1,4 @@
+import { attempt } from '../../best-effort.js';
 export const STORAGE_PREFIX = 'deck-stage:slide:';
 const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -16,18 +17,17 @@ export function loadNotes(deckEl) {
 
 export function restoreIndex(deckEl, slides) {
     const storageKey = STORAGE_PREFIX + (location.pathname || '/');
-    try {
-        const raw = localStorage.getItem(storageKey);
-        if (raw == null) return 0;
-        const n = parseInt(raw, 10);
-        if (Number.isFinite(n) && n >= 0 && n < slides.length) return n;
-    } catch (e) { /* swallow: localStorage unavailable or corrupt saved-slide-index — fall back to slide 0 */ }
+    const raw = attempt(() => localStorage.getItem(storageKey), null);
+    if (raw != null) {
+      const n = parseInt(raw, 10);
+      if (Number.isFinite(n) && n >= 0 && n < slides.length) return n;
+    }
     return 0;
 }
 
 export function persistIndex(deckEl, index) {
     const storageKey = STORAGE_PREFIX + (location.pathname || '/');
-    try { localStorage.setItem(storageKey, String(index)); } catch (e) { /* swallow: persistence is best-effort, deck still shows the current slide */ }
+    attempt(() => { localStorage.setItem(storageKey, String(index)); });
 }
 
 export function collectSlides(deckEl, slot) {
@@ -67,7 +67,7 @@ export function applyIndex(deckEl, { index, prevIndex, slides, countEl, totalEl,
     if (totalEl) totalEl.textContent = String(slides.length);
     persistIndex(deckEl, curr);
     if (broadcast) {
-        try { window.postMessage({ slideIndexChanged: curr }, '*'); } catch (e) { /* swallow: cross-frame notification is best-effort, local slide state already updated */ }
+        attempt(() => { window.postMessage({ slideIndexChanged: curr }, '*'); });
         deckEl.dispatchEvent(new CustomEvent('slidechange', {
             detail: {
                 index: curr, previousIndex: prev, total: slides.length,

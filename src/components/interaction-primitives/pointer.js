@@ -1,8 +1,4 @@
-// Pointer-driven interaction behaviours, Pointer Events only (mouse + touch +
-// pen + XR controller): useDraggable (threshold-gated data-transfer drag with a
-// keyboard-only Space/Arrow fallback), useNumberScrub (drag-to-scrub a numeric
-// input without losing click-to-edit), usePointerDrag (raw per-frame 2D drag
-// for canvas/gizmo surfaces), and useDropTarget.
+import { attempt } from '../../best-effort.js';
 
 const DRAG_THRESHOLD = 5;
 
@@ -32,7 +28,7 @@ export function useDraggable(el, { data, kind, onDragStart, onDragEnd } = {}) {
         if (!active) return;
         const wasStarted = started;
         active = false; started = false;
-        try { if (pid != null) el.releasePointerCapture(pid); } catch { /* swallow: pointer capture may already be released, drag end still proceeds */ }
+        attempt(() => { if (pid != null) el.releasePointerCapture(pid); });
         pid = null;
         el.removeAttribute('data-dragging');
         const hit = document.elementFromPoint(e.clientX, e.clientY);
@@ -47,7 +43,7 @@ export function useDraggable(el, { data, kind, onDragStart, onDragEnd } = {}) {
         if (e.button != null && e.button !== 0) return;
         active = true; started = false;
         startX = e.clientX; startY = e.clientY; pid = e.pointerId;
-        try { el.setPointerCapture(e.pointerId); } catch { /* swallow: pointer capture unsupported/denied, drag still tracks via listeners */ }
+        attempt(() => { el.setPointerCapture(e.pointerId); });
         window.addEventListener('pointermove', onMove);
         window.addEventListener('pointerup', onUp);
         window.addEventListener('pointercancel', onUp);
@@ -89,10 +85,6 @@ export function useDraggable(el, { data, kind, onDragStart, onDragEnd } = {}) {
     }};
 }
 
-// useNumberScrub — pointer-event horizontal drag-to-scrub on a numeric input.
-// Pointer Events (mouse+touch+pen+XR), touch-action:none so a vertical page
-// scroll never steals the gesture. Click-to-edit is preserved: a press that
-// does not cross SCRUB_THRESHOLD leaves the input focusable for typing.
 export function useNumberScrub(el, { getValue, onChange, step = 0.01, threshold = 3 } = {}) {
     if (!el) return { destroy() {} };
     el.style.touchAction = 'none';
@@ -111,7 +103,7 @@ export function useNumberScrub(el, { getValue, onChange, step = 0.01, threshold 
     };
     const onUp = () => {
         if (pid == null) return;
-        try { el.releasePointerCapture(pid); } catch { /* swallow: pointer capture may already be released, drag end still proceeds */ }
+        attempt(() => { el.releasePointerCapture(pid); });
         pid = null;
         el.removeAttribute('data-scrubbing');
         window.removeEventListener('pointermove', onMove);
@@ -120,12 +112,11 @@ export function useNumberScrub(el, { getValue, onChange, step = 0.01, threshold 
     };
     const onDown = (e) => {
         if (e.button != null && e.button !== 0) return;
-        // Let a focused input handle caret placement / text selection instead.
         if (document.activeElement === el) return;
         pid = e.pointerId; startX = e.clientX; moved = false;
         const cur = getValue ? getValue() : parseFloat(el.value);
         startV = Number.isFinite(cur) ? cur : 0;
-        try { el.setPointerCapture(pid); } catch { /* swallow: pointer capture unsupported/denied, drag still tracks via listeners */ }
+        attempt(() => { el.setPointerCapture(pid); });
         window.addEventListener('pointermove', onMove);
         window.addEventListener('pointerup', onUp);
         window.addEventListener('pointercancel', onUp);
@@ -139,15 +130,6 @@ export function useNumberScrub(el, { getValue, onChange, step = 0.01, threshold 
     }};
 }
 
-// usePointerDrag — free 2D pointer drag with caller-supplied onMove, for surfaces
-// that need raw pointer coordinates each frame (a 3D viewport gizmo, a canvas
-// handle) rather than the data-transfer DnD model of useDraggable. Pointer Events
-// only, so mouse+touch+pen+XR-controller all drive it. The primary pointer is
-// captured on the element (drag keeps tracking when it leaves the element or
-// crosses a panel) and released on pointerup/pointercancel; a non-primary pointer
-// (second finger) is ignored mid-drag so multi-touch never makes the drag jump.
-// onStart returns false to decline the drag (e.g. a miss in the gizmo raycast),
-// leaving the pointerdown to propagate to other handlers.
 export function usePointerDrag(el, { onStart, onMove, onEnd, button = 0 } = {}) {
     if (!el) return { destroy() {} };
     let pid = null;
@@ -157,7 +139,7 @@ export function usePointerDrag(el, { onStart, onMove, onEnd, button = 0 } = {}) 
     };
     const finish = (e, cancelled) => {
         if (pid == null) return;
-        try { el.releasePointerCapture(pid); } catch { /* swallow: pointer capture may already be released, drag end still proceeds */ }
+        attempt(() => { el.releasePointerCapture(pid); });
         pid = null;
         el.removeAttribute('data-pointer-dragging');
         window.removeEventListener('pointermove', onMoveEv);
@@ -169,11 +151,11 @@ export function usePointerDrag(el, { onStart, onMove, onEnd, button = 0 } = {}) 
     const onCancelEv = (e) => { if (e.pointerId === pid) finish(e, true); };
     const onDown = (e) => {
         if (button != null && e.button != null && e.button !== button) return;
-        if (pid != null) return; // already dragging with the primary pointer
-        if (onStart && onStart(e) === false) return; // caller declined (e.g. raycast miss)
+        if (pid != null) return;
+        if (onStart && onStart(e) === false) return;
         pid = e.pointerId;
         el.setAttribute('data-pointer-dragging', 'true');
-        try { el.setPointerCapture(pid); } catch { /* swallow: pointer capture unsupported/denied, drag still tracks via listeners */ }
+        attempt(() => { el.setPointerCapture(pid); });
         window.addEventListener('pointermove', onMoveEv);
         window.addEventListener('pointerup', onUpEv);
         window.addEventListener('pointercancel', onCancelEv);

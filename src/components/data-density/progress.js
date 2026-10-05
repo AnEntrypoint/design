@@ -1,8 +1,3 @@
-// Progress — plain value/max progress bar. Sibling module of data-density.js
-// (kept separate purely to respect the 200-line module cap, not a
-// barrel-over-submodules split of the whole group): the percentage-width
-// bar-fill approach is the same one BarRow uses in data-density.js, just
-// without BarRow's label/meta column chrome — track + fill only.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;

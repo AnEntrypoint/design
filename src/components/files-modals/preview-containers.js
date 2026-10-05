@@ -1,8 +1,3 @@
-// The two preview containers around a body renderer: FileViewer (the modal
-// overlay, focus-trapped, kept as the narrow-viewport fallback) and
-// FilePreviewPane (the persistent non-modal side pane for a WorkspaceShell
-// pane slot). Both share the head, the ArrowLeft/Right stepper, and the
-// swipe-to-step gesture.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -10,10 +5,6 @@ import { fmtFileSize } from '../files.js';
 import { Modal } from './modal-shell.js';
 const h = webjsx.createElement;
 
-// Shared preview-head children for both the modal FileViewer and the inline
-// FilePreviewPane: name + meta + prev/next stepper + download + close. ASCII
-// prev/next words (no glyph arrows). onPrev/onNext are omitted when there is no
-// previewable neighbour in that direction.
 function previewHead({ file, onClose, onAction, onPrev, onNext } = {}) {
     const meta = [file.type, file.size != null ? fmtFileSize(file.size) : null, file.modified || null]
         .filter(Boolean).join(' · ');
@@ -30,7 +21,6 @@ function previewHead({ file, onClose, onAction, onPrev, onNext } = {}) {
     ];
 }
 
-// ArrowLeft/Right step the preview when focus is inside it (both pane + modal).
 function previewKeyNav(onPrev, onNext) {
     return (e) => {
         if (e.key === 'ArrowLeft' && onPrev) { e.preventDefault(); onPrev(); }
@@ -38,9 +28,6 @@ function previewKeyNav(onPrev, onNext) {
     };
 }
 
-// Touch stepping: horizontal swipe on the preview body steps prev/next. Skips
-// when the gesture starts inside a horizontally-scrollable child (code <pre>)
-// so panning wide code never flips files.
 function previewSwipe(onPrev, onNext) {
     if (!onPrev && !onNext) return {};
     let sx = null, sy = null;
@@ -77,10 +64,6 @@ export function FileViewer({ file, body, onClose, onAction, onPrev, onNext } = {
     });
 }
 
-// FilePreviewPane — the SAME preview, but as a persistent, non-modal side pane
-// for the WorkspaceShell's pane slot (the split-view, claude-Desktop file-pane
-// feel). Distinct from the overlay FileViewer (kept as the <900px fallback).
-// Not focus-trapped (it is not modal); ArrowLeft/Right step files when focused.
 export function FilePreviewPane({ file, body, onClose, onAction, onPrev, onNext } = {}) {
     if (!file) {
         return h('div', { class: 'ds-preview-pane ds-preview-pane-empty', role: 'status' },

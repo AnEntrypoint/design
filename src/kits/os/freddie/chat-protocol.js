@@ -1,5 +1,4 @@
-// Wire-format translation for the dashboard chat page: SSE frame parsing and
-// the dashboard-message -> kit-ChatMessage shape conversion.
+import { attempt } from '../../../best-effort.js';
 
 export function parseSseEvents(text) {
     const events = [];
@@ -8,19 +7,13 @@ export function parseSseEvents(text) {
         if (line.startsWith('event: ')) { curEvent = line.slice(7).trim(); }
         else if (line.startsWith('data: ')) { curData = line.slice(6).trim(); }
         else if (line === '' && curEvent) {
-            try { events.push({ event: curEvent, data: JSON.parse(curData) }); } catch { /* swallow: a malformed SSE event is dropped, the stream continues */ }
+            attempt(() => { events.push({ event: curEvent, data: JSON.parse(curData) }); });
             curEvent = null; curData = '';
         }
     }
     return events;
 }
 
-// Convert the dashboard message shape into the kit ChatMessage shape:
-//   { role:'user', content:string }   -> { role:'user', text }
-//   { role:'assistant', content:string } -> { role:'assistant', parts:[{kind:'md', text}] }
-//   { role:'tool', name, argsSummary, content } ->
-//       { role:'tool', parts:[{kind:'tool_call', name, label, args, result, status}] }
-//   { role:'thinking' } -> { role:'thinking', parts:[{kind:'thinking', text}] }
 export function toKitMessage(m) {
     if (m.role === 'tool') {
         const status = m.status || (m.error ? 'error' : (m.content != null ? 'done' : 'running'));

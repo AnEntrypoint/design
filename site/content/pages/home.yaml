@@ -3,15 +3,15 @@ title: Home
 
 showcase:
   heading: "Live components"
-  lede: "Not a screenshot — the same Btn, Chip, Badge, and Table components every kit page imports, rendered right here from the SDK you'd actually install."
+  lede: "These are the live Btn, Chip, Badge and Table components that every kit imports, rendered from the published SDK."
 
 hero:
   eyebrow: "design system"
   heading: "247420"
-  subheading: "The 247420 design system"
-  body: "One token file drives every color, radius, and spacing value across 302 components and {{TOTAL_KITS}} working kits. Change a theme once — every surface updates, with zero component code changes and no JavaScript bundler required."
+  subheading: "Tokens, components and kits for dense, tonal UI"
+  body: "One token file drives every color, radius, and spacing value across {{TOTAL_COMPONENTS}} components and {{TOTAL_KITS}} kits. Edit a token and every surface updates; no bundler is needed."
   badges:
-    - { label: "302", desc: "components" }
+    - { label: "{{TOTAL_COMPONENTS}}", desc: "components" }
     - { label: "{{TOTAL_KITS}}", desc: "kits" }
     - { label: "0", desc: "blocking a11y violations" }
   ctas:
@@ -23,19 +23,6 @@ sidebar:
     label: "open"
     glyph: "+"
     href: "./ui_kits/homepage/"
-  # `count` here is a fallback only -- site/theme.mjs::withRealCounts()
-  # overwrites it at render time from the real kits/decks/previews/docs
-  # arrays below for any row whose href is in COUNT_SOURCE_BY_HREF, so a
-  # hand-typed number here can never drift out of sync with what the
-  # matching panel actually renders.
-  #
-  # Previously two groups (bins: Everything/Pinned/Shipped/Drafts, labels:
-  # UI kits/Decks/Previews/Docs) pointed at the same 3 anchors (#kits,
-  # #previews, #decks) under different, unexplained metaphorical names --
-  # "Pinned" and "UI kits" both meant #kits with no stated difference, and
-  # "bins" never even covered #docs (only "labels" did). Consolidated into
-  # one group with literal, self-explaining labels: every real destination
-  # appears exactly once.
   bins:
     - { label: "Everything", href: "#all", active: true }
     - { label: "UI kits",    href: "#kits" }
@@ -97,7 +84,7 @@ docs:
     - { code: "md",  title: "Skill",  sub: "Authoring rules for the agent",      desc: "Editorial zine surface modes.",    href: "https://github.com/AnEntrypoint/design/blob/main/SKILL.md" }
     - { code: "css", title: "Tokens", sub: "Colors, type, panel surface tokens", desc: "Canonical source of truth.",           href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css" }
     - { code: "md",  title: "Component props", sub: "Generated prop reference", desc: "Every exported component's signature and documented parameters.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/component-props.md" }
-    - { code: "live", title: "Component explorer", sub: "Interactive, searchable, live-rendered", desc: "The same 302 components as the reference above, browsable with a real prop table each -- live-mounted specimens today cover 4 of them (Btn, Chip, Badge, Table), not yet all 302.", href: "./ui_kits/component_explorer/" }
+    - { code: "live", title: "Component explorer", sub: "Interactive, searchable, live-rendered", desc: "The same {{TOTAL_COMPONENTS}} components as the reference above, each with a prop table. Live specimens exist for 4 of them (Btn, Chip, Badge, Table).", href: "./ui_kits/component_explorer/" }
     - { code: "md",  title: "Changelog", sub: "Release history", desc: "What shipped in each published version.", href: "https://github.com/AnEntrypoint/design/blob/main/CHANGELOG.md" }
     - { code: "md",  title: "Accessibility", sub: "WCAG AA compliance, keyboard navigation", desc: "Contrast ratios, focus-visible tokens, ARIA conventions, and the live audit baseline.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/accessibility.md" }
     - { code: "md",  title: "Responsive breakpoints", sub: "The documented breakpoint scale in use", desc: "Verified mobile, tablet, and desktop behavior across kits.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/responsive.md" }
@@ -142,12 +129,12 @@ file_browser:
   count: "primitives"
   items:
     - { code: "fb", title: "file_browser kit",   sub: "Drop, list, preview, dialogs",   desc: "The full surface, working with mock data.",  href: "./ui_kits/file_browser/", cta: "open" }
-    - { code: "fb", title: "FileRow",            sub: "Rail, icon, name, meta",      desc: "data-file-type drives the rail color — never apply rail-* manually.", href: "./preview/file-row.html", cta: "open" }
-    - { code: "fb", title: "FileGrid",           sub: "A stack of rows in a panel",       desc: "Directories sort first; the selected row gets the mint .active tone.", href: "./preview/file-grid.html", cta: "open" }
-    - { code: "fb", title: "DropZone",           sub: "Tonal upload target",            desc: "Swaps to --panel-select on dragover; preventDefault runs on document, not just the zone.", href: "./preview/dropzone.html", cta: "open" }
+    - { code: "fb", title: "FileRow",            sub: "Rail, icon, name, meta",      desc: "data-file-type sets the rail color; do not apply rail-* classes by hand.", href: "./preview/file-row.html", cta: "open" }
+    - { code: "fb", title: "FileGrid",           sub: "A stack of rows in a panel",       desc: "Directories sort first; the selected row gets the .active tone.", href: "./preview/file-grid.html", cta: "open" }
+    - { code: "fb", title: "DropZone",           sub: "Tonal upload target",            desc: "Swaps to --panel-select on dragover; preventDefault runs on document, so a drop outside the zone does not navigate.", href: "./preview/dropzone.html", cta: "open" }
     - { code: "fb", title: "FileViewer",         sub: "Modal preview, keyed head",     desc: "Head and body both carry data-file-type so rails propagate inside the modal.", href: "./preview/file-viewer.html", cta: "open" }
     - { code: "fb", title: "FileToolbar",        sub: "Actions, breadcrumb, upload",  desc: "Left-aligned actions, right-aligned count; UploadProgress sits underneath.", href: "./preview/file-toolbar.html", cta: "open" }
-    - { code: "fb", title: "fsbrowse",           sub: "Express + busboy backend",       desc: "Canonical real-world wiring — same SDK, real filesystem operations.",     href: "https://github.com/AnEntrypoint/fsbrowse", cta: "source" }
+    - { code: "fb", title: "fsbrowse",           sub: "Express + busboy backend",       desc: "Real-world wiring: the same SDK over a real filesystem.",     href: "https://github.com/AnEntrypoint/fsbrowse", cta: "source" }
 
 quickstart:
   heading: "Quick start"
@@ -164,9 +151,9 @@ desktop_os:
     - { code: "os", title: "Live demo",           sub: "menubar, apps drawer, side rail, taskbar, floating windows", desc: "a runnable desktop shell with its own window manager and a 2-app registry",   href: "./ui_kits/os/",   cta: "open" }
     - { code: "os", title: "createDesktopShell",  sub: "menubar, apps launcher, taskbar, window manager",  desc: "mount any app registry into a draggable, resizable window manager",   href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/shell.js",   cta: "shell.js" }
     - { code: "os", title: "renderWindow / renderDock", sub: "pure paint-surface primitives",  desc: "the window chrome and dock rendering the shell composes, importable standalone", href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/wm.js", cta: "wm.js" }
-    - { code: "os", title: "Icon set",            sub: "SVG glyphs for menubar and taskbar",                    desc: "home, apps, search, settings — used by the shell and exposed for apps",   href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/icons.js",   cta: "icons.js" }
-    - { code: "os", title: "theme.css",           sub: "OS chrome tokens: menubar, launcher, window manager",          desc: "scoped CSS module loaded by the shell — keeps desktop visuals isolated",  href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/theme.css", cta: "theme.css" }
-    - { code: "os", title: "Import path",         sub: "anentrypoint-design/kits/os",                         desc: "subpath export, no bundler needed — pulls icons, shell, and every app paint surface",    href: "https://github.com/AnEntrypoint/design/blob/main/package.json",          cta: "exports" }
+    - { code: "os", title: "Icon set",            sub: "SVG glyphs for menubar and taskbar",                    desc: "home, apps, search, settings, used by the shell and exposed for apps",   href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/icons.js",   cta: "icons.js" }
+    - { code: "os", title: "theme.css",           sub: "OS chrome tokens: menubar, launcher, window manager",          desc: "scoped CSS module loaded by the shell, which keeps desktop visuals isolated",  href: "https://github.com/AnEntrypoint/design/blob/main/src/kits/os/theme.css", cta: "theme.css" }
+    - { code: "os", title: "Import path",         sub: "anentrypoint-design/kits/os",                         desc: "subpath export, no bundler needed; pulls icons, shell, and every app paint surface",    href: "https://github.com/AnEntrypoint/design/blob/main/package.json",          cta: "exports" }
 
 web_components:
   heading: "Web components"
@@ -179,32 +166,29 @@ api_exports:
   heading: "Public API"
   count: "SDK surface"
   items:
-    - { code: "api", title: "h / applyDiff",                  sub: "webjsx createElement and diff",       desc: "Build vnodes with h(), render with applyDiff(root, [vnode]) — no JSX pragma needed.",       href: "https://github.com/AnEntrypoint/design/blob/main/src/index.js",      cta: "index.js" }
+    - { code: "api", title: "h / applyDiff",                  sub: "webjsx createElement and diff",       desc: "Build vnodes with h() and render with applyDiff(root, [vnode]); no JSX pragma needed.",       href: "https://github.com/AnEntrypoint/design/blob/main/src/index.js",      cta: "index.js" }
     - { code: "api", title: "installStyles / scope",          sub: "ds-247420 CSS scope and bootstrap",   desc: "installStyles() injects the prefixed CSS; scope = '.ds-247420' for selector composition.",  href: "https://github.com/AnEntrypoint/design/blob/main/src/styles.js",     cta: "styles.js" }
     - { code: "api", title: "loadCss",                        sub: "Fetch the bundled CSS string",      desc: "Useful for shadow roots or custom style-injection paths.",                                  href: "https://github.com/AnEntrypoint/design/blob/main/src/styles.js",     cta: "styles.js" }
     - { code: "api", title: "mount / mountKit",               sub: "Shell and ui_kit bootstrap",       desc: "mount(root, viewFn) wires applyDiff and motion; mountKit({root,view,screen}) wires a full kit.",   href: "https://github.com/AnEntrypoint/design/blob/main/src/bootstrap.js",  cta: "bootstrap.js" }
     - { code: "api", title: "registerDeckStage / getDeckStage", sub: "16:9 deck stage API",             desc: "Register custom deck stages and fetch the active stage for slide transitions.",             href: "https://github.com/AnEntrypoint/design/blob/main/src/deck-stage.js", cta: "deck-stage.js" }
     - { code: "api", title: "renderMarkdown",                 sub: "marked v15 + DOMPurify, lazy-loaded", desc: "Lazily loads marked and DOMPurify from a CDN; the only XSS gate for chat HTML.",                 href: "https://github.com/AnEntrypoint/design/blob/main/src/markdown.js",   cta: "markdown.js" }
     - { code: "api", title: "ensurePrism / highlightAllUnder", sub: "Prism core plus per-language",         desc: "Injects Prism on first use; a ref-callback highlights code inside any subtree.",         href: "https://github.com/AnEntrypoint/design/blob/main/src/highlight.js",  cta: "highlight.js" }
-    - { code: "api", title: "renderPageHtml",                 sub: "Static page HTML template",         desc: "Shared head/body wrapper for kit pages — meta tags, importmap, ds-247420 scope.",                href: "https://github.com/AnEntrypoint/design/blob/main/src/page-html.js",  cta: "page-html.js" }
+    - { code: "api", title: "renderPageHtml",                 sub: "Static page HTML template",         desc: "Shared head and body wrapper for kit pages: meta tags, importmap and the ds-247420 scope.",                href: "https://github.com/AnEntrypoint/design/blob/main/src/page-html.js",  cta: "page-html.js" }
     - { code: "api", title: "components / motion / debug",    sub: "Namespaces from the default export", desc: "components.* are the C.* primitives; motion.animateTree; a debug registry at window.__debug.",  href: "https://github.com/AnEntrypoint/design/blob/main/src/components.js", cta: "components.js" }
 
 features:
   heading: "Why teams choose 247420"
   items:
-    - { name: "Clear visual hierarchy", desc: "Panel-on-panel layering keeps dense dashboards scannable — important content stays legible even in complex, data-heavy screens.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css", cta: "panel-row.css" }
+    - { name: "Layered panels", desc: "Nested tonal panels separate groups without borders.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css", cta: "panel-row.css" }
     - { name: "Readable at a glance",   desc: "A disciplined type system reserves monospace for codes and labels and sans-serif for everything meant to be read, so interfaces stay legible under real workloads.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
     - { name: "Instant status recognition", desc: "Color-coded indicator rails let users scan for status and category at a glance, without relying on borders that add visual noise.", href: "https://github.com/AnEntrypoint/design/blob/main/src/css/app-shell/panel-row.css#L126", cta: "panel-row.css" }
-    - { name: "Token-driven retheming, no component edits", desc: "Every surface, type scale, and accent color is driven entirely by design tokens — a light-on-light preset is genuinely quick (8-14 tokens), a real dark theme is a bigger job (~36 tokens, each hand-verified for contrast) until the theme generator in the roadmap ships.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
-    - { name: "Automated accessibility scanning in CI", desc: "Every kit is scanned with axe-core on WCAG-tagged rules (0 blocking violations across all {{TOTAL_KITS}} kits) plus shared focus-visible tokens and correct ARIA roles on core components. This covers a real but partial slice of WCAG — it explicitly excludes best-practice checks like skip links and heading structure, and has no manual screen-reader or keyboard-only pass yet. Read the full report before treating this as a conformance claim.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/a11y-report.md", cta: "a11y-report.md" }
+    - { name: "Retheme by tokens", desc: "A light theme takes 8-14 tokens; a dark theme takes about 36, each checked for contrast.", href: "https://github.com/AnEntrypoint/design/blob/main/colors_and_type.css", cta: "colors_and_type.css" }
+    - { name: "Automated accessibility scan (local)", desc: "npm run a11y runs axe-core on WCAG-tagged rules against every live-rendered kit (0 serious or critical violations across {{TOTAL_KITS}} kits). It is a local gate, not a CI step, and it skips best-practice checks such as skip links and heading structure. It is not a conformance claim.", href: "https://github.com/AnEntrypoint/design/blob/main/docs/a11y-report.md", cta: "a11y-report.md" }
 
 status_left:
   - "main"
   - "utf-8"
   - "lf"
-# theme.mjs overwrites this with the real published SDK version + live kit
-# count (from home.kits.items.length) rather than the static fallback
-# strings below, which only render if that lookup ever fails.
 status_right:
   - "anentrypoint-design"
   - "18 kits"

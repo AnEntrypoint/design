@@ -1,9 +1,3 @@
-// SpreadsheetPreview — tabbed inline spreadsheet/CSV viewer, ported from
-// docstudio's documents/xls-preview.js. The kit does no parsing (no SheetJS
-// dependency): the host hands over an already-parsed `workbook` shape and
-// this component only renders tabs + a table + loading/error/truncation
-// states, reusing the existing Skeleton/Alert primitives rather than
-// inventing new visual language.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Skeleton, Alert } from './content.js';
@@ -12,7 +6,6 @@ const h = webjsx.createElement;
 const DEFAULT_MAX_ROWS = 500;
 const DEFAULT_MAX_COLS = 80;
 
-// workbook: { sheetNames: string[], sheets: { [name]: string[][] } }
 export function SpreadsheetPreview({
     workbook, activeSheet, onSheetChange,
     maxRows = DEFAULT_MAX_ROWS, maxCols = DEFAULT_MAX_COLS,

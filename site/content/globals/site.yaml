@@ -1,7 +1,7 @@
 title: "Design"
 siteName: "247420"
 tagline: "247420 design system"
-description: "247420 is a tokens-driven design system: 302 components, 22 working kits, and one CSS file that reskins all of them. Install from npm or a CDN link tag."
+description: "247420 is a tokens-driven design system: {{TOTAL_COMPONENTS}} components, {{TOTAL_KITS}} working kits, and one CSS file that reskins all of them. Install from npm or a CDN link tag."
 repo: "https://github.com/AnEntrypoint/design"
 url: "https://anentrypoint.github.io/design/"
 year: 2026
@@ -10,8 +10,6 @@ keywords:
   - "tokens"
   - "247420"
   - "anentrypoint"
-# Brand accent gradient — mirrors the canonical palette (--green → --green-2).
-# YAML is content config, not CSS, so it cannot use var(); keep in sync with colors_and_type.css.
 accent_from: "#247420"
 accent_to: "#3A9A34"
 glyph: "·"

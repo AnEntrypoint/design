@@ -1,4 +1,5 @@
 import * as webjsx from '../../../vendor/webjsx/index.js'
+import { Icon } from '../../components.js'
 const h = webjsx.createElement
 
 export function createAssetPickerModal(opts = {}) {
@@ -59,7 +60,7 @@ export function createAssetPickerModal(opts = {}) {
       const isSelected = _selectedAsset && _selectedAsset.id === asset.id
 
       return h('div', {
-        style: `padding:12px;border:2px solid ${isSelected ? 'var(--primary,#0066cc)' : 'var(--panel-border,#ddd)'};border-radius:6px;cursor:pointer;background:${isSelected ? 'var(--primary-bg,#f0f7ff)' : 'var(--panel-bg,#fff)'};transition:all 0.15s`,
+        style: `padding:12px;border:2px solid ${isSelected ? 'var(--primary,#262626)' : 'var(--panel-border,#ddd)'};border-radius:6px;cursor:pointer;background:${isSelected ? 'var(--primary-bg,#f0f7ff)' : 'var(--panel-bg,#fff)'};transition:all 0.15s`,
         onClick: () => {
           _selectedAsset = asset
           render()
@@ -77,7 +78,7 @@ export function createAssetPickerModal(opts = {}) {
           h('img', { src: asset.thumbnail, style: 'width:100%;height:100%;object-fit:contain' })
         ]) : h('div', {
           style: 'width:100%;aspect-ratio:1;background:var(--panel-bg-2,#eee);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:24px'
-        }, '📦'),
+        }, Icon('package', { size: 24 })),
 
         h('div', { style: 'font-weight:500;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, asset.name),
 
@@ -130,7 +131,7 @@ export function createAssetPickerModal(opts = {}) {
             }, 'Cancel'),
             h('button', {
               type: 'button',
-              style: `padding:6px 16px;border-radius:4px;background:${_selectedAsset ? 'var(--primary,#0066cc)' : 'var(--fg-3,#ccc)'};color:#fff;border:none;cursor:pointer;font-size:12px`,
+              style: `padding:6px 16px;border-radius:4px;background:${_selectedAsset ? 'var(--primary,#262626)' : 'var(--fg-3,#ccc)'};color:#fff;border:none;cursor:pointer;font-size:12px`,
               disabled: !_selectedAsset,
               onClick: () => {
                 if (_selectedAsset) {

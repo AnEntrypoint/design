@@ -135,7 +135,7 @@ const view = () => h('div', { class: 'spec-page' },
             { title: 'gates', rows: [{ label: 'lint', value: '16/16' }, { label: 'a11y', value: '0 blocking' }] },
         ], onRefresh: () => { /* specimen: resting appearance */ } })),
 
-    spec('Dialog', 'Shown open — the closed state renders nothing.',
+    spec('Dialog', 'Shown open. The closed state renders nothing.',
         Dialog({ title: 'confirm', open: true, dismissible: true,
             children: h('p', {}, 'dialog body copy.'),
             actions: [{ label: 'cancel', kind: 'ghost' }, { label: 'confirm', kind: 'primary' }],

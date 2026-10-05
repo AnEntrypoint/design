@@ -1,6 +1,3 @@
-// Reorderable — a drag-to-reorder list composed from useDraggable +
-// useDropTarget: every row is both a drag source (via its own handle) and a
-// drop target carrying its index.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';

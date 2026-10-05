@@ -48,9 +48,6 @@ export function SettingsRowToggle({ icon = 'blank', label, description, checked 
     });
 }
 
-// SettingsRowTriState — cycles allow -> deny -> neutral (null) -> allow,
-// same row shell as SettingsRow/SettingsRowToggle, with a distinct
-// icon+color per state instead of a checkbox.
 export function SettingsRowTriState({ icon = 'blank', label, description, value = null, onChange } = {}) {
     const next = value === 'allow' ? 'deny' : value === 'deny' ? null : 'allow';
     const stateLabel = value === 'allow' ? 'Allow' : value === 'deny' ? 'Deny' : 'Neutral';

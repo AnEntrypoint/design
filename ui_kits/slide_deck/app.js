@@ -1,7 +1,4 @@
 import * as webjsx from 'webjsx';
-// Imported directly from owning submodules, not the ds/components.js barrel
-// -- see aicat/app.js for the measured rationale (200+ serial unbundled
-// module requests when every kit pulls the full 30+-submodule barrel).
 import { Topbar, Crumb, Status, Side, AppShell } from 'ds/components/shell.js';
 import { PageHeader } from 'ds/components/content.js';
 import { ThemeToggle } from 'ds/components/theme-toggle.js';
@@ -10,21 +7,6 @@ const h = webjsx.createElement;
 
 const root = document.getElementById('root');
 
-// No slide sets `accent`. It fed `--slide-accent`, which the stylesheet reads
-// as a `color:` on .ds-slide-hero and .ds-slide-bullet-key — so passing a raw
-// lore fill ('green', 'mascot') put a background tone into a text slot, the
-// exact --accent vs --accent-ink split AGENTS.md warns about, and rendered the
-// title slides in a muted mid-green against near-black. Unset, both rules fall
-// through to their `var(--accent-ink)` default, which is the readable tone and
-// inverts correctly with the theme.
-//
-// Eyebrows here are reserved for the two slides that are a DIFFERENT KIND of
-// slide from the body of the deck: the opening masthead and the closing marker.
-// The interior slides deliberately carry none. Their eyebrows were the bare
-// numbers 01-04, which is a position indicator, not a category label — and the
-// deck already shows position twice (the `ds-deck-count` "n / 6" readout and
-// the numbered sidebar list), so a third copy named nothing new. If you add a
-// slide, it gets no eyebrow unless it genuinely names a new section.
 const slides = [
     {
         kind: 'title',
@@ -41,9 +23,9 @@ const slides = [
         kind: 'bullets',
         title: 'three modes for theme',
         items: [
-            ['auto',  'follow the OS — re-renders live when you flip dark mode'],
-            ['paper', 'force light — for daylight, demos, projection screens'],
-            ['ink',   'force dark — for night, low-light reads, oled']
+            ['auto',  'follow the OS theme'],
+            ['paper', 'always light'],
+            ['ink',   'always dark']
         ]
     },
     {
@@ -54,7 +36,7 @@ const slides = [
     {
         kind: 'split',
         title: 'usable terminals are instant.',
-        left: 'output appears the moment it exists. no reveal animation, no typewriter — the user is waiting on real work.',
+        left: 'output appears the moment it exists. no reveal animation or typewriter effect.',
         right: 'showcase terminals can play a loop. they are clearly labelled "demo" and pause on prefers-reduced-motion.'
     },
     {
@@ -68,10 +50,7 @@ const slides = [
 const state = { i: 0 };
 
 function Slide(s) {
-    // custom-property-only inline: carries the per-slide accent tone, no layout
     const accentStyle = s.accent ? `--slide-accent:var(--${s.accent})` : '';
-    // null, not an empty div — an empty .ds-slide-eyebrow still paints its
-    // margin-bottom, leaving an unexplained gap above the eyebrow-less slides.
     const eyebrow = s.eyebrow ? h('div', { class: 'ds-slide-eyebrow' }, s.eyebrow) : null;
 
     if (s.kind === 'title') {
@@ -150,9 +129,6 @@ function Progress() {
 }
 
 function Controls() {
-    // Disabled at the ends rather than silently no-op: a button that looks
-    // live and does nothing when pressed reads as a broken deck, not as "you
-    // are on the last slide".
     const atStart = state.i === 0;
     const atEnd = state.i === slides.length - 1;
     return h('div', { class: 'ds-deck-controls' },
@@ -174,17 +150,11 @@ function App() {
             brand: '247420',
             leaf: 'slide deck',
             items: [['index', '../../'], ['system primer', '../system_primer/']],
-            // This kit renders its own ThemeToggle in the PageHeader below —
-            // without this, both it and the Topbar's default toggle render,
-            // stacking two identical "theme: auto" pills.
             themeToggle: false
         }),
         crumb: Crumb({ trail: ['247420', 'kits'], leaf: 'slide deck' }),
         side: Side({
             sections: [
-                // The slide list IS this deck's navigation — every entry jumps
-                // to its slide. It was previously a static readout, which left
-                // the only way to reach slide 5 as four presses of `next`.
                 { group: 'slides', items: slides.map((s, i) => ({
                     glyph: i === state.i ? '*' : '-',
                     label: (i + 1) + ' · ' + (s.title || s.eyebrow || s.kind),
@@ -196,9 +166,6 @@ function App() {
             ]
         }),
         main: [
-            // Dense page header, not a display H1 over a lede: the stage below
-            // is the content, and a full-scale kit title above it made the
-            // page's chrome read heavier than the slide it frames.
             PageHeader({
                 dense: true,
                 title: 'slide deck',

@@ -1,44 +1,11 @@
-// ui_kits/kits.config.mjs -- per-kit config consumed by
-// scripts/generate-ui-kit-scaffolds.mjs to regenerate the ~16 "thin" kit
-// index.html shells (colors_and_type.css + app-shell.css [+ a couple extra
-// sheets], empty #root mount, no hand-authored body markup) from
-// ui_kits/_template/index.html.
-//
-// Kits NOT listed here are outliers with genuinely custom index.html markup
-// (full inline SEO suites with hand-authored bodies, extra stylesheets tied
-// to bespoke components, non-standard theme wiring) and must stay hand-edited:
-//   blog            -- hand-authored body (topbar/breadcrumb/article), no importmap block
-//   docs            -- hand-authored body (topbar/breadcrumb/sidebar nav), no importmap block
-//   community-app   -- data-theme="ink" on <body> (not <html data-theme="auto">), 5 stylesheets.
-//                      The sole chat/community kit -- demos the real
-//                      mountCommunityApp adapter-driven product (the same function
-//                      zellous consumes). The standalone ui_kits/community and
-//                      ui_kits/chat kits were merged away here: each only showed a
-//                      subset of this kit's real, working reference adapter, and its
-//                      sample thread now carries every message type the chat kit did.
-//   workspace       -- links chat.css + app-surfaces.css (AgentChat), not in this shape
-//   os              -- desktop-shell demo (createDesktopShell + wm + registry), links
-//                      src/kits/os/theme.css + app-panes.css directly, not app-shell.css
-//   component_explorer -- interactive props reference, fetches manifest.json at runtime,
-//                      carries its own inline <style> block for explorer-specific classes
-//
-// Each entry maps 1:1 to the template's {{...}} placeholders. `htmlTheme`
-// controls whether <html> gets data-theme="auto"; `themeColorMetas` controls
-// whether the two theme-color <meta> tags are emitted. These are independent,
-// though every current thin kit carries both. `stylesheets`
-// is the ordered list of extra .css files linked after the base
-// colors_and_type.css + app-shell.css pair (both always present). `seo` is an
-// optional block of extra <meta>/<link> tags emitted between the description
-// and the canonical link, verbatim, for the couple of kits that carry a
-// fuller SEO suite than the plain thin shell. `importExtra` appends extra
-// importmap entries (ds/) after the always-present
-// webjsx/webjsx-jsx-runtime trio.
+const CHAT_STREAM_TOOL_RULES = 'chat.css';
+const EDITOR_PRIMITIVES_RULES = 'editor-primitives.css';
 
 export const kits = [
   {
     id: 'buttons',
     title: 'Buttons',
-    description: 'buttons ui kit — every variant, size, and state: primary, secondary, ghost, link, danger, loading, disabled.',
+    description: 'Buttons kit: every Btn variant, size and state (primary, secondary, ghost, link, danger, loading, disabled).',
     screenLabel: '17 Buttons',
     htmlTheme: true,
     themeColorMetas: true,
@@ -48,24 +15,17 @@ export const kits = [
   {
     id: 'aicat',
     title: 'AICat',
-    description: 'aicat ui kit — ai assistant chat with cat persona, ascii portrait, thinking dots.',
+    description: 'AICat kit: assistant chat with a cat persona, ascii portrait and thinking dots.',
     screenLabel: '07 AICat',
     htmlTheme: true,
     themeColorMetas: true,
-    // AICat renders through ChatComposer + the chat-message-parts tool/stream
-    // blocks, whose .chat-tool-*/.chat-stream-*/.chat-thinking-*/
-    // .chat-composer-toolbar rules live only in chat.css (app-shell's
-    // chat-basic/chat-polish cover the bubble/thread layer, not these).
-    // ChatComposer also mounts EmojiPicker + CommandPalette from
-    // overlay-primitives, styled by editor-primitives.css's .ov-emoji-*/
-    // .ov-cmd-* families.
-    stylesheets: ['chat.css', 'editor-primitives.css'],
+    stylesheets: [CHAT_STREAM_TOOL_RULES, EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'error_404',
     title: '404',
-    description: '404 ui kit — empty-state hero with suggested routes.',
+    description: '404 kit: plain not-found page that names the missing path and links to pages that exist.',
     screenLabel: '13 404',
     htmlTheme: true,
     themeColorMetas: true,
@@ -75,20 +35,17 @@ export const kits = [
   {
     id: 'gallery',
     title: 'Gallery',
-    description: 'gallery ui kit — visual grid, lightbox, tonal cards.',
+    description: 'Gallery kit: visual grid, lightbox and tonal cards.',
     screenLabel: '14 Gallery',
     htmlTheme: true,
     themeColorMetas: true,
-    // Lightbox is Dialog (editor-primitives/modals.js), whose .ds-ep-dialog*
-    // chrome (backdrop, card, head/body/actions) lives only in
-    // editor-primitives.css.
-    stylesheets: ['editor-primitives.css'],
+    stylesheets: [EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'search',
     title: 'Search',
-    description: 'search ui kit — query bar, faceted filters, ranked results.',
+    description: 'Search kit: query bar, faceted filters and ranked results.',
     screenLabel: '12 Search',
     htmlTheme: true,
     themeColorMetas: true,
@@ -98,17 +55,17 @@ export const kits = [
   {
     id: 'settings',
     title: 'Settings',
-    description: 'settings ui kit — sectioned forms, toggles, inputs, save bar.',
+    description: 'Settings kit: sectioned forms, toggles, inputs and a save bar.',
     screenLabel: '10 Settings',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: ['editor-primitives.css'],
+    stylesheets: [EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'slide_deck',
     title: 'Slide Deck',
-    description: '16:9 slide deck template — keyboard nav, slide counter, SDK chrome.',
+    description: '16:9 slide deck template with keyboard navigation, a slide counter and SDK chrome.',
     screenLabel: '17 Slide Deck',
     htmlTheme: true,
     themeColorMetas: true,
@@ -118,17 +75,17 @@ export const kits = [
   {
     id: 'system_primer',
     title: 'System Primer',
-    description: 'design system showcase — palette swatches, type scale, primitives in one page.',
+    description: 'Design system showcase: palette swatches, type scale and primitives on one page.',
     screenLabel: '16 System Primer',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: ['editor-primitives.css'],
+    stylesheets: [EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'terminal',
     title: 'Terminal',
-    description: 'terminal ui kit — cli prompt, command lines, log viewer.',
+    description: 'Terminal kit: cli prompt, command lines and a log viewer.',
     screenLabel: '09 Terminal',
     htmlTheme: true,
     themeColorMetas: true,
@@ -138,37 +95,37 @@ export const kits = [
   {
     id: 'gm_inspector',
     title: 'GM Inspector',
-    description: 'gm inspector ui kit — session list, process tree, deviations, PRD/mutable editors, query builder, built from AppShell + the data-density component family.',
+    description: 'GM Inspector kit: session list, process tree, deviations, PRD and mutable editors, and a query builder, built from AppShell and the data-density components.',
     screenLabel: 'gm inspector',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: ['editor-primitives.css'],
+    stylesheets: [EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'dashboard',
     title: 'Dashboard',
-    description: 'dashboard ui kit — kpis, tables, receipts, changelog, panels.',
+    description: 'Dashboard kit: kpis, tables, receipts, a changelog and panels.',
     screenLabel: '08 Dashboard',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: ['editor-primitives.css'],
+    stylesheets: [EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'signin',
     title: 'Sign in',
-    description: 'signin ui kit — authentication panel, providers, tone-on-tone form.',
+    description: 'Sign in kit: authentication panel, providers and a tonal form.',
     screenLabel: '11 Sign in',
     htmlTheme: true,
     themeColorMetas: true,
-    stylesheets: ['editor-primitives.css'],
+    stylesheets: [EDITOR_PRIMITIVES_RULES],
     importExtra: ['ds/'],
   },
   {
     id: 'homepage',
     title: 'Homepage',
-    description: 'landing surface for the 247420 collective — works, writing, manifesto.',
+    description: 'Landing page for the 247420 collective: works, writing and manifesto.',
     screenLabel: '01 Homepage',
     htmlTheme: true,
     themeColorMetas: true,
@@ -184,8 +141,8 @@ export const kits = [
   {
     id: 'project_page',
     title: 'project / gm ·',
-    titleSuffixed: true, // title already reads "project / gm · 247420" verbatim, don't append " / 247420" again
-    description: 'generic project landing template — install, receipt, changelog, docs sidebar.',
+    titleSuffixed: true,
+    description: 'Generic project landing template: install, receipt, changelog and docs sidebar.',
     screenLabel: '02 Project Page',
     htmlTheme: true,
     themeColorMetas: true,
@@ -201,19 +158,15 @@ export const kits = [
   {
     id: 'file_browser',
     title: 'File Browser',
-    description: 'file-browser surface — rails by file type, drop-zone upload, modal preview.',
+    description: 'File browser: rails by file type, drop-zone upload and modal preview.',
     screenLabel: '08 File Browser',
     htmlTheme: true,
     themeColorMetas: true,
-    // Most file-browser primitives live in app-shell's files.css, but eight
-    // classes this kit renders sit only in chat.css: .ds-file-more/-count/
-    // -btn (FileGrid's overflow footer) and .ds-preview-step/-gutter/
-    // -code-wrap/-code-head/-media-alpha (FileViewer + FilePreviewCode/Media).
-    stylesheets: ['chat.css', 'editor-primitives.css'],
+    stylesheets: [CHAT_STREAM_TOOL_RULES, EDITOR_PRIMITIVES_RULES],
     importExtra: [],
     seo: {
       author: '247420 / AnEntrypoint',
-      ogSimple: true, // og:type/title/description/url/site_name + robots, no image/twitter
+      ogSimple: true,
     },
   },
 ];

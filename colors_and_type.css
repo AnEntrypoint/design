@@ -62,20 +62,20 @@
   --green-2:     #3A9A34;
   --green-deep:  #133F10;
   --green-tint:  #D7E4C2;
-  --purple:      #420247; /* the brand codename's digit reversal, the identity's secondary lead -- 15.77:1 on --paper */
-  --purple-2:    #7F18A4;
-  --purple-deep: #220026;
-  --purple-tint: #E2CFE4;
-  --mascot:      #FF2E84;
-  --mascot-2:    #FF3CA7;
-  --mascot-tint: #F7CEDD;
-  --mascot-deep: #B81F63;
+  --purple:      #525252;
+  --purple-2:    #595959;
+  --purple-deep: #262626;
+  --purple-tint: #E5E5E5;
+  --mascot:      #737373;
+  --mascot-2:    #8C8C8C;
+  --mascot-tint: #E5E5E5;
+  --mascot-deep: #262626;
   /* Fixed ink-surface mascot text tone (6.67:1 on --ink). Unlike
      --mascot-deep, this NEVER follows the theme: it is for always-dark
      surfaces like the .cli card, which stay ink under a light theme and so
      need a tone chosen for ink rather than for the active theme. Same role
      --paper-3-dark plays for the tier-3 text ramp. */
-  --mascot-on-ink: #FF5C9E;
+  --mascot-on-ink: #D4D4D4;
   /* Same always-dark-surface pattern, for .ds-cli-ok's success/OK text.
      --brand-green (#247420) fails 1.15:1 on the always-dark .cli card
      (npm run a11y caught this on the terminal kit), so this reuses the
@@ -90,12 +90,12 @@
      pair (flame 4.74:1, amber 4.5+:1 on paper); the dark blocks below restore
      the originals (#FF5A1F / #D9A93A) which were tuned on ink and fail on
      paper (2.9:1 / 2.0:1). */
-  --flame:       #C53E00;
+  --flame:       var(--warn);
   /* #8A6512 measured 4.5+:1 on --paper but only 4.26:1 on --bg-2, which the
      dashboard card status text actually renders on - darkened for margin on
      both backgrounds (5.21:1 on --bg-2). */
   --amber:       #7C570F;
-  --sky:         #3A6EFF;
+  --sky:         #404040;
   /* --warn = interactive danger controls (buttons, banners, menus, error
      inputs); --danger below = passive error/status text and metrics
      (kpi/sparkline deltas, auth-error text). Two tokens, one convention.
@@ -153,24 +153,15 @@
      fill (verified via npm run a11y against a dark-on-dark 1.15:1 failure
      across every kit's .btn-primary/.active nav item, both of which read
      --accent-fg as their text color). */
-  /* Brand accent identity — ported from stoat for-web's default M3 source
-     color (m3Accent #5470ec, materialTheme.ts) through this repo's own HCT
-     tone engine (src/theme/dynamic-accent.js), at the SAME fixed M3
-     TonalSpot role tones that engine already guarantees contrast at
-     (LIGHT_TONES.primary T40 / onPrimary T100). Computed once (hue 293.4°,
-     chroma clamped to the engine's own MAX_CHROMA 48) and pasted as literal
-     hex rather than left to run at load time, matching how every other
-     token in this file is a static value, not a runtime computation --
-     the JS engine itself stays reserved for its existing per-server/
-     per-subtree scoped-override role (--dyn-accent*), never document-wide.
-     Verified 6.42:1 (--accent-ink on --paper) / 6.02:1 (fill/onPrimary
-     pair), both clear of AA 4.5:1. This is the document-wide accent
-     identity; --brand-green is a separate, frozen brand primitive, still
-     consumed directly by [data-accent="acid"] (see below). */
-  --accent:      #4D58A7;
-  --accent-fg:   #F6F7FF;
-  --accent-ink:  #001759;
-  --accent-bright: #4D58A7; /* base value so var(--accent-bright) never falls back empty; ink + [data-accent] retune it */
+  /* Neutral grayscale accent: the FILL is #262626 with
+     white --accent-fg on top (15.9:1); --accent-ink (#171717) is the readable
+     TEXT tone on --paper (17.9:1). Dark/ink themes retune below to #BFBFBF
+     with --accent-ink = --paper. Chromatic accents are opt-in only, via the
+     [data-accent] presets at the end of this file. */
+  --accent:      #262626;
+  --accent-fg:   var(--paper);
+  --accent-ink:  #171717;
+  --accent-bright: #262626; /* base value so var(--accent-bright) never falls back empty; ink + [data-accent] retune it */
   /* Blends --accent-ink (the readable/darker ink variant), not the raw
      --accent fill, so light-theme active states clear contrast against --bg;
      dark/ink and auto-dark restate the prior --accent-based value explicitly
@@ -223,7 +214,7 @@
   --panel-text-2: var(--fg-2);
   --panel-text-3: var(--fg-3);
   --panel-accent-2: var(--accent-bright, var(--accent));
-  --panel-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent), 0 4px 14px color-mix(in oklab, var(--fg) 8%, transparent);
+  --panel-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
   /* Single-layer, half-strength companion to --shadow-1, used ONLY by .panel.
      .panel already carries a tonal --panel-1 fill and a --rule border; a
      full --shadow-1 on top made three simultaneous edge/surface signals
@@ -650,21 +641,21 @@
      blocks). Each consumer block below still needs its own selector -- CSS
      has no shared mixin across a plain selector and a @media-nested one --
      but the actual VALUES now have exactly one place to edit. */
-  --dark-accent:      #BCBEFF; /* for-web HCT source (#5470ec) at DARK_TONES.primary T80; 7.45:1 fill/onPrimary, 9.90:1 accent-ink on ink */
-  --dark-accent-fg:   #0B2B72;
-  --dark-accent-ink:  #E8E9FF;
+  --dark-accent:      #BFBFBF; /* 10.5:1 on --ink; 9.9:1 on --ink-2 */
+  --dark-accent-fg:   var(--ink); /* 8.9:1 on the #BFBFBF fill */
+  --dark-accent-ink:  var(--paper);
   --dark-danger:      oklch(0.68 0.19 25);
-  --dark-flame:       #FF5A1F;
+  --dark-flame:       var(--dark-warn);
   --dark-amber:       #D9A93A;
   --dark-warn:        #FF5A52; /* clears AA 4.5:1 on --ink; the :root paper value (#E0241A) does not */
-  --dark-sky:         #6E9BFF;
+  --dark-sky:         #BFBFBF;
   /* Category/heritage dark-tuned text tones: the :root PAPER values go
      dark-on-dark on ink (measured: mascot-deep #B81F63 3.13:1, purple-2
      #7F18A4 2.36:1, green #247420 3.30:1 on --ink -- all failing AA). These
      clear 4.5:1 on both ink surfaces: #FF5C9E 6.67/5.67, #C277FF 6.77/5.75,
      #5CBF52 8.28/7.04. */
-  --dark-mascot-deep: #FF5C9E;
-  --dark-purple-2:    #C277FF;
+  --dark-mascot-deep: #D4D4D4;
+  --dark-purple-2:    #BFBFBF;
   --dark-green:       #5CBF52;
 }
 
@@ -710,7 +701,7 @@
   --panel-text-2: var(--fg-2);
   --panel-text-3: var(--fg-3);
   --panel-accent-2: var(--accent-bright, var(--accent));
-  --panel-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent), 0 4px 14px color-mix(in oklab, var(--fg) 8%, transparent);
+  --panel-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
   --panel-shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
   /* Same class: a scrim is the theme's own ink dimming its own ground, so an
      island's overlay must dim with the island's --fg, not its ancestor's. */
@@ -720,7 +711,8 @@
 }
 
 [data-theme="ink"],
-[data-theme="dark"] {
+[data-theme="dark"],
+[data-theme="github-dark"] {
   color-scheme: dark;
   --bg:        var(--ink);
   --bg-2:      var(--ink-2);
@@ -787,7 +779,8 @@
 /* Restores the pre-existing (weaker) dark-theme selection tint after the
    light-theme-only bump in app-shell.css's base ::selection rule. */
 [data-theme="ink"] ::selection,
-[data-theme="dark"] ::selection {
+[data-theme="dark"] ::selection,
+[data-theme="github-dark"] ::selection {
   background: color-mix(in oklab, var(--accent) 24%, var(--bg-2));
   color: var(--fg);
 }
@@ -856,10 +849,10 @@
   color-scheme: light;
   --bg: var(--paper); --bg-2: var(--paper-2); --bg-3: var(--paper-3);
   --fg: var(--ink);   --fg-2: var(--ink-2);   --fg-3: var(--ink-3);
-  --accent: #4D58A7; --accent-fg: #F6F7FF; --accent-ink: #001759;
+  --accent: #262626; --accent-fg: var(--paper); --accent-ink: #171717;
   --accent-tint: color-mix(in oklab, var(--accent-ink) 22%, var(--bg));
   /* A paper island under a dark ancestor must not inherit the dark signal pair. */
-  --flame: #C53E00; --amber: #7C570F; --warn: #C41C0C; --sky: #3A6EFF;
+  --flame: #C41C0C; --amber: #7C570F; --warn: #C41C0C; --sky: #404040;
 }
 
 /* thebird — warm-paper brand preset. A first-class swappable theme: it lives
@@ -933,7 +926,7 @@
      either into the brand orange would render two different case statuses
      identically on a disease-surveillance map. */
   --amber: #7C570F;
-  --sky: #3A6EFF;
+  --sky: #404040;
 }
 
 /* herd-ink -- the dark companion. It exists because this kit's own bundle
@@ -985,48 +978,6 @@
   --green: var(--dark-green);
 }
 
-/* github-dark — pi-web's GitHub-dark theme. Cool dark palette with blue accent,
-   ported from pi-web (https://github.com/jmfederico/pi-web). */
-[data-theme="github-dark"] {
-  color-scheme: dark;
-  --bg:        #0d1117;
-  --bg-2:      #161b22;
-  --bg-3:      #21262d;
-  --fg:        #e6edf3;
-  --fg-2:      #c9d1d9;
-  --fg-3:      #8b949e;
-  /* Only tier-3 deviates from the shared [data-theme] derivation; see the
-     explicit dark block above. */
-  --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
-  --accent:    #58a6ff;
-  --accent-fg: #ffffff;
-  --accent-ink: #58a6ff;
-  --accent-bright: #79c0ff;
-  --accent-tint: color-mix(in oklab, var(--accent) 30%, var(--bg));
-  --danger:    #ff7b72;
-  --flame:     #ff7b72;
-  --amber:     #d29922;
-  --warn:      #ff7b72;
-  --warn-fg:   #0d1117;
-  --sky:       #58a6ff;
-  --mascot-deep: #ff7b72;
-  --purple-2:  #d2a8ff;
-  --green:     #3fb950;
-  --green-2:   #3fb950;
-  --cat-green-ink:  #3fb950;
-  --cat-purple-ink: #d2a8ff;
-  --code-string:  var(--green-2);
-  --code-keyword: var(--sky);
-  --code-fn:      var(--flame);
-  --code-str-alt: var(--mascot-deep);
-  --code-num:     var(--amber);
-}
-
-[data-theme="github-dark"] ::selection {
-  background: color-mix(in oklab, var(--accent) 24%, var(--bg-2));
-  color: var(--fg);
-}
-
 /* --density still scales the smooth --space, --pad, and --gutter scale (that
    tolerates fractional rem fine); --ctl and --row-height below are
    overridden per-tier as discrete whole-pixel tables instead (see the
@@ -1043,7 +994,7 @@
 
 [data-accent="acid"]   { --accent: var(--brand-green); --accent-bright: var(--brand-green); --accent-fg: var(--paper); --accent-ink: var(--brand-green-deep); --panel-accent: var(--brand-green); }
 [data-accent="green"]  { --accent: var(--green);  --accent-bright: var(--green-2);  --accent-fg: var(--paper); --accent-ink: var(--green);     --panel-accent: var(--green);  }
-[data-accent="purple"] { --accent: var(--purple); --accent-bright: #C277FF;         --accent-fg: var(--paper); --accent-ink: var(--purple-2);  --panel-accent: var(--purple); }
+[data-accent="purple"] { --accent: var(--purple); --accent-bright: var(--dark-purple-2);        --accent-fg: var(--paper); --accent-ink: var(--purple-2);  --panel-accent: var(--purple); }
 [data-accent="mascot"] { --accent: var(--mascot); --accent-bright: var(--mascot-2); --accent-fg: var(--ink);   --accent-ink: var(--mascot-deep);--panel-accent: var(--mascot); }
 
 /* Type-scale modifier — opt-in body/lg/xl bump for surfaces that want denser
@@ -1069,8 +1020,8 @@
    now, same visual intent, no more raw color literal in a component sheet. */
 .with-grid-overlay {
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--mascot) 15%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--mascot) 15%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--fg) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--fg) 10%, transparent) 1px, transparent 1px);
   background-size: 8px 8px;
 }
 
@@ -1092,14 +1043,11 @@
 /* Elevation tokens consumed by overlays (Tooltip, Popover, Dropdown, Dialog). */
 :root:not(:where(.ds-247420 .ds-247420)) {
   --shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
-  --shadow-2: 0 4px 12px color-mix(in oklab, var(--fg) 10%, transparent),
-              0 2px 4px  color-mix(in oklab, var(--fg) 6%,  transparent);
-  --shadow-3: 0 12px 32px color-mix(in oklab, var(--fg) 14%, transparent),
-              0 4px 8px   color-mix(in oklab, var(--fg) 8%,  transparent);
+  --shadow-2: 0 1px 3px color-mix(in oklab, var(--fg) 10%, transparent);
+  --shadow-3: 0 4px 8px -2px color-mix(in oklab, var(--fg) 12%, transparent);
   /* Overlay elevation — the float for dialogs/lightboxes that sit above a
      scrim; heavier than --shadow-3 and theme-driven (was raw rgba(0,0,0,.4)). */
-  --shadow-overlay: 0 12px 40px color-mix(in oklab, var(--fg) 28%, transparent),
-                    0 4px 12px  color-mix(in oklab, var(--fg) 16%, transparent);
+  --shadow-overlay: 0 8px 16px -4px color-mix(in oklab, var(--fg) 16%, transparent);
   /* --z-popover is an alias, not a rung: popovers and dropdowns are the
      same anchored-to-a-trigger layer and must never be able to drift
      apart. The rungs themselves live with the stacking scale above. */

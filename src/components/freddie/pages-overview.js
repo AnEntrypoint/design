@@ -1,7 +1,3 @@
-// Freddie overview pages: the dashboard `home` KPI roll-up, `agents` live
-// activity, and `analytics` provider/sampler health. All read-only polling
-// pages over /api/health, /api/agents, /api/sessions and /api/models/*.
-
 import { makePage, api, loadingState, errorState, emptyState, refreshError } from './runtime.js';
 import { Table, Kpi, PageHeader } from '../content.js';
 import { fmtAgo } from '../sessions.js';
@@ -10,9 +6,6 @@ import { section, truncSpan, truncJson, TRUNC_TITLE } from './shared.js';
 export const home = makePage((ctx) => {
     async function load() {
         try {
-            // tools/skills counts come from the host when injected; otherwise
-            // fall back to the same /api/* endpoints the tools/skills pages use
-            // so the home KPIs never render an em-dash placeholder.
             const needTools = ctx.host?.pi?.tools?.size == null;
             const needSkills = ctx.host?.pi?.skills?.size == null;
             const [health, agents, sessions, toolsList, skillsList] = await Promise.all([
@@ -23,12 +16,10 @@ export const home = makePage((ctx) => {
                 needSkills ? api('/api/skills').catch(() => null) : Promise.resolve(null),
             ]);
             const toolsCount = needTools ? (Array.isArray(toolsList) ? toolsList.length : (toolsList?.tools?.length ?? null)) : null;
-            // GET /api/skills returns { home, bundled, skillState } -- never
-            // a bare array or a `.skills` key.
             const skillsCount = needSkills ? (skillsList ? (skillsList.home?.length || 0) + (skillsList.bundled?.length || 0) : null) : null;
             const sessFailed = sessions && sessions._err;
             ctx.set({ loading: false, health, agents, sessions: Array.isArray(sessions) ? sessions : [], sessFailed, toolsCount, skillsCount, error: null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     load();
     ctx.interval(load, 15000);
@@ -65,7 +56,7 @@ export const home = makePage((ctx) => {
 });
 
 export const agents = makePage((ctx) => {
-    async function load() { try { ctx.set({ loading: false, data: await api('/api/agents'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, data: await api('/api/agents'), error: null }); } catch (e) { ctx.failLoad(e); } }
     load(); ctx.interval(load, 5000);
     return () => {
         const s = ctx.state;
@@ -89,16 +80,13 @@ export const analytics = makePage((ctx) => {
                 api('/api/models/availability/summary').catch(() => null),
             ]);
             ctx.set({ loading: false, sampler, avail, error: null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     load(); ctx.interval(load, 15000);
     return () => {
         const s = ctx.state;
         if (s.loading) return loadingState('loading analytics…');
         if (s.error && !s.sampler && !s.avail) return errorState(s.error, load);
-        // GET /api/models/sampler returns { status: [{provider, ok, failCount,
-        // nextCheckIn}, ...] } -- an ARRAY keyed by nothing, not a map keyed
-        // by provider name, and the health field is `ok`, not `available`.
         const samp = Array.isArray(s.sampler?.status) ? s.sampler.status : [];
         const ok = samp.filter(x => x && x.ok !== false).length;
         const sum = s.avail?.summary || {};

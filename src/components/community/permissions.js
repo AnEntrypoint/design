@@ -1,8 +1,3 @@
-// PermissionsEditor — stoat for-web's ChannelPermissionsOverview/Editor
-// shape: a role-tab selector (pills) plus a scrollable, section-grouped
-// permission list. Each permission is TRI-STATE (allow / neutral / deny),
-// cycled by a dedicated SettingsRowTriState control living alongside the
-// binary SettingsRowToggle in voice/settings-row.js.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -23,7 +18,6 @@ export function RoleTabs({ roles = [], activeId, onSelect } = {}) {
     );
 }
 
-// value: 'allow' | 'deny' | null (neutral/inherit)
 export function PermissionRow({ title, description, value, onCycle } = {}) {
     const next = value === 'allow' ? 'deny' : value === 'deny' ? null : 'allow';
     const label = value === 'allow' ? 'Allowed' : value === 'deny' ? 'Denied' : 'Neutral';
@@ -68,8 +62,6 @@ export function PermissionsEditor({ roles = [], activeRoleId, onSelectRole, sect
     );
 }
 
-// PermissionsOverview — the role/everyone picker menu preceding the editor:
-// "Everyone" default plus role rows, split into overrides-present vs. not.
 export function PermissionsOverview({ roles = [], overrideRoleIds = [], onSelectDefault, onSelectRole } = {}) {
     const withOverrides = roles.filter((r) => overrideRoleIds.includes(r.id));
     const withoutOverrides = roles.filter((r) => !overrideRoleIds.includes(r.id));

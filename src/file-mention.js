@@ -1,8 +1,3 @@
-// Pure helpers for a chat input's "@" file-mention autocomplete: detecting an
-// in-progress @token before the caret, ranking a flat file/dir index against
-// the typed query, and building the replacement text on completion.
-// Framework-independent — no DOM, no webjsx — wire into any composer's
-// oninput/onkeydown handlers.
 
 /**
  * Detect an "@" file token immediately before the cursor. The "@" must sit at

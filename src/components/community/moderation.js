@@ -1,12 +1,3 @@
-// Server moderation surfaces — stoat for-web's settings/server shape ported
-// to the design SDK: role list + role editor (name, colour swatch picker,
-// permission-toggle grid, hoist/mentionable), a ban list, and an invite list.
-// Composed from the same SettingsRow/SettingsSection primitives Voice
-// Settings already uses (settings-row.js) so a permission grid reads as the
-// same visual language as every other settings surface, and from the same
-// list-row shape MemberItem/UserCard already establish (avatar + name +
-// trailing action). No backend anywhere in this file — every mutation is a
-// callback prop, matching every other component in this SDK.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -15,8 +6,6 @@ import { avatarStyle } from './avatar-style.js';
 import { SettingsSection, SettingsRowToggle } from '../voice/settings-row.js';
 const h = webjsx.createElement;
 
-
-// A single role row: drag handle, colour swatch, name, member count, chevron.
 export function RoleRow({ id, name, color, memberCount, draggable = true, onClick, onDragStart, onDragOver, onDrop } = {}) {
     return h('div', {
         class: 'cm-role-row',
@@ -37,9 +26,6 @@ export function RoleRow({ id, name, color, memberCount, draggable = true, onClic
     );
 }
 
-// Full role list — draggable-reorder rows plus a trailing "everyone"
-// (default-permissions) row and an add-role affordance, matching
-// ServerRoleOverview's Draggable list + pinned @everyone row + Fab shape.
 export function RoleList({ roles = [], onSelectRole, onReorder, onAddRole, saving = false } = {}) {
     let dragId = null;
     const handleDrop = (targetId) => {
@@ -147,10 +133,6 @@ function PermissionGrid({ permissions = {}, groups = PERMISSION_GROUPS, onChange
     );
 }
 
-// Role editor form — name, colour swatch picker (matching the accent-picker
-// shape), a live name/colour preview, hoist + mentionable checkboxes, a
-// permission-toggle grid built from SettingsRow primitives, and copy-id /
-// delete-role actions.
 export function RoleEditor({
     role = {}, permissions = {}, permissionGroups,
     onChangeName, onChangeColor, onChangeHoist, onChangeMentionable, onChangePermission,
@@ -192,8 +174,6 @@ export function RoleEditor({
     );
 }
 
-// Shared list-row shell for bans/invites: avatar + primary/secondary text +
-// trailing action button — the same composition MemberItem/UserCard use.
 function ModListRow({ identity, name, color, primary, secondary, actionIcon, actionLabel, danger, onAction } = {}) {
     const initial = avatarInitial(name || identity);
     return h('div', { class: 'cm-modlist-row' },
@@ -209,8 +189,6 @@ function ModListRow({ identity, name, color, primary, secondary, actionIcon, act
     );
 }
 
-// Ban list — avatar + username + reason + unban button per row, plus a
-// name/reason filter pair matching ListBans' two filter TextFields.
 export function BanList({ bans = [], filterName = '', filterReason = '', onFilterName, onFilterReason, onUnban, loading = false } = {}) {
     const q = filterName.trim().toLowerCase(), qr = filterReason.trim().toLowerCase();
     const visible = bans.filter(b =>
@@ -239,8 +217,6 @@ export function BanList({ bans = [], filterName = '', filterReason = '', onFilte
     );
 }
 
-// Invite list — creator avatar/name + channel, invite code with a copy
-// button, expiry, and a revoke button, plus a "Create invite" affordance.
 export function InviteList({ invites = [], onCreate, canCreate = true, onCopy, onRevoke, loading = false } = {}) {
     const fmtExpiry = (exp) => {
         if (!exp) return 'never expires';

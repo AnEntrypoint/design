@@ -1,21 +1,9 @@
-// ---------------------------------------------------------------------------
-// Pager — prev/next paginator with a page label. Generalizes gmsniff's
-// gm-pager. page is 1-indexed; pageCount<=1 disables both buttons (no
-// divide-by-zero, no dead-end enabled control). total (optional) renders an
-// item-count suffix ("42 items") alongside the page label.
-//
-// numbered=true switches to a compact numbered-button row (screen-real-estate
-// dense mode) instead of the prev/next label: always shows first, last, the
-// current page, and up to `siblingCount` neighbors either side, collapsing
-// gaps into an ellipsis span. Falls back to prev/next automatically when
-// pageCount<=1. The prev/next contract (default) is untouched.
-// ---------------------------------------------------------------------------
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
 function buildPageRange(count, page, siblingCount) {
-    const limit = siblingCount * 2 + 3; // first + last + current + siblings
+    const limit = siblingCount * 2 + 3;
     if (count <= limit) return Array.from({ length: count }, (_, i) => i + 1);
     const pages = new Set([1, count, page]);
     for (let i = 1; i <= siblingCount; i++) {

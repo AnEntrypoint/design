@@ -1,79 +1,24 @@
 #!/usr/bin/env node
-// generate-component-types.mjs -- generates types/components.d.ts from the
-// SAME extraction that produces docs/component-props.md
-// (scripts/component-surface.mjs). Hand-written declarations for 193
-// components would drift from the real signatures within a week; a generator
-// reading the real destructured parameter list cannot, because there is no
-// second copy of the truth to fall out of sync.
-//
-// Type fidelity, in descending order of evidence strength. Every rung is a
-// REAL fact read out of the source -- none of it is a guess about what a
-// prop "probably" is:
-//
-//   1. A JSDoc `{Type}` annotation on the matching @param. This is the
-//      author's own explicit statement, including real enum unions like
-//      `'default'|'primary'|'ghost'|'danger'`, so it wins outright. JSDoc
-//      type syntax is translated to TS (`*` -> `any`, `Function` -> a
-//      callable, `Array<X>` -> `X[]`, `Set<*>` -> `Set<any>`).
-//   2. The prop's actual default value literal. `false` proves boolean,
-//      `'list'` proves string (and is emitted as a widened `string` unless
-//      rung 3 finds sibling values), `[]` proves an array, `0`/`24` number.
-//      A default is a load-bearing fact: the prop cannot be typed narrower
-//      than a value the component itself assigns.
-//   3. For a string-defaulted prop, the enumerated sibling values the
-//      component's own body compares it against (`density === 'thumb'`,
-//      `mode === 'ptt'`). Scanned per-component out of the real function
-//      body, so the union is that component's real accepted set plus its
-//      default, never a global guess pooled across unrelated components.
-//      Emitted as `'a' | 'b' | (string & {})` -- the `(string & {})` tail
-//      keeps autocomplete listing the known values WITHOUT rejecting a
-//      value the scan did not see, since a comparison scan proves values
-//      are accepted, never that others are refused.
-//   4. Failing all of the above, a name-shape rule with a real convention
-//      behind it: `on*` is a handler, `key`/`children` are webjsx's own
-//      well-known slots. Everything else is `any` -- honestly unknown
-//      beats a fabricated type that would reject valid calls.
-//
-// Run: node scripts/generate-component-types.mjs
-// Add --check to verify types/components.d.ts already matches generated
-// output (exits 1 on drift) -- the CI gate, matching
-// generate-component-docs.mjs's own --check convention.
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { extractComponentSurface, root, readNormalized } from './component-surface.mjs';
+import { die, orDie } from './die.mjs';
 
 const CHECK = process.argv.includes('--check');
 
-let surface;
-try {
-    surface = extractComponentSurface();
-} catch (e) {
-    console.error(e.message);
-    process.exit(1);
-}
-const { components, driftWarnings, fileOrder } = surface;
+const { components, driftWarnings, fileOrder } = orDie(extractComponentSurface);
 
-// ---- JSDoc type -> TypeScript type -------------------------------------
-// Deliberately conservative: anything this does not confidently understand
-// falls through to `any` rather than being half-translated into a type that
-// would reject a valid call. A wrong type is worse than a wide one -- it
-// makes a working consumer fail to compile.
 function jsdocTypeToTs(t) {
     if (!t) return null;
     let s = t.trim();
     if (!s || s === '*' || s === 'any') return 'any';
-    // Union of the form A|B|C -- recurse per member so `'a'|'b'` (a real
-    // string-literal enum) survives intact and mixed unions still translate.
     if (s.includes('|') && !/[<{]/.test(s)) {
         const parts = s.split('|').map((p) => jsdocTypeToTs(p)).filter(Boolean);
         return parts.length ? [...new Set(parts)].join(' | ') : 'any';
     }
-    // A quoted string literal is already valid TS.
     if (/^'[^']*'$/.test(s)) return s;
     if (/^Array<(.+)>$/.test(s)) {
         const inner = jsdocTypeToTs(s.replace(/^Array<(.+)>$/, '$1'));
-        // Object-shaped members can contain `|` at depth; wrap so `A|B[]`
-        // does not mis-associate.
         return `Array<${inner}>`;
     }
     if (/^Set<(.+)>$/.test(s)) return `Set<${jsdocTypeToTs(s.replace(/^Set<(.+)>$/, '$1'))}>`;
@@ -81,8 +26,6 @@ function jsdocTypeToTs(t) {
     if (s === 'boolean' || s === 'string' || s === 'number') return s;
     if (s === 'Object' || s === 'object') return 'Record<string, any>';
     if (s === 'Element' || s === 'HTMLElement' || s === 'Node') return s;
-    // An inline object shape `{value:string, onInput:Function}` -- the
-    // members are real, so translate them rather than collapsing to `any`.
     if (/^\{[\s\S]*\}$/.test(s)) {
         const inner = s.slice(1, -1);
         const members = splitTopLevel(inner, ',');
@@ -102,8 +45,6 @@ function jsdocTypeToTs(t) {
     return 'any';
 }
 
-// Split on a separator at brace/bracket/paren depth 0 only -- an inline
-// object type's own nested commas must not split its parent.
 function splitTopLevel(s, sep) {
     const out = [];
     let cur = '', d = 0;
@@ -117,12 +58,11 @@ function splitTopLevel(s, sep) {
     return out.map((x) => x.trim()).filter(Boolean);
 }
 
-// ---- default-value literal -> TypeScript type --------------------------
 function defaultToTs(def) {
     if (def == null) return null;
     const d = def.trim();
     if (d === 'false' || d === 'true') return 'boolean';
-    if (d === 'null' || d === 'undefined') return null; // proves nothing
+    if (d === 'null' || d === 'undefined') return null;
     if (/^-?\d+(\.\d+)?$/.test(d) || d === 'Infinity' || d === '-Infinity') return 'number';
     if (/^'([^']*)'$/.test(d) || /^"([^"]*)"$/.test(d)) return 'string';
     if (/^\[\s*\]$/.test(d)) return 'any[]';
@@ -130,27 +70,15 @@ function defaultToTs(def) {
     if (/^\{/.test(d)) return 'Record<string, any>';
     if (/^\(/.test(d) || d.includes('=>')) return '(...args: any[]) => any';
     if (/^new\s+Set\b/.test(d)) return 'Set<any>';
-    // An identifier default (`FILE_ROW_ACTIONS`, `CHAT_MINIMAP_WIDTH`,
-    // `selected`) references another binding whose type this scan does not
-    // resolve -- honestly unknown.
     return null;
 }
 
-// A string-literal default only proves the prop is a string. Whether it is a
-// closed keyword set is answered by the component's OWN body: the literals it
-// compares this exact prop against. Scanned per-component from real source.
 function enumValuesFor(body, prop) {
     if (!/^[A-Za-z_$][\w$]*$/.test(prop)) return [];
     const vals = new Set();
-    // `typeof prop === 'number'` compares the prop's TYPE, not its value --
-    // harvesting 'number'/'string'/'function' out of it invented a bogus
-    // `'50%' | 'number'` union for SplitPanel.initial on the first run. The
-    // negative lookbehind drops exactly that shape while leaving every real
-    // value comparison intact.
     const cmp = new RegExp(`(?<!typeof\\s)\\b${prop}\\s*===?\\s*'([^']*)'|'([^']*)'\\s*===?\\s*(?<!typeof\\s)\\b${prop}\\b`, 'g');
     let m;
     while ((m = cmp.exec(body))) vals.add(m[1] !== undefined ? m[1] : m[2]);
-    // `['a','b'].includes(prop)` — same proof shape, different spelling.
     const inc = new RegExp(`\\[([^\\]]*)\\]\\s*\\.includes\\(\\s*${prop}\\s*\\)`, 'g');
     while ((m = inc.exec(body))) {
         for (const q of m[1].matchAll(/'([^']*)'/g)) vals.add(q[1]);
@@ -158,7 +86,6 @@ function enumValuesFor(body, prop) {
     return [...vals];
 }
 
-// ---- name-shape fallback -----------------------------------------------
 function nameToTs(name) {
     if (name === 'key') return 'string | number';
     if (name === 'children') return 'any';
@@ -166,10 +93,6 @@ function nameToTs(name) {
     return 'any';
 }
 
-// ---- per-component function body, for the enum scan --------------------
-// Read each source file once; find the component's own body by a
-// balanced-brace scan from its definition, so an enum comparison in a
-// NEIGHBOURING component in the same file cannot leak into this one's union.
 const fileCache = new Map();
 function sourceOf(relFile) {
     if (!fileCache.has(relFile)) {
@@ -185,11 +108,6 @@ function bodyOf(relFile, name) {
     const re = new RegExp(`(?:export\\s+)?function\\s+${name}\\s*\\(`);
     const m = re.exec(src);
     if (!m) {
-        // Symbol lives in a sub-file reached by the surface extractor's
-        // one-hop re-export resolution. Scan every sibling under the group
-        // directory rather than guessing which one -- but still anchor on
-        // THIS symbol's own definition, so the per-component isolation the
-        // balanced-brace scan provides is preserved.
         const dir = relFile.replace(/\.js$/, '');
         const im = new RegExp(`import\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*'([^']+)'`).exec(src);
         if (im) {
@@ -217,32 +135,27 @@ function braceBody(src, from) {
     return src.slice(open);
 }
 
-// ---- emit ---------------------------------------------------------------
 function tsPropName(name) {
     return /^[A-Za-z_$][\w$]*$/.test(name) ? name : `'${name.replace(/'/g, "\\'")}'`;
 }
 
+const OPEN_STRING_TAIL = '(string & {})';
+
 function typeForProp(c, p, docTypes, body) {
-    // 1. JSDoc type -- the author's own explicit statement.
     const fromDoc = jsdocTypeToTs(docTypes[p.name]);
     if (fromDoc && fromDoc !== 'any') return fromDoc;
-    // 2/3. Default value, widened by the component's own comparison set.
     const fromDefault = defaultToTs(p.default);
     if (fromDefault === 'string') {
         const lit = (p.default || '').trim().replace(/^['"]|['"]$/g, '');
         const found = enumValuesFor(body, p.name).filter((v) => v !== lit);
         if (found.length) {
             const union = [lit, ...found].filter((v) => v !== '').map((v) => `'${v.replace(/'/g, "\\'")}'`);
-            // `(string & {})` keeps the literals in autocomplete without
-            // closing the set -- the scan proves these values ARE accepted,
-            // never that any other value is refused.
-            return union.length ? `${[...new Set(union)].join(' | ')} | (string & {})` : 'string';
+            return union.length ? `${[...new Set(union)].join(' | ')} | ${OPEN_STRING_TAIL}` : 'string';
         }
         return 'string';
     }
     if (fromDefault) return fromDefault;
-    if (fromDoc) return fromDoc; // an explicit `*`/`any` still beats guessing
-    // 4. Name-shape convention.
+    if (fromDoc) return fromDoc;
     return nameToTs(p.name);
 }
 
@@ -294,9 +207,6 @@ for (const file of fileOrder) {
         const desc = c.jsdoc && c.jsdoc.description ? c.jsdoc.description : '';
 
         if (c.kind !== 'component') {
-            // A const: emit the value's real type. An alias (`Card = Panel`)
-            // is declared as the same props interface its target uses, so
-            // `Card({...})` type-checks identically to `Panel({...})`.
             const d = c.props[0] ? c.props[0].default : null;
             if (desc) out += `/** ${desc.replace(/\*\//g, '*\\/')} */\n`;
             if (c.kind === 'const (alias)' && d && /^[A-Z]\w*$/.test(d.replace(/;$/, ''))) {
@@ -305,7 +215,6 @@ for (const file of fileOrder) {
                 continue;
             }
             if (c.kind === 'const (factory-wrapped)') {
-                // makePage(...) -- a page component taking a host context.
                 out += `export declare const ${c.name}: (...args: any[]) => VNode;\n\n`;
                 continue;
             }
@@ -317,7 +226,6 @@ for (const file of fileOrder) {
         const body = bodyOf(c.file, c.name);
         const positional = c.props.filter((p) => p.positional);
         if (positional.length) {
-            // A plain positional-arg function, not a props component.
             if (desc) out += `/** ${desc.replace(/\*\//g, '*\\/')} */\n`;
             const args = positional.map((p, i) => {
                 const nm = /^[A-Za-z_$][\w$]*$/.test(p.name) ? p.name : `arg${i}`;
@@ -346,9 +254,6 @@ for (const file of fileOrder) {
                 if (docParam && docParam.desc) notes.push(docParam.desc);
                 if (p.default != null) notes.push(`@default ${p.default.replace(/\*\//g, '*\\/').replace(/\s+/g, ' ')}`);
                 if (notes.length) out += `    /** ${notes.join(' ').replace(/\*\//g, '*\\/')} */\n`;
-                // Every prop is optional: every component destructures with
-                // `= {}` or tolerates a missing key, and marking one required
-                // would reject calls the runtime accepts today.
                 out += `    ${tsPropName(p.name)}?: ${t};\n`;
             }
             out += `}\n`;
@@ -363,19 +268,10 @@ if (driftWarnings.length) {
     out += `\n`;
 }
 
-// ---- root entry declarations (types/index.d.ts) -------------------------
-// The package entry (dist/247420.js, built from src/index.js) re-exports far
-// more than the component barrel: the render loop, theme/motion/i18n, the
-// markdown+highlight stack, the router, the spoint kit surfaces. Those are
-// enumerated from src/index.js's REAL export statements for the same reason
-// the components are -- a hand-kept list of ~90 names is a list that silently
-// goes stale. Each name's shape is read from its own defining module (a
-// `function` -> a callable, a `const` -> its value's type), so the entry
-// declaration tracks the source rather than restating it.
 const indexSrc = readNormalized(join(root, 'src', 'index.js'));
 
 function collectIndexExports(src) {
-    const named = []; // { name, from }  -- from is null for local definitions
+    const named = [];
     for (const m of src.matchAll(/export\s*\{([^}]*)\}\s*from\s*'([^']+)';/g)) {
         for (const raw of m[1].split(',').map((s) => s.trim()).filter(Boolean)) {
             const [orig, alias] = raw.includes(' as ') ? raw.split(' as ').map((s) => s.trim()) : [raw, raw];
@@ -386,7 +282,6 @@ function collectIndexExports(src) {
         if (/\bfrom\b/.test(m[0])) continue;
         for (const raw of m[1].split(',').map((s) => s.trim()).filter(Boolean)) {
             const [orig, alias] = raw.includes(' as ') ? raw.split(' as ').map((s) => s.trim()) : [raw, raw];
-            // Resolve the local binding to the module it was imported from.
             const im = new RegExp(`import\\s*(?:\\*\\s*as\\s+${orig}|\\{[^}]*\\b${orig}\\b[^}]*\\})\\s*from\\s*'([^']+)'`).exec(src);
             const ns = new RegExp(`import\\s*\\*\\s*as\\s+${orig}\\s*from\\s*'([^']+)'`).test(src);
             named.push({ name: alias, orig, from: im ? im[1] : null, namespace: ns });
@@ -398,20 +293,15 @@ function collectIndexExports(src) {
     for (const m of src.matchAll(/export\s+const\s+(\w+)\s*=/g)) {
         named.push({ name: m[1], orig: m[1], from: null, local: 'const' });
     }
-    // De-dupe by exported name, first occurrence wins (matches ESM: a
-    // duplicate export name is a syntax error, so there is no ambiguity).
     const seen = new Set();
     return named.filter((e) => (seen.has(e.name) ? false : (seen.add(e.name), true)));
 }
 
-// Resolve a re-exported name's real declaration kind in its own module, so a
-// function is declared callable rather than flattened to `any`.
 function shapeOfExport(entry) {
     if (entry.namespace) return { kind: 'namespace' };
     let modPath = entry.from;
     if (!modPath) {
         if (entry.local === 'function') return { kind: 'function', async: !!entry.async };
-        // A local `export const X = <rhs>` in index.js.
         const m = new RegExp(`export\\s+const\\s+${entry.orig}\\s*=\\s*([^;\\n]+)`).exec(indexSrc);
         const rhs = m ? m[1].trim() : '';
         if (/^webjsx\./.test(rhs)) return { kind: 'function' };
@@ -431,10 +321,6 @@ function shapeOfExport(entry) {
         if (/^(?:async\s*)?\(/.test(rhs) || rhs.includes('=>') || /^function\b/.test(rhs)) return { kind: 'function' };
         return { kind: 'value', ts: defaultToTs(rhs) || 'any' };
     }
-    // Re-exported onward from this module (a barrel) -- callable is the
-    // overwhelmingly common shape here and is what every such name in this
-    // entry actually is; but only claim it when the name is not obviously a
-    // constant (SCREAMING_CASE).
     if (/^[A-Z0-9_]+$/.test(entry.orig)) return { kind: 'value', ts: 'any' };
     return { kind: 'function' };
 }
@@ -456,17 +342,11 @@ idx += `export type { VNode };\n\n`;
 idx += `/** Every component in the SDK, keyed by name (\`components.AppShell({...})\`). */\n`;
 idx += `export declare const components: typeof import('./components.js');\n\n`;
 
-// `export * from './components.js'` above already provides every component-
-// barrel name. src/index.js ALSO re-exports a convenience subset of those
-// same names (FREDDIE_PAGES, fmtBytes, the freddie pages) directly from
-// './components.js' -- re-declaring them here would be a duplicate-identifier
-// error, and the star export already gives the consumer the better-typed
-// version. Skip exactly the names the star already covers.
 const fromComponentBarrel = new Set(components.map((c) => c.name));
 
 for (const e of indexExports) {
-    if (e.name === 'components') continue; // declared explicitly above
-    if (e.name === 'scope') continue; // declared explicitly below
+    if (e.name === 'components') continue;
+    if (e.name === 'scope') continue;
     if (fromComponentBarrel.has(e.name)) continue;
     const shape = shapeOfExport(e);
     if (shape.kind === 'namespace') {
@@ -492,8 +372,7 @@ if (CHECK) {
     if ((existsSync(outPath) ? readNormalized(outPath) : null) !== out) stale.push('types/components.d.ts');
     if ((existsSync(idxPath) ? readNormalized(idxPath) : null) !== idx) stale.push('types/index.d.ts');
     if (stale.length) {
-        console.error(`[component-types] ${stale.join(' and ')} ${stale.length > 1 ? 'are' : 'is'} stale -- run \`node scripts/generate-component-types.mjs\` and commit the result`);
-        process.exit(1);
+        die(`[component-types] ${stale.join(' and ')} ${stale.length > 1 ? 'are' : 'is'} stale -- run \`node scripts/generate-component-types.mjs\` and commit the result`);
     }
     console.log(`[component-types] types/*.d.ts up to date (${components.length} component symbols, ${indexExports.length} entry exports, 0 drift)`);
     process.exit(0);

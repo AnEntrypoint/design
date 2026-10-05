@@ -1,7 +1,3 @@
-// Row-backed lists — the three domain list renderers built on Row/RowLink:
-// WorksList (expand-to-detail portfolio entries), WritingList (dated posts)
-// and EventList (a dense event feed with a shape-matched loading skeleton).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Btn, Icon } from '../shell.js';
 import { Row, RowLink } from './row.js';
@@ -16,9 +12,6 @@ export function WorksList({ works = [], openedIndex = -1, onToggle }) {
                 Row({
                     code: w.code,
                     title: w.title, sub: w.sub,
-                    // Expand affordance: a chevron icon (down when open, right when
-                    // collapsed) separated from the meta text by a CSS gap, not a
-                    // literal +/- with a double-space.
                     meta: h('span', { class: 'ds-works-meta' },
                         w.meta != null ? h('span', {}, w.meta) : null,
                         Icon(isOpen ? 'chevron-down' : 'chevron-right')),
@@ -50,10 +43,6 @@ export function WritingList({ posts = [] }) {
 
 export function EventList({ items, events, emptyText = 'no events', rankPad = 3, loading = false, loadingText = 'loading events…' }) {
     const list = items || events || [];
-    // Shape-matched skeleton rows for the slow first events fetch (the ccsniff
-    // cold walk can take 30-90s) - a lone spinner collapses the whole pane.
-    // Keying discipline mirrors ConversationList: a single keyed wrapper with
-    // all-keyed siblings (webjsx applyDiff crashes on mixed keyed/unkeyed).
     if (loading && !list.length) {
         return h('section', { class: 'ds-section ds-event-list' },
             h('div', { key: 'st', role: 'status', 'aria-live': 'polite', class: 'ds-event-state lede' }, loadingText),
@@ -73,8 +62,6 @@ export function EventList({ items, events, emptyText = 'no events', rankPad = 3,
             onClick: it.onClick,
             kind: it.kind,
             rail: it.rail,
-            // Forward a disclosure state when the host marks the row as a toggle,
-            // so a clickable event row announces aria-expanded.
             expanded: it.expanded,
             detail: it.detail,
             actions: it.actions,

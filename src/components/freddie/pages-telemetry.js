@@ -1,6 +1,3 @@
-// Freddie telemetry pages: `logs` (live WebSocket JSONL tail with
-// subsystem/severity/message filtering and auto-reconnect) and `debug`
-// (per-subsystem snapshot + log drill-down).
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { makePage, api, loadingState, errorState, emptyState, refreshError } from './runtime.js';
@@ -9,6 +6,7 @@ import { Chip } from '../shell.js';
 import { formatTime } from '../../locale.js';
 import { register as registerDebug, unregister as unregisterDebug } from '../../debug.js';
 import { section, truncSpan, TRUNC_DESC } from './shared.js';
+import { attempt, attemptAsync } from '../../best-effort.js';
 
 const h = webjsx.createElement;
 
@@ -19,8 +17,7 @@ export const logs = makePage((ctx) => {
     const MAX_LINES = 500;
 
     async function loadSubsystems() {
-        try { ctx.set({ subsystems: await api('/api/logs') }); }
-        catch (e) { /* swallow: non-fatal, subsystem list is a filter convenience, not required for the stream */ }
+        await attemptAsync(async () => { ctx.set({ subsystems: await api('/api/logs') }); });
     }
 
     let unmounted = false;
@@ -48,7 +45,7 @@ export const logs = makePage((ctx) => {
     ctx.onCleanup(() => {
         unmounted = true;
         if (reconnectTimer) clearTimeout(reconnectTimer);
-        try { currentWs?.close(); } catch { /* swallow: teardown-only close, socket may already be closed/closing */ }
+        attempt(() => { currentWs?.close(); });
         unregisterDebug('logs');
     });
 
@@ -102,7 +99,7 @@ export const logs = makePage((ctx) => {
 
 export const debug = makePage((ctx) => {
     Object.assign(ctx.state, { sub: null, logs: null });
-    async function load() { try { ctx.set({ loading: false, data: await api('/api/debug'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, data: await api('/api/debug'), error: null }); } catch (e) { ctx.failLoad(e); } }
     async function loadLogs(name) {
         ctx.set({ sub: name });
         try { ctx.set({ logs: await api('/api/logs/' + encodeURIComponent(name)) }); }
@@ -113,11 +110,6 @@ export const debug = makePage((ctx) => {
         const s = ctx.state;
         if (s.loading) return loadingState('loading debug snapshots…');
         if (s.error) return errorState(s.error, load);
-        // GET /api/debug (plugins/gui/gui-debug/plugin.js -> listDebug())
-        // returns a plain ARRAY of subsystem-name strings, never
-        // {subsystems:[...]}. Object.keys(array) yields index strings
-        // ("0","1",...) instead of the real names -- guard the array case
-        // first so this doesn't quietly fall through to the wrong branch.
         const d = s.data;
         const subsystems = Array.isArray(d) ? d : (d && d.subsystems) || Object.keys(d || {});
         return [

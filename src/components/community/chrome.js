@@ -1,6 +1,3 @@
-// Thin chrome bands around the main content column: the channel header, the
-// narrow-viewport header with its menu/members toggles, the reply-quote bar,
-// and the dismissible/actionable banner.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -10,13 +7,6 @@ const h = webjsx.createElement;
 export function ChatHeader({ icon = '#', name, topic, toolbar = [] } = {}) {
     return h('div', { class: 'cm-chat-header' },
         h('span', { class: 'cm-chat-header-icon' }, icon),
-        // h1, not span: this is already the visible title of the content column
-        // — the channel you are reading. It carried no heading semantics, so
-        // both community kits rendered a document with zero headings. An h1
-        // here reuses the element that was always the page title rather than
-        // adding a second, hidden one. .cm-chat-header-name pins weight/size/
-        // colour and now also zeroes the UA h1 margin, so this is a semantic
-        // change with no visual change.
         h('h1', { class: 'cm-chat-header-name' }, name),
         topic ? h('span', { class: 'cm-chat-header-topic' }, topic) : null,
         h('div', { class: 'cm-chat-header-toolbar' }, ...toolbar)

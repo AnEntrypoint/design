@@ -173,15 +173,6 @@
 }
 .agentchat-status .status-dot-disc.status-dot-live {
   background: var(--accent);
-  animation: agentchat-pulse 2s infinite;
-}
-@keyframes agentchat-pulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 50%, transparent); }
-  70%  { box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .agentchat-status .status-dot-disc { animation: none !important; }
 }
 
 /* working-directory bar */
@@ -316,7 +307,7 @@
   padding: .4em .8em; font: inherit; font-size: var(--fs-tiny); cursor: pointer;
   border-radius: var(--r-pill); border: var(--bw-hair) solid var(--rule);
   background: var(--bg-2); color: var(--fg-2, var(--fg));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--fg) 14%, transparent);
+  box-shadow: var(--shadow-1);
 }
 .agentchat-jump.show { display: inline-flex; }
 .agentchat-jump:hover { background: var(--bg-3); }
@@ -468,13 +459,13 @@
 .agentchat-working .chat-thinking-dots span {
   width: 5px; height: 5px; border-radius: 50%;
   background: var(--fg); opacity: .4;
-  animation: agentchat-dot-bounce 1.2s infinite ease-in-out;
+  animation: agentchat-dot-fade 1.2s infinite ease-in-out;
 }
 .agentchat-working .chat-thinking-dots span:nth-child(2) { animation-delay: .15s; }
 .agentchat-working .chat-thinking-dots span:nth-child(3) { animation-delay: .3s; }
-@keyframes agentchat-dot-bounce {
-  0%, 80%, 100% { transform: scale(.6); opacity: .3; }
-  40% { transform: scale(1); opacity: .9; }
+@keyframes agentchat-dot-fade {
+  0%, 80%, 100% { opacity: .3; }
+  40% { opacity: .9; }
 }
 @media (prefers-reduced-motion: reduce) {
   .agentchat-working .chat-thinking-dots span { animation: none; opacity: .7; }
@@ -482,14 +473,14 @@
 /* Standalone thinking part (ThinkingNode renders .chat-bubble.chat-thinking with
    .chat-thinking-dots + .chat-thinking-text OUTSIDE the .agentchat-working tail).
    Without these base rules the dots are invisible empty spans and the text has
-   no muted tone. Reuse the agentchat-dot-bounce keyframe. */
+   no muted tone. Reuse the agentchat-dot-fade keyframe. */
 .chat-thinking { display: flex; align-items: center; gap: .5em; color: var(--fg-3); font-size: var(--fs-tiny); background: none; padding: .3em .2em; }
 .chat-thinking-text { color: var(--fg-3); }
 .chat-thinking-dots { display: inline-flex; gap: var(--space-half); }
 .chat-thinking-dots span {
   width: 5px; height: 5px; border-radius: 50%;
   background: var(--fg); opacity: .4;
-  animation: agentchat-dot-bounce 1.2s infinite ease-in-out;
+  animation: agentchat-dot-fade 1.2s infinite ease-in-out;
 }
 .chat-thinking-dots span:nth-child(2) { animation-delay: .15s; }
 .chat-thinking-dots span:nth-child(3) { animation-delay: .3s; }
@@ -549,22 +540,12 @@
 /* Live: a persistent faint concentric ring (resting shape channel, independent
    of motion) with the pulse layered on top — so even at the pulse trough the
    disc reads as solid-fill + ring, never a bare solid that aliases stale. */
-.status-dot-disc.status-dot-live { background: var(--accent-ink); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-ink) 30%, transparent); animation: status-disc-pulse 1.8s ease-in-out infinite; }
+.status-dot-disc.status-dot-live { background: var(--accent-ink); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-ink) 30%, transparent); }
 .status-dot-disc.status-dot-error { background: var(--flame); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--flame) 38%, transparent); }
 .status-dot-disc.status-dot-connecting { background: transparent; box-shadow: inset 0 0 0 2px var(--amber); }
 /* Stale: a muted ring with a hollow centre — silhouette distinct from live's
    filled disc and connecting's amber hollow ring (hue + inset core). */
 .status-dot-disc.status-dot-stale { background: transparent; box-shadow: inset 0 0 0 1px var(--stale), inset 0 0 0 3px var(--bg); }
-@keyframes status-disc-pulse {
-  /* First shadow is the persistent resting ring; second is the animated halo —
-     the ring is always present so the trough never collapses to a bare solid. */
-  0%, 100% { box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent), 0 0 0 2px color-mix(in oklab, var(--accent) 55%, transparent); }
-  50%      { box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent), 0 0 0 6px color-mix(in oklab, var(--accent) 0%, transparent); }
-}
-@media (prefers-reduced-motion: reduce) {
-  /* The base rule already carries the persistent ring; just stop the pulse. */
-  .status-dot-disc.status-dot-live { animation: none; }
-}
 
 /* ----------------------------------------------------------------------------
    ConversationList — left-rail "Chats" column.
@@ -1352,7 +1333,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 @media (prefers-reduced-motion: no-preference) {
   .btn.is-armed, .btn-primary.is-armed { animation: ds-arm-pulse var(--dur-slow) var(--ease); }
 }
-@keyframes ds-arm-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--warn) 55%, transparent); } 100% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--warn) 0%, transparent); } }
+@keyframes ds-arm-pulse { 0% { opacity: 0.55; } 100% { opacity: 1; } }
 
 /* Error card carries the strongest left-bar tone (flame > stale amber > active
    accent), placed last so its inset bar wins source order over is-active/is-stale.
@@ -1373,24 +1354,21 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 
 /* Conversation-rail loading skeleton (cold ccsniff walk). */
 .ds-session-row-skeleton { display: flex; flex-direction: column; gap: var(--space-1-75); padding: var(--space-2) var(--space-3); }
-.ds-session-row-skeleton .ds-skel { background: var(--bg-3); border-radius: var(--r-1); }
+.ds-session-row-skeleton .ds-skel { border-radius: var(--r-1); }
 .ds-session-row-skeleton .ds-skel-title { height: 12px; width: 70%; }
 .ds-session-row-skeleton .ds-skel-meta { height: 9px; width: 45%; }
 @media (prefers-reduced-motion: no-preference) {
-  .ds-session-row-skeleton .ds-skel { animation: ds-skel-shimmer 1.3s ease-in-out infinite; background: linear-gradient(90deg, var(--bg-3) 0%, var(--bg-2) 50%, var(--bg-3) 100%); background-size: 200% 100%; }
 }
-@keyframes ds-skel-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* Agent-picker list loading skeleton (shares the .ds-skel shimmer base above). */
 .ds-agent-list-skeleton { display: flex; flex-direction: column; gap: var(--space-2); }
 .ds-agent-row-skeleton { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); }
-.ds-agent-row-skeleton .ds-skel { background: var(--bg-3); border-radius: var(--r-1); }
+.ds-agent-row-skeleton .ds-skel { border-radius: var(--r-1); }
 .ds-agent-row-skeleton .ds-skel-icon { height: 18px; width: 18px; flex: none; border-radius: var(--r-round, 50%); }
 .ds-agent-row-skeleton .ds-skel-title { height: 12px; width: 40%; }
 .ds-agent-row-skeleton .ds-skel-meta { height: 9px; width: 25%; margin-left: auto; }
 .ds-agent-list-skeleton-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
 @media (prefers-reduced-motion: no-preference) {
-  .ds-agent-row-skeleton .ds-skel { animation: ds-skel-shimmer 1.3s ease-in-out infinite; background: linear-gradient(90deg, var(--bg-3) 0%, var(--bg-2) 50%, var(--bg-3) 100%); background-size: 200% 100%; }
 }
 
 /* File code preview: paint Prism tokens (the bundle scoped them to the chat

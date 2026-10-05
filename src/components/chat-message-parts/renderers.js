@@ -1,7 +1,3 @@
-// The one PART_RENDERERS dispatch table every chat surface's message parts
-// render through, plus the attachment part kinds (image / pdf / file / link)
-// that live nowhere else, and the two entry points callers actually use.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { fmtFileSize } from '../files.js';
@@ -11,17 +7,10 @@ import { ToolCallNode, ThinkingNode, ApprovalNode, QuestionNode } from './agent-
 
 const h = webjsx.createElement;
 
-// ONE byte format across the kit (mirrors chat.js's own fmtBytes alias).
 const fmtBytes = fmtFileSize;
 
-// The one dispatch table every chat surface's message parts render through.
 export const PART_RENDERERS = {
     text:  (p) => p.preShell
-        // Streaming prose that already contains a code fence (or a huge tail
-        // window) renders as a plain monospaced <pre> so it does not reflow from
-        // prose to a styled block on settle (no Prism mid-stream). The settled
-        // turn renders real markdown. `streamHead` is an optional head line for
-        // the tail-window path ('streaming · N KB so far').
         ? h('div', { class: 'chat-bubble chat-md chat-stream-pre' },
             ...[p.streamHead ? h('div', { key: 'sh', class: 'chat-stream-head', role: 'status', 'aria-live': 'polite' }, p.streamHead) : null,
                h('pre', { key: 'pre' }, h('code', {}, p.text || '')),
@@ -38,9 +27,6 @@ export const PART_RENDERERS = {
     approval:    (p) => ApprovalNode(p),
     question:    (p) => QuestionNode(p),
     image: (p) => {
-        // Guard both the wrapping link and the img src against unsafe schemes
-        // (e.g. a data:text/html src) so an embedded-image part from untrusted
-        // markdown can't smuggle an active payload.
         const imgSrc = safeUrl(p.src);
         const linkHref = safeUrl(p.href || p.src);
         if (!imgSrc) return h('span', { class: 'chat-image-blocked' }, p.alt || 'image blocked (unsafe url)');
@@ -72,10 +58,6 @@ export const PART_RENDERERS = {
         ))
 };
 
-// Render one message part {kind, ...} to a vnode, keyed for webjsx diffing.
-// `onKindRendered` is an optional (kind) => void hook so a caller can track
-// per-kind render stats (chat.js uses this to keep its existing debug counter
-// wired without this module owning that state itself).
 export function renderMessagePart(p, key, onKindRendered) {
     const fn = PART_RENDERERS[p.kind] || PART_RENDERERS.text;
     const node = fn(p);
@@ -84,8 +66,6 @@ export function renderMessagePart(p, key, onKindRendered) {
     return node;
 }
 
-// Render a full `parts` array in order — the common case every chat surface
-// actually calls (ChatMessage.bodyNodes today, any future host tomorrow).
 export function renderMessageParts(parts, onKindRendered) {
     return (parts || []).map((p, i) => renderMessagePart(p, i, onKindRendered));
 }

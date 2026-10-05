@@ -1,8 +1,3 @@
-// Carousel — horizontal (or vertical) scroll-snap content carousel. Native
-// CSS scroll-snap does the heavy lifting; prev/next Btns call scrollBy() on
-// the track element via a `ref` callback (the same raw-DOM-node-reference
-// pattern used across the codebase, e.g. editor-primitives/split-panel.js's
-// `ref: (el) => { rootEl = el; }`). No drag-library dependency.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Btn } from './shell/atoms.js';

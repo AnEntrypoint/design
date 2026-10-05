@@ -1,13 +1,7 @@
-// mountKit — single entry every ui_kit uses. Installs motion, runs
-// applyDiff, registers a debug snapshot.
-
 import * as webjsx from '../vendor/webjsx/index.js';
 import * as motion from './motion.js';
 import { register } from './debug.js';
 
-// Tracks nodes already mounted via mountKit() so a second mountKit() call
-// onto the same root fails loud instead of silently layering a second
-// applyDiff/motion loop on one DOM node.
 const _mountedKitRoots = new WeakSet();
 
 export function mountKit({ root, view, screen, animateOnMount = true } = {}) {

@@ -1,15 +1,4 @@
 #!/usr/bin/env node
-// RTL-mirroring guard: fail if any real stylesheet uses a PHYSICAL left/right
-// property (padding-left, margin-right, border-left, left:, right:,
-// text-align: left/right) where the logical equivalent
-// (padding-inline-start/end, margin-inline-start/end, border-inline-start/
-// end, inset-inline-start/end, text-align: start/end) would automatically
-// mirror under [dir="rtl"] (see src/theme.js's applyDirection/getDirection).
-// A physical property never flips for RTL locales — it silently produces a
-// mirrored-wrong layout instead of a correctly-mirrored one.
-//
-// Run standalone (`node scripts/lint-rtl-physical-properties.mjs`) or wire
-// into CI alongside the other scripts/lint-*.mjs gates.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,9 +6,6 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
-// Every real stylesheet this repo ships as a themable component sheet —
-// mirrors scripts/lint-tokens.mjs's COMPONENT_SHEETS list plus the kit
-// sheets discovered live via grep this session.
 const SHEETS = [
     'colors_and_type.css',
     'app-shell.css',
@@ -31,10 +17,6 @@ const SHEETS = [
     'src/kits/os/theme.css',
 ];
 
-// Physical property -> logical replacement, keyed by the exact CSS property
-// name matched (declaration-level, not selector-level — a `left:`/`right:`
-// used as a bare positioning offset on an absolutely/fixed-positioned
-// element maps to inset-inline-start/end).
 const PHYSICAL_RE = /(^|[\s;{])(padding-left|padding-right|margin-left|margin-right|border-left|border-right|border-left-width|border-right-width|border-left-color|border-right-color|left|right)\s*:/gm;
 const TEXT_ALIGN_RE = /text-align\s*:\s*(left|right)\b/g;
 
@@ -80,7 +62,7 @@ function main() {
         for (const f of findings) console.log(`  line ${f.line}: ${f.property}  ->  ${f.suggest}`);
     }
     if (all.length) {
-        console.log(`\n[FAIL] ${all.length} physical left/right declaration(s) found — these will not mirror correctly under RTL locales`);
+        console.log(`\n[FAIL] ${all.length} physical left/right declaration(s) found: these will not mirror correctly under RTL locales`);
         process.exitCode = 1;
     } else {
         console.log('\n[ok] no physical left/right declarations found');

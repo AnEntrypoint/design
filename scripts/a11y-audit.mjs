@@ -1,27 +1,9 @@
 #!/usr/bin/env node
-// WCAG 2.1 AA guard over every ui_kits/*/index.html, run against the LIVE
-// rendered DOM by the real axe-core engine — computed style and contrast only
-// exist post-render, so a static-HTML heuristic scan cannot substitute.
-//
-// No browser-automation package (AGENTS.md ban): the CDP client in ./cdp.mjs
-// talks to an already-running Chrome over the built-in WebSocket, and axe-core
-// is a pinned vendored copy under vendor/axe-core/ (same practice the repo
-// already uses for vendor/webjsx). Nothing here installs or launches a browser.
-//
-// Usage:
-//   node scripts/a11y-audit.mjs                      -- check against baseline
-//   node scripts/a11y-audit.mjs --write-baseline     -- re-freeze the baseline
-//   BASE_URL=http://127.0.0.1:8899 CDP_BASE=http://127.0.0.1:9333 ...
-//
-// RATCHET SEMANTICS (matching the repo's other ratchet gates): the baseline is
-// a per-kit count of serious/critical violations and it is a DEBT FIGURE TO
-// DRIVE DOWN, never a budget to spend. Over baseline fails. Under baseline
-// fails too, with an instruction to re-freeze DOWNWARD — slack in a baseline
-// silently absorbs the next regression.
 import { readdirSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { withPage, cdpAvailable, CDP_BASE } from './cdp.mjs';
+import { die } from './die.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const kitsDir = join(root, 'ui_kits');
@@ -29,36 +11,14 @@ const axePath = join(root, 'vendor', 'axe-core', 'axe.min.js');
 const baselinePath = join(root, 'scripts', 'a11y.baseline.json');
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:8899';
 
-// The gate's severity floor. axe's minor/moderate findings are reported but do
-// not gate — serious/critical is what the removed Playwright gate enforced.
 const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
-
-// DETERMINISM PINS — the same class of fix scripts/visual-baseline.mjs already
-// applies, for the same root cause.
-//
-// Every kit ships `data-theme="auto"`, which defers to `prefers-color-scheme`.
-// Chrome's default for that preference is NOT stable across environments: a
-// developer's headless Chrome commonly reports `dark`, while the ubuntu-latest
-// CI runner reports `light`. Unpinned, the audit therefore samples a different
-// THEME per machine — which is precisely how 4 real light-theme contrast
-// defects passed locally and failed only in CI. `light` matches the CI runner
-// and is the stricter of the two for this palette (the paper surfaces are
-// where the tier-3 text tones sit closest to the 4.5:1 floor).
 const EMULATED_COLOR_SCHEME = 'light';
-// The entry animation in src/motion.js fades panels in via opacity, and axe
-// composites a mid-fade element against its backdrop — sampling a blended
-// colour that matches no committed token and flapping purely on render timing
-// (measured: the same page alternating 0 and 30 violations across settle
-// delays). Pinning reduced-motion makes motion.js's `[data-motion]` path skip
-// the transition entirely, so axe always samples the settled, real colours.
 const EMULATED_REDUCED_MOTION = 'reduce';
+const SAMPLE_NODES_PER_RULE = 5;
+const SAMPLE_HTML_CHARS = 200;
 
-// A kit is auditable if it has an index.html to serve. _template holds only
-// index.html.tmpl (a generator input, deliberately not servable), so it drops
-// out here structurally rather than via a name it could later be renamed out
-// of — one rule instead of a hardcoded exclusion sitting beside it.
-function listKits() {
+function listServableKits() {
     return readdirSync(kitsDir, { withFileTypes: true })
         .filter((d) => d.isDirectory())
         .map((d) => d.name)
@@ -66,48 +26,34 @@ function listKits() {
         .sort();
 }
 
+const axeRunProjectedToPlainData = `
+    window.axe.run(document, { runOnly: { type: 'tag', values: ${JSON.stringify(WCAG_TAGS)} } })
+        .then((r) => ({
+            passes: r.passes.length,
+            violations: r.violations.map((v) => ({
+                id: v.id,
+                impact: v.impact,
+                help: v.help,
+                helpUrl: v.helpUrl,
+                nodes: v.nodes.length,
+                sample: v.nodes.slice(0, ${SAMPLE_NODES_PER_RULE}).map((n) => ({
+                    target: String(n.target),
+                    why: String(n.failureSummary || '').replace(/\\s+/g, ' ').trim(),
+                    html: String(n.html || '').slice(0, ${SAMPLE_HTML_CHARS}),
+                })),
+            })),
+        }))
+`;
+
 async function auditKit(kit) {
-    // Trailing slash, not `/index.html`: http-server 301s a direct
-    // `/index.html` request to the extensionless directory URL (no trailing
-    // slash), which then resolves this page's own relative `./app.js`/`<link>`
-    // one directory too high and silently serves a near-empty DOM — axe then
-    // audits nothing and reports a false-clean 0 violations. Witnessed live:
-    // `curl -sI .../os/index.html` -> `301 Location: /ui_kits/os/index`.
-    const url = `${BASE_URL}/ui_kits/${kit}/`;
-    return withPage(url, async (page) => {
+    const directoryUrlWithTrailingSlash = `${BASE_URL}/ui_kits/${kit}/`;
+    return withPage(directoryUrlWithTrailingSlash, async (page) => {
         await page.addScriptFile(axePath);
-        // Serialised through returnByValue, so project down to plain data in
-        // the page rather than shipping axe's full (circular, huge) result.
-        const raw = await page.evaluate(`
-            window.axe.run(document, { runOnly: { type: 'tag', values: ${JSON.stringify(WCAG_TAGS)} } })
-                .then((r) => ({
-                    passes: r.passes.length,
-                    violations: r.violations.map((v) => ({
-                        id: v.id,
-                        impact: v.impact,
-                        help: v.help,
-                        helpUrl: v.helpUrl,
-                        nodes: v.nodes.length,
-                        sample: v.nodes.slice(0, 5).map((n) => ({
-                            target: String(n.target),
-                            // failureSummary carries axe's per-node "why" —
-                            // for color-contrast that includes the exact
-                            // sampled fg/bg colours and the computed ratio,
-                            // which is the only way to tell a real defect
-                            // from an environment-dependent sample.
-                            why: String(n.failureSummary || '').replace(/\\s+/g, ' ').trim(),
-                            html: String(n.html || '').slice(0, 200),
-                        })),
-                    })),
-                }))
-        `);
+        const raw = await page.evaluate(axeRunProjectedToPlainData);
         return { kit, ...raw };
     }, { emulate: { colorScheme: EMULATED_COLOR_SCHEME, reducedMotion: EMULATED_REDUCED_MOTION } });
 }
 
-/** Print every blocking rule + node to stdout. docs/a11y-report.md is not
- *  uploaded as a CI artifact, so a failure that only lands there is a failure
- *  nobody can diagnose from the log. */
 function printBlockingDetail(results) {
     for (const r of results) {
         const blocking = r.violations.filter((v) => BLOCKING_IMPACTS.has(v.impact));
@@ -163,7 +109,7 @@ function writeReport(results) {
 
 export async function auditAllKits({ onProgress } = {}) {
     const results = [];
-    for (const kit of listKits()) {
+    for (const kit of listServableKits()) {
         const r = await auditKit(kit);
         results.push(r);
         if (onProgress) onProgress(r);
@@ -171,13 +117,28 @@ export async function auditAllKits({ onProgress } = {}) {
     return results;
 }
 
+function compareAgainstBaseline(counts, baseline) {
+    const regressed = [];
+    const improved = [];
+    for (const [kit, count] of Object.entries(counts)) {
+        const base = baseline.kits[kit];
+        const isNewKitWithZeroTolerance = base === undefined;
+        if (isNewKitWithZeroTolerance) {
+            if (count > 0) regressed.push(`${kit}: ${count} blocking violation(s) (new kit, baseline 0)`);
+            continue;
+        }
+        if (count > base) regressed.push(`${kit}: ${count} blocking violation(s), baseline ${base}`);
+        else if (count < base) improved.push(`${kit}: ${count} < baseline ${base}`);
+    }
+    return { regressed, improved };
+}
+
 async function main() {
     const write = process.argv.includes('--write-baseline');
 
     if (!(await cdpAvailable())) {
         console.error(`[a11y-audit] no CDP endpoint at ${CDP_BASE}.`);
-        console.error('[a11y-audit] start Chrome with --headless --remote-debugging-port=9333 (a workflow step or your own browser; this script never launches one) and serve the repo at ' + BASE_URL);
-        process.exit(1);
+        die('[a11y-audit] start Chrome with --headless --remote-debugging-port=9333 (a workflow step or your own browser; this script never launches one) and serve the repo at ' + BASE_URL);
     }
 
     const results = await auditAllKits({
@@ -195,24 +156,9 @@ async function main() {
     }
 
     const baseline = readBaseline();
-    if (!baseline) {
-        console.error('[a11y-audit] no baseline. Run: node scripts/a11y-audit.mjs --write-baseline');
-        process.exit(1);
-    }
+    if (!baseline) die('[a11y-audit] no baseline. Run: node scripts/a11y-audit.mjs --write-baseline');
 
-    const regressed = [];
-    const improved = [];
-    for (const [kit, count] of Object.entries(counts)) {
-        const base = baseline.kits[kit];
-        if (base === undefined) {
-            // A new kit starts at zero tolerance — a ratchet cannot be
-            // silently widened by adding a page.
-            if (count > 0) regressed.push(`${kit}: ${count} blocking violation(s) (new kit, baseline 0)`);
-            continue;
-        }
-        if (count > base) regressed.push(`${kit}: ${count} blocking violation(s), baseline ${base}`);
-        else if (count < base) improved.push(`${kit}: ${count} < baseline ${base}`);
-    }
+    const { regressed, improved } = compareAgainstBaseline(counts, baseline);
 
     console.log(`[a11y-audit] ${results.length} kit(s), ${total} blocking violation(s) (baseline ${baseline.total}). Report: docs/a11y-report.md`);
 
@@ -220,14 +166,12 @@ async function main() {
         console.error('[a11y-audit] FAIL — a11y regression:');
         for (const r of regressed) console.error(`  - ${r}`);
         printBlockingDetail(results);
-        console.error('[a11y-audit] Fix the violation. Never raise the baseline to make it pass.');
-        process.exit(1);
+        die('[a11y-audit] Fix the violation. Never raise the baseline to make it pass.');
     }
     if (improved.length) {
         console.error('[a11y-audit] FAIL — violations dropped below baseline; re-freeze it DOWNWARD:');
         for (const i of improved) console.error(`  - ${i}`);
-        console.error('[a11y-audit] Run: node scripts/a11y-audit.mjs --write-baseline');
-        process.exit(1);
+        die('[a11y-audit] Run: node scripts/a11y-audit.mjs --write-baseline');
     }
     console.log('[a11y-audit] OK — no regression against baseline.');
 }

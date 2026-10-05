@@ -1,8 +1,3 @@
-// Layout primitives — the static structural shapes an editor lays its panes
-// out with: Dock (five-region frame), the BP_* breakpoint scale +
-// useMediaQuery, Grid/GridItem (24-column responsive layout) and Divider.
-// Interactive resizing lives in ./split-panel.js; progressive disclosure in
-// ./collapse.js.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { kids } from './shared.js';
@@ -18,9 +13,6 @@ export function Dock({ top, left, right, bottom, center } = {}) {
     );
 }
 
-// ---------------------------------------------------------------------------
-// Breakpoints + useMediaQuery
-// ---------------------------------------------------------------------------
 export const BP_SM = 480;
 export const BP_MD = 768;
 export const BP_LG = 1024;
@@ -38,17 +30,6 @@ export function useMediaQuery(query) {
     };
 }
 
-// ---------------------------------------------------------------------------
-// Grid / GridItem — 24-column responsive layout primitive (screen-real-estate
-// density: dense multi-column panels without a hand-rolled grid-template-
-// columns per consumer). Column-span props are integers 1-24 (or `true` for
-// full-width/auto-grow, or `0` to hide at that breakpoint) evaluated at four
-// tiers mirroring BP_SM/MD/LG/XL (480/768/1024/1440) via media queries in
-// editor-primitives.css — no JS-side matchMedia needed, CSS custom
-// properties + @media do the layout work so it degrades gracefully with
-// SSR/no-hydration. Grid itself is a flex row wrapper; GridItem computes
-// flex-basis/max-width from its span at each tier.
-// ---------------------------------------------------------------------------
 export function Grid({ gap, justify, align, children, key } = {}) {
     const style = [
         gap != null ? `gap:${typeof gap === 'number' ? gap + 'px' : gap}` : '',
@@ -77,10 +58,6 @@ export function GridItem({ xs, sm, md, lg, xl, children, key } = {}) {
     return h('div', { key, class: 'ds-ep-grid-item', style: style || null }, children);
 }
 
-// ---------------------------------------------------------------------------
-// Divider — plain rule, optional centered text label, optional vertical
-// orientation (for segmenting dense panels without a full Section wrapper).
-// ---------------------------------------------------------------------------
 export function Divider({ label, vertical = false, key } = {}) {
     if (vertical) return h('span', { key, class: 'ds-ep-divider ds-ep-divider-vertical', role: 'separator', 'aria-orientation': 'vertical' });
     if (!label) return h('hr', { key, class: 'ds-ep-divider' });
@@ -88,13 +65,6 @@ export function Divider({ label, vertical = false, key } = {}) {
         h('span', { class: 'ds-ep-divider-label' }, label));
 }
 
-// ---------------------------------------------------------------------------
-// AspectRatio — thin wrapper over the `.ds-aspect` CSS utility (app-shell's
-// base.css), matching Divider's own trivial-CSS-only-primitive-still-gets-a-
-// factory convention. `ratio` accepts a CSS ratio string ('1/1', '16/9') or
-// a number (interpreted as width/height); falls back to the utility's own
-// 16/9 default when omitted.
-// ---------------------------------------------------------------------------
 export function AspectRatio({ ratio, children, key } = {}) {
     const cssRatio = typeof ratio === 'number' ? `${ratio} / 1` : ratio;
     return h('div', { key, class: 'ds-aspect', style: cssRatio ? `--aspect:${cssRatio}` : null }, children);

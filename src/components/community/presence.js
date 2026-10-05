@@ -1,6 +1,3 @@
-// Who-is-here surfaces: the speaking-state voice user chip, the local user's
-// own mic/deafen/settings panel, the member roster, and the connected-voice
-// control strip.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -8,13 +5,6 @@ import { avatarInitial } from '../content.js';
 import { avatarStyle } from './avatar-style.js';
 const h = webjsx.createElement;
 
-
-// 16:9 participant tile (stoat for-web's ParticipantTile shape): video fills
-// the tile when a camera track is present, otherwise a centered avatar; a
-// bottom overlay carries the name plus mic/camera status glyphs, and an
-// outline glow marks the currently-speaking participant. `videoEl` is an
-// already-attached <video>/<canvas> element the consumer owns (this
-// component never touches media APIs) — omit it to fall back to avatar-only.
 export function VoiceUser({ identity, speaking, color, muted, camera, videoEl } = {}) {
     const initial = avatarInitial(identity);
     const hasVideo = !!(camera && videoEl);
@@ -37,9 +27,8 @@ export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen,
     const handleSettings = (e) => {
         e.preventDefault();
         if (onSettings) {
-            // onSettings callback should open a drawer/modal with quick toggles
             onSettings({
-                audioDevice: null, // controlled by consumer
+                audioDevice: null,
                 micOn: !muted,
                 speakerOn: !deafened,
             });
@@ -79,10 +68,6 @@ export function MemberItem({ identity, name, color, nameColor, status = 'online'
     );
 }
 
-// UserCard — stoat for-web's profile popout shape: a banner strip (color or
-// image) with the avatar overlapping its bottom edge, then name/status,
-// then optional bio/roles/joined-date sections stacked below. Sized for a
-// popover/hovercard body, not a full modal.
 export function UserCard({ identity, name, color, bannerUrl, status = 'online', statusLabel, bio, roles = [], joinedAt, joinedServerAt, serverName, actions = [] } = {}) {
     const initial = avatarInitial(name || identity);
     const statusClass = MEMBER_STATUS_CLASS[status];
@@ -130,8 +115,6 @@ export function UserCard({ identity, name, color, bannerUrl, status = 'online', 
     );
 }
 
-// Skeleton rows for a cold member-list load, matching FileSkeleton/session
-// skeleton shape (icon + title placeholder), never a bare spinner.
 function MemberListSkeleton({ rows = 6 } = {}) {
     return h('div', { class: 'cm-member-list cm-member-skeleton open', 'aria-hidden': 'true' },
         ...Array.from({ length: rows }, (_, i) => h('div', { key: 'msk' + i, class: 'cm-member-item-skeleton' },

@@ -1,14 +1,6 @@
-// Monochrome inline-SVG icon set. Single source for the line-icon vocabulary
-// AGENTS.md mandates in place of decorative unicode glyphs: extend ICON_PATHS
-// to add a name (an out-of-set name renders an EMPTY span, a silent bug).
-// Two renderers share one attribute contract — Icon() for webjsx render
-// scopes, iconMarkup() for raw-DOM consumers that assign innerHTML.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
-// Monochrome inline-SVG icons (stroke=currentColor) so chrome reads as one
-// coherent line-icon set instead of multicolor OS emoji. 16px box, 1.6 stroke.
 export const ICON_PATHS = {
     lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
@@ -36,7 +28,6 @@ export const ICON_PATHS = {
     forum: '<path d="M4 5h13a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/>',
     page: '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M8 13h8M8 17h6"/>',
     thread: '<path d="M5 6h14M5 11h14M5 16h8"/><circle cx="17" cy="17" r="3"/>',
-    // status / control icons (replace decorative text glyphs at the source)
     check: '<path d="M20 6 9 17l-5-5"/>',
     'check-check': '<path d="M18 6 7 17l-3-3"/><path d="m22 10-7.5 7.5L13 16"/>',
     'chevron-right': '<path d="m9 6 6 6-6 6"/>',
@@ -58,7 +49,6 @@ export const ICON_PATHS = {
     info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
     help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.9.8c0 1.7-2.4 2-2.4 3.7M12 17h.01"/>',
     warn: '<path d="M10.3 4 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 4a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
-    // file-type icons (replace the FILE_GLYPHS unicode set)
     'file-pdf': '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
     'file-zip': '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="M11 4v3M11 9v3M11 14v3"/>',
     'file-video': '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="m10 12 4 2.5L10 17z"/>',
@@ -67,24 +57,18 @@ export const ICON_PATHS = {
     'file-code': '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="m10 12-2 2 2 2M14 12l2 2-2 2"/>',
     'file-text': '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="M8 13h8M8 17h6"/>',
     file: '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/>',
-    // animal-health-domain icon (paw print) -- for empty states/branding in
-    // consuming apps like casey whose subject matter is animal disease
-    // surveillance, so an empty-state icon can read as domain-relevant
-    // instead of a generic file/document glyph.
     paw: '<circle cx="8" cy="8" r="2"/><circle cx="16" cy="8" r="2"/><circle cx="5" cy="13" r="1.8"/><circle cx="19" cy="13" r="1.8"/><path d="M12 13.5c-3 0-5.5 2.2-5.5 4.7 0 1.5 1.3 2.3 2.8 1.8.9-.3 1.7-.7 2.7-.7s1.8.4 2.7.7c1.5.5 2.8-.3 2.8-1.8 0-2.5-2.5-4.7-5.5-4.7z"/>',
     pencil: '<path d="M4 20h4L19 9a2 2 0 0 0-3-3L5 17z"/><path d="M14 6l3 3"/>',
     'skip-forward': '<path d="M5 5v14l9-7z"/><path d="M19 5v14"/>',
     'chevron-left': '<path d="m15 6-6 6 6 6"/>',
     trash: '<path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/>',
     'external-link': '<path d="M14 4h6v6M20 4l-9 9M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/>',
-    // theme-toggle icons (replace decorative sun/moon/contrast text glyphs)
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',
     contrast: '<circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"/>',
-    // file-browser icons (replace folder/file emoji + arrow glyphs in fs apps)
     folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
     'folder-open': '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2H5l-2 9z"/><path d="M3 18l2-9h17l-2 9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
-    // density-picker icons (list / compact / thumbnail view modes)
+    package: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
     rows: '<path d="M4 6h16M4 12h16M4 18h16"/>',
     'rows-tight': '<path d="M4 5h16M4 9h16M4 13h16M4 17h16"/>',
     grid: '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>',
@@ -93,46 +77,22 @@ export const ICON_PATHS = {
     upload: '<path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/>',
     download: '<path d="M12 4v12M7 11l5 5 5-5"/><path d="M5 20h14"/>',
     'corner-up-left': '<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 5 5v6"/>',
-    // clipboard/copy — for the per-block code copy + message copy action, so the
-    // copy affordance reads as copy, not the lined-document `page` glyph.
     copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/>',
     clipboard: '<rect x="8" y="4" width="8" height="4" rx="1"/><path d="M8 6H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2"/>',
-    // Live-cursor pointer arrow — collab.js's LiveCursorOverlay renders one
-    // per remote collaborator, filled with that collaborator's color.
     cursor: '<path d="M5 3l14 8-6.5 1.5L11 20z"/>',
-    // Password-visibility toggle — eye / eye-off pair.
     eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
     'eye-off': '<path d="M2 12s3.5-7 10-7c1.7 0 3.2.4 4.5 1.1M22 12s-3.5 7-10 7c-1.7 0-3.2-.4-4.5-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="m4 4 16 16"/>',
-    // Auth-provider glyphs for the signin kit — generic provider-neutral
-    // shapes (not trademarked logo reproductions), so a real icon renders
-    // instead of a text-letter abbreviation per AGENTS.md icon policy.
-    // github: a rounded body + one circular "eye", a widely-recognized
-    // silhouette-family shape without tracing the actual brand mark.
     github: '<path d="M12 3a8 8 0 0 0-2.5 15.6c.4.1.5-.2.5-.4v-1.7c-2.2.4-2.7-1-2.9-1.6-.1-.3-.5-1-1-1.2-.3-.1-.6-.4 0-.5.9-.1 1.5.8 1.7 1.1.7 1.1 1.7.8 2.1.6.1-.5.3-.8.6-1-2.2-.3-3.4-1.4-3.4-3.4 0-.8.3-1.5.7-2-.1-.3-.3-1.1.1-2.2 0 0 .8-.2 2.5.9a8 8 0 0 1 4.5 0c1.7-1.1 2.5-.9 2.5-.9.4 1.1.2 1.9.1 2.2.5.5.7 1.2.7 2 0 2-1.2 3.1-3.4 3.4.3.3.6.8.6 1.5v2.1c0 .2.1.5.5.4A8 8 0 0 0 12 3z"/>',
-    // google: provider-neutral "G-circle" — a plain ring with a break and a
-    // short spoke, evoking the four-color pinwheel mark's silhouette only.
-    google: '<circle cx="12" cy="12" r="8"/><path d="M12 12h6"/><path d="M12 8v4"/>',
-    // sso: shield-check, a common auth/identity glyph for a generic
-    // single-sign-on entry point.
+    google: '<path d="M18.4 7.2A7.5 7.5 0 1 0 19.5 12H12"/>',
     sso: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
-    // Tri-state permission-neutral glyph — a bare horizontal dash.
     minus: '<path d="M5 12h14"/>',
-    // Role-shield glyph (permissions overview role rows) — undecorated
-    // outline, distinct from `sso`'s shield-check auth mark.
     shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>',
-    // Everyone/default-permissions glyph — a globe (meridian ellipse pair).
     globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/>',
-    // Generic image-URL field glyph.
     image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
-    // Webhook create affordance glyph — cloud, matching stoat for-web's
-    // BiSolidCloud "Create Webhook" action icon.
     cloud: '<path d="M17.5 19a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.6-1.8A4 4 0 0 0 6.5 16"/>',
     edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'
 };
 
-// The single SVG attribute contract (viewBox/stroke/linecap…) shared by both
-// the markup-string and the vnode renderers below, so the icon shape is defined
-// once. Insertion order is the serialized attribute order iconMarkup emits.
 function iconAttrs(name, size) {
     return {
         class: 'ds-icon ds-icon-' + name,
@@ -141,7 +101,6 @@ function iconAttrs(name, size) {
         'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true',
     };
 }
-// Normalize the (name) | ({name,size}) call shapes both renderers accept.
 function iconArgs(name, size) {
     if (name && typeof name === 'object') ({ name, size = 16 } = name);
     return { name, size };

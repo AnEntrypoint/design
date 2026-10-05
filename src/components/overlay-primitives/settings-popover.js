@@ -1,7 +1,3 @@
-// SettingsPopover — fixed popover with generic section/row control rendering.
-// Rows are data-driven: `kind` picks the control (select/toggle/range/button,
-// or a non-interactive value row), and every interactive control gets a
-// stable id so the visible row label is its accessible name.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { trapTab, _anchoredOverlayLifecycle } from './floating.js';
@@ -16,15 +12,11 @@ export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY
     const renderRow = (row, i) => {
         const label = row.label != null ? row.label : (row.title != null ? row.title : '');
         const kind = row.kind;
-        // Give every interactive control a stable id and point the row label's
-        // `for` at it, so the visible label is the control's accessible name.
         const ctrlId = 'ov-set-' + i + '-' + kind;
         const labelNode = h('label', { class: 'ov-set-row-label', for: ctrlId }, String(label));
         let control = null;
         if (kind === 'select') {
             const opts = Array.isArray(row.options) ? row.options : [];
-            // Controlled via the `value` prop only — per-option `selected` is
-            // dropped so the two don't fight (value wins).
             control = h('select', {
                 id: ctrlId,
                 class: 'ov-set-control', value: row.value != null ? String(row.value) : undefined,
@@ -57,7 +49,6 @@ export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY
             return h('div', { class: 'ov-set-row', key: i }, control);
         } else {
             control = h('span', { class: 'ov-set-row-value' }, String(row.value != null ? row.value : ''));
-            // Non-interactive value row: a plain span label (no `for` target).
             return h('div', { class: 'ov-set-row', key: i }, h('span', { class: 'ov-set-row-label' }, String(label)), control);
         }
         return h('div', { class: 'ov-set-row', key: i }, labelNode, control);

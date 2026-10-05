@@ -1,7 +1,3 @@
-// Freddie execution-surface pages: `cron` (scheduled prompt jobs), `tools`
-// (grouped tool catalogue with schema drill-down), and `batch` (parallel
-// prompt runner + result roll-up).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { makePage, api, loadingState, errorState, emptyState } from './runtime.js';
 import { Row, Table, Kpi, PageHeader, SearchInput, TextField } from '../content.js';
@@ -13,22 +9,19 @@ const h = webjsx.createElement;
 
 export const cron = makePage((ctx) => {
     Object.assign(ctx.state, { expr: '', prompt: '', busy: false, note: null, confirmDelete: null });
-    async function load() { try { ctx.set({ loading: false, list: await api('/api/cron'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, list: await api('/api/cron'), error: null }); } catch (e) { ctx.failLoad(e); } }
     async function add() {
         const expr = (ctx.state.expr || '').trim(); const prompt = (ctx.state.prompt || '').trim();
         if (!expr || !prompt) { ctx.set({ note: { kind: 'warn', msg: 'cron expression and prompt required' } }); return; }
         ctx.set({ busy: true, note: null });
         try { await api('/api/cron', { method: 'POST', body: { cron: expr, prompt } }); ctx.state.expr = ''; ctx.state.prompt = ''; await load(); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false });
     }
-    // A cron job delete is instant and irreversible (hard DELETE, no undo) --
-    // gate it behind ConfirmDialog (an existing, already-shared primitive)
-    // rather than firing on a single click.
     async function del(job) {
         ctx.set({ busy: true });
         try { await api('/api/cron/' + job.id, { method: 'DELETE' }); await load(); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false, confirmDelete: null });
     }
     load();
@@ -61,7 +54,7 @@ export const cron = makePage((ctx) => {
 
 export const tools = makePage((ctx) => {
     Object.assign(ctx.state, { open: null, q: '' });
-    async function load() { try { ctx.set({ loading: false, list: await api('/api/tools'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, list: await api('/api/tools'), error: null }); } catch (e) { ctx.failLoad(e); } }
     load();
     return () => {
         const s = ctx.state;
@@ -88,15 +81,11 @@ export const batch = makePage((ctx) => {
     async function run() {
         const prompts = (ctx.state.prompts || '').split('\n').map(x => x.trim()).filter(Boolean);
         if (!prompts.length) { ctx.set({ note: { kind: 'warn', msg: 'enter at least one prompt (one per line)' } }); return; }
-        // `Number(x) || 4` only guards NaN/0 -- a genuine negative number is
-        // still truthy and passes through. src/batch.js clamps this too, but
-        // failing fast here gives the user real feedback instead of a batch
-        // that (pre-clamp) could hang forever with no error.
         const n = Number(ctx.state.concurrency);
         if (!Number.isFinite(n) || n <= 0) { ctx.set({ note: { kind: 'warn', msg: 'concurrency must be a positive number' } }); return; }
         ctx.set({ busy: true, note: null, result: null });
         try { const r = await api('/api/batch', { method: 'POST', body: { prompts, concurrency: Math.floor(n) } }); ctx.set({ result: r }); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false });
     }
     return () => {

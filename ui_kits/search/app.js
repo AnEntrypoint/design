@@ -1,16 +1,13 @@
 import * as webjsx from 'webjsx';
-// Imported directly from owning submodules, not the ds/components.js barrel
-// -- see aicat/app.js for the measured rationale (200+ serial unbundled
-// module requests when every kit pulls the full 30+-submodule barrel).
-import { Topbar, Crumb, Status, Side, AppShell, Heading, Lede, Chip } from 'ds/components/shell.js';
-import { Panel, Row, RowLink } from 'ds/components/content.js';
+import { Topbar, Crumb, Status, Side, AppShell, Heading } from 'ds/components/shell.js';
+import { Panel, Row } from 'ds/components/content.js';
 import { mountKit } from 'ds/bootstrap.js';
 const h = webjsx.createElement;
 
 const root = document.getElementById('root');
 
 const corpus = [
-    { code: 'kit', title: 'aicat',         sub: 'ai assistant with cat persona — ascii portrait + mood face', kind: 'kit',     href: '../aicat/' },
+    { code: 'kit', title: 'aicat',         sub: 'ai assistant with cat persona: ascii portrait and mood face', kind: 'kit',     href: '../aicat/' },
     { code: 'kit', title: 'community-app', sub: 'chat + community app: threads, composer, servers, voice',     kind: 'kit',     href: '../community-app/' },
     { code: 'kit', title: 'dashboard',     sub: 'kpis, tables, receipts, changelog, panels',                  kind: 'kit',     href: '../dashboard/' },
     { code: 'kit', title: 'file_browser',  sub: 'rails by file type, drop, preview',                          kind: 'kit',     href: '../file_browser/' },
@@ -18,7 +15,7 @@ const corpus = [
     { code: 'kit', title: 'settings',      sub: 'sectioned forms, toggles, inputs, save bar',                 kind: 'kit',     href: '../settings/' },
     { code: 'kit', title: 'signin',        sub: 'auth panel, providers, magic link',                          kind: 'kit',     href: '../signin/' },
     { code: 'kit', title: 'terminal',      sub: 'cli prompt, command lines, log viewer',                      kind: 'kit',     href: '../terminal/' },
-    { code: 'pre', title: 'buttons',       sub: 'primary · secondary · ghost — 6px radius',                   kind: 'preview', href: '../../preview/buttons.html' },
+    { code: 'pre', title: 'buttons',       sub: 'primary · secondary · ghost',                   kind: 'preview', href: '../../preview/buttons.html' },
     { code: 'pre', title: 'colors-core',   sub: 'paper, ink, panel-N tonal stack',                            kind: 'preview', href: '../../preview/colors-core.html' },
     { code: 'pre', title: 'dropzone',      sub: 'tonal upload target',                                        kind: 'preview', href: '../../preview/dropzone.html' },
     { code: 'pre', title: 'file-viewer',   sub: 'modal preview · keyed head + body',                          kind: 'preview', href: '../../preview/file-viewer.html' },
@@ -33,36 +30,7 @@ const corpus = [
 
 const kinds = ['all', 'kit', 'preview', 'doc', 'api'];
 
-// `phase` drives which state the results panel renders. It is a real toggle in
-// the sidebar rather than a flag only a live backend could set — an index kit
-// whose loading and error surfaces exist only in dead code has not shipped them.
-const state = { q: 'panel', kind: 'all', phase: 'ready' };
-const PHASES = ['ready', 'loading', 'error'];
-
-// Ranked-result loading placeholder. Reuses .ds-event-row-skeleton + .ds-skel*
-// (app-shell/files.css) because a RowLink is the same code/title/meta rhythm.
-function ResultsSkeleton() {
-    return h('div', {},
-        ...[0, 1, 2, 3, 4, 5].map((i) => h('div', { key: 'sk' + i, class: 'ds-event-row-skeleton' },
-            h('span', { class: 'ds-skel ds-skel-icon' }),
-            h('span', { class: 'ds-skel ds-skel-title' }),
-            h('span', { class: 'ds-skel ds-skel-meta' })
-        ))
-    );
-}
-
-function ResultsError() {
-    return h('div', { class: 'ds-alert ds-alert-error' },
-        h('span', { class: 'ds-alert-icon' }, '!'),
-        h('div', { class: 'ds-alert-content' },
-            h('div', { class: 'ds-alert-title' }, 'index out of date'),
-            h('div', { class: 'ds-alert-message' }, 'the search index last rebuilt 9 days ago and rejected this query. results would be wrong rather than missing, so nothing is shown. rebuilding takes about 20s.'),
-            h('div', { class: 'ds-alert-retry' },
-                h('button', { class: 'btn', onclick: () => { state.phase = 'ready'; kit.render(); } }, 'rebuild index')
-            )
-        )
-    );
-}
+const state = { q: 'panel', kind: 'all' };
 
 function score(item, q) {
     const t = (item.title + ' ' + item.sub).toLowerCase();
@@ -94,10 +62,7 @@ function App() {
                 oninput: (e) => { state.q = e.target.value; kit.render(); }
             })
         }),
-        // Result count already surfaces once, in the 'results' panel header
-        // pill below -- the crumb only needs to speak when that panel isn't
-        // showing a count of its own (loading/error phases).
-        crumb: Crumb({ trail: ['247420', 'kits'], leaf: 'search', right: state.phase === 'ready' ? null : state.phase }),
+        crumb: Crumb({ trail: ['247420', 'kits'], leaf: 'search' }),
         side: Side({
             sections: [
                 { group: 'kind', items: kinds.map((k) => ({
@@ -105,13 +70,6 @@ function App() {
                     count: k === 'all' ? corpus.length : corpus.filter((c) => c.kind === k).length,
                     href: '#' + k, active: state.kind === k, key: k,
                     onClick: (e) => { e.preventDefault(); state.kind = k; kit.render(); }
-                })) },
-                // Reachable state switcher — the results panel is this kit's
-                // data surface, so loading and error are one click away.
-                { group: 'index state', items: PHASES.map((p) => ({
-                    glyph: h('span', { class: state.phase === p ? 'ds-dot ds-dot-on' : 'ds-dot ds-dot-off' }),
-                    label: p, key: 'ph-' + p, active: state.phase === p, href: '#' + p,
-                    onClick: (e) => { e.preventDefault(); state.phase = p; kit.render(); }
                 })) },
                 { group: 'recent', items: [
                     { glyph: '·', label: 'panel', key: 'q1', onClick: (e) => { e.preventDefault(); state.q = 'panel'; kit.render(); } },
@@ -123,26 +81,18 @@ function App() {
         }),
         main: [
             h('div', { class: 'ds-app-surface ds-section-pad' },
-                Heading({ level: 1, children: 'search' }),
-                Lede({ children: 'query bar in the topbar, faceted filters in the sidebar, ranked results in panel rows. same row primitive every other surface uses.' }),
-                state.phase === 'loading' ? Panel({ title: 'searching', class: 'ds-panel-gap', children: ResultsSkeleton() })
-                : state.phase === 'error' ? Panel({ title: 'results unavailable', class: 'ds-panel-gap', children: ResultsError() })
-                : rows.length ? Panel({ title: 'results', count: rows.length, class: 'ds-panel-gap', children:
-                    rows.map((r, i) => RowLink({ key: 'r' + r.code + i, code: r.code, title: r.title, sub: r.sub, meta: r.kind, href: r.href }))
+                Heading({ level: 1, children: rows.length + (rows.length === 1 ? ' result' : ' results') + (state.q.trim() ? ' for "' + state.q.trim() + '"' : '') }),
+                rows.length ? Panel({ title: 'results', count: rows.length, class: 'ds-panel-gap', children:
+                    rows.map((r, i) => Row({ key: 'r' + r.code + i, title: r.title, sub: r.sub, meta: r.kind, href: r.href, kind: 'link', highlight: state.q.trim() }))
                 }) : Panel({ title: 'no results', class: 'ds-panel-gap', children: h('div', { class: 'ds-empty-state' },
                     h('div', { class: 'ds-empty-state-glyph' }, '( )'),
                     h('p', { class: 'ds-empty-state-msg' }, 'no matches for ', h('code', {}, '"' + state.q + '"')),
                     h('p', { class: 'ds-empty-state-hint' }, 'try a shorter query, or pick a different kind.')
-                ) }),
-                Panel({ title: 'about this kit', class: 'ds-panel-gap', children: h('div', { class: 'ds-pattern-notes' },
-                    h('p', {}, '· query input lives in the ', Chip({ tone: 'accent', children: 'Topbar' }), ' search slot — same component the index uses.'),
-                    h('p', {}, '· filters are ', Chip({ tone: 'accent', children: 'Side' }), ' sections with active states; counts come from the corpus.'),
-                    h('p', {}, '· results reuse ', Chip({ tone: 'accent', children: 'RowLink' }), ' — never a bespoke result row.')
                 ) })
             )
         ],
         status: Status({
-            left: ['search', '- kind=' + state.kind, state.phase === 'ready' ? '- ' + rows.length + ' rows' : '- ' + state.phase],
+            left: ['search', '- kind=' + state.kind, '- ' + rows.length + ' rows'],
             right: ['247420 / mmxxvi']
         })
     });

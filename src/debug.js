@@ -1,5 +1,3 @@
-// Lightweight client-side registry. Subsystems register a snapshot fn;
-// `window.__debug` exposes them all for live inspection.
 
 const _registry = new Map();
 

@@ -64,20 +64,20 @@
   --green-2:     #3A9A34;
   --green-deep:  #133F10;
   --green-tint:  #D7E4C2;
-  --purple:      #420247; /* the brand codename's digit reversal, the identity's secondary lead -- 15.77:1 on --paper */
-  --purple-2:    #7F18A4;
-  --purple-deep: #220026;
-  --purple-tint: #E2CFE4;
-  --mascot:      #FF2E84;
-  --mascot-2:    #FF3CA7;
-  --mascot-tint: #F7CEDD;
-  --mascot-deep: #B81F63;
+  --purple:      #525252;
+  --purple-2:    #595959;
+  --purple-deep: #262626;
+  --purple-tint: #E5E5E5;
+  --mascot:      #737373;
+  --mascot-2:    #8C8C8C;
+  --mascot-tint: #E5E5E5;
+  --mascot-deep: #262626;
   /* Fixed ink-surface mascot text tone (6.67:1 on --ink). Unlike
      --mascot-deep, this NEVER follows the theme: it is for always-dark
      surfaces like the .cli card, which stay ink under a light theme and so
      need a tone chosen for ink rather than for the active theme. Same role
      --paper-3-dark plays for the tier-3 text ramp. */
-  --mascot-on-ink: #FF5C9E;
+  --mascot-on-ink: #D4D4D4;
   /* Same always-dark-surface pattern, for .ds-cli-ok's success/OK text.
      --brand-green (#247420) fails 1.15:1 on the always-dark .cli card
      (npm run a11y caught this on the terminal kit), so this reuses the
@@ -92,12 +92,12 @@
      pair (flame 4.74:1, amber 4.5+:1 on paper); the dark blocks below restore
      the originals (#FF5A1F / #D9A93A) which were tuned on ink and fail on
      paper (2.9:1 / 2.0:1). */
-  --flame:       #C53E00;
+  --flame:       var(--warn);
   /* #8A6512 measured 4.5+:1 on --paper but only 4.26:1 on --bg-2, which the
      dashboard card status text actually renders on - darkened for margin on
      both backgrounds (5.21:1 on --bg-2). */
   --amber:       #7C570F;
-  --sky:         #3A6EFF;
+  --sky:         #404040;
   /* --warn = interactive danger controls (buttons, banners, menus, error
      inputs); --danger below = passive error/status text and metrics
      (kpi/sparkline deltas, auth-error text). Two tokens, one convention.
@@ -155,24 +155,15 @@
      fill (verified via npm run a11y against a dark-on-dark 1.15:1 failure
      across every kit's .btn-primary/.active nav item, both of which read
      --accent-fg as their text color). */
-  /* Brand accent identity — ported from stoat for-web's default M3 source
-     color (m3Accent #5470ec, materialTheme.ts) through this repo's own HCT
-     tone engine (src/theme/dynamic-accent.js), at the SAME fixed M3
-     TonalSpot role tones that engine already guarantees contrast at
-     (LIGHT_TONES.primary T40 / onPrimary T100). Computed once (hue 293.4°,
-     chroma clamped to the engine's own MAX_CHROMA 48) and pasted as literal
-     hex rather than left to run at load time, matching how every other
-     token in this file is a static value, not a runtime computation --
-     the JS engine itself stays reserved for its existing per-server/
-     per-subtree scoped-override role (--dyn-accent*), never document-wide.
-     Verified 6.42:1 (--accent-ink on --paper) / 6.02:1 (fill/onPrimary
-     pair), both clear of AA 4.5:1. This is the document-wide accent
-     identity; --brand-green is a separate, frozen brand primitive, still
-     consumed directly by [data-accent="acid"] (see below). */
-  --accent:      #4D58A7;
-  --accent-fg:   #F6F7FF;
-  --accent-ink:  #001759;
-  --accent-bright: #4D58A7; /* base value so var(--accent-bright) never falls back empty; ink + [data-accent] retune it */
+  /* Neutral grayscale accent: the FILL is #262626 with
+     white --accent-fg on top (15.9:1); --accent-ink (#171717) is the readable
+     TEXT tone on --paper (17.9:1). Dark/ink themes retune below to #BFBFBF
+     with --accent-ink = --paper. Chromatic accents are opt-in only, via the
+     [data-accent] presets at the end of this file. */
+  --accent:      #262626;
+  --accent-fg:   var(--paper);
+  --accent-ink:  #171717;
+  --accent-bright: #262626; /* base value so var(--accent-bright) never falls back empty; ink + [data-accent] retune it */
   /* Blends --accent-ink (the readable/darker ink variant), not the raw
      --accent fill, so light-theme active states clear contrast against --bg;
      dark/ink and auto-dark restate the prior --accent-based value explicitly
@@ -225,7 +216,7 @@
   --panel-text-2: var(--fg-2);
   --panel-text-3: var(--fg-3);
   --panel-accent-2: var(--accent-bright, var(--accent));
-  --panel-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent), 0 4px 14px color-mix(in oklab, var(--fg) 8%, transparent);
+  --panel-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
   /* Single-layer, half-strength companion to --shadow-1, used ONLY by .panel.
      .panel already carries a tonal --panel-1 fill and a --rule border; a
      full --shadow-1 on top made three simultaneous edge/surface signals
@@ -652,21 +643,21 @@
      blocks). Each consumer block below still needs its own selector -- CSS
      has no shared mixin across a plain selector and a @media-nested one --
      but the actual VALUES now have exactly one place to edit. */
-  --dark-accent:      #BCBEFF; /* for-web HCT source (#5470ec) at DARK_TONES.primary T80; 7.45:1 fill/onPrimary, 9.90:1 accent-ink on ink */
-  --dark-accent-fg:   #0B2B72;
-  --dark-accent-ink:  #E8E9FF;
+  --dark-accent:      #BFBFBF; /* 10.5:1 on --ink; 9.9:1 on --ink-2 */
+  --dark-accent-fg:   var(--ink); /* 8.9:1 on the #BFBFBF fill */
+  --dark-accent-ink:  var(--paper);
   --dark-danger:      oklch(0.68 0.19 25);
-  --dark-flame:       #FF5A1F;
+  --dark-flame:       var(--dark-warn);
   --dark-amber:       #D9A93A;
   --dark-warn:        #FF5A52; /* clears AA 4.5:1 on --ink; the :root paper value (#E0241A) does not */
-  --dark-sky:         #6E9BFF;
+  --dark-sky:         #BFBFBF;
   /* Category/heritage dark-tuned text tones: the :root PAPER values go
      dark-on-dark on ink (measured: mascot-deep #B81F63 3.13:1, purple-2
      #7F18A4 2.36:1, green #247420 3.30:1 on --ink -- all failing AA). These
      clear 4.5:1 on both ink surfaces: #FF5C9E 6.67/5.67, #C277FF 6.77/5.75,
      #5CBF52 8.28/7.04. */
-  --dark-mascot-deep: #FF5C9E;
-  --dark-purple-2:    #C277FF;
+  --dark-mascot-deep: #D4D4D4;
+  --dark-purple-2:    #BFBFBF;
   --dark-green:       #5CBF52;
 }
 
@@ -712,7 +703,7 @@
   --panel-text-2: var(--fg-2);
   --panel-text-3: var(--fg-3);
   --panel-accent-2: var(--accent-bright, var(--accent));
-  --panel-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent), 0 4px 14px color-mix(in oklab, var(--fg) 8%, transparent);
+  --panel-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
   --panel-shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
   /* Same class: a scrim is the theme's own ink dimming its own ground, so an
      island's overlay must dim with the island's --fg, not its ancestor's. */
@@ -722,7 +713,8 @@
 }
 
 .ds-247420[data-theme="ink"],
-.ds-247420[data-theme="dark"] {
+.ds-247420[data-theme="dark"],
+.ds-247420[data-theme="github-dark"] {
   color-scheme: dark;
   --bg:        var(--ink);
   --bg-2:      var(--ink-2);
@@ -789,7 +781,8 @@
 /* Restores the pre-existing (weaker) dark-theme selection tint after the
    light-theme-only bump in app-shell.css's base ::selection rule. */
 .ds-247420[data-theme="ink"] ::selection,
-.ds-247420[data-theme="dark"] ::selection {
+.ds-247420[data-theme="dark"] ::selection,
+.ds-247420[data-theme="github-dark"] ::selection {
   background: color-mix(in oklab, var(--accent) 24%, var(--bg-2));
   color: var(--fg);
 }
@@ -858,10 +851,10 @@
   color-scheme: light;
   --bg: var(--paper); --bg-2: var(--paper-2); --bg-3: var(--paper-3);
   --fg: var(--ink);   --fg-2: var(--ink-2);   --fg-3: var(--ink-3);
-  --accent: #4D58A7; --accent-fg: #F6F7FF; --accent-ink: #001759;
+  --accent: #262626; --accent-fg: var(--paper); --accent-ink: #171717;
   --accent-tint: color-mix(in oklab, var(--accent-ink) 22%, var(--bg));
   /* A paper island under a dark ancestor must not inherit the dark signal pair. */
-  --flame: #C53E00; --amber: #7C570F; --warn: #C41C0C; --sky: #3A6EFF;
+  --flame: #C41C0C; --amber: #7C570F; --warn: #C41C0C; --sky: #404040;
 }
 
 /* thebird — warm-paper brand preset. A first-class swappable theme: it lives
@@ -935,7 +928,7 @@
      either into the brand orange would render two different case statuses
      identically on a disease-surveillance map. */
   --amber: #7C570F;
-  --sky: #3A6EFF;
+  --sky: #404040;
 }
 
 /* herd-ink -- the dark companion. It exists because this kit's own bundle
@@ -987,48 +980,6 @@
   --green: var(--dark-green);
 }
 
-/* github-dark — pi-web's GitHub-dark theme. Cool dark palette with blue accent,
-   ported from pi-web (https://github.com/jmfederico/pi-web). */
-.ds-247420[data-theme="github-dark"] {
-  color-scheme: dark;
-  --bg:        #0d1117;
-  --bg-2:      #161b22;
-  --bg-3:      #21262d;
-  --fg:        #e6edf3;
-  --fg-2:      #c9d1d9;
-  --fg-3:      #8b949e;
-  /* Only tier-3 deviates from the shared [data-theme] derivation; see the
-     explicit dark block above. */
-  --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
-  --accent:    #58a6ff;
-  --accent-fg: #ffffff;
-  --accent-ink: #58a6ff;
-  --accent-bright: #79c0ff;
-  --accent-tint: color-mix(in oklab, var(--accent) 30%, var(--bg));
-  --danger:    #ff7b72;
-  --flame:     #ff7b72;
-  --amber:     #d29922;
-  --warn:      #ff7b72;
-  --warn-fg:   #0d1117;
-  --sky:       #58a6ff;
-  --mascot-deep: #ff7b72;
-  --purple-2:  #d2a8ff;
-  --green:     #3fb950;
-  --green-2:   #3fb950;
-  --cat-green-ink:  #3fb950;
-  --cat-purple-ink: #d2a8ff;
-  --code-string:  var(--green-2);
-  --code-keyword: var(--sky);
-  --code-fn:      var(--flame);
-  --code-str-alt: var(--mascot-deep);
-  --code-num:     var(--amber);
-}
-
-.ds-247420[data-theme="github-dark"] ::selection {
-  background: color-mix(in oklab, var(--accent) 24%, var(--bg-2));
-  color: var(--fg);
-}
-
 /* --density still scales the smooth --space, --pad, and --gutter scale (that
    tolerates fractional rem fine); --ctl and --row-height below are
    overridden per-tier as discrete whole-pixel tables instead (see the
@@ -1045,7 +996,7 @@
 
 .ds-247420[data-accent="acid"]   { --accent: var(--brand-green); --accent-bright: var(--brand-green); --accent-fg: var(--paper); --accent-ink: var(--brand-green-deep); --panel-accent: var(--brand-green); }
 .ds-247420[data-accent="green"]  { --accent: var(--green);  --accent-bright: var(--green-2);  --accent-fg: var(--paper); --accent-ink: var(--green);     --panel-accent: var(--green);  }
-.ds-247420[data-accent="purple"] { --accent: var(--purple); --accent-bright: #C277FF;         --accent-fg: var(--paper); --accent-ink: var(--purple-2);  --panel-accent: var(--purple); }
+.ds-247420[data-accent="purple"] { --accent: var(--purple); --accent-bright: var(--dark-purple-2);        --accent-fg: var(--paper); --accent-ink: var(--purple-2);  --panel-accent: var(--purple); }
 .ds-247420[data-accent="mascot"] { --accent: var(--mascot); --accent-bright: var(--mascot-2); --accent-fg: var(--ink);   --accent-ink: var(--mascot-deep);--panel-accent: var(--mascot); }
 
 /* Type-scale modifier — opt-in body/lg/xl bump for surfaces that want denser
@@ -1071,8 +1022,8 @@
    now, same visual intent, no more raw color literal in a component sheet. */
 .ds-247420 .with-grid-overlay {
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--mascot) 15%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--mascot) 15%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--fg) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--fg) 10%, transparent) 1px, transparent 1px);
   background-size: 8px 8px;
 }
 
@@ -1094,14 +1045,11 @@
 /* Elevation tokens consumed by overlays (Tooltip, Popover, Dropdown, Dialog). */
 .ds-247420:not(:where(.ds-247420 .ds-247420)) {
   --shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
-  --shadow-2: 0 4px 12px color-mix(in oklab, var(--fg) 10%, transparent),
-              0 2px 4px  color-mix(in oklab, var(--fg) 6%,  transparent);
-  --shadow-3: 0 12px 32px color-mix(in oklab, var(--fg) 14%, transparent),
-              0 4px 8px   color-mix(in oklab, var(--fg) 8%,  transparent);
+  --shadow-2: 0 1px 3px color-mix(in oklab, var(--fg) 10%, transparent);
+  --shadow-3: 0 4px 8px -2px color-mix(in oklab, var(--fg) 12%, transparent);
   /* Overlay elevation — the float for dialogs/lightboxes that sit above a
      scrim; heavier than --shadow-3 and theme-driven (was raw rgba(0,0,0,.4)). */
-  --shadow-overlay: 0 12px 40px color-mix(in oklab, var(--fg) 28%, transparent),
-                    0 4px 12px  color-mix(in oklab, var(--fg) 16%, transparent);
+  --shadow-overlay: 0 8px 16px -4px color-mix(in oklab, var(--fg) 16%, transparent);
   /* --z-popover is an alias, not a rung: popovers and dropdowns are the
      same anchored-to-a-trigger layer and must never be able to drift
      apart. The rungs themselves live with the stacking scale above. */
@@ -1989,6 +1937,7 @@
   background: transparent; border: none; color: var(--fg-3); cursor: pointer;
   border-radius: var(--r-0);
 }
+@media (pointer: coarse) { .ds-247420 .app-status-toggle { width: 44px; min-height: 44px; } }
 .ds-247420 .app-status-toggle:hover { color: var(--fg); background: var(--bg-3); }
 .ds-247420 .app-status-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .ds-247420 .app-status.is-collapsed {
@@ -2037,20 +1986,19 @@
   border-radius: var(--r-1);
   border: var(--bw-hair) solid transparent;
   box-shadow: none;
-  transition: transform var(--dur-base) var(--ease-spring), background var(--dur-snap) var(--ease),
-    color var(--dur-snap) var(--ease), box-shadow var(--dur-base) var(--ease-spring),
+  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease),
     border-color var(--dur-snap) var(--ease);
 }
 .ds-247420 .btn { background: var(--bg-2); color: var(--fg); border-color: var(--rule); }
-.ds-247420 .btn:hover { background: var(--bg-3); color: var(--fg); transform: translateY(-1px); box-shadow: var(--shadow-1); }
+.ds-247420 .btn:hover { background: var(--bg-3); color: var(--fg); }
 .ds-247420 .btn-primary {
   background: var(--accent); color: var(--accent-fg);
   font-weight: 600;
 }
-.ds-247420 .btn-primary:hover { background: var(--fg); color: var(--bg); transform: translateY(-1px); box-shadow: var(--shadow-2); }
+.ds-247420 .btn-primary:hover { background: var(--fg); color: var(--bg); }
 .ds-247420 .btn-ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 var(--bw-hair) var(--fg); }
-.ds-247420 .btn-ghost:hover { background: color-mix(in oklab, var(--fg) 12%, transparent); transform: translateY(-1px); }
-.ds-247420 .btn:active, .ds-247420 .btn-primary:active, .ds-247420 .btn-ghost:active { transform: translateY(1px); box-shadow: none; }
+.ds-247420 .btn-ghost:hover { background: color-mix(in oklab, var(--fg) 12%, transparent); }
+.ds-247420 .btn:active, .ds-247420 .btn-primary:active, .ds-247420 .btn-ghost:active { box-shadow: none; }
 /* Disabled state: --fg-3 (the tuned tertiary-text token, AA-clear against
    every panel tier) instead of a blind opacity halving -- opacity multiplies
    the SURROUNDING contrast too, so a light-on-dark button can drop under 3:1
@@ -2080,6 +2028,10 @@
   color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px;
   cursor: pointer;
 }
+@media (pointer: coarse) {
+  .ds-247420 .btn-link { min-height: 44px; min-width: 44px; justify-content: center; }
+  .ds-247420 .btn-sm, .ds-247420 .btn-sm.btn-primary, .ds-247420 .btn-sm.btn-ghost { height: 44px; min-height: 44px; min-width: 44px; }
+}
 .ds-247420 .btn-link:hover { color: var(--fg); }
 .ds-247420 .btn-link:focus-visible {
   outline: var(--focus-w) solid var(--focus-color);
@@ -2088,6 +2040,9 @@
 .ds-247420 .btn-lg, .ds-247420 .btn-lg.btn-primary, .ds-247420 .btn-lg.btn-ghost {
   height: var(--ctl-lg); min-height: var(--ctl-lg);
   padding: 0 var(--space-4); font-size: var(--fs-body); gap: var(--space-2);
+}
+@media (pointer: coarse) {
+  .ds-247420 .btn-lg, .ds-247420 .btn-lg.btn-primary, .ds-247420 .btn-lg.btn-ghost { min-height: 44px; }
 }
 
 /* App chrome is compact/dense (see --fs-h1-app etc in colors_and_type.css) --
@@ -2236,18 +2191,6 @@
   border-radius: 50%;
   background: var(--sky);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .chip.tone-live::before {
-    animation: chip-live-pulse 1.6s ease-in-out infinite;
-  }
-}
-@keyframes chip-live-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in oklab, var(--sky) 50%, transparent); }
-  50% { opacity: 0.7; box-shadow: 0 0 0 4px transparent; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-247420 .chip.tone-live::before { animation: none; }
-}
 .ds-247420 .chip.tone-flame, .ds-247420 .chip.tone-error, .ds-247420 .chip.tone-miss {
   background: var(--flame); color: var(--on-color);
 }
@@ -2290,7 +2233,7 @@
 
 .ds-247420 .ds-pill {
   display: inline-block;
-  padding: 1px 7px;
+  padding: 1px var(--space-2);
   border-radius: var(--r-pill);
   font-size: var(--fs-micro);
   background: var(--bg-3); color: var(--fg-2);
@@ -2329,6 +2272,9 @@
 }
 .ds-247420 .ds-empty-state--panel { background: var(--bg-2); border-radius: var(--r-1); }
 .ds-247420 .ds-empty-state--compact { padding: var(--space-5) var(--space-3); }
+.ds-247420 .ds-empty-state-glyph { color: var(--fg-3); line-height: 1; }
+.ds-247420 .ds-empty-state-msg { color: var(--fg-2); font-size: var(--fs-body); }
+.ds-247420 .ds-empty-state-hint { color: var(--fg-3); font-size: var(--fs-tiny); max-width: 48ch; }
 
 /* .ds-tooltip — shared floating bubble (overlay-primitives/tooltip.js appends
    one instance to <body> and repositions it via useFloating). Fade timing
@@ -2392,6 +2338,9 @@
 .ds-247420 .ds-menubar-trigger:hover { background: var(--bg-3); }
 .ds-247420 .ds-menubar-trigger:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-247420 .ds-menubar-trigger.is-open { background: var(--bg-3); }
+@media (pointer: coarse) {
+  .ds-247420 .ds-menubar-trigger { min-height: 44px; min-width: 44px; justify-content: center; }
+}
 @media (prefers-reduced-motion: reduce) {
   .ds-247420 .ds-menubar-trigger { transition: none; }
 }
@@ -2516,6 +2465,17 @@
    makes proximity report grouping truthfully. */
 .ds-247420 .panel-body > * + * { margin-top: calc(var(--space-3) * var(--density)); }
 .ds-247420 .panel.panel-wide .panel-body { padding: 0; }
+
+/* One left edge on an Operate surface: the page title, the panel heading, the
+   heading's hairline and the panel content all start at the surface's own
+   edge. The flat panel's inline padding otherwise indents the heading 40px past
+   the title and the rule 24px, three edges in one column. Block padding goes
+   too -- the panel margin (.ds-panel-gap) already owns vertical separation, and
+   padding on top of it doubled the gap between sections. Bordered and tonal
+   panels keep their padding: they have a visible edge to pad against. */
+.ds-247420 .ds-app-surface .panel:not(.panel-tonal):not(.panel-inline):not(.panel--dense) { padding: 0; }
+.ds-247420 .ds-app-surface .panel:not(.panel-tonal):not(.panel-inline):not(.panel--dense) > .panel-head,
+.ds-247420 .ds-app-surface .panel:not(.panel-tonal):not(.panel-inline):not(.panel--dense) > .panel-body { padding-inline: 0; }
 
 /* ============================================================
    LogRow — one entry in a log or timeline. Dense, quiet, and
@@ -3199,18 +3159,14 @@
 /* ============================================================
    Changelog
    ============================================================ */
-.ds-247420 .ds-changelog-row {
-  /* The !important is load-bearing and was empirically confirmed so -- do not
-     remove it on a specificity argument. A changelog row carries three tracks
-     (date, version, message) where a plain .row carries two, and the responsive
-     blocks in responsive.css legitimately rewrite .row's template at several
-     breakpoints. Those blocks are later in the cascade, so at tablet width the
-     two-track override wins on source order and collapses the version column:
-     measured live, removing this flag changes the computed template from
-     "120.75px 77.625px 70.125px" to "103.5px 0px 165px" -- a zero-width column
-     and the version silently gone. Scoping to .app does not help, because the
-     competing rules would need to be scoped in lockstep. */
-  grid-template-columns: minmax(110px, 14ch) minmax(60px, 9ch) minmax(0, 1fr) !important;
+/* Three tracks (date, version, message) where a plain .row has two. The
+   .app .row.ds-changelog-row selector is (0,3,0) so it out-ranks the generic
+   .app .row template rewritten at every responsive breakpoint by specificity
+   rather than by !important; the bare .row.ds-changelog-row form covers rows
+   rendered outside .app, where those generic rules do not apply either. */
+.ds-247420 .app .row.ds-changelog-row,
+.ds-247420 .row.ds-changelog-row {
+  grid-template-columns: minmax(110px, 14ch) minmax(60px, 9ch) minmax(0, 1fr);
 }
 .ds-247420 .ds-changelog-ver {
   font-family: var(--ff-body); font-weight: 600; font-size: var(--fs-sm);
@@ -3233,7 +3189,7 @@
    ============================================================ */
 .ds-247420 .work-detail {
   padding: var(--space-4) var(--space-5) var(--space-5);
-  margin: 4px 0 var(--space-2);
+  margin: var(--space-1) 0 var(--space-2);
   background: var(--bg-2);
   border-radius: var(--r-3);
   display: flex; flex-direction: column; gap: var(--space-3);
@@ -3290,12 +3246,10 @@
      gap named against the stat tiles. */
   border: 1px solid var(--rule);
   position: relative;
-  transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  transition: border-color var(--dur-snap) var(--ease);
 }
 .ds-247420 .kpi-card:hover {
   border-color: color-mix(in oklab, var(--accent) 40%, var(--rule));
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-1, 0 2px 8px rgba(0,0,0,.12));
 }
 /* Number+caption stack, isolated from .kpi-foot below it. Previously the
    number and label were plain block children of .kpi-card with the label's
@@ -3543,21 +3497,15 @@
   }
   .ds-247420 .row .sub { grid-column: 1 / -1; order: 3; }
   .ds-247420 .row .title { font-size: var(--fs-sm); }
-  /* Changelog carries 3 children: give date+ver line one, message wraps below
-     (the generic 2-col .row override staggers it into an implicit row).
-     Needs (0,3,0) to clear BOTH the `.app .row` rule directly above and
-     `.ds-changelog-row`'s own !important base in hero-content.css — an
-     !important base can only be beaten by another !important, so this one
-     stays until that upstream flag is removed (hero-content.css is outside
-     this change's scope). */
-  .ds-247420 .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr) !important; }
+  /* Changelog carries 3 children: date+ver share line one, the message wraps below. */
+  .ds-247420 .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr); }
   .ds-247420 .ds-changelog-row .title { grid-column: 1 / -1; }
 
   .ds-247420 .btn:not(.btn-sm):not(.btn-lg), .ds-247420 .btn-primary:not(.btn-sm):not(.btn-lg), .ds-247420 .btn-ghost:not(.btn-sm):not(.btn-lg) {
     /* 11px vertical is optical, not scale drift: --space-2-75 (12) would tip
        the intrinsic box past the 44px min-height floor below and make the
        floor dead, changing the mobile button rhythm. */
-    padding: 11px var(--space-3); font-size: var(--fs-tiny);
+    padding: var(--space-2-75) var(--space-3); font-size: var(--fs-tiny);
     min-height: 44px; /* Touch target minimum */
   }
 
@@ -3612,7 +3560,7 @@
   .ds-247420 .row-form { gap: var(--space-2-5); padding: var(--space-3); }
   .ds-247420 .row-form input,
   
-  .ds-247420 .row-form textarea { padding: 11px var(--space-2-75); font-size: var(--fs-sm); }
+  .ds-247420 .row-form textarea { padding: var(--space-2-75) var(--space-2-75); font-size: var(--fs-sm); }
 
   /* Hero Section — keep fluid base font-size, just unconstrain width on mobile. */
   .ds-247420 .ds-hero { padding: var(--space-6) 0 var(--space-5); }
@@ -3647,9 +3595,7 @@
      the later `@media` `.row` rules in this file without a flag. */
   .ds-247420 .app .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: var(--space-1); }
   .ds-247420 .row .sub { grid-column: 1 / -1; order: 3; }
-  /* (0,3,0) + !important: still required to beat `.ds-changelog-row`'s
-     !important base in hero-content.css (see the 480px block). */
-  .ds-247420 .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr) !important; }
+  .ds-247420 .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr); }
   .ds-247420 .ds-changelog-row .title { grid-column: 1 / -1; }
 }
 
@@ -3710,7 +3656,7 @@
     /* 11px/14px are the tuned tablet bubble insets; neither is on the scale
        (11 sits between --space-2-5 and --space-2-75, 14 between --space-2-75
        and --space-3) and snapping visibly re-pitches every bubble in a thread. */
-    padding: 11px 14px; font-size: var(--fs-sm);
+    padding: var(--space-2-75) 14px; font-size: var(--fs-sm);
   }
   .ds-247420 .chat-avatar { width: 32px; height: 32px; font-size: var(--fs-micro); }
 
@@ -3781,7 +3727,7 @@
    Chat — minimal styles (placeholder for full chat surface)
    ============================================================ */
 .ds-247420 .ds-chat { display: flex; flex-direction: column; gap: var(--space-2-75); padding: var(--space-4); }
-.ds-247420 .ds-chat-msg { padding: 12px 18px; background: var(--bg-2); border-radius: var(--r-3); max-width: min(90vw, 36em); }
+.ds-247420 .ds-chat-msg { padding: var(--space-2-75) 18px; background: var(--bg-2); border-radius: var(--r-3); max-width: min(90vw, 36em); }
 .ds-247420 .ds-chat-msg.user { background: var(--accent-tint); color: var(--fg); align-self: flex-end; }
 .ds-247420 .ds-chat-md { font-size: var(--fs-sm); line-height: 1.6; }
 .ds-247420 .ds-chat-composer { display: flex; gap: var(--space-2); padding: var(--space-4); }
@@ -3837,19 +3783,10 @@
 .ds-247420 .ds-event-row-skeleton { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2-75) var(--space-3); pointer-events: none; }
 .ds-247420 .ds-skel-rank { height: 12px; width: 2.5ch; }
 .ds-247420 .ds-event-state { padding: var(--space-2) var(--space-3); }
-.ds-247420 .ds-skel { display: inline-block; border-radius: var(--r-1); background: var(--bg-2); position: relative; overflow: hidden; }
-.ds-247420 .ds-skel::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, var(--bg-3), transparent);
-  transform: translateX(-100%);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-skel::after { animation: ds-skel-shimmer 1.2s infinite; }
-}
+.ds-247420 .ds-skel { display: inline-block; border-radius: var(--r-1); }
 .ds-247420 .ds-skel-icon { width: 22px; height: 22px; }
 .ds-247420 .ds-skel-title { height: 12px; width: 60%; }
 .ds-247420 .ds-skel-meta { height: 10px; width: 64px; margin-left: auto; }
-@keyframes ds-skel-shimmer { 100% { transform: translateX(100%); } }
 @media (prefers-reduced-motion: reduce) { .ds-247420 .ds-skel::after { animation: none; } }
 
 /* File row — linear layout (checkbox? · open-button[code · icon · title · meta] · actions).
@@ -3864,7 +3801,7 @@
      and the hairline borders it lands the row at ~50px, comfortably over the
      44px touch floor without the 52px a 12px pad would give. Snapping either
      way visibly re-pitches every row in a long listing. */
-  padding: 11px var(--space-3); background: var(--bg);
+  padding: var(--space-2-75) var(--space-3); background: var(--bg);
   border: var(--bw-hair) solid transparent;
   border-radius: var(--r-2); color: var(--fg);
   cursor: pointer;
@@ -4280,9 +4217,6 @@
   border-color: var(--accent);
   background: var(--accent-tint);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-dropzone.dragover { animation: ds-dropzone-pulse 1.1s var(--ease) infinite; }
-}
 .ds-247420 .ds-dropzone.dragover .ds-dropzone-glyph,
 .ds-247420 .ds-dropzone.dragover .ds-dropzone-label { color: var(--accent-ink); }
 @keyframes ds-dropzone-pulse {
@@ -4420,8 +4354,6 @@
            max(var(--space-3), env(safe-area-inset-bottom))
            max(var(--space-3), env(safe-area-inset-left));
   background: color-mix(in oklab, var(--ink) 55%, transparent);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
 }
 @media (prefers-reduced-motion: no-preference) {
   .ds-247420 .ds-modal-backdrop { animation: ds-modal-fade var(--dur-base) var(--ease); }
@@ -4680,7 +4612,7 @@
 /* Toolbar filter input — compact search box. */
 .ds-247420 .ds-filter-input {
   width: clamp(120px, 22vw, 220px);
-  padding: 7px 12px;
+  padding: var(--space-2) var(--space-2-75);
   background: var(--bg-2); border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-pill); color: var(--fg);
   font-family: inherit; font-size: var(--fs-xs);
@@ -4719,7 +4651,7 @@
 /* Keyboard-shortcuts hint — compact two-column legend. */
 .ds-247420 .ds-shortcuts-hint {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 4px var(--space-3);
+  gap: var(--space-1) var(--space-3);
   padding: var(--space-3) var(--space-4);
   background: var(--bg-2); border: var(--bw-hair) solid var(--rule);
   border-radius: var(--r-2); font-size: var(--fs-xs);
@@ -4800,7 +4732,7 @@
 }
 .ds-247420 .chat-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 .ds-247420 .chat-head .ds-chat-title,
-.ds-247420 .chat-head > span:nth-child(2) {
+.ds-247420 .chat-head > span:nth-child(2):not(.sub) {
   font-family: var(--ff-body); font-size: var(--fs-h4);
   font-weight: 600; color: var(--fg);
   text-transform: none; letter-spacing: var(--tr-tight, -0.01em); line-height: 1.2;
@@ -4840,11 +4772,10 @@
   display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--ff-body); font-size: var(--fs-micro); font-weight: var(--fw-medium, 500);
   text-transform: lowercase; letter-spacing: 0.02em; user-select: none;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
   position: relative;
   box-shadow: inset 0 0 0 1px var(--rule);
 }
-.ds-247420 .chat-msg:hover .chat-avatar { transform: scale(1.03); box-shadow: 0 1px 4px color-mix(in oklab, var(--fg) 6%, transparent); }
 .ds-247420 .chat-msg.you .chat-avatar {
   background: color-mix(in oklab, var(--accent) 18%, var(--bg-3));
   color: var(--accent-ink);
@@ -4891,7 +4822,6 @@
    turn in a conversation. */
 .ds-247420 .chat-msg:not(.you) .chat-bubble { border-bottom-left-radius: var(--r-0); }
 .ds-247420 .chat-msg.you .chat-bubble { border-bottom-right-radius: var(--r-0); }
-.ds-247420 .chat-msg:hover .chat-bubble { transform: translateY(-1px); box-shadow: 0 2px 8px color-mix(in oklab, var(--fg) 6%, transparent); transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease); }
 /* Own bubble — calm tinted lead, not a full electric fill (chat stays readable). */
 .ds-247420 .chat-msg.you .chat-bubble { background: var(--accent-tint); color: var(--fg); }
 .ds-247420 .chat-msg.aicat .chat-bubble {
@@ -5066,9 +4996,7 @@
 .ds-247420 .chat-image { position: relative; }
 .ds-247420 .chat-image img {
   display: block; width: 100%; height: auto; max-height: 360px; object-fit: cover;
-  transition: transform var(--dur-base, .16s) var(--ease, ease);
 }
-.ds-247420 .chat-image:hover img { transform: scale(1.03); }
 /* Hover-zoom cue (magnifier glyph, center-pinned, fades in) signalling the
    embed is click-to-expand — for-web's image embeds carry an equivalent
    affordance; this kit's previously had none, just a bare href-out anchor. */
@@ -5080,7 +5008,7 @@
   opacity: 0;
   transition: opacity var(--dur-snap, .12s) var(--ease, ease);
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3Cpath d='M11 8v6M8 11h6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3Cpath d='M11 8v6M8 11h6'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: center;
 }
 .ds-247420 .chat-image:hover::after { opacity: 1; }
@@ -5237,10 +5165,10 @@
      proportions. */
   min-height: 24px;
   cursor: pointer; user-select: none; appearance: none;
-  transition: background var(--dur-snap, .12s) var(--ease, ease), border-color var(--dur-snap, .12s) var(--ease, ease), transform 0.12s ease;
+  transition: background var(--dur-snap, .12s) var(--ease, ease), border-color var(--dur-snap, .12s) var(--ease, ease);
   position: relative;
 }
-.ds-247420 .chat-reactions .rxn:hover { background: var(--bg-3); transform: scale(1.06); }
+.ds-247420 .chat-reactions .rxn:hover { background: var(--bg-3); }
 .ds-247420 .chat-reactions .rxn:active {
   transform: scale(0.92);
   transition: transform var(--dur-snap, .08s) var(--ease-spring);
@@ -5360,14 +5288,14 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .ds-247420 .chat-typing span {
-    animation: chat-typing-bounce 1.4s infinite ease-in-out;
+    animation: chat-typing-fade 1.4s infinite ease-in-out;
   }
   .ds-247420 .chat-typing span:nth-child(1) { animation-delay: 0s; }
   .ds-247420 .chat-typing span:nth-child(2) { animation-delay: 0.18s; }
   .ds-247420 .chat-typing span:nth-child(3) { animation-delay: 0.36s; }
-  @keyframes chat-typing-bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.55; }
-    30% { transform: translateY(-5px); opacity: 1; }
+  @keyframes chat-typing-fade {
+    0%, 60%, 100% { opacity: 0.35; }
+    30% { opacity: 1; }
   }
 }
 
@@ -5395,7 +5323,7 @@
   background: var(--accent); color: var(--accent-fg);
   font-size: 8px; font-weight: var(--fw-medium, 500);
   border: 2px solid var(--bg);
-  box-shadow: 0 0 0 0.5px color-mix(in oklab, var(--fg) 12%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--fg) 12%, transparent);
 }
 .ds-247420 .chat-typing-avatar:not(:first-child) { margin-inline-start: -6px; }
 .ds-247420 .chat-typing-bar-label {
@@ -5744,6 +5672,7 @@
 }
 @media (pointer: coarse) {
   .ds-247420 .chat-composer-toolbar .composer-btn { width: 44px; height: 44px; }
+  .ds-247420 .chat-composer textarea { min-height: 44px; }
 }
 
 .ds-247420 .chat-composer-note {
@@ -5821,9 +5750,9 @@
   aspect-ratio: 1; font-size: var(--fs-lg, 18px); line-height: 1;
   background: transparent; border: 0; border-radius: var(--r-1, 8px);
   cursor: pointer;
-  transition: background var(--dur-snap, .15s) var(--ease, ease), transform 0.12s ease;
+  transition: background var(--dur-snap, .15s) var(--ease, ease);
 }
-.ds-247420 .ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); transform: scale(1.12); }
+.ds-247420 .ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); }
 .ds-247420 .ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--accent) 18%, transparent); }
 .ds-247420 .ov-emoji-empty {
   grid-column: 1 / -1;
@@ -5900,9 +5829,12 @@
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
+@media (pointer: coarse) {
+  .ds-247420 .ds-side-tree-summary { min-height: 44px; }
+}
 .ds-247420 .ds-side-tree-summary .glyph { font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); }
 .ds-247420 .ds-side-tree-summary .count {
-  margin-left: auto; padding: 1px 8px; font-size: var(--fs-micro); font-weight: 700;
+  margin-left: auto; padding: 1px var(--space-2); font-size: var(--fs-micro); font-weight: 700;
   font-family: var(--ff-body); letter-spacing: 0.04em; min-width: 18px; text-align: center;
   color: var(--fg-3); background: var(--bg-2); border-radius: var(--r-pill, 999px);
 }
@@ -5930,7 +5862,7 @@
     width: 100%;
     min-width: 0;
     min-height: 32px; /* shared control floor with .btn/.btn-primary/.btn-ghost */
-    padding: 10px 30px 10px 14px; /* right gap clears the chevron */
+    padding: var(--space-2-5) 30px var(--space-2-5) 14px; /* right gap clears the chevron */
     background: var(--bg-2);
     border: 0;
     border-radius: var(--r-2);
@@ -5967,7 +5899,7 @@
     .ds-247420 .chat-stack { max-width: 100%; }
     .ds-247420 .chat-msg { padding: var(--space-1) 0; }
     .ds-247420 .chat-msg:hover { padding: var(--space-1) 0; margin: 0; border-radius: 0; background: transparent; }
-    .ds-247420 .chat-bubble { font-size: var(--fs-sm); padding: 10px 14px; }
+    .ds-247420 .chat-bubble { font-size: var(--fs-sm); padding: var(--space-2-5) 14px; }
     .ds-247420 .chat-avatar { width: 28px; height: 28px; font-size: var(--fs-micro); }
     .ds-247420 .chat-composer { padding: var(--space-2); }
     .ds-247420 .chat-composer textarea { padding: var(--space-2-5) var(--space-2-75); }
@@ -5976,14 +5908,14 @@
 /* --- landscape orientation: reduce vertical space for chrome + composer --- */
 @media (max-height: 500px) and (orientation: landscape) {
     /* Keep horizontal padding: 0 put the textarea/focus ring flush on the edge. */
-    .ds-247420 .chat-composer { padding: 6px var(--space-2); }
+    .ds-247420 .chat-composer { padding: var(--space-1-75) var(--space-2); }
     .ds-247420 .chat-composer textarea { min-height: 36px; max-height: 96px; }
     .ds-247420 .chat-composer .chat-composer-hint,
     .ds-247420 .chat-composer .chat-composer-context { display: none; }
     /* Compact the shell chrome: ~114px of topbar+crumb+status is a third of a
        360px-tall landscape fold. */
     .ds-247420 { --app-topbar-h: 40px; --app-crumb-h: 24px; }
-    .ds-247420 .app-chrome { padding: 4px var(--pad-x); }
+    .ds-247420 .app-chrome { padding: var(--space-1) var(--pad-x); }
     .ds-247420 .app-status { display: none; }
     .ds-247420 .ws-crumb { min-height: 32px; }
     .ds-247420 .ds-hero { padding: var(--space-4) 0 var(--space-3); }
@@ -6186,14 +6118,6 @@
 .ds-247420 .list-item.drag-before::before { top: -2px; }
 .ds-247420 .list-item.drag-after::after { bottom: -2px; }
 
-@keyframes pulse-line {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .list-item.drag-before::before,
-  .ds-247420 .list-item.drag-after::after { animation: pulse-line 0.6s ease-in-out infinite; }
-}
 
 /* ------------------------------------------------------------
    Focus-visible for controls with no other component sheet
@@ -6236,7 +6160,7 @@
 
 .ds-247420 .ds-context-menu-item {
   display: flex; align-items: center; gap: var(--space-2-5);
-  padding: 10px 14px;
+  padding: var(--space-2-5) 14px;
   cursor: pointer;
   color: var(--fg);
   font-size: var(--fs-sm);
@@ -6749,25 +6673,7 @@
    -------------------------------------------------------------- */
 
 /* Skeleton loading state */
-.ds-247420 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-2) 0%,
-    var(--bg-3) 50%,
-    var(--bg-2) 100%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-load 1.5s infinite;
-  border-radius: var(--r-2);
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-247420 .skeleton { animation: none; }
-}
-
-@keyframes skeleton-load {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
+.ds-247420 .skeleton { border-radius: var(--r-2); }
 
 .ds-247420 .skeleton-line { height: 12px; margin-bottom: var(--space-2-75); }
 .ds-247420 .skeleton-title { height: 24px; margin-bottom: var(--space-3); width: 60%; }
@@ -6906,7 +6812,7 @@
   background: var(--accent);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-spinner span { animation: ds-bounce 1.4s infinite ease-in-out; }
+  .ds-247420 .ds-spinner span { animation: ds-dots-fade 1.4s infinite ease-in-out; }
   .ds-247420 .ds-spinner span:nth-child(1) { animation-delay: 0s; }
   .ds-247420 .ds-spinner span:nth-child(2) { animation-delay: 0.18s; }
   .ds-247420 .ds-spinner span:nth-child(3) { animation-delay: 0.36s; }
@@ -6924,9 +6830,9 @@
 .ds-247420 .ds-spinner-xl { height: var(--space-5); gap: var(--space-2); }
 .ds-247420 .ds-spinner-xl span { width: var(--space-2); height: var(--space-2); }
 
-@keyframes ds-bounce {
-  0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-8px); }
+@keyframes ds-dots-fade {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
 }
 
 /* Two spinner visual languages coexist intentionally: dots (.ds-spinner*)
@@ -6942,13 +6848,13 @@
   flex-direction: column;
   gap: var(--space-2);
 }
-.ds-247420 .ds-skeleton {
-  background: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
+.ds-247420 .ds-skeleton, .ds-247420 .ds-skel, .ds-247420 .skeleton, .ds-247420 .cm-channel-item-skeleton .ds-skel-icon, .ds-247420 .cm-channel-item-skeleton .ds-skel-title, .ds-247420 .cm-member-item-skeleton .ds-skel-icon, .ds-247420 .cm-member-item-skeleton .ds-skel-title, .ds-247420 .cm-list-item-skeleton .ds-skel-title, .ds-247420 .cm-list-item-skeleton .ds-skel-meta {
+  background-image: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
   background-size: 200% 100%;
-  border-radius: var(--r-1);
 }
+.ds-247420 .ds-skeleton { border-radius: var(--r-1); }
 @media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-skeleton { animation: ds-shimmer 1.5s infinite; }
+  .ds-247420 .ds-skeleton, .ds-247420 .ds-skel, .ds-247420 .skeleton, .ds-247420 .cm-channel-item-skeleton .ds-skel-icon, .ds-247420 .cm-channel-item-skeleton .ds-skel-title, .ds-247420 .cm-member-item-skeleton .ds-skel-icon, .ds-247420 .cm-member-item-skeleton .ds-skel-title, .ds-247420 .cm-list-item-skeleton .ds-skel-title, .ds-247420 .cm-list-item-skeleton .ds-skel-meta { animation: ds-shimmer 1.5s ease-in-out infinite; }
 }
 
 @keyframes ds-shimmer {
@@ -7084,7 +6990,7 @@
      actions, live status) in crumb-right, so hiding it strands them. Collapse
      the breadcrumb trail/leaf instead and let the right cluster wrap. */
   .ds-247420 .app-crumb { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--space-2-75); }
-  .ds-247420 .app-crumb > .sep, .ds-247420 .app-crumb > span:not(.crumb-right):not(.leaf) { display: none; }
+  .ds-247420 .app-crumb > span:not(.crumb-right) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ds-247420 .app-crumb .crumb-right { margin-left: 0; }
   .ds-247420 .chat-head { padding: var(--space-2) var(--space-3) var(--space-2); margin-bottom: var(--space-2); }
   .ds-247420 .app-main { padding-left: var(--space-3); padding-right: var(--space-3); }
@@ -7127,11 +7033,11 @@
 .ds-247420 .app-side-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 @container (max-width: 900px) {
   .ds-247420 .app-side-toggle { display: inline-flex; }
-  .ds-247420 .app-topbar .brand { margin-left: 44px; }
+  .ds-247420 .app:has(.app-side-toggle) .app-topbar .brand { margin-left: 44px; }
   /* Merged-chrome layout (.app-chrome > .app-crumb) puts the breadcrumb, not
      the topbar brand, at the left edge where the absolute-positioned toggle
      sits — without this the crumb text renders directly under the button. */
-  .ds-247420 .app-chrome > .app-crumb { margin-left: 44px; }
+  .ds-247420 .app:has(.app-side-toggle) .app-chrome > .app-crumb { margin-left: 44px; }
 }
 
 /* Desktop: the app shell is exactly viewport-height and contains its own
@@ -7166,21 +7072,43 @@
 @media (max-width: 480px) {
   .ds-247420 .app-status {
     font-size: var(--fs-micro);
-    padding: 4px var(--space-2);
+    padding: var(--space-1) var(--space-2);
     gap: var(--space-2);
   }
   .ds-247420 .app-status > :last-child:not(:only-child) { display: none; }
+  .ds-247420 .app-status .item:not(:first-of-type), .ds-247420 .app-status .spread { display: none; }
+}
+
+/* Mobile (<=480) chrome: one 44px row (hamburger, title, icon-only theme
+   toggle) with the nav as a single scrolling row beneath. The merged chrome's
+   topbar dissolves (display: contents) so the crumb and the theme toggle share
+   the first row instead of the toggle dropping to a row of its own. */
+@media (max-width: 480px) {
+  .ds-247420 .app-chrome, .ds-247420 .app-topbar { padding-block: var(--space-2); }
+  .ds-247420 .app-chrome > .app-topbar { display: contents; }
+  .ds-247420 .app-chrome > .app-topbar > .ds-search-field, .ds-247420 .app-chrome > .app-topbar > .ds-topbar-search { order: 3; flex: 1 1 100%; max-width: none; }
+  .ds-247420 .app-chrome > .app-topbar > nav { order: 4; }
+  .ds-247420 .app-chrome > .app-crumb { min-height: 44px; align-items: center; flex-wrap: nowrap; }
+  .ds-247420 .app-topbar > .brand {
+    flex: 1 1 0; min-width: 0; min-height: 44px; display: flex; align-items: center;
+    overflow: hidden; white-space: nowrap;
+  }
+  .ds-247420 .app-topbar > .app-topbar-theme { order: 2; margin-left: auto; padding-left: 0; }
+  .ds-247420 .app-topbar > .app-topbar-theme::before { display: none; }
+  .ds-247420 .app-topbar-theme .ds-theme-toggle-label { display: none; }
+  .ds-247420 .app-topbar-theme .ds-theme-toggle.btn { min-width: 44px; min-height: 44px; justify-content: center; padding: 0; }
+  .ds-247420 .app-side-toggle { top: var(--space-2); }
 }
 
 /* Tiny phone (≤360) topbar compact */
 @media (max-width: 360px) {
   .ds-247420 .app-topbar {
-    padding: 8px var(--space-2);
+    padding: var(--space-2) var(--space-2);
     font-size: var(--fs-xs);
     gap: var(--space-2);
   }
   .ds-247420 .app-chrome {
-    padding: 8px var(--space-2);
+    padding: var(--space-2) var(--space-2);
     font-size: var(--fs-xs);
     gap: var(--space-2);
   }
@@ -7270,8 +7198,10 @@
 .ds-247420 .ws-sessions-collapsed .ws-resizer-sessions,
 .ds-247420 .ws-pane-collapsed .ws-resizer-pane { display: none; }
 /* Coarse-pointer hit target for hybrid touch laptops above the drawer breakpoint
-   (the 8px sliver is un-grabbable by touch). */
-@media (pointer: coarse) { .ds-247420 .ws-resizer { width: 16px; margin-right: -8px; } }
+   (the 8px sliver is un-grabbable by touch). The grid cell is a fixed track, so
+   the 44px box overlays neighbours without moving any track; the 2px line and
+   grip stay centred, so the visible handle is unchanged. */
+@media (pointer: coarse) { .ds-247420 .ws-resizer { width: 44px; margin-right: -22px; } }
 /* Ease the rail/pane collapse. Track COUNT stays stable on collapse (only a
    width var flips), so grid-template-columns is animatable; reduced-motion
    drops it to an instant swap. */
@@ -7336,6 +7266,7 @@
 .ds-247420 .ws-rail-item:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: -2px; }
 .ds-247420 .ws-rail-item.active { background: var(--accent-tint); color: var(--fg); }
 .ds-247420 .ws-rail-item-label { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.ds-247420 .ws-rail-item-glyph { flex: none; width: var(--icon-sm); height: var(--icon-sm); }
 /* Shape/color come from the shared .ds-badge component (see app-shell/primitives.css);
    this class is now just the rail-item layout hook (spacing, collapsed-state targeting). */
 .ds-247420 .ws-rail-item-count { flex: none; margin-inline-start: var(--space-1); }
@@ -7540,6 +7471,32 @@
   .ds-247420 .ws-crumb .app-crumb .leaf { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .ds-247420 .ws-crumb .app-crumb .crumb-right { margin-left: 0; flex-wrap: wrap; min-width: 0; display: inline-flex; }
 }
+/* Phones (<=600): a 60px icon strip plus a squeezed 260px chat column is the
+   worst split, and the glyph tiles are unlabeled. The rail becomes a labelled
+   horizontal bar across the top and the content gets the full width. */
+@media (max-width: 600px) {
+  .ds-247420 .ws-shell { --ws-rail-h: calc(var(--space-2) * 2 + 44px); }
+  .ds-247420 .ws-rail { inset: 0 0 auto 0; width: auto; height: var(--ws-rail-h); flex-direction: row; border-right: 0; border-bottom: var(--bw-hair) solid var(--bg-3); }
+  .ds-247420 .ws-rail-inner { flex-direction: row; align-items: center; padding: var(--space-2) var(--space-3); }
+  .ds-247420 .ws-rail-head { display: none; }
+  .ds-247420 .ws-rail-nav { flex-direction: row; align-items: center; gap: var(--space-1); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .ds-247420 .ws-rail .ws-rail-item { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-3); gap: var(--space-2); }
+  .ds-247420 .ws-rail .ws-rail-item-label { display: inline; flex: 0 1 auto; }
+  .ds-247420 .ws-rail .ws-rail-item-count { display: inline-flex; }
+  .ds-247420 .ws-rail-item-glyph { display: none; }
+  .ds-247420 .ws-rail-foot { margin-top: 0; padding-top: 0; border-top: 0; }
+  .ds-247420 .ws-content { padding-left: 0; padding-top: var(--ws-rail-h); }
+  .ds-247420 .ws-sessions { inset: var(--ws-rail-h) auto 0 0; transform: translateX(-110%); }
+  .ds-247420 .ws-main { padding-inline: var(--space-3); }
+  .ds-247420 .ws-main .agentchat-controls { flex-wrap: wrap; }
+  .ds-247420 .ws-main .agentchat-controls .ds-select { flex: 1 1 0; min-width: 0; max-width: none; }
+  .ds-247420 .ws-main .agentchat-controls .btn { flex: 0 0 auto; }
+  .ds-247420 .ws-main .agentchat-cwd { flex-wrap: nowrap; }
+  .ds-247420 .ws-main .agentchat-cwd-text { flex: 1 1 0; min-width: 0; max-width: none; }
+  .ds-247420 .ws-main .agentchat-cwd-btn { flex: 0 0 auto; white-space: nowrap; }
+  .ds-247420 .ws-main .agentchat-head { flex-wrap: wrap; column-gap: var(--space-2); }
+  .ds-247420 .ws-main .agentchat-sub { white-space: nowrap; }
+}
 .ds-247420 .ws-drawer-toggle:hover { background: var(--bg-2); color: var(--fg); }
 .ds-247420 .ws-drawer-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
@@ -7727,7 +7684,7 @@
    `top: -15px` the label below is lifted by, so the label clears the segments
    without a gap. Snapping the pad to --space-3 (16px) alone would desync the
    pair. */
-.ds-247420 .ds-phasewalk { padding-top: 15px; }
+.ds-247420 .ds-phasewalk { padding-top: var(--space-3); }
 .ds-247420 .ds-phasewalk-lbl {
   position: absolute; top: -15px; left: 0;
   font-size: var(--fs-micro); color: var(--fg-3); white-space: nowrap;
@@ -7762,6 +7719,10 @@
 .ds-247420 .ds-bar-bg { flex: 1; min-width: 60px; background: var(--bg-3); border-radius: var(--r-hair); height: 6px; overflow: hidden; }
 .ds-247420 .ds-bar-fill { background: var(--fg-3); height: 100%; border-radius: var(--r-hair); }
 .ds-247420 .ds-bar-fill.is-active { background: var(--accent); }
+.ds-247420 .ds-progress { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-247420 .ds-progress-label { color: var(--fg-2); font-size: var(--fs-tiny); }
+.ds-247420 .ds-progress-track { background: var(--bg-3); border-radius: var(--r-hair); height: 6px; overflow: hidden; }
+.ds-247420 .ds-progress-fill { background: var(--accent); height: 100%; border-radius: var(--r-hair); }
 .ds-247420 .ds-bar-row-value { flex-shrink: 0; color: var(--fg-2); max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 400px) {
   .ds-247420 .ds-bar-row-label { width: 72px; }
@@ -7951,6 +7912,13 @@
    and separates generously from the content it introduces. */
 .ds-247420 .ds-app-surface > .lede,
 .ds-247420 .ds-app-surface > .t-lede { margin-bottom: calc(var(--space-6) * var(--density)); }
+/* Sections nested in an Operate surface follow the panel rhythm, not the
+   marketing --space-8 editorial lead: a page of short sections (install,
+   receipt, changelog) otherwise sits ~100px between groups while the content
+   inside each is dense. Header-adjacent chip rows keep a gap from what follows. */
+.ds-247420 .ds-app-surface .ds-section { margin: calc(var(--space-5) * var(--density)) 0; }
+.ds-247420 .ds-app-surface .ds-section > h2 { margin: 0 0 var(--space-3); }
+.ds-247420 .ds-app-surface > .ds-btn-row { margin-bottom: calc(var(--space-4) * var(--density)); }
 /* No leading margin on the first block or trailing margin on the last — the
    shell owns the region's outer edges. */
 .ds-247420 .ds-app-surface > :first-child { margin-top: 0; }
@@ -7994,7 +7962,7 @@
 .ds-247420 .ds-panel-duo {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: calc(var(--space-3) * var(--density));
+  gap: calc(var(--space-5) * var(--density));
   margin: calc(var(--space-5) * var(--density)) 0;
   /* A duo pairs two DIFFERENT things (a 4-bar chart beside a 5-row table).
      Stretching them to a common height does not create equality, it just moves
@@ -8019,7 +7987,7 @@
 .ds-247420 .ds-panel-trio {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: calc(var(--space-3) * var(--density));
+  gap: calc(var(--space-5) * var(--density));
   margin: calc(var(--space-5) * var(--density)) 0;
   /* A trio IS a set of equal peers, so a shared bottom edge reads as one band
      rather than three ragged cards — the opposite call from .ds-panel-duo
@@ -8091,9 +8059,16 @@
 .ds-247420 .ds-deck-dot {
   width: var(--space-1-5); height: var(--space-1-5); border-radius: 50%;
   background: var(--fg-3); flex: 0 0 auto;
-  transition: background var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+  transition: background var(--dur-base) var(--ease);
 }
-.ds-247420 .ds-deck-dot--active { background: var(--accent); transform: scale(1.3); }
+.ds-247420 .ds-deck-dot--active { background: var(--accent); }
+@media (pointer: coarse) {
+  .ds-247420 .ds-deck-progress { gap: 0; }
+  .ds-247420 .ds-deck-dot {
+    width: 44px; height: 44px; background: radial-gradient(circle closest-side, var(--fg-3) calc(var(--space-1-5) / 2), transparent calc(var(--space-1-5) / 2 + 1px));
+  }
+  .ds-247420 .ds-deck-dot--active { background: radial-gradient(circle closest-side, var(--accent) calc(var(--space-1-5) / 2), transparent calc(var(--space-1-5) / 2 + 1px)); }
+}
 /* Kit small-label voice — one local composition of the house `.t-label` recipe
    (base.css) for every eyebrow/label in the appended kit blocks below. These
    previously each restated the four declarations with drifted tracking
@@ -8232,12 +8207,9 @@
   aspect-ratio: 4 / 3;
   border: 0; text-align: left; font: inherit; color: inherit;
   background: var(--tile-tone, var(--panel-1));
-  transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+  transition: box-shadow var(--dur-snap) var(--ease);
 }
-/* Flat tonal fill only (house style: no bespoke tile chrome, no borders — see
-   .ds-feature above), so the hover affordance is a lift, matching the same
-   translateY + shadow idiom .chat-msg:hover .chat-bubble already uses. */
-.ds-247420 .ds-gallery-tile:hover { transform: translateY(-2px); box-shadow: 0 2px 8px color-mix(in oklab, var(--fg) 10%, transparent); }
+.ds-247420 .ds-gallery-tile:hover { box-shadow: inset 0 0 0 1px var(--fg-3); }
 .ds-247420 .ds-gallery-tile:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .ds-247420 .ds-gallery-tile--tight { aspect-ratio: 3 / 2; }
 /* The lightbox scrim/card chrome itself is now Dialog's (.ds-ep-dialog /
@@ -8343,10 +8315,9 @@
   padding: var(--space-2, 8px) var(--space-3, 12px);
   border-radius: var(--r-pill);
   color: var(--fg-2);
-  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease),
-    transform var(--dur-base) var(--ease-spring);
+  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
 }
-.ds-247420 .tabs[role="tablist"] a:hover { background: var(--bg-2); color: var(--fg); transform: translateY(-1px); }
+.ds-247420 .tabs[role="tablist"] a:hover { background: var(--bg-2); color: var(--fg); }
 .ds-247420 .tabs[role="tablist"] a.active {
   color: var(--accent-ink);
   background: color-mix(in oklab, var(--accent) 16%, transparent);
@@ -8388,6 +8359,7 @@
 .ds-247420 .ds-table-sort-btn:hover { color: var(--fg); }
 .ds-247420 .ds-table-sort-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 2px; }
 .ds-247420 .ds-table-sort-btn.is-active { color: var(--accent-ink, var(--accent)); }
+.ds-247420 .ds-table-sort-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 
 /* == appended: settings kit cleanup == */
@@ -8556,6 +8528,7 @@
    floor other controls in this row (the link text, the input fields) sit
    above. Sized up on the existing --space-2-5 token, no new primitive. */
 .ds-247420 .ds-auth-remember input[type="checkbox"] { width: var(--space-2-5); height: var(--space-2-5); margin: 0; }
+@media (pointer: coarse) { .ds-247420 .ds-auth-remember { min-height: 44px; } }
 .ds-247420 .ds-auth-remember-text { color: var(--panel-text-2); font-size: var(--fs-tiny); }
 /* --accent-ink, not --accent, per the design system's text-vs-fill split
    (AGENTS.md): --accent is a background/border-color lead only, --accent-ink
@@ -8691,7 +8664,7 @@
 /* Per-row copy button on command lines only (kind==='cmd', see terminal
    app.js's Line()) -- hover/focus-reveal like the chat surface's
    .chat-code-copy so the scrollback stays a clean transcript at rest. */
-.ds-247420 .ds-term-line-copyable { position: relative; padding-right: 40px; }
+.ds-247420 .ds-term-body .ds-term-line-copyable { position: relative; padding-right: var(--space-6); }
 .ds-247420 .ds-term-line-copy {
   position: absolute; top: 0; right: 0;
   opacity: 0; pointer-events: none;
@@ -8708,7 +8681,9 @@
 .ds-247420 .ds-term-line-copy.is-copied { color: var(--accent); opacity: 1; pointer-events: auto; }
 @media (pointer: coarse) {
   /* No hover on touch -- always visible so the affordance is reachable. */
-  .ds-247420 .ds-term-line-copy { opacity: 1; pointer-events: auto; }
+  .ds-247420 .ds-term-body .ds-term-line-copyable { padding-right: calc(44px + var(--space-1)); min-height: 44px; }
+  .ds-247420 .ds-term-line-copy { opacity: 1; pointer-events: auto; min-width: 44px; min-height: 44px; }
+  .ds-247420 .ds-auth-forgot, .ds-247420 .ds-auth-mode-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 }
 .ds-247420 .ds-term-input-row { margin-top: var(--space-1-75); }
 .ds-247420 .ds-term-input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--paper); caret-color: var(--brand-green); }
@@ -8727,13 +8702,12 @@
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
-/* The input itself is a prompt line, not a form control, so it is NOT floored
-   to 44px (that would break the terminal's line rhythm). Instead the whole
-   prompt ROW becomes the tap target, and the font goes to 16px so focusing it
-   does not trigger iOS zoom — a sub-16px input is what causes that. */
+/* On touch the prompt row and the input both floor at 44px, so the input is
+   itself the tap target; the font goes to 16px so focusing it does not trigger
+   iOS zoom — a sub-16px input is what causes that. */
 @media (pointer: coarse) {
   .ds-247420 .ds-term-input-row { min-height: 44px; align-items: center; }
-  .ds-247420 .ds-term-input { font-size: max(16px, var(--fs-micro)); }
+  .ds-247420 .ds-term-input { min-height: 44px; font-size: max(16px, var(--fs-micro)); }
 }
 /* full-viewport render root (community-app) */
 .ds-247420 .ds-root-viewport { height: 100vh; height: 100dvh; }
@@ -9024,6 +8998,10 @@
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
+@media (pointer: coarse) {
+  .ds-247420 .ds-kit-controls summary { display: flex; align-items: center; min-height: 44px; }
+  .ds-247420 .ds-kit-controls summary::before { white-space: pre; }
+}
 .ds-247420 .ds-kit-controls-body {
   padding: 0 var(--space-3) var(--space-3);
   display: flex;
@@ -9098,7 +9076,7 @@
 }
 .ds-247420 .ds-git-row {
   display: flex; align-items: center; gap: var(--space-2-5);
-  width: 100%; padding: 7px 12px;
+  width: 100%; padding: var(--space-2) var(--space-2-75);
   background: none; border: var(--bw-hair) solid transparent; border-radius: var(--r-2);
   color: var(--fg); font: inherit; text-align: left; cursor: pointer;
   transition: background var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease);
@@ -9127,7 +9105,7 @@
 }
 .ds-247420 .ds-git-row-tag {
   flex: 0 0 auto; font-size: var(--fs-micro); color: var(--fg-3);
-  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 1px 6px;
+  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 1px var(--space-1-75);
 }
 .ds-247420 .ds-git-row-stats { flex: 0 0 auto; display: inline-flex; gap: var(--space-1-75); font-family: var(--ff-body); font-size: var(--fs-micro); }
 .ds-247420 .ds-git-stat-add { color: var(--green-2); }
@@ -9154,7 +9132,7 @@
 .ds-247420 .ds-git-diff-empty { padding: var(--space-3); color: var(--fg-3); font-size: var(--fs-sm); }
 .ds-247420 .ds-git-hunk + .ds-git-hunk { border-top: var(--bw-hair) solid color-mix(in oklab, var(--paper) 12%, transparent); }
 .ds-247420 .ds-git-hunk-header {
-  padding: 4px var(--space-3);
+  padding: var(--space-1) var(--space-3);
   color: var(--purple-2); font-family: var(--ff-mono); font-size: var(--fs-micro);
   background: color-mix(in oklab, var(--paper) 6%, transparent);
 }
@@ -9215,7 +9193,7 @@
   width: min(860px, 100%); height: min(76vh, 720px);
   background: var(--bg); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-3);
   display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: var(--shadow-3, 0 8px 32px rgba(0,0,0,0.18));
+  box-shadow: var(--shadow-3);
 }
 .ds-247420 .ds-plugins-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -9303,14 +9281,14 @@
 .ds-247420 .ds-plugins-toggle[disabled] { cursor: wait; opacity: 0.65; }
 .ds-247420 .ds-plugins-toggle-knob {
   position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--bg); box-shadow: var(--shadow-1, 0 1px 4px rgba(0,0,0,0.22));
+  background: var(--bg); box-shadow: var(--shadow-1);
   transition: left var(--dur-snap) var(--ease);
 }
 .ds-247420 .ds-plugins-toggle.on .ds-plugins-toggle-knob { left: 21px; }
 
 .ds-247420 .ds-plugins-fact-grid {
   display: grid; grid-template-columns: minmax(96px, 130px) minmax(0, 1fr);
-  gap: 9px var(--space-3); font-size: var(--fs-sm);
+  gap: var(--space-2) var(--space-3); font-size: var(--fs-sm);
 }
 .ds-247420 .ds-plugins-fact-label { color: var(--fg-3); }
 .ds-247420 .ds-plugins-fact-value { color: var(--fg-2); }
@@ -9326,7 +9304,7 @@
 .ds-247420 .ds-plugins-requires-list { display: flex; flex-wrap: wrap; gap: var(--space-1-75); }
 .ds-247420 .ds-plugins-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-2);
-  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: 2px 7px;
+  border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); padding: var(--space-hair) var(--space-2);
 }
 .ds-247420 .ds-plugins-requires-empty { font-size: var(--fs-sm); color: var(--fg-3); }
 
@@ -9380,14 +9358,14 @@
 
 .ds-247420 .ds-mc-key-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); font-weight: 700;
-  padding: 1px 6px; border-radius: var(--r-1);
+  padding: 1px var(--space-1-75); border-radius: var(--r-1);
 }
 .ds-247420 .ds-mc-key-chip.tone-ok { color: var(--green-2); background: var(--green-tint); }
 .ds-247420 .ds-mc-key-chip.tone-fail { color: var(--fg-3); background: var(--bg-3); }
 
 .ds-247420 .ds-mc-sampler {
   display: inline-block; margin: var(--space-hair) 0 var(--space-1) var(--space-2-75);
-  font-size: var(--fs-micro); padding: 1px 6px; border-radius: var(--r-1);
+  font-size: var(--fs-micro); padding: 1px var(--space-1-75); border-radius: var(--r-1);
 }
 .ds-247420 .ds-mc-sampler.tone-ok { color: var(--green-2); background: var(--green-tint); }
 .ds-247420 .ds-mc-sampler.tone-fail { color: var(--ink); background: var(--sun); }
@@ -9420,7 +9398,7 @@
 .ds-247420 .ds-mc-model-id { font-family: var(--ff-mono); font-size: var(--fs-sm); font-weight: 600; }
 .ds-247420 .ds-mc-model-via { font-size: var(--fs-micro); color: var(--fg-3); }
 .ds-247420 .ds-mc-usable-chip {
-  font-size: var(--fs-micro); font-weight: 700; padding: 1px 6px; border-radius: var(--r-1);
+  font-size: var(--fs-micro); font-weight: 700; padding: 1px var(--space-1-75); border-radius: var(--r-1);
   margin-left: auto;
 }
 .ds-247420 .ds-mc-usable-chip.tone-ok { color: var(--green-2); background: var(--green-tint); }
@@ -9430,7 +9408,7 @@
 .ds-247420 .ds-mc-mode-grid { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 .ds-247420 .ds-mc-chip {
   font-family: var(--ff-mono); font-size: var(--fs-micro); font-weight: 600;
-  padding: 2px 7px; border-radius: var(--r-1);
+  padding: var(--space-hair) var(--space-2); border-radius: var(--r-1);
   border: var(--bw-hair) solid transparent;
 }
 .ds-247420 .ds-mc-chip.tone-ok { color: var(--green-2); background: var(--green-tint); }
@@ -9451,7 +9429,7 @@
 
 .ds-247420 .ds-skills-group { margin-bottom: var(--space-2); }
 .ds-247420 .ds-skills-group-label {
-  padding: var(--space-2) var(--space-2) 3px;
+  padding: var(--space-2) var(--space-2) var(--space-half);
   font-size: var(--fs-micro); font-weight: 600; color: var(--fg-3);
   letter-spacing: 0;
 }
@@ -9509,6 +9487,9 @@
 .ds-247420 .ds-slider-track:has(.ds-slider-range:focus-visible) .ds-slider-thumb {
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 40%, transparent), var(--shadow-1);
 }
+@media (pointer: coarse) {
+  .ds-247420 .ds-slider-range { inset: auto 0; top: 50%; height: 44px; transform: translateY(-50%); }
+}
 .ds-247420 .ds-slider-range:disabled { cursor: default; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9542,6 +9523,9 @@
 .ds-247420 .ds-otp-box-error { border-color: var(--red); }
 .ds-247420 .ds-otp-box-error:focus-visible { box-shadow: var(--focus-ring-inset); }
 .ds-247420 .ds-otp-box:disabled { opacity: 0.5; cursor: default; }
+@media (pointer: coarse) {
+  .ds-247420 .ds-otp-box { width: 44px; height: 44px; min-height: 44px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ds-247420 .ds-otp-box {
@@ -9718,6 +9702,9 @@
 .ds-247420 .ds-dp-trigger:hover { background: var(--bg-3); }
 .ds-247420 .ds-dp-trigger:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-247420 .ds-dp-trigger-label { white-space: nowrap; }
+@media (pointer: coarse) {
+  .ds-247420 .ds-dp-trigger { min-height: 44px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ds-247420 .ds-dp-trigger { transition: none; }
@@ -9836,6 +9823,221 @@
 .ds-247420 .ds-collab-chip-status-idle { background: var(--sun); }
 .ds-247420 .ds-collab-chip-status-offline { background: var(--fg-3); }
 .ds-247420 .ds-collab-chip-name { font-size: var(--fs-tiny); color: var(--fg-2); white-space: nowrap; }
+/* Blocks emitted by shared components (EventList, CliBlock, Brand) that every
+   kit linking app-shell.css needs. They previously lived in app-surfaces.css,
+   gm-prose.css and community-app.css, which most kits never link. */
+.ds-247420 .ds-event-list .row[role="button"]:hover { background: color-mix(in srgb, var(--fg) 5%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .ds-247420 .ds-event-list .row.event-flash { animation: agentgui-event-flash 2s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-247420 .ds-event-list .row.event-flash { animation: none; outline: 2px solid var(--accent-ink); }
+}
+@keyframes agentgui-event-flash {
+  0%   { background: color-mix(in srgb, var(--accent) 40%, transparent); }
+  100% { background: transparent; }
+}
+
+.ds-247420 .brand .slash { color: var(--fg-3); }
+
+.ds-247420 .ds-cli-block {
+  --ds-cli-block-fs-mono-halfrung: 12.5px;
+  display: block;
+  background: var(--panel-1);
+  border-radius: var(--r-0);
+  padding: var(--space-3) var(--space-3-5);
+  margin: var(--space-3) 0 var(--space-5) 0;
+  font-family: var(--ff-mono);
+  font-size: var(--ds-cli-block-fs-mono-halfrung);
+  line-height: 1.6;
+  color: var(--panel-text);
+  box-shadow: var(--panel-shadow);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ds-247420 .ds-cli-block .ds-cli-comment {
+  color: var(--panel-text-3);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 1.4em;
+  padding: var(--space-half) 0;
+  line-height: 1.6;
+}
+.ds-247420 .ds-cli-block .ds-cli-comment:empty::before { content: '\00a0'; }
+.ds-247420 .ds-cli-block .ds-cli-row {
+  display: flex;
+  gap: var(--space-2-5);
+  padding: var(--space-half) 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ds-247420 .ds-cli-block .ds-cli-row .prompt {
+  color: var(--panel-accent);
+  flex: 0 0 auto;
+  user-select: none;
+}
+.ds-247420 .ds-cli-block .ds-cli-row .cmd {
+  color: var(--panel-text);
+  flex: 1 1 auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+/* dashboard.css -- agent-dashboard components (.ds-dash-*): header, grid, cards,
+   compact rows, status, stream indicator, selection. Lives in app-shell, not
+   chat.css, because kits that render the dashboard (gm_inspector,
+   system_primer) link app-shell.css but never chat.css. */
+.ds-247420 .ds-dash-header { flex: 0 0 auto; display: flex; align-items: center; gap: var(--space-3); row-gap: var(--space-2); flex-wrap: wrap; padding: var(--space-3) var(--space-4) 0; }
+.ds-247420 .ds-dash-count { font-size: var(--fs-sm); color: var(--fg-2); font-weight: 600; }
+.ds-247420 .ds-dash-header .btn, .ds-247420 .ds-dash-header .btn-primary {
+  margin-left: 0;
+  padding: var(--space-1-5) var(--space-2-75); min-height: 32px; border-radius: var(--r-1); font-weight: 500;
+}
+.ds-247420 .ds-dash-header .btn-primary.danger {
+  background: transparent; color: var(--warn);
+  border: var(--bw-hair) solid var(--warn);
+}
+.ds-247420 .ds-dash-header .btn-primary.danger:hover {
+  background: color-mix(in oklab, var(--warn) 12%, transparent); color: var(--warn);
+}
+.ds-247420 .ds-dash-header .btn-primary.danger.is-armed { background: var(--warn); color: var(--ink); border-color: var(--warn); }
+.ds-247420 .ds-dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-2); padding: var(--space-3); }
+@media (min-width: 1500px) { .ds-247420 .ds-dash-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
+.ds-247420 .ds-dash-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); background: var(--bg-2); border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-1); }
+.ds-247420 .ds-dash-grid.is-compact { grid-template-columns: 1fr; gap: 0; padding: var(--space-1) var(--space-2); }
+.ds-247420 .ds-dash-card.is-compact {
+  flex-direction: row; align-items: baseline; flex-wrap: nowrap;
+  gap: var(--space-2); padding: var(--space-1-75) var(--space-2);
+  background: transparent; border: 0; border-radius: 0;
+  border-bottom: var(--bw-hair) solid var(--bg-3);
+  overflow: hidden;
+}
+.ds-247420 .ds-dash-card.is-compact .ds-dash-card-head {
+  flex: 0 1 auto; min-width: 0; overflow: hidden; white-space: nowrap;
+}
+.ds-247420 .ds-dash-card.is-compact .ds-dash-agent,
+.ds-247420 .ds-dash-card.is-compact .ds-dash-model,
+.ds-247420 .ds-dash-card.is-compact .ds-dash-status {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.ds-247420 .ds-dash-card.is-compact .ds-dash-meta {
+  flex: 1 1 0; min-width: 0; display: flex; flex-direction: row;
+  align-items: baseline; gap: var(--space-2); overflow: hidden;
+  flex-wrap: nowrap; white-space: nowrap;
+}
+.ds-247420 .ds-dash-card.is-compact .ds-dash-stat,
+.ds-247420 .ds-dash-card.is-compact .ds-dash-activity {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.ds-247420 .ds-dash-card.is-compact .ds-dash-cwd {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ds-247420 .ds-dash-card.is-compact .ds-dash-activity { flex: 0 0 auto; margin-inline-start: auto; }
+.ds-247420 .ds-dash-card.is-compact.is-active { box-shadow: inset 2px 0 0 var(--accent); }
+.ds-247420 .ds-dash-card.is-compact:last-child { border-bottom: 0; }
+.ds-247420 .ds-dash-card.is-compact.is-error { box-shadow: inset 2px 0 0 var(--flame); }
+.ds-247420 .ds-dash-card.is-compact.is-error .ds-dash-agent { font-weight: 700; color: var(--fg); }
+.ds-247420 .ds-dash-card.is-compact.is-running .ds-dash-agent { font-weight: 600; color: var(--fg); }
+.ds-247420 .ds-dash-card.is-compact.is-stale .ds-dash-agent { font-weight: 400; color: var(--fg-2); }
+.ds-247420 .ds-dash-card.is-error { border-color: var(--flame); }
+.ds-247420 .ds-dash-card-head { display: flex; align-items: center; gap: var(--space-2); }
+.ds-247420 .ds-dash-status { font-size: var(--fs-tiny); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tr-caps); }
+.ds-247420 .ds-dash-status.is-error { color: var(--flame); }
+.ds-247420 .ds-dash-agent { font-size: var(--fs-body); font-weight: 600; color: var(--fg); }
+.ds-247420 .ds-dash-model { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3); margin-left: auto; }
+.ds-247420 .ds-dash-meta { display: flex; flex-direction: column; gap: var(--space-hair); }
+.ds-247420 .ds-dash-cwd { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-247420 .ds-dash-stat { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-2); }
+.ds-247420 .ds-dash-stat-cost { color: var(--fg); font-weight: 600; }
+.ds-247420 .ds-dash-activity { font-size: var(--fs-tiny); color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-247420 .ds-dash-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
+.ds-247420 .ds-dash-state { padding: var(--space-6) var(--space-4); text-align: center; color: var(--fg-3); font-size: var(--fs-body); }
+.ds-247420 .ds-dash-state-error { color: var(--flame); }
+@media (max-width: 640px) {
+  .ds-247420 .ds-dash-grid { grid-template-columns: 1fr; padding: var(--space-3); }
+}
+.ds-247420 .ds-dash-status.is-stale { color: var(--stale); }
+.ds-247420 .ds-dash-status.is-running { color: var(--accent-ink); }
+.ds-247420 .ds-dash-toolbar { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.ds-247420 .ds-dash-toolbar .ds-search-input {
+  width: 200px; min-height: 32px; padding: var(--space-1-5) var(--space-2-5);
+  font-size: var(--fs-sm); border-radius: var(--r-1);
+}
+.ds-247420 .ds-dash-toolbar .ds-select, .ds-247420 .ds-dash-toolbar select {
+  min-height: 32px; padding: var(--space-1) var(--space-2-5); font-size: var(--fs-sm);
+  width: auto; border-radius: var(--r-1);
+}
+.ds-247420 .ds-dash-stream { font-size: var(--fs-tiny); color: var(--fg-3); }
+.ds-247420 .ds-dash-stream.is-connected { color: var(--accent-ink); }
+.ds-247420 .ds-dash-stream.is-lost { color: var(--flame); }
+.ds-247420 .ds-dash-stream.is-connecting { color: var(--amber); }
+.ds-247420 .ds-dash-header .spread { flex: 1; }
+.ds-247420 .ds-dash-errors-toggle {
+  min-height: 32px; padding: var(--space-1-5) var(--space-2-75); border-radius: var(--r-1);
+  font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 500;
+  background: transparent; border: var(--bw-hair) solid var(--rule); color: var(--fg-2);
+  cursor: pointer;
+}
+.ds-247420 .ds-dash-errors-toggle.active { background: var(--accent-tint); color: var(--fg); border-color: var(--accent); }
+.ds-247420 .ds-dash-errors-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
+.ds-247420 .ds-dash-select {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 24px; min-height: 24px; padding: 0; cursor: pointer;
+  border: none; background: none; color: var(--fg-3);
+  font-family: var(--ff-mono); font-size: var(--fs-sm);
+}
+.ds-247420 .ds-dash-select[aria-checked="true"] { color: var(--accent-ink); }
+.ds-247420 .ds-dash-select:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
+.ds-247420 .ds-dash-card.is-active { box-shadow: inset 2px 0 0 var(--accent); }
+.ds-247420 .ds-dash-card.is-selected { background: var(--accent-tint); }
+.ds-247420 .ds-dash-card.is-stale { box-shadow: inset 2px 0 0 var(--stale); }
+.ds-247420 .ds-dash-card.is-active.is-stale { box-shadow: inset 2px 0 0 var(--accent); }
+.ds-247420 .ds-dash-title {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--fg);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ds-247420 .ds-dash-status.is-stopping { color: var(--amber); }
+.ds-247420 .ds-dash-external {
+  /* 1px vertical is OFF-SCALE ON PURPOSE — a --fs-micro uppercase pill whose
+     height must stay inside the card's meta row. --space-hair (2px) tips it
+     past the row and pushes the card taller. Horizontal snaps normally. */
+  padding: 1px var(--space-1-75); border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-pill);
+  font-size: var(--fs-micro); color: var(--fg-3); text-transform: uppercase; letter-spacing: var(--tr-caps);
+}
+.ds-247420 .ds-dash-card.is-external { border-style: dashed; }
+.ds-247420 .ds-dash-stream.is-offline { color: var(--flame); }
+.ds-247420 .ds-dash-card.is-new { box-shadow: inset 2px 0 0 var(--accent), 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
+.ds-247420 .ds-dash-card.is-error { box-shadow: inset 2px 0 0 var(--flame); }
+.ds-247420 .ds-dash-card.is-new.is-error { box-shadow: inset 2px 0 0 var(--flame), 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .ds-247420 .ds-dash-card.is-new { animation: ds-card-in var(--dur-slow) var(--ease); }
+}
+.ds-247420 .ds-dash-group { display: flex; flex-direction: column; gap: var(--space-2); }
+.ds-247420 .ds-dash-group-label { font-size: var(--fs-tiny); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tr-label); color: var(--fg-3); padding: 0 var(--space-1); }
+.ds-247420 .ds-dash-breakdown { display: flex; align-items: center; gap: var(--space-1); font-size: var(--fs-sm); color: var(--fg-2); }
+.ds-247420 .ds-dash-breakdown .seg { display: inline-flex; align-items: center; gap: var(--space-1); font-weight: 600; }
+.ds-247420 .ds-dash-breakdown .seg::before { content: ''; width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.ds-247420 .ds-dash-breakdown .seg.is-running { color: var(--accent-ink); }
+.ds-247420 .ds-dash-breakdown .seg.is-running::before { background: var(--accent); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--accent) 30%, transparent); }
+.ds-247420 .ds-dash-breakdown .seg.is-error { color: var(--flame); }
+.ds-247420 .ds-dash-breakdown .seg.is-error::before { background: var(--flame); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--flame) 38%, transparent); }
+.ds-247420 .ds-dash-breakdown .seg.is-idle { color: var(--stale); }
+.ds-247420 .ds-dash-breakdown .seg.is-idle::before { background: transparent; box-shadow: inset 0 0 0 1px var(--stale), inset 0 0 0 3px var(--bg); }
+.ds-247420 .ds-dash-stream-disc { display: inline-flex; align-items: center; gap: var(--space-1); }
+.ds-247420 .ds-dash-selectall { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--fs-tiny); color: var(--fg-2); cursor: pointer; background: none; border: none; padding: var(--space-1); }
+.ds-247420 .ds-dash-selectall:hover { color: var(--fg); }
+.ds-247420 .ds-dash-selectall:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
+.ds-247420 .ds-dash-clear { background: none; border: none; color: var(--fg-3); cursor: pointer; font-size: var(--fs-tiny); text-decoration: underline dotted; padding: var(--space-1); }
+.ds-247420 .ds-dash-clear:hover { color: var(--fg); }
+.ds-247420 .ds-dash-clear:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; border-radius: var(--r-1); }
+
+/* Hover and the coarse floor follow the .row-act group in chat.css, which no
+   longer carries this selector. */
+.ds-247420 .ds-dash-errors-toggle:hover { background: var(--bg-2); color: var(--fg); }
+@media (pointer: coarse), (max-width: 640px) {
+  .ds-247420 .ds-dash-select { min-width: 44px; min-height: 44px; }
+  .ds-247420 .ds-dash-errors-toggle { min-height: 44px; }
+}
 
 /* community.css */
 /* ============================================================
@@ -10271,7 +10473,6 @@
 
 .ds-247420 .cm-ch-icon.voice-active-badge {
   color: var(--green);
-  text-shadow: 0 0 8px var(--green-2);
 }
 
 .ds-247420 .cm-ch-voice-badge {
@@ -10281,16 +10482,6 @@
   background: var(--green-2);
   flex-shrink: 0;
   position: relative;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .cm-ch-voice-badge {
-    animation: cm-voice-pulse 2s ease-in-out infinite;
-  }
-  @keyframes cm-voice-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
-  }
 }
 
 .ds-247420 .cm-ch-name {
@@ -10452,16 +10643,6 @@
   border-radius: 50%;
   background: var(--green-2);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--green-2) 30%, transparent);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .cm-vs-label::before {
-    animation: cm-pulse 1.6s ease-in-out infinite;
-  }
-  @keyframes cm-pulse {
-    0%, 100% { box-shadow: 0 0 0 3px color-mix(in oklab, var(--green-2) 30%, transparent); }
-    50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--green-2) 0%,  transparent); }
-  }
 }
 
 .ds-247420 .cm-vs-channel {
@@ -11052,7 +11233,7 @@
     bottom: 0;
     transform: translateX(-110%);
     transition: transform var(--dur-base) var(--ease-drawer);
-    box-shadow: 2px 0 16px color-mix(in oklab, var(--ink) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
   .ds-247420 .cm-channel-sidebar.open { transform: translateX(0); }
   /* display:none -> flex can't itself animate, so the member-list drawer
@@ -11070,7 +11251,7 @@
     transform: translateX(110%);
     visibility: hidden;
     transition: transform var(--dur-base) var(--ease-drawer), visibility 0s linear var(--dur-base);
-    box-shadow: -2px 0 16px color-mix(in oklab, var(--ink) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
   .ds-247420 .cm-member-list.open {
     transform: translateX(0);
@@ -11418,17 +11599,11 @@
 }
 .ds-247420 .vx-ptt-recording .vx-ptt-glow, .ds-247420 .vx-ptt-live .vx-ptt-glow {
   opacity: 1;
-  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
-  animation: vx-pulse 1.4s var(--ease) infinite;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent);
 }
 .ds-247420 .vx-ptt-vad {
   border-color: var(--green-2);
   background: color-mix(in oklab, var(--green) 16%, var(--bg-2));
-}
-@keyframes vx-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent); }
-  70% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--accent) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent); }
 }
 
 .ds-247420 .vx-vad { display: flex; flex-direction: column; gap: var(--space-1); width: 100%; }
@@ -11742,7 +11917,7 @@
     top: 0; right: 0; bottom: 0;
     height: auto;
     width: min(320px, 90vw);
-    box-shadow: -2px 0 16px color-mix(in oklab, var(--ink) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
 }
 .ds-247420 .cm-tp-head {
@@ -11778,6 +11953,10 @@
   color: var(--fg-2, var(--fg)); opacity: .7; font-size: var(--fs-sm);
 }
 .ds-247420 .cm-tp-empty svg, .ds-247420 .cm-forum-empty svg, .ds-247420 .cm-channel-empty svg, .ds-247420 .cm-member-empty svg { opacity: .6; }
+.ds-247420 .cm-tp-empty-text, .ds-247420 .cm-forum-empty-text, .ds-247420 .cm-channel-empty-text, .ds-247420 .cm-member-empty-text { max-width: 32ch; text-wrap: balance; }
+.ds-247420 .cm-tp-item-author, .ds-247420 .cm-forum-item-author { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-247420 .cm-tp-item-time, .ds-247420 .cm-forum-item-time { margin-left: auto; white-space: nowrap; }
+.ds-247420 .cm-channel-skeleton, .ds-247420 .cm-member-skeleton { pointer-events: none; }
 .ds-247420 .cm-tp-reply {
   display: flex; gap: var(--space-1);
   padding: var(--space-2); border-top: var(--bw-hair) solid var(--rule);
@@ -11805,29 +11984,17 @@
   padding: var(--space-2); margin: var(--space-hair) var(--space-1);
 }
 .ds-247420 .cm-channel-item-skeleton .ds-skel-icon, .ds-247420 .cm-member-item-skeleton .ds-skel-icon {
-  width: 20px; height: 20px; border-radius: 50%; flex: none; background: var(--bg-3);
+  width: 20px; height: 20px; border-radius: 50%; flex: none; background-color: var(--bg-3);
 }
 .ds-247420 .cm-channel-item-skeleton .ds-skel-title, .ds-247420 .cm-member-item-skeleton .ds-skel-title {
-  height: 12px; width: 60%; border-radius: var(--r-1); background: var(--bg-3);
+  height: 12px; width: 60%; border-radius: var(--r-1); background-color: var(--bg-3);
 }
 .ds-247420 .cm-list-item-skeleton {
   display: flex; flex-direction: column; gap: var(--space-1-75);
   padding: var(--space-2) var(--space-3); border-bottom: var(--bw-hair) solid var(--rule);
 }
-.ds-247420 .cm-list-item-skeleton .ds-skel-title { height: 12px; width: 55%; border-radius: var(--r-1); background: var(--bg-3); }
-.ds-247420 .cm-list-item-skeleton .ds-skel-meta { height: 9px; width: 35%; border-radius: var(--r-1); background: var(--bg-3); }
-/* Self-contained shimmer keyframe: community.css ships standalone (the
-   community-app kit does not also load chat.css), so this cannot depend on
-   chat.css's ds-skel-shimmer definition even though the visual language and
-   token vocabulary match it exactly. */
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .cm-channel-item-skeleton .ds-skel-icon, .ds-247420 .cm-channel-item-skeleton .ds-skel-title, .ds-247420 .cm-member-item-skeleton .ds-skel-icon, .ds-247420 .cm-member-item-skeleton .ds-skel-title, .ds-247420 .cm-list-item-skeleton .ds-skel-title, .ds-247420 .cm-list-item-skeleton .ds-skel-meta {
-    animation: cm-skel-shimmer 1.3s ease-in-out infinite;
-    background: linear-gradient(90deg, var(--bg-3) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
-    background-size: 200% 100%;
-  }
-}
-@keyframes cm-skel-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.ds-247420 .cm-list-item-skeleton .ds-skel-title { height: 12px; width: 55%; border-radius: var(--r-1); background-color: var(--bg-3); }
+.ds-247420 .cm-list-item-skeleton .ds-skel-meta { height: 9px; width: 35%; border-radius: var(--r-1); background-color: var(--bg-3); }
 
 /* ForumView — cm-forum / cm-forum-* */
 .ds-247420 .cm-forum { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--bg-1, var(--bg-2)); color: var(--fg); }
@@ -12606,15 +12773,6 @@
 }
 .ds-247420 .agentchat-status .status-dot-disc.status-dot-live {
   background: var(--accent);
-  animation: agentchat-pulse 2s infinite;
-}
-@keyframes agentchat-pulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 50%, transparent); }
-  70%  { box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-247420 .agentchat-status .status-dot-disc { animation: none !important; }
 }
 
 /* working-directory bar */
@@ -12697,7 +12855,7 @@
   align-items: baseline;
   gap: .5em;
 }
-.ds-247420 .agentchat-title { font-size: 1em; margin: 0; }
+.ds-247420 .agentchat-title { font-size: inherit; margin: 0; }
 .ds-247420 .agentchat-sub { font-size: var(--fs-tiny); color: var(--fg-3); }
 /* Optional inline content viewer beside the thread (sidePanel prop) - a
    docstudio-cue addition (its chat view keeps a document/PDF preview open
@@ -12749,7 +12907,7 @@
   padding: .4em .8em; font: inherit; font-size: var(--fs-tiny); cursor: pointer;
   border-radius: var(--r-pill); border: var(--bw-hair) solid var(--rule);
   background: var(--bg-2); color: var(--fg-2, var(--fg));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--fg) 14%, transparent);
+  box-shadow: var(--shadow-1);
 }
 .ds-247420 .agentchat-jump.show { display: inline-flex; }
 .ds-247420 .agentchat-jump:hover { background: var(--bg-3); }
@@ -12901,13 +13059,13 @@
 .ds-247420 .agentchat-working .chat-thinking-dots span {
   width: 5px; height: 5px; border-radius: 50%;
   background: var(--fg); opacity: .4;
-  animation: agentchat-dot-bounce 1.2s infinite ease-in-out;
+  animation: agentchat-dot-fade 1.2s infinite ease-in-out;
 }
 .ds-247420 .agentchat-working .chat-thinking-dots span:nth-child(2) { animation-delay: .15s; }
 .ds-247420 .agentchat-working .chat-thinking-dots span:nth-child(3) { animation-delay: .3s; }
-@keyframes agentchat-dot-bounce {
-  0%, 80%, 100% { transform: scale(.6); opacity: .3; }
-  40% { transform: scale(1); opacity: .9; }
+@keyframes agentchat-dot-fade {
+  0%, 80%, 100% { opacity: .3; }
+  40% { opacity: .9; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ds-247420 .agentchat-working .chat-thinking-dots span { animation: none; opacity: .7; }
@@ -12915,14 +13073,14 @@
 /* Standalone thinking part (ThinkingNode renders .chat-bubble.chat-thinking with
    .chat-thinking-dots + .chat-thinking-text OUTSIDE the .agentchat-working tail).
    Without these base rules the dots are invisible empty spans and the text has
-   no muted tone. Reuse the agentchat-dot-bounce keyframe. */
+   no muted tone. Reuse the agentchat-dot-fade keyframe. */
 .ds-247420 .chat-thinking { display: flex; align-items: center; gap: .5em; color: var(--fg-3); font-size: var(--fs-tiny); background: none; padding: .3em .2em; }
 .ds-247420 .chat-thinking-text { color: var(--fg-3); }
 .ds-247420 .chat-thinking-dots { display: inline-flex; gap: var(--space-half); }
 .ds-247420 .chat-thinking-dots span {
   width: 5px; height: 5px; border-radius: 50%;
   background: var(--fg); opacity: .4;
-  animation: agentchat-dot-bounce 1.2s infinite ease-in-out;
+  animation: agentchat-dot-fade 1.2s infinite ease-in-out;
 }
 .ds-247420 .chat-thinking-dots span:nth-child(2) { animation-delay: .15s; }
 .ds-247420 .chat-thinking-dots span:nth-child(3) { animation-delay: .3s; }
@@ -12981,22 +13139,12 @@
 /* Live: a persistent faint concentric ring (resting shape channel, independent
    of motion) with the pulse layered on top — so even at the pulse trough the
    disc reads as solid-fill + ring, never a bare solid that aliases stale. */
-.ds-247420 .status-dot-disc.status-dot-live { background: var(--accent-ink); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-ink) 30%, transparent); animation: status-disc-pulse 1.8s ease-in-out infinite; }
+.ds-247420 .status-dot-disc.status-dot-live { background: var(--accent-ink); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-ink) 30%, transparent); }
 .ds-247420 .status-dot-disc.status-dot-error { background: var(--flame); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--flame) 38%, transparent); }
 .ds-247420 .status-dot-disc.status-dot-connecting { background: transparent; box-shadow: inset 0 0 0 2px var(--amber); }
 /* Stale: a muted ring with a hollow centre — silhouette distinct from live's
    filled disc and connecting's amber hollow ring (hue + inset core). */
 .ds-247420 .status-dot-disc.status-dot-stale { background: transparent; box-shadow: inset 0 0 0 1px var(--stale), inset 0 0 0 3px var(--bg); }
-@keyframes status-disc-pulse {
-  /* First shadow is the persistent resting ring; second is the animated halo —
-     the ring is always present so the trough never collapses to a bare solid. */
-  0%, 100% { box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent), 0 0 0 2px color-mix(in oklab, var(--accent) 55%, transparent); }
-  50%      { box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent), 0 0 0 6px color-mix(in oklab, var(--accent) 0%, transparent); }
-}
-@media (prefers-reduced-motion: reduce) {
-  /* The base rule already carries the persistent ring; just stop the pulse. */
-  .ds-247420 .status-dot-disc.status-dot-live { animation: none; }
-}
 
 /* ----------------------------------------------------------------------------
    ConversationList — left-rail "Chats" column.
@@ -13128,29 +13276,14 @@
    SessionDashboard — grid of live-session cards.
 ---------------------------------------------------------------------------- */
 .ds-247420 .ds-dash { display: flex; flex-direction: column; min-height: 0; }
-.ds-247420 .ds-dash-header { flex: 0 0 auto; display: flex; align-items: center; gap: var(--space-3); row-gap: var(--space-2); flex-wrap: wrap; padding: var(--space-3) var(--space-4) 0; }
-.ds-247420 .ds-dash-count { font-size: var(--fs-sm); color: var(--fg-2); font-weight: 600; }
+
 /* Stop is a quiet destructive control in chrome, not a page-level red CTA;
    it only goes loud while ARMED (the one-shot press-again confirm). */
-.ds-247420 .ds-dash-header .btn, .ds-247420 .ds-dash-header .btn-primary {
-  margin-left: 0;
-  padding: var(--space-1-5) var(--space-2-75); min-height: 32px; border-radius: var(--r-1); font-weight: 500;
-}
-.ds-247420 .ds-dash-header .btn-primary.danger {
-  background: transparent; color: var(--warn);
-  border: var(--bw-hair) solid var(--warn);
-}
-.ds-247420 .ds-dash-header .btn-primary.danger:hover {
-  background: color-mix(in oklab, var(--warn) 12%, transparent); color: var(--warn);
-}
+
 /* --ink, not --paper, on the armed fill: --warn (#FF5A52) is a light-ish red,
    so paper-on-warn measures 2.72:1 (below the 4.5:1 floor) while ink-on-warn
    measures 6.27:1. This is the same --accent/--accent-ink split the token layer
    documents -- a saturated fill needs the dark text tone, not the light one. */
-.ds-247420 .ds-dash-header .btn-primary.danger.is-armed { background: var(--warn); color: var(--ink); border-color: var(--warn); }
-.ds-247420 .ds-dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-2); padding: var(--space-3); }
-@media (min-width: 1500px) { .ds-247420 .ds-dash-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
-.ds-247420 .ds-dash-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); background: var(--bg-2); border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-1); }
 
 /* Compact density — one line per session. The comfortable card stacks title +
    head + meta + actions as four flex rows and measured 208px tall on a real
@@ -13161,49 +13294,22 @@
    The grid also collapses to a single column: a min-240px card grid beside
    one-line rows would put unrelated sessions shoulder to shoulder and destroy
    the vertical scan the density exists to create. */
-.ds-247420 .ds-dash-grid.is-compact { grid-template-columns: 1fr; gap: 0; padding: var(--space-1) var(--space-2); }
+
 /* nowrap, not wrap: with wrapping allowed a long value pushes the next cluster
    onto its own line and the row grows. Measured that way -- rows came out 37 /
    55 / 75 / 176px instead of one height, the 176px case being a long phase
    label that expanded the head to 498px and squeezed meta to 202px so its
    contents stacked. Every child now elides instead of wrapping, which is what
    keeps a density a density. */
-.ds-247420 .ds-dash-card.is-compact {
-  flex-direction: row; align-items: baseline; flex-wrap: nowrap;
-  gap: var(--space-2); padding: var(--space-1-75) var(--space-2);
-  background: transparent; border: 0; border-radius: 0;
-  border-bottom: var(--bw-hair) solid var(--bg-3);
-  overflow: hidden;
-}
+
 /* The head carries status + agent + model; it may shrink and elide rather than
    expand past its content and starve the meta cluster. */
-.ds-247420 .ds-dash-card.is-compact .ds-dash-card-head {
-  flex: 0 1 auto; min-width: 0; overflow: hidden; white-space: nowrap;
-}
-.ds-247420 .ds-dash-card.is-compact .ds-dash-agent,
-.ds-247420 .ds-dash-card.is-compact .ds-dash-model,
-.ds-247420 .ds-dash-card.is-compact .ds-dash-status {
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
-}
+
 /* meta takes the remaining width and stays on one line, so a long cwd elides
    rather than wrapping the row to two lines and defeating the density. */
-.ds-247420 .ds-dash-card.is-compact .ds-dash-meta {
-  flex: 1 1 0; min-width: 0; display: flex; flex-direction: row;
-  align-items: baseline; gap: var(--space-2); overflow: hidden;
-  flex-wrap: nowrap; white-space: nowrap;
-}
-.ds-247420 .ds-dash-card.is-compact .ds-dash-stat,
-.ds-247420 .ds-dash-card.is-compact .ds-dash-activity {
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
-}
-.ds-247420 .ds-dash-card.is-compact .ds-dash-cwd {
-  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.ds-247420 .ds-dash-card.is-compact .ds-dash-activity { flex: 0 0 auto; margin-inline-start: auto; }
+
 /* The selected/active affordances are inset shadows on the comfortable card;
    with no border to sit inside, compact carries them as a leading rule. */
-.ds-247420 .ds-dash-card.is-compact.is-active { box-shadow: inset 2px 0 0 var(--accent); }
-.ds-247420 .ds-dash-card.is-compact:last-child { border-bottom: 0; }
 
 /* Visual weight follows the status the host already computes -- it does NOT
    invent a severity. A dense list where every row paints identically makes the
@@ -13216,33 +13322,13 @@
    font-weight 600 / color --fg, and .ds-dash-cwd is already --fg-3. So the
    differentiator cannot BE --fg-3 (that is the default) -- error must rise
    above the baseline and idle must fall below it. */
-.ds-247420 .ds-dash-card.is-compact.is-error { box-shadow: inset 2px 0 0 var(--flame); }
-.ds-247420 .ds-dash-card.is-compact.is-error .ds-dash-agent { font-weight: 700; color: var(--fg); }
-.ds-247420 .ds-dash-card.is-compact.is-running .ds-dash-agent { font-weight: 600; color: var(--fg); }
+
 /* Idle recedes by weight and by the tier-2 tone -- NOT by opacity, which would
    scale every child including the status word and drop it under the contrast
    floor. --fg-2 stays a real text tone. */
-.ds-247420 .ds-dash-card.is-compact.is-stale .ds-dash-agent { font-weight: 400; color: var(--fg-2); }
-.ds-247420 .ds-dash-card.is-error { border-color: var(--flame); }
-.ds-247420 .ds-dash-card-head { display: flex; align-items: center; gap: var(--space-2); }
-.ds-247420 .ds-dash-status { font-size: var(--fs-tiny); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tr-caps); }
+
 /* running tone unified on --accent (the later is-running rule + the live disc all
    use --accent); the dead var(--green) duplicate that lived here was removed. */
-.ds-247420 .ds-dash-status.is-error { color: var(--flame); }
-.ds-247420 .ds-dash-agent { font-size: var(--fs-body); font-weight: 600; color: var(--fg); }
-.ds-247420 .ds-dash-model { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3); margin-left: auto; }
-.ds-247420 .ds-dash-meta { display: flex; flex-direction: column; gap: var(--space-hair); }
-.ds-247420 .ds-dash-cwd { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-247420 .ds-dash-stat { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-2); }
-.ds-247420 .ds-dash-stat-cost { color: var(--fg); font-weight: 600; }
-.ds-247420 .ds-dash-activity { font-size: var(--fs-tiny); color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-247420 .ds-dash-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
-.ds-247420 .ds-dash-state { padding: var(--space-6) var(--space-4); text-align: center; color: var(--fg-3); font-size: var(--fs-body); }
-.ds-247420 .ds-dash-state-error { color: var(--flame); }
-
-@media (max-width: 640px) {
-  .ds-247420 .ds-dash-grid { grid-template-columns: 1fr; padding: var(--space-3); }
-}
 
 /* ----------------------------------------------------------------------------
    ContextPane — compact right-hand context panel for the chat surface.
@@ -13384,54 +13470,21 @@
 .ds-247420 .agentchat-followups { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--space-3); }
 
 /* --- C1: stale/idle dashboard status (static, NOT pulsing). --- */
-.ds-247420 .ds-dash-status.is-stale { color: var(--stale); }
-.ds-247420 .ds-dash-status.is-running { color: var(--accent-ink); }
 
 /* --- C2: dashboard sort/filter toolbar + stream-state line. --- */
 /* The toolbar is part of the ONE header row (count | heartbeat ... filter,
    sort, errors-only, stop): compact controls that align on a shared 32px
    height, never a stacked full-width form column. */
-.ds-247420 .ds-dash-toolbar { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-.ds-247420 .ds-dash-toolbar .ds-search-input {
-  width: 200px; min-height: 32px; padding: var(--space-1-5) var(--space-2-5);
-  font-size: var(--fs-sm); border-radius: var(--r-1);
-}
-.ds-247420 .ds-dash-toolbar .ds-select, .ds-247420 .ds-dash-toolbar select {
-  min-height: 32px; padding: var(--space-1) var(--space-2-5); font-size: var(--fs-sm);
-  width: auto; border-radius: var(--r-1);
-}
-.ds-247420 .ds-dash-stream { font-size: var(--fs-tiny); color: var(--fg-3); }
-.ds-247420 .ds-dash-stream.is-connected { color: var(--accent-ink); }
-.ds-247420 .ds-dash-stream.is-lost { color: var(--flame); }
-.ds-247420 .ds-dash-stream.is-connecting { color: var(--amber); }
-.ds-247420 .ds-dash-header .spread { flex: 1; }
-.ds-247420 .ds-dash-errors-toggle {
-  padding: var(--space-1) var(--space-2-5); min-height: 32px; border: var(--bw-hair) solid var(--bg-3);
-  border-radius: var(--r-1); background: var(--bg-2); color: var(--fg-2);
-  cursor: pointer; font-family: var(--ff-body); font-size: var(--fs-tiny);
-}
-.ds-247420 .ds-dash-errors-toggle.active { background: var(--accent-tint); color: var(--fg); border-color: var(--accent); }
-.ds-247420 .ds-dash-errors-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
 
 /* --- C3: per-card select checkbox. --- */
-.ds-247420 .ds-dash-select {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 24px; min-height: 24px; padding: 0; cursor: pointer;
-  border: none; background: none; color: var(--fg-3);
-  font-family: var(--ff-mono); font-size: var(--fs-sm);
-}
-.ds-247420 .ds-dash-select[aria-checked="true"] { color: var(--accent-ink); }
-.ds-247420 .ds-dash-select:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
 
 /* --- C5: active dashboard card (current conversation). --- */
-.ds-247420 .ds-dash-card.is-active { box-shadow: inset 2px 0 0 var(--accent); }
-.ds-247420 .ds-dash-card.is-selected { background: var(--accent-tint); }
+
 /* Stale/idle card: a positive amber inset bar (mirrors is-active) so a stuck
    agent is flagged in a dense grid, not merely faded near-invisibly. The word
    'idle' co-carries state, so this stays colour-blind safe. */
-.ds-247420 .ds-dash-card.is-stale { box-shadow: inset 2px 0 0 var(--stale); }
+
 /* Active identity always wins over stale amber when both classes are present. */
-.ds-247420 .ds-dash-card.is-active.is-stale { box-shadow: inset 2px 0 0 var(--accent); }
 
 /* --- H3: dashboard live disc pulses; stale/error do not (handled by H1). --- */
 
@@ -13480,11 +13533,10 @@
    they are reachable by finger. --- */
 @media (pointer: coarse), (max-width: 640px) {
   .ds-247420 .chat-msg-actions { opacity: 1; }
-  .ds-247420 .chat-code-copy { opacity: 1; }
+  .ds-247420 .chat-code-copy { opacity: 1; min-width: 48px; min-height: 44px; }
   .ds-247420 .chat-tool-copy { opacity: 1; min-width: 44px; min-height: 44px; }
   .ds-247420 .chat-msg-action { min-width: 44px; height: 44px; }
-  .ds-247420 .ds-dash-select { min-width: 44px; min-height: 44px; }
-  .ds-247420 .ds-file-more-btn, .ds-247420 .ds-roots-tab, .ds-247420 .ds-dash-errors-toggle { min-height: 44px; }
+  .ds-247420 .ds-file-more-btn, .ds-247420 .ds-roots-tab { min-height: 44px; }
   .ds-247420 .agentchat-export-act { min-height: 44px; }
   .ds-247420 .agentchat-install-copy { min-height: 44px; min-width: 44px; }
 }
@@ -13655,26 +13707,12 @@
 .ds-247420 .agentchat-cwd-hint.is-checking { color: var(--fg-2); font-style: italic; }
 
 /* Dashboard: shared session title heading (same string as the rails). */
-.ds-247420 .ds-dash-title {
-  font-size: var(--fs-sm); font-weight: 600; color: var(--fg);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
 
 /* Stopping state: in-flight cancel reads distinctly from running/error. */
-.ds-247420 .ds-dash-status.is-stopping { color: var(--amber); }
 
 /* External (observed, not owned) session card: no stop control exists. */
-.ds-247420 .ds-dash-external {
-  /* 1px vertical is OFF-SCALE ON PURPOSE — a --fs-micro uppercase pill whose
-     height must stay inside the card's meta row. --space-hair (2px) tips it
-     past the row and pushes the card taller. Horizontal snaps normally. */
-  padding: 1px var(--space-1-75); border: var(--bw-hair) solid var(--bg-3); border-radius: var(--r-pill);
-  font-size: var(--fs-micro); color: var(--fg-3); text-transform: uppercase; letter-spacing: var(--tr-caps);
-}
-.ds-247420 .ds-dash-card.is-external { border-style: dashed; }
 
 /* One connection vocabulary: offline (is-lost kept as legacy alias). */
-.ds-247420 .ds-dash-stream.is-offline { color: var(--flame); }
 
 /* ============================================================
    10th run - Claude-Code-web design-language parity
@@ -13847,6 +13885,19 @@
 .ds-247420 .chat-tool-pre { margin: 0; padding: var(--space-2); background: var(--bg-2); border-radius: var(--r-1); font-family: var(--ff-mono); font-size: var(--fs-tiny); line-height: 1.45; overflow-x: auto; max-height: 320px; overflow-y: auto; }
 .ds-247420 .chat-tool-pre.is-error { color: var(--flame); }
 .ds-247420 .chat-tool-pre.chat-tool-empty { color: var(--fg-3); }
+.ds-247420 .chat-approval-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+.ds-247420 .chat-approval-btn { position: static; opacity: 1; min-height: 32px; }
+.ds-247420 .chat-approval-btn.is-on { color: var(--accent-ink); border-color: var(--accent); }
+.ds-247420 .chat-approval-note { color: var(--fg-3); font-size: var(--fs-tiny); }
+.ds-247420 .chat-question-block { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-3); }
+.ds-247420 .chat-question-header { color: var(--fg-3); font-size: var(--fs-tiny); }
+.ds-247420 .chat-question-text { color: var(--fg); font-size: var(--fs-body); }
+.ds-247420 .chat-question-opts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.ds-247420 .chat-question-other { min-height: 32px; padding: var(--space-1) var(--space-2); background: var(--bg-2); color: var(--fg); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); font: inherit; font-size: var(--fs-tiny); }
+.ds-247420 .chat-question-other:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
+.ds-247420 .chat-thinking-settled > summary { cursor: pointer; color: var(--fg-3); font-size: var(--fs-tiny); }
+.ds-247420 .chat-thinking-body { margin-top: var(--space-1); padding-left: var(--space-3); border-left: var(--bw-hair) solid var(--rule); color: var(--fg-2); font-size: var(--fs-tiny); white-space: pre-wrap; }
+.ds-247420 .chat-image-blocked { color: var(--fg-3); font-style: italic; }
 /* Nested fold for an args/result body past LONG_BODY_THRESHOLD (agent-nodes.js)
    -- collapsed by default so a huge result's <pre> never enters the DOM until
    the user expands it, independent of the outer card's own open/closed state. */
@@ -13881,65 +13932,42 @@
 @media (prefers-reduced-motion: no-preference) {
   .ds-247420 .btn.is-armed, .ds-247420 .btn-primary.is-armed { animation: ds-arm-pulse var(--dur-slow) var(--ease); }
 }
-@keyframes ds-arm-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--warn) 55%, transparent); } 100% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--warn) 0%, transparent); } }
-.ds-247420 .ds-dash-card.is-new { box-shadow: inset 2px 0 0 var(--accent), 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
+@keyframes ds-arm-pulse { 0% { opacity: 0.55; } 100% { opacity: 1; } }
+
 /* Error card carries the strongest left-bar tone (flame > stale amber > active
    accent), placed last so its inset bar wins source order over is-active/is-stale.
    The full-perimeter border-color (line ~396) stays for extra severity emphasis. */
-.ds-247420 .ds-dash-card.is-error { box-shadow: inset 2px 0 0 var(--flame); }
+
 /* A newly-arrived AND errored card: keep the LEFT inset bar flame (severity
    precedence, never accent) while restoring the is-new arrival outline as a
    full-perimeter accent glow that does not collide with the flame bar. Placed
    after both is-new and is-error so it wins source order. */
-.ds-247420 .ds-dash-card.is-new.is-error { box-shadow: inset 2px 0 0 var(--flame), 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-dash-card.is-new { animation: ds-card-in var(--dur-slow) var(--ease); }
-}
+
 @keyframes ds-card-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* Live command-center: status-bucket groups + header breakdown + heartbeat. */
-.ds-247420 .ds-dash-group { display: flex; flex-direction: column; gap: var(--space-2); }
-.ds-247420 .ds-dash-group-label { font-size: var(--fs-tiny); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tr-label); color: var(--fg-3); padding: 0 var(--space-1); }
-.ds-247420 .ds-dash-breakdown { display: flex; align-items: center; gap: var(--space-1); font-size: var(--fs-sm); color: var(--fg-2); }
+
 /* Shape-channel discs mirror the .status-dot-disc vocabulary (solid /
    solid+halo / hollow ring) so a colour-blind user can scan the breakdown by
    shape, not hue alone. CSS-drawn discs, not glyphs (glyph policy clean). */
-.ds-247420 .ds-dash-breakdown .seg { display: inline-flex; align-items: center; gap: var(--space-1); font-weight: 600; }
-.ds-247420 .ds-dash-breakdown .seg::before { content: ''; width: 7px; height: 7px; border-radius: 50%; flex: none; }
-.ds-247420 .ds-dash-breakdown .seg.is-running { color: var(--accent-ink); }
-.ds-247420 .ds-dash-breakdown .seg.is-running::before { background: var(--accent); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--accent) 30%, transparent); }
-.ds-247420 .ds-dash-breakdown .seg.is-error { color: var(--flame); }
-.ds-247420 .ds-dash-breakdown .seg.is-error::before { background: var(--flame); box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--flame) 38%, transparent); }
-.ds-247420 .ds-dash-breakdown .seg.is-idle { color: var(--stale); }
-.ds-247420 .ds-dash-breakdown .seg.is-idle::before { background: transparent; box-shadow: inset 0 0 0 1px var(--stale), inset 0 0 0 3px var(--bg); }
-.ds-247420 .ds-dash-stream-disc { display: inline-flex; align-items: center; gap: var(--space-1); }
-.ds-247420 .ds-dash-selectall { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--fs-tiny); color: var(--fg-2); cursor: pointer; background: none; border: none; padding: var(--space-1); }
-.ds-247420 .ds-dash-selectall:hover { color: var(--fg); }
-.ds-247420 .ds-dash-selectall:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
-.ds-247420 .ds-dash-clear { background: none; border: none; color: var(--fg-3); cursor: pointer; font-size: var(--fs-tiny); text-decoration: underline dotted; padding: var(--space-1); }
-.ds-247420 .ds-dash-clear:hover { color: var(--fg); }
-.ds-247420 .ds-dash-clear:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; border-radius: var(--r-1); }
 
 /* Conversation-rail loading skeleton (cold ccsniff walk). */
 .ds-247420 .ds-session-row-skeleton { display: flex; flex-direction: column; gap: var(--space-1-75); padding: var(--space-2) var(--space-3); }
-.ds-247420 .ds-session-row-skeleton .ds-skel { background: var(--bg-3); border-radius: var(--r-1); }
+.ds-247420 .ds-session-row-skeleton .ds-skel { border-radius: var(--r-1); }
 .ds-247420 .ds-session-row-skeleton .ds-skel-title { height: 12px; width: 70%; }
 .ds-247420 .ds-session-row-skeleton .ds-skel-meta { height: 9px; width: 45%; }
 @media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-session-row-skeleton .ds-skel { animation: ds-skel-shimmer 1.3s ease-in-out infinite; background: linear-gradient(90deg, var(--bg-3) 0%, var(--bg-2) 50%, var(--bg-3) 100%); background-size: 200% 100%; }
 }
-@keyframes ds-skel-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* Agent-picker list loading skeleton (shares the .ds-skel shimmer base above). */
 .ds-247420 .ds-agent-list-skeleton { display: flex; flex-direction: column; gap: var(--space-2); }
 .ds-247420 .ds-agent-row-skeleton { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); }
-.ds-247420 .ds-agent-row-skeleton .ds-skel { background: var(--bg-3); border-radius: var(--r-1); }
+.ds-247420 .ds-agent-row-skeleton .ds-skel { border-radius: var(--r-1); }
 .ds-247420 .ds-agent-row-skeleton .ds-skel-icon { height: 18px; width: 18px; flex: none; border-radius: var(--r-round, 50%); }
 .ds-247420 .ds-agent-row-skeleton .ds-skel-title { height: 12px; width: 40%; }
 .ds-247420 .ds-agent-row-skeleton .ds-skel-meta { height: 9px; width: 25%; margin-left: auto; }
 .ds-247420 .ds-agent-list-skeleton-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
 @media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-agent-row-skeleton .ds-skel { animation: ds-skel-shimmer 1.3s ease-in-out infinite; background: linear-gradient(90deg, var(--bg-3) 0%, var(--bg-2) 50%, var(--bg-3) 100%); background-size: 200% 100%; }
 }
 
 /* File code preview: paint Prism tokens (the bundle scoped them to the chat
@@ -13971,13 +13999,13 @@
    tier B (inline-row-grade, 24px) for actions inside dense row strips.
    Hover/focus/active-state rules on the originals still apply.
 ---------------------------------------------------------------------------- */
-.ds-247420 .row-act, .ds-247420 .ds-dash-errors-toggle, .ds-247420 .agentchat-export-act, .ds-247420 .ds-file-more-btn {
+.ds-247420 .row-act, .ds-247420 .agentchat-export-act, .ds-247420 .ds-file-more-btn {
   min-height: 32px; padding: var(--space-1-5) var(--space-2-75); border-radius: var(--r-1);
   font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 500;
   background: transparent; border: var(--bw-hair) solid var(--rule); color: var(--fg-2);
   cursor: pointer;
 }
-.ds-247420 .row-act:hover, .ds-247420 .ds-dash-errors-toggle:hover, .ds-247420 .agentchat-export-act:hover, .ds-247420 .ds-file-more-btn:hover {
+.ds-247420 .row-act:hover, .ds-247420 .agentchat-export-act:hover, .ds-247420 .ds-file-more-btn:hover {
   background: var(--bg-2); color: var(--fg);
 }
 .ds-247420 .agentchat-install-copy, .ds-247420 .ds-upload-act, .ds-247420 .ds-session-meta-copy {
@@ -13990,7 +14018,7 @@
   background: var(--bg-2); color: var(--fg);
 }
 @media (pointer: coarse) {
-  .ds-247420 .row-act, .ds-247420 .ds-dash-errors-toggle, .ds-247420 .agentchat-export-act, .ds-247420 .ds-file-more-btn, .ds-247420 .agentchat-install-copy, .ds-247420 .ds-upload-act, .ds-247420 .ds-session-meta-copy { min-height: 44px; }
+  .ds-247420 .row-act, .ds-247420 .agentchat-export-act, .ds-247420 .ds-file-more-btn, .ds-247420 .agentchat-install-copy, .ds-247420 .ds-upload-act, .ds-247420 .ds-session-meta-copy { min-height: 44px; }
 }
 
 /* 11th run: ultrawide widens the reading measure where there is room. */
@@ -14101,6 +14129,10 @@
 .ds-247420 .chat-minimap-tooltip.is-user { border-left-color: color-mix(in oklab, var(--accent) 70%, transparent); }
 .ds-247420 .chat-minimap-tooltip.is-assistant { border-left-color: color-mix(in oklab, var(--fg-3) 50%, transparent); }
 .ds-247420 .chat-minimap-tooltip.is-nearest { opacity: 1; color: var(--fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-247420 .chat-msg-actions, .ds-247420 .chat-minimap-dot, .ds-247420 .chat-minimap-tooltip { transition: none; }
+}
 
 /* editor-primitives.css */
 /* editor-primitives.css — chrome for in-engine editors, inspectors, IDEs,
@@ -14500,6 +14532,9 @@
     width: 100%;
     border-radius: var(--r-1, 8px);
     padding: var(--space-hair, 2px) var(--space-1, 4px);
+}
+@media (pointer: coarse) {
+    .ds-247420 .ds-ep-inline-input.ds-ep-inline-input { min-height: 44px; }
 }
 .ds-247420 .ds-ep-inline-input.ds-ep-inline-input:focus-visible {
     outline: none;
@@ -15326,7 +15361,7 @@
     padding: var(--space-hair) var(--space-1-5); cursor: pointer;
 }
 .ds-247420 .ov-menubutton-retry:hover, .ds-247420 .ov-menubutton-retry:focus-visible { background: var(--panel-2, var(--rule)); outline: none; }
-.ds-247420 .ov-menubutton-trigger {
+.ds-247420 .ov-menubutton-trigger, .ds-247420 .ov-perm-trigger {
     appearance: none;
     background: var(--panel-2, transparent);
     color: inherit; font: inherit;
@@ -15338,7 +15373,7 @@
     display: inline-flex; align-items: center;
 }
 @media (pointer: coarse) {
-    .ds-247420 .ov-menubutton-trigger { min-height: 44px; }
+    .ds-247420 .ov-menubutton-trigger, .ds-247420 .ov-perm-trigger { min-height: 44px; }
 }
 
 /* ---------------------------------------------------------------
@@ -15421,8 +15456,7 @@
 .ds-247420 .ov-cmd-backdrop {
     position: fixed; inset: 0;
     z-index: var(--z-modal);
-    background: color-mix(in oklab, var(--fg) 32%, transparent);
-    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    background: color-mix(in oklab, var(--fg) 40%, transparent);
     display: flex; align-items: flex-start; justify-content: center;
     padding: 12vh var(--space-3, 16px) var(--space-3, 16px);
     animation: ov-cmd-backdrop-in var(--dur-base, 160ms) var(--ease, ease) both;
@@ -15904,8 +15938,7 @@
     display: flex; flex-direction: column;
     width: 280px; max-width: calc(50% - 12px);
     pointer-events: all;
-    background: color-mix(in oklab, var(--panel-1) 82%, transparent);
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    background: var(--panel-1);
     border: 1px solid var(--rule);
     border-radius: var(--r-2, 8px);
     box-shadow: var(--shadow-3);
@@ -16104,6 +16137,16 @@
     .ds-247420 .ds-damage-number { transform: translate(-50%, -50%); }
 }
 
+.ds-247420 .ds-gek-btn { padding: var(--space-1) var(--space-2); background: var(--accent); color: var(--accent-fg); border: none; border-radius: var(--r-1); cursor: pointer; font-size: var(--fs-nano); white-space: nowrap; transition: background-color var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease); }
+.ds-247420 .ds-gek-btn-dense { padding: var(--space-half) var(--space-1); }
+.ds-247420 .ds-gek-btn-primary { background: var(--accent); color: var(--accent-fg); }
+.ds-247420 .ds-gek-btn-danger { background: var(--danger); color: var(--accent-fg); }
+.ds-247420 .ds-gek-btn-ghost { background: transparent; color: var(--fg); border: var(--bw-hair) solid var(--rule); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-247420 .ds-ep-tab-close, .ds-247420 .ds-ep-btngrp-btn { transition: none; }
+}
+
 /* community-app.css */
 /* community-app.css — layout glue for mountCommunityApp (the full chat/community
    app GUI). Reuses the canonical app/body/main classes from app-shell.css and
@@ -16204,7 +16247,6 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.ds-247420.ds-247420 .ca-app .app-topbar .brand .slash { color: var(--fg-3); }
 .ds-247420.ds-247420 .ca-app .app-topbar nav {
   display: flex;
   align-items: center;
@@ -16278,6 +16320,11 @@
   font-size: var(--fs-sm, 14px);
   font-weight: var(--fw-semibold, 600);
   transition: background 0.1s, color 0.1s;
+}
+@media (pointer: coarse) {
+  .ds-247420.ds-247420 .ca-rail-servers { padding-inline: 0; }
+  .ds-247420.ds-247420 .ca-app .app-topbar nav a { min-width: 44px; justify-content: center; }
+  .ds-247420.ds-247420 .ca-rail-servers a { width: 44px; height: 44px; flex: 0 0 auto; }
 }
 .ds-247420.ds-247420 .ca-rail-servers a::before {
   content: '';
@@ -16548,7 +16595,6 @@
   margin: 0 auto var(--space-3);
   background-color: var(--accent);
   border-radius: 50%;
-  box-shadow: 0 0 0 15px color-mix(in oklab, var(--accent) 12%, transparent);
   -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2011.5a8.38%208.38%200%200%201-.9%203.8%208.5%208.5%200%200%201-7.6%204.7%208.38%208.38%200%200%201-3.8-.9L3%2021l1.9-5.7a8.38%208.38%200%200%201-.9-3.8%208.5%208.5%200%200%201%204.7-7.6%208.38%208.38%200%200%201%203.8-.9h.5a8.48%208.48%200%200%201%208%208v.5z%22/%3E%3C/svg%3E") center / 20px 20px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2011.5a8.38%208.38%200%200%201-.9%203.8%208.5%208.5%200%200%201-7.6%204.7%208.38%208.38%200%200%201-3.8-.9L3%2021l1.9-5.7a8.38%208.38%200%200%201-.9-3.8%208.5%208.5%200%200%201%204.7-7.6%208.38%208.38%200%200%201%203.8-.9h.5a8.48%208.48%200%200%201%208%208v.5z%22/%3E%3C/svg%3E") center / 20px 20px no-repeat;
 }
@@ -16571,7 +16617,7 @@
     width: 240px; min-width: 240px;
     transform: translateX(-110%);
     transition: transform var(--dur-base, 240ms) var(--ease, ease);
-    box-shadow: 2px 0 16px color-mix(in oklab, var(--ink, #000) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
   .ds-247420.ds-247420 .ca-rail.open { transform: translateX(0); }
   .ds-247420.ds-247420 .ca-app:has(.ca-rail.open) .app-main {
@@ -16614,12 +16660,14 @@
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420.ds-247420 .ca-drop-overlay-inner { animation: ca-drop-overlay-pulse 1.1s var(--ease) infinite; }
-}
-@keyframes ca-drop-overlay-pulse {
-  0%, 100% { border-color: var(--accent); }
-  50% { border-color: color-mix(in oklab, var(--accent) 45%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-247420.ds-247420 .ca-app .app-topbar nav a,
+  .ds-247420.ds-247420 .ca-rail-servers a,
+  .ds-247420.ds-247420 .ca-rail-servers a::before,
+  .ds-247420.ds-247420 .ca-rail-server-add,
+  .ds-247420.ds-247420 .ca-rail-server-explore,
+  .ds-247420.ds-247420 .ca-rail-channels a { transition: none; }
 }
 
 /* app-surfaces.css */
@@ -16680,7 +16728,7 @@
 .ds-247420 *::-webkit-scrollbar-track { background: transparent; }
 .ds-247420 *::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--fg) 20%, transparent);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
@@ -16718,7 +16766,7 @@
 /* Project filter pills. */
 .ds-247420 .pill-row { display: flex; flex-wrap: wrap; gap: .35em; padding: .35em 0; }
 .ds-247420 .pill {
-  cursor: pointer; padding: .25em .7em; border-radius: 999px;
+  cursor: pointer; padding: .25em .7em; border-radius: var(--r-pill);
   border: 1px solid transparent; background: transparent;
   font: inherit; color: inherit; line-height: 1.4;
   transition: background-color .15s ease, border-color .15s ease;
@@ -16737,7 +16785,7 @@
 .ds-247420 .field-error { color: var(--warn); }
 
 /* Boot splash: static text painted with the HTML, replaced by the first mount. */
-.ds-247420 .boot-splash { height: 100%; min-height: 60vh; display: flex; align-items: center; justify-content: center; color: var(--fg-3); font-size: .9rem; }
+.ds-247420 .boot-splash { height: 100%; min-height: 60vh; display: flex; align-items: center; justify-content: center; color: var(--fg-3); font-size: var(--fs-xs); }
 
 /* Chat control cluster in the crumb bar: model picker, +new, status. */
 .ds-247420 .chat-controls { display: flex; align-items: center; gap: .6em; flex-wrap: wrap; }
@@ -16783,7 +16831,7 @@
 .ds-247420 .health-summary { display: flex; flex-wrap: wrap; gap: .4em; margin: .6em 0; }
 .ds-247420 .health-chip {
   font-family: var(--ff-mono, ui-monospace, monospace);
-  font-size: .8rem; padding: .15em .55em; border-radius: var(--r-1, 8px);
+  font-size: var(--fs-tiny); padding: .15em .55em; border-radius: var(--r-1, 8px);
   background: color-mix(in srgb, var(--fg) 8%, transparent);
   color: var(--fg-2);
   border: var(--bw-hair, 1px) solid color-mix(in srgb, var(--fg) 12%, transparent);
@@ -16801,7 +16849,7 @@
 .ds-247420 .ds-status-chip {
   display: inline-flex; align-items: center; gap: .35em;
   font-family: var(--ff-mono, ui-monospace, monospace);
-  font-size: .8rem; padding: .15em .55em; border-radius: var(--r-1, 8px);
+  font-size: var(--fs-tiny); padding: .15em .55em; border-radius: var(--r-1, 8px);
   background: color-mix(in srgb, var(--fg) 8%, transparent);
   color: var(--fg-2);
   border: var(--bw-hair, 1px) solid color-mix(in srgb, var(--fg) 12%, transparent);
@@ -16821,7 +16869,7 @@
 /* Compact working-directory bar. */
 .ds-247420 .cwd-bar {
   display: flex; align-items: center; gap: .5em; flex-wrap: wrap;
-  padding: .15em 0 .5em; font-size: .85rem;
+  padding: .15em 0 .5em; font-size: var(--fs-xs);
 }
 .ds-247420 .cwd-bar-text {
   font-family: var(--ff-mono, ui-monospace, monospace);
@@ -16862,17 +16910,12 @@
    prop; hide it (streaming state shows via the title + busy banner). */
 .ds-247420 .chat-head .sub { display: none; }
 
-/* Event-list row hover + search-result flash. */
-.ds-247420 .ds-event-list .row[role="button"]:hover { background: color-mix(in srgb, var(--fg) 5%, transparent); }
 /* Opt-in like every other animation in the kit: the flash is declared only
    under no-preference, so a reduced-motion user gets the row without a 2s
    pulsing highlight. It animates background rather than transform, so the
    vestibular risk is low, but a repeating attention pull is still exactly the
    kind of thing the preference exists to suppress. The row is located by the
    scroll-into-view that accompanies it, so nothing is lost when it is absent. */
-@media (prefers-reduced-motion: no-preference) {
-  .ds-247420 .ds-event-list .row.event-flash { animation: agentgui-event-flash 2s ease-out; }
-}
 
 
 /* Generic interactive focus ring for app-emitted controls. */
@@ -16884,10 +16927,6 @@
 .ds-247420 .agentgui-field-mb { margin: 0 0 .5em; }
 .ds-247420 .agentgui-field-my { margin: .5em 0; }
 
-@keyframes agentgui-event-flash {
-  0%   { background: color-mix(in srgb, var(--accent) 40%, transparent); }
-  100% { background: transparent; }
-}
 
 @media (min-width: 900px) {
   .ds-247420 .settings-grid { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); }
@@ -16909,15 +16948,12 @@
   .ds-247420 .cwd-bar { gap: .3em; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ds-247420 .ds-event-list .row.event-flash { animation: none; outline: 2px solid var(--accent-ink); }
-}
 
 @media print {
   /* Re-assert the paper-tuned signal tokens so token-derived foregrounds
      (status discs, error text, tool cards) print with light-theme colours
      rather than the dark-theme-derived values inherited under auto-dark. */
-  .ds-247420 { --flame:#C53E00; --amber:#7C570F; --warn:#C41C0C; --sky:#3A6EFF; --bg:var(--paper); --fg:var(--ink); }
+  .ds-247420 { --flame:#C53E00; --amber:#7C570F; --warn:#C41C0C; --sky:#404040; --bg:var(--paper); --fg:var(--ink); }
   .ds-247420 #app { min-height: auto; display: block; height: auto; }
   .ds-247420 .skip-link, .ds-247420 .status-dot, .ds-247420 .history-actions, .ds-247420 .chat-composer { display: none !important; }
   .ds-247420 .app, .ds-247420 .app-main, .ds-247420 .panel, .ds-247420 .chat, .ds-247420 .chat-thread {
@@ -17082,7 +17118,7 @@
 .ds-247420 {
   --article-toc-rail-w: 256px;
   --article-toc-gutter-nonrhythm: 44px;
-  --article-toc-header-gap: 16px;
+  --article-toc-header-gap: var(--space-3);
   --article-measure-wide: min(96%, 1600px);
 }
 .ds-247420 #ds-article-host.has-toc {
@@ -17197,50 +17233,6 @@
   }
 }
 
-.ds-247420 .ds-cli-block {
-  --ds-cli-block-fs-mono-halfrung: 12.5px;
-  display: block;
-  background: var(--panel-1);
-  border-radius: var(--r-0);
-  padding: var(--space-3) var(--space-3-5);
-  margin: var(--space-3) 0 var(--space-5) 0;
-  font-family: var(--ff-mono);
-  font-size: var(--ds-cli-block-fs-mono-halfrung);
-  line-height: 1.6;
-  color: var(--panel-text);
-  box-shadow: var(--panel-shadow);
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.ds-247420 .ds-cli-block .ds-cli-comment {
-  color: var(--panel-text-3);
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 1.4em;
-  padding: var(--space-half) 0;
-  line-height: 1.6;
-}
-.ds-247420 .ds-cli-block .ds-cli-comment:empty::before { content: '\00a0'; }
-.ds-247420 .ds-cli-block .ds-cli-row {
-  display: flex;
-  gap: var(--space-2-5);
-  padding: var(--space-half) 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.ds-247420 .ds-cli-block .ds-cli-row .prompt {
-  color: var(--panel-accent);
-  flex: 0 0 auto;
-  user-select: none;
-}
-.ds-247420 .ds-cli-block .ds-cli-row .cmd {
-  color: var(--panel-text);
-  flex: 1 1 auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
 .ds-247420 .panel .row { align-items: flex-start; padding: var(--space-3) var(--space-3-5); gap: var(--space-3); }
 .ds-247420 .panel .row + .row { box-shadow: inset 0 1px 0 var(--rule); }
 .ds-247420 .panel .row .code { padding-top: var(--space-hair); min-width: 28px; }
@@ -17277,7 +17269,7 @@
   background: var(--panel-2);
   color: var(--panel-text-2);
   border: 1px solid var(--panel-3);
-  font-size: 0.7rem;
+  font-size: var(--fs-nano);
   --tag-inset-rem-coupled-to-root-fontsize: 0.15rem 0.5rem;
   padding: var(--tag-inset-rem-coupled-to-root-fontsize);
   border-radius: var(--r-hair);
@@ -17313,6 +17305,10 @@
 }
 .ds-247420 .ds-prose-endnote a { color: var(--panel-accent); text-decoration: none; }
 .ds-247420 .ds-prose-endnote a:hover { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-247420 #ds-article-host .toc a { transition: none; }
+}
 
 /* marketing.css */
 /* marketing.css — landing / docs site surface family (the agentgui flatspace
@@ -17448,7 +17444,7 @@
   width: 200px;
   height: 20px;
   background: var(--bg-3);
-  border-radius: 4px;
+  border-radius: var(--r-0);
   overflow: hidden;
 }
 .ds-247420 .sp-hud-health-fill {
@@ -17474,7 +17470,7 @@
   background: var(--accent);
   color: var(--accent-fg);
   font-weight: bold;
-  border-radius: 6px;
+  border-radius: var(--r-0);
   font-size: var(--fs-xs, 14px);
 }
 

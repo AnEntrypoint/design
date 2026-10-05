@@ -1,6 +1,3 @@
-// CommandPalette — centered Cmd+K palette with live filter + keyboard nav.
-// The result list is rendered imperatively (applyDiff into the list element)
-// so filter/active-index changes repaint only the list, not the whole page.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
@@ -46,8 +43,6 @@ export function CommandPalette({ open, items = [], onSelect, onClose } = {}) {
     };
 
     let rootEl = null, inputEl = null, listEl = null, flat = [];
-    // Remember the element focused before the palette opened so we can return
-    // focus there on close (the input steals focus on mount).
     const prevFocus = (typeof document !== 'undefined') ? document.activeElement : null;
     const restoreFocus = () => { if (prevFocus && prevFocus.focus && document.contains(prevFocus)) prevFocus.focus(); };
     const close = () => { restoreFocus(); if (onClose) onClose(); };

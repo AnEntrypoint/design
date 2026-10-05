@@ -48,6 +48,13 @@
    and separates generously from the content it introduces. */
 .ds-app-surface > .lede,
 .ds-app-surface > .t-lede { margin-bottom: calc(var(--space-6) * var(--density)); }
+/* Sections nested in an Operate surface follow the panel rhythm, not the
+   marketing --space-8 editorial lead: a page of short sections (install,
+   receipt, changelog) otherwise sits ~100px between groups while the content
+   inside each is dense. Header-adjacent chip rows keep a gap from what follows. */
+.ds-app-surface .ds-section { margin: calc(var(--space-5) * var(--density)) 0; }
+.ds-app-surface .ds-section > h2 { margin: 0 0 var(--space-3); }
+.ds-app-surface > .ds-btn-row { margin-bottom: calc(var(--space-4) * var(--density)); }
 /* No leading margin on the first block or trailing margin on the last — the
    shell owns the region's outer edges. */
 .ds-app-surface > :first-child { margin-top: 0; }
@@ -91,7 +98,7 @@
 .ds-panel-duo {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: calc(var(--space-3) * var(--density));
+  gap: calc(var(--space-5) * var(--density));
   margin: calc(var(--space-5) * var(--density)) 0;
   /* A duo pairs two DIFFERENT things (a 4-bar chart beside a 5-row table).
      Stretching them to a common height does not create equality, it just moves
@@ -116,7 +123,7 @@
 .ds-panel-trio {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: calc(var(--space-3) * var(--density));
+  gap: calc(var(--space-5) * var(--density));
   margin: calc(var(--space-5) * var(--density)) 0;
   /* A trio IS a set of equal peers, so a shared bottom edge reads as one band
      rather than three ragged cards — the opposite call from .ds-panel-duo
@@ -188,9 +195,9 @@
 .ds-deck-dot {
   width: var(--space-1-5); height: var(--space-1-5); border-radius: 50%;
   background: var(--fg-3); flex: 0 0 auto;
-  transition: background var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+  transition: background var(--dur-base) var(--ease);
 }
-.ds-deck-dot--active { background: var(--accent); transform: scale(1.3); }
+.ds-deck-dot--active { background: var(--accent); }
 @media (pointer: coarse) {
   .ds-deck-progress { gap: 0; }
   .ds-deck-dot {
@@ -336,12 +343,9 @@
   aspect-ratio: 4 / 3;
   border: 0; text-align: left; font: inherit; color: inherit;
   background: var(--tile-tone, var(--panel-1));
-  transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+  transition: box-shadow var(--dur-snap) var(--ease);
 }
-/* Flat tonal fill only (house style: no bespoke tile chrome, no borders — see
-   .ds-feature above), so the hover affordance is a lift, matching the same
-   translateY + shadow idiom .chat-msg:hover .chat-bubble already uses. */
-.ds-gallery-tile:hover { transform: translateY(-2px); box-shadow: 0 2px 8px color-mix(in oklab, var(--fg) 10%, transparent); }
+.ds-gallery-tile:hover { box-shadow: inset 0 0 0 1px var(--fg-3); }
 .ds-gallery-tile:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 .ds-gallery-tile--tight { aspect-ratio: 3 / 2; }
 /* The lightbox scrim/card chrome itself is now Dialog's (.ds-ep-dialog /
@@ -447,10 +451,9 @@
   padding: var(--space-2, 8px) var(--space-3, 12px);
   border-radius: var(--r-pill);
   color: var(--fg-2);
-  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease),
-    transform var(--dur-base) var(--ease-spring);
+  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
 }
-.tabs[role="tablist"] a:hover { background: var(--bg-2); color: var(--fg); transform: translateY(-1px); }
+.tabs[role="tablist"] a:hover { background: var(--bg-2); color: var(--fg); }
 .tabs[role="tablist"] a.active {
   color: var(--accent-ink);
   background: color-mix(in oklab, var(--accent) 16%, transparent);

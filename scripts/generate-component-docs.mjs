@@ -1,34 +1,12 @@
 #!/usr/bin/env node
-// generate-component-docs.mjs -- generates docs/component-props.md from the
-// REAL exported component surface, extracted by scripts/component-surface.mjs
-// (shared with generate-component-types.mjs, so the prose doc and the
-// TypeScript declarations describe one identical model rather than two
-// parsers that can disagree). See that module's header for what the
-// extraction pulls and why the real signature -- not a JSDoc's claim about
-// it -- is the authority.
-//
-// Run: node scripts/generate-component-docs.mjs
-// Add --check to verify docs/component-props.md already matches generated
-// output (exits 1 on drift) instead of writing -- CI/lint-gate usage,
-// matching generate-ui-kit-scaffolds.mjs's own --check convention.
 import { writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { extractComponentSurface, root, readNormalized } from './component-surface.mjs';
+import { die, orDie } from './die.mjs';
 
 const CHECK = process.argv.includes('--check');
 
-let surface;
-try {
-    surface = extractComponentSurface();
-} catch (e) {
-    console.error(e.message);
-    process.exit(1);
-}
-const { components, driftWarnings, fileOrder } = surface;
-
-// ---- Render docs/component-props.md, grouped by source file in barrel order
-// (matches how components.js itself groups them, so the doc's section order
-// mirrors the real barrel structure).
+const { components, driftWarnings, fileOrder } = orDie(extractComponentSurface);
 
 function esc(s) { return String(s).replace(/\|/g, '\\|').replace(/\n/g, ' '); }
 
@@ -87,8 +65,7 @@ const outPath = join(root, 'docs', 'component-props.md');
 if (CHECK) {
     const existing = existsSync(outPath) ? readNormalized(outPath) : null;
     if (existing !== md) {
-        console.error(`[component-docs] docs/component-props.md is stale -- run \`node scripts/generate-component-docs.mjs\` and commit the result`);
-        process.exit(1);
+        die(`[component-docs] docs/component-props.md is stale -- run \`node scripts/generate-component-docs.mjs\` and commit the result`);
     }
     console.log(`[component-docs] docs/component-props.md is up to date (${components.length} symbols, 0 drift)`);
     process.exit(0);

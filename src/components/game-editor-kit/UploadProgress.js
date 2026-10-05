@@ -89,7 +89,7 @@ export function createUploadProgress(opts = {}) {
       h('div', { style: 'margin-bottom:12px' }, [
         h('div', { style: 'height:20px;background:var(--panel-bg-2,#eee);border-radius:3px;overflow:hidden;border:1px solid var(--panel-border,#ddd)' }, [
           h('div', {
-            style: `height:100%;background:var(--primary,#0066cc);transition:width 0.2s;width:${progress}%`
+            style: `height:100%;background:var(--primary,#262626);transition:width 0.2s;width:${progress}%`
           })
         ]),
         h('div', { style: 'font-size:11px;color:var(--fg-2);margin-top:4px;text-align:center' }, `${progress}%`)

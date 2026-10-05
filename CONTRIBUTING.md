@@ -105,9 +105,10 @@ and aggregates one pass/fail report:
 - **`lint-rtl-physical-properties.mjs`** — no physical `left`/`right`
   CSS property where a logical `inline-start`/`inline-end` equivalent would
   auto-mirror under `[dir="rtl"]`.
-- **`lint-swallow-comments.mjs`** — every empty `catch {}` block must carry a
-  `// swallow: <why>` comment or equivalent explanation — swallowing errors is
-  allowed, but never silently.
+- **`lint-empty-catch.mjs`** — hard zero: no empty `catch {}` block (a comment
+  inside does not count) and no empty `.catch(() => {})`. Best-effort calls go
+  through `attempt()` / `attemptAsync()`, and `.catch(ignoreFailure)`, from
+  `src/best-effort.js`; the helper name is the statement of intent.
 
 Four gates are hard zero-tolerance (`lint-tokens`, plus raw `border-radius`,
 raw `z-index`, and `transition: all` bans folded into `lint-css.mjs`). Four

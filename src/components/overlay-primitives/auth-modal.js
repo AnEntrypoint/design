@@ -1,4 +1,3 @@
-// AuthModal — centered login dialog: extension / generate / import (nsec) modes.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';

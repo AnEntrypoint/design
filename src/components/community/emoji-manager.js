@@ -1,7 +1,3 @@
-// EmojiManagerGrid — server custom-emoji management (stoat for-web's
-// EmojiList.tsx): a grid of custom emoji cells reusing the emoji-picker's
-// `.ov-emoji-*` visual language, plus a delete-on-hover affordance and an
-// upload-drop-zone cell.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';

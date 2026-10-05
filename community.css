@@ -431,7 +431,6 @@
 
 .cm-ch-icon.voice-active-badge {
   color: var(--green);
-  text-shadow: 0 0 8px var(--green-2);
 }
 
 .cm-ch-voice-badge {
@@ -441,16 +440,6 @@
   background: var(--green-2);
   flex-shrink: 0;
   position: relative;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .cm-ch-voice-badge {
-    animation: cm-voice-pulse 2s ease-in-out infinite;
-  }
-  @keyframes cm-voice-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
-  }
 }
 
 .cm-ch-name {
@@ -612,16 +601,6 @@
   border-radius: 50%;
   background: var(--green-2);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--green-2) 30%, transparent);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .cm-vs-label::before {
-    animation: cm-pulse 1.6s ease-in-out infinite;
-  }
-  @keyframes cm-pulse {
-    0%, 100% { box-shadow: 0 0 0 3px color-mix(in oklab, var(--green-2) 30%, transparent); }
-    50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--green-2) 0%,  transparent); }
-  }
 }
 
 .cm-vs-channel {
@@ -1212,7 +1191,7 @@
     bottom: 0;
     transform: translateX(-110%);
     transition: transform var(--dur-base) var(--ease-drawer);
-    box-shadow: 2px 0 16px color-mix(in oklab, var(--ink) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
   .cm-channel-sidebar.open { transform: translateX(0); }
   /* display:none -> flex can't itself animate, so the member-list drawer
@@ -1230,7 +1209,7 @@
     transform: translateX(110%);
     visibility: hidden;
     transition: transform var(--dur-base) var(--ease-drawer), visibility 0s linear var(--dur-base);
-    box-shadow: -2px 0 16px color-mix(in oklab, var(--ink) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
   .cm-member-list.open {
     transform: translateX(0);
@@ -1578,17 +1557,11 @@
 }
 .vx-ptt-recording .vx-ptt-glow, .vx-ptt-live .vx-ptt-glow {
   opacity: 1;
-  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
-  animation: vx-pulse 1.4s var(--ease) infinite;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent);
 }
 .vx-ptt-vad {
   border-color: var(--green-2);
   background: color-mix(in oklab, var(--green) 16%, var(--bg-2));
-}
-@keyframes vx-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent); }
-  70% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--accent) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent); }
 }
 
 .vx-vad { display: flex; flex-direction: column; gap: var(--space-1); width: 100%; }
@@ -1902,7 +1875,7 @@
     top: 0; right: 0; bottom: 0;
     height: auto;
     width: min(320px, 90vw);
-    box-shadow: -2px 0 16px color-mix(in oklab, var(--ink) 30%, transparent);
+    box-shadow: var(--shadow-2);
   }
 }
 .cm-tp-head {
@@ -1969,31 +1942,17 @@
   padding: var(--space-2); margin: var(--space-hair) var(--space-1);
 }
 .cm-channel-item-skeleton .ds-skel-icon, .cm-member-item-skeleton .ds-skel-icon {
-  width: 20px; height: 20px; border-radius: 50%; flex: none; background: var(--bg-3);
+  width: 20px; height: 20px; border-radius: 50%; flex: none; background-color: var(--bg-3);
 }
 .cm-channel-item-skeleton .ds-skel-title, .cm-member-item-skeleton .ds-skel-title {
-  height: 12px; width: 60%; border-radius: var(--r-1); background: var(--bg-3);
+  height: 12px; width: 60%; border-radius: var(--r-1); background-color: var(--bg-3);
 }
 .cm-list-item-skeleton {
   display: flex; flex-direction: column; gap: var(--space-1-75);
   padding: var(--space-2) var(--space-3); border-bottom: var(--bw-hair) solid var(--rule);
 }
-.cm-list-item-skeleton .ds-skel-title { height: 12px; width: 55%; border-radius: var(--r-1); background: var(--bg-3); }
-.cm-list-item-skeleton .ds-skel-meta { height: 9px; width: 35%; border-radius: var(--r-1); background: var(--bg-3); }
-/* Self-contained shimmer keyframe: community.css ships standalone (the
-   community-app kit does not also load chat.css), so this cannot depend on
-   chat.css's ds-skel-shimmer definition even though the visual language and
-   token vocabulary match it exactly. */
-@media (prefers-reduced-motion: no-preference) {
-  .cm-channel-item-skeleton .ds-skel-icon, .cm-channel-item-skeleton .ds-skel-title,
-  .cm-member-item-skeleton .ds-skel-icon, .cm-member-item-skeleton .ds-skel-title,
-  .cm-list-item-skeleton .ds-skel-title, .cm-list-item-skeleton .ds-skel-meta {
-    animation: cm-skel-shimmer 1.3s ease-in-out infinite;
-    background: linear-gradient(90deg, var(--bg-3) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
-    background-size: 200% 100%;
-  }
-}
-@keyframes cm-skel-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.cm-list-item-skeleton .ds-skel-title { height: 12px; width: 55%; border-radius: var(--r-1); background-color: var(--bg-3); }
+.cm-list-item-skeleton .ds-skel-meta { height: 9px; width: 35%; border-radius: var(--r-1); background-color: var(--bg-3); }
 
 /* ForumView — cm-forum / cm-forum-* */
 .cm-forum { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--bg-1, var(--bg-2)); color: var(--fg); }

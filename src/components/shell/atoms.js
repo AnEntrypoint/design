@@ -1,8 +1,3 @@
-// Chrome atoms: the smallest pure label/control factories the shell and every
-// higher-level component build on — Brand, Chip, Btn, IconButton, Badge, Pill,
-// Glyph, Heading, Lede, Dot, Rail. Props in, webjsx vnode out; all visuals ride
-// class names defined in app-shell.css.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from './icons.js';
 const h = webjsx.createElement;
@@ -60,15 +55,11 @@ export function Chip({ tone = '', size = 'md', tag = false, onRemove, children }
  * @returns {*} webjsx vnode
  */
 export function Btn({ href, variant = 'default', size = 'md', children, onClick, 'aria-label': ariaLabel, title, primary, ghost, danger, disabled, class: className, key }) {
-    // Support legacy primary/ghost props for backward compatibility, but prefer variant
     if (primary || ghost || danger) {
         const used = primary ? 'primary' : (ghost ? 'ghost' : 'danger');
         console.warn(`[247420] Btn's "${used}" boolean prop is deprecated -- use variant="${used}" instead. No removal version set yet (tracked in MIGRATION_GUIDE.md); both still work.`);
     }
     const resolvedVariant = variant !== 'default' ? variant : (primary ? 'primary' : (ghost ? 'ghost' : (danger ? 'danger' : 'default')));
-    // size: 'sm' | 'md' | 'lg' — md is the base .btn rule (no class); sm/lg add a
-    // modifier that snaps height/padding/font to the --ctl-* ladder. Unknown
-    // sizes fall back to md so a typo never drops the button's base styling.
     const sizeCls = size === 'sm' ? ' btn-sm' : (size === 'lg' ? ' btn-lg' : '');
     const cls = (resolvedVariant === 'primary' ? 'btn-primary' : (resolvedVariant === 'ghost' ? 'btn-ghost' : (resolvedVariant === 'danger' ? 'btn-primary danger' : (resolvedVariant === 'link' ? 'btn-link' : 'btn'))))
         + sizeCls
@@ -78,28 +69,8 @@ export function Btn({ href, variant = 'default', size = 'md', children, onClick,
         if (disabled) { e.preventDefault(); return; }
         if (onClick) onClick(e);
     };
-    // `title` sits between aria-label and a string child on purpose. An
-    // icon-only button (children is [Icon(...)], and Icon marks its <svg>
-    // aria-hidden) has no text content at all, so without this it shipped with
-    // NO accessible name -- six such buttons existed in game-editor-kit, each
-    // already passing a perfectly good `title` that this component used to
-    // discard. Array children that DO carry text are named by their content,
-    // which is why there is no vnode-text-extraction step here: it would be
-    // redundant where text exists and useless where it does not.
-    //
-    // Every value below may be undefined, and that is the safe shape: webjsx's
-    // updateAttributesCore skips a prop whose value equals the (absent) old
-    // value, so `undefined` writes nothing. Do NOT "normalise" these to null --
-    // `title` is a reflected IDL property, and `el.title = null` stringifies to
-    // a literal title="null" on the element (confirmed live).
     const ariaName = ariaLabel || title || (typeof children === 'string' ? children : undefined);
 
-    // A real navigational href renders an anchor; everything else is an action
-    // button and renders a native <button> (correct semantics + keyboard
-    // activation for free, no role=button / href="#" scroll-jump hack).
-    // children may be a string OR an array of vnodes (e.g. icon + label); spread
-    // arrays so each vnode is a real child - passing the array as a single child
-    // produces a nested array webjsx applyDiff cannot key-diff (reading 'key').
     const kids = Array.isArray(children) ? children : [children];
     const isLink = href != null && href !== '' && href !== '#';
     if (isLink) {
@@ -149,17 +120,10 @@ export function IconButton({ icon, onClick, title, size = 'base', variant = 'gho
  * @example Badge({ children: '3', tone: 'accent', size: 'sm' })
  */
 export function Badge({ children, variant = 'default', tone = 'neutral', size = 'md' }) {
-    // size: 'sm' | 'md' | 'lg' — md is the base 18px badge.
     const sizeCls = size === 'sm' ? ' ds-badge--sm' : (size === 'lg' ? ' ds-badge--lg' : '');
     return h('span', { class: 'ds-badge ds-badge-' + variant + sizeCls + ' tone-' + tone }, children);
 }
 
-// Pill — plain non-interactive label chip for tag-like annotations (a phase
-// name, an id, a subsystem tag). Distinct from Chip (status-tone indicator),
-// Badge (count/variant marker), and FilterPills (interactive toggle-group):
-// Pill renders no button, carries no pressed/active state, just a small
-// rounded label. tone is a semantic keyword ('' | 'accent' | 'muted'),
-// never a raw color — every visual rides colors_and_type.css tokens.
 export function Pill({ tone = '', children, key } = {}) {
     return h('span', { key, class: 'ds-pill' + (tone ? ' tone-' + tone : '') }, children);
 }
@@ -180,14 +144,9 @@ export function Pill({ tone = '', children, key } = {}) {
  * @example Glyph({ children: '*', label: 'Complete', color: 'var(--success)' })
  */
 export function Glyph({ children, color, size = 'base', label } = {}) {
-    // Font-size is var-driven per size class (--glyph-size-{size}) so themes can
-    // retune glyph scale; inline fallback keeps sizing if the SDK CSS hasn't
-    // loaded yet. Size class is the stable hook (glyph-sm / glyph-base / glyph-lg).
     const fallback = size === 'sm' ? '11px' : (size === 'lg' ? '16px' : '13px');
     const cls = 'glyph glyph-' + size;
     const style = `font-size:var(--glyph-size-${size}, ${fallback})` + (color ? `;color:${color}` : '');
-    // Decorative by default (screen readers skip the glyph char). Pass `label`
-    // to expose an accessible name instead.
     return h('span', label
         ? { class: cls, style, role: 'img', 'aria-label': label }
         : { class: cls, style, 'aria-hidden': 'true' }, children);
@@ -203,19 +162,9 @@ export function Lede({ children }) {
 
 export function Dot({ tone = 'on' }) {
     const isOn = tone === 'on' || tone === 'live';
-    // 'live' gets its own visual modifier (ds-dot-live, sky hue) layered on
-    // top of ds-dot-on so a live-broadcast indicator is never visually
-    // identical to a plain "this thing is on" status dot — same split
-    // rationale as .chip.tone-live / .ds-badge.tone-live.
     const modifierCls = tone === 'live' ? ' ds-dot-live' : (tone === 'warn' ? ' ds-dot-warn' : '');
-    // `warn` is not 'on' or 'live', so isOn is already false for it — the base
-    // class is just the on/off split, and `warn` gets its hue from
-    // modifierCls above. (This used to carry an extra `tone === 'warn' ?
-    // 'ds-dot-off' : ...` arm producing the identical string the else-arm
-    // already produced.)
     const cls = 'ds-dot ' + (isOn ? 'ds-dot-on' : 'ds-dot-off') + modifierCls;
     const statusLabel = tone === 'live' ? 'live status indicator' : (tone === 'warn' ? 'warning status indicator' : (isOn ? 'on status indicator' : 'off status indicator'));
-    // Drawn as a CSS circle (.ds-dot) — no decorative text glyph.
     return h('span', { class: cls, role: 'img', 'aria-label': statusLabel });
 }
 

@@ -1,10 +1,4 @@
 import * as webjsx from 'webjsx';
-// Imported directly from owning submodules, not the ds/components.js barrel
-// -- see aicat/app.js for the measured rationale (200+ serial unbundled
-// module requests when every kit pulls the full 30+-submodule barrel). This
-// kit is the primer/showcase for the whole system so it legitimately touches
-// many submodules -- the point is each import still names its real owner
-// instead of routing everything through the all-encompassing barrel.
 import { Topbar, Crumb, Status, Side, AppShell, Chip, Btn } from 'ds/components/shell.js';
 import { Panel, PageHeader, InputOTP } from 'ds/components/content.js';
 import { ThemeToggle } from 'ds/components/theme-toggle.js';
@@ -65,7 +59,6 @@ const TYPE_SCALE = [
 
 function Swatch(name, v, big) {
     return h('div', { class: 'ds-swatch ds-swatch-col' },
-        // custom-property-only inline: carries the swatch tone, no layout
         h('div', { class: 'ds-swatch-chip' + (big ? ' ds-swatch-chip--big' : ''), style: '--swatch:' + v }),
         h('div', { class: 'ds-swatch-name' }, name)
     );
@@ -73,7 +66,7 @@ function Swatch(name, v, big) {
 
 function PaletteGrid() {
     return Panel({ id: 'palette', title: 'lore palette', count: PALETTE.length + ' colors', class: 'ds-panel-gap', children: [
-        h('p', { class: 'ds-panel-caption' }, 'fixed brand colors — the same hex in light and dark theme.'),
+        h('p', { class: 'ds-panel-caption' }, 'fixed brand colors: the same hex in light and dark.'),
         h('div', { class: 'ds-swatch-grid-sm' },
             ...PALETTE.map(p => Swatch(p.name, p.v, false))
         )
@@ -81,10 +74,8 @@ function PaletteGrid() {
 }
 
 function SemanticGrid() {
-    // count reads off the array — it was the hardcoded string '7', which would
-    // have silently gone stale the first time a token was added or removed.
     return Panel({ id: 'semantic', title: 'semantic tokens', count: SEMANTIC.length + ' tokens', class: 'ds-panel-gap', children: [
-        h('p', { class: 'ds-panel-caption' }, 'contextual roles — same name, different color per theme; these invert on toggle while the lore palette above holds.'),
+        h('p', { class: 'ds-panel-caption' }, 'contextual roles: same name, different color per theme.'),
         h('div', { class: 'ds-swatch-grid-sm ds-swatch-grid-lg' },
             ...SEMANTIC.map(p => Swatch(p.name, p.v, true))
         )
@@ -97,7 +88,6 @@ function TypeScalePanel() {
             ...TYPE_SCALE.map(t =>
                 h('div', { class: 'ds-type-row' },
                     h('span', { class: 'ds-type-row-label' }, t.name),
-                    // custom-property-only inline: picks the sampled size token
                     h('div', { class: (t.cls ? t.cls + ' ' : '') + 'ds-type-sample', style: '--sample-size:' + t.size }, 'two-four-seven four-twenty')
                 )
             )
@@ -105,17 +95,8 @@ function TypeScalePanel() {
     });
 }
 
-// The three button specimens are the only controls on this reference page that
-// look pressable, so pressing one has to do something. Each reports which
-// variant was last pressed, which is the one fact a primer's button row can
-// truthfully demonstrate — the alternative was three buttons that swallow every
-// click, on the page whose whole job is showing how controls behave.
 const primState = { pressed: null };
 
-// Same interactive-demonstration standard as primState above, for the 2026
-// restyle's new primitives (Calendar/DatePicker/Slider/InputOTP/HoverCard):
-// each control is genuinely wired to state and re-renders on change, not a
-// static screenshot of the component.
 const restyleState = {
     sliderValue: 40,
     otpValue: '',
@@ -125,13 +106,6 @@ const restyleState = {
     hoverCardOpen: false,
 };
 
-// The remaining backfilled primitives. Same live-wired standard: every control
-// that looks interactive owns real state and re-renders on change. The three
-// collab-ui overlays and the context-pane trio are DATA-driven rather than
-// input-driven, so their specimens supply representative fixture data — the
-// honest demonstration for a component whose input is a remote peer's cursor
-// position or a token accounting breakdown, neither of which a primer page can
-// manufacture by being clicked.
 const moreState = {
     rangeValue: { from: null, to: null },
     rangeOpen: false,
@@ -140,18 +114,11 @@ const moreState = {
     xrayOpenId: null,
 };
 
-// Scroll-spy: the sidebar is the only nav on this single-continuous-scroll
-// page, so it must reflect which of the 6 sections is actually in view —
-// otherwise every row looks equally (in)active no matter how far you've
-// scrolled. IntersectionObserver over each panel id, re-render on change.
 const NAV_SECTION_IDS = ['palette', 'semantic', 'type-scale', 'primitives', 'restyle', 'backfill'];
 const navState = { activeId: NAV_SECTION_IDS[0] };
 
 function observeSections() {
     const observer = new IntersectionObserver((entries) => {
-        // Pick the entry closest to the top of the viewport among those
-        // currently intersecting, so scrolling past a short section doesn't
-        // leave the sidebar pointing at a section no longer on screen.
         const visible = entries.filter(e => e.isIntersecting);
         if (!visible.length) return;
         visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -173,9 +140,6 @@ const COLLAB_USERS = [
     { userId: 'u3', label: 'agent',  color: 'var(--mascot)', status: 'active' },
 ];
 
-// `value` (not `tokens`) and a `tone` class suffix are the real field names
-// ContextMeter/ContextTreemap/ContextXRayPanel all read — a `tokens` key renders
-// zero-width bars and an empty treemap rather than erroring, so it has to match.
 const CONTEXT_SEGMENTS = [
     { id: 'sys',   label: 'system',    value: 1840, tone: 'system' },
     { id: 'files', label: 'files',     value: 7320, tone: 'files' },
@@ -209,10 +173,8 @@ function PrimitivesPanel() {
     });
 }
 
-// New primitives added in the 2026 webjsx-toolkit-look restyle. Live-wired
-// (not static screenshots), same standard as PrimitivesPanel above.
 function RestylePanel() {
-    return Panel({ id: 'restyle', title: 'restyle 2026 — new primitives', class: 'ds-panel-gap', children:
+    return Panel({ id: 'restyle', title: 'restyle 2026: new primitives', class: 'ds-panel-gap', children:
         h('div', { class: 'ds-prim-panel' },
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'slider'),
@@ -242,7 +204,7 @@ function RestylePanel() {
                 h('span', { class: 'ds-prim-label' }, 'hover card'),
                 HoverCard({
                     trigger: Btn({ children: 'hover me' }),
-                    content: h('div', {}, 'HoverCard content — composes Popover with a delayed hover trigger.'),
+                    content: h('div', {}, 'HoverCard: a Popover opened on hover after a delay.'),
                     open: restyleState.hoverCardOpen,
                     onOpenChange: (v) => { restyleState.hoverCardOpen = v; kit.render(); },
                 })
@@ -263,21 +225,13 @@ function RestylePanel() {
     });
 }
 
-// Distinguishes rows a visitor can actually operate (input-driven — pick a
-// range, open a menu, drag a carousel) from rows that only render supplied
-// fixture data (collab cursors, context accounting) — both are legitimate
-// specimens, but they look identical otherwise inside the same row shell.
 function RowTag(kind) {
     return Chip({ tone: kind === 'live' ? 'accent' : 'dim', size: 'sm', children: kind });
 }
 
-// The rest of the backfilled surface: range picking, the two overlay
-// compositions, the aspect-ratio wrapper, the collab-ui overlays and the
-// context-pane trio. Split from RestylePanel rather than appended to it to keep
-// each function a single readable specimen group.
 function BackfillPanel() {
     const totalTokens = CONTEXT_SEGMENTS.reduce((n, s) => n + s.value, 0);
-    return Panel({ id: 'backfill', title: 'backfill — range, overlays, collab, context', class: 'ds-panel-gap', children:
+    return Panel({ id: 'backfill', title: 'backfill: range, overlays, collab, context', class: 'ds-panel-gap', children:
         h('div', { class: 'ds-prim-panel' },
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'date range'), RowTag('live'),
@@ -327,10 +281,6 @@ function BackfillPanel() {
             ),
             h('div', { class: 'ds-prim-row ds-prim-row-collab' },
                 h('span', { class: 'ds-prim-label' }, 'collab overlays'), RowTag('fixture'),
-                // LiveCursorOverlay takes flat x/y, but the ring and flash
-                // overlays read a NESTED `rect` ({top,left,width,height}) --
-                // passing flat coords there throws on `s.rect.left`, taking the
-                // whole kit's mount down rather than just blanking one specimen.
                 LiveCursorOverlay({ cursors: [{ userId: 'u1', label: 'ana', color: 'var(--purple)', x: 40, y: 18 }, { userId: 'u3', label: 'agent', color: 'var(--mascot)', x: 120, y: 44 }] }),
                 RemoteSelectionRings({ selections: [{ userId: 'u2', color: 'var(--green)', rect: { left: 20, top: 12, width: 90, height: 18 } }] }),
                 RecentEditHighlightFlash({ edits: [{ timestamp: 1, color: 'var(--purple)', rect: { left: 12, top: 60, width: 70, height: 16 } }] })
@@ -363,9 +313,6 @@ function App() {
             items: [['index', '../../'], ['terminal', '../terminal/']]
         }),
         crumb: Crumb({ trail: ['247420', 'kits'], leaf: 'system primer' }),
-        // Every entry anchors to the panel it names. These were four inert
-        // rows styled exactly like working nav — the only sidebar on the page
-        // and none of it went anywhere.
         side: Side({
             sections: [
                 { group: 'sections', items: [
@@ -379,15 +326,10 @@ function App() {
             ]
         }),
         main: [
-            // Dense header: this is a reference surface people scroll to look
-            // something up, not a landing page. The display H1 + wrapped lede
-            // spent most of the first fold on an intro, and the lede's narrow
-            // measure sat ragged against the full-width heading above it.
             PageHeader({
                 dense: true,
                 title: 'system primer',
-                lede: 'palette, semantic tokens, type scale, primitives',
-                right: ThemeToggle({ compact: true })
+                lede: 'palette, semantic tokens, type scale, primitives'
             }),
             h('div', { class: 'ds-section ds-section-pad' },
                 PaletteGrid(),
@@ -406,6 +348,4 @@ function App() {
 }
 
 const kit = mountKit({ root, view: App, screen: '16 System Primer' });
-// One-time observer setup after the first real DOM paint — the panel ids
-// don't exist until mountKit's initial applyDiff has run.
 queueMicrotask(observeSections);

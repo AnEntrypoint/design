@@ -1,15 +1,3 @@
-// Game-HUD paint surface for the spoint TPS client (webjsx vnode tree).
-// renderGameHud(h, { hp, ammo, magazine, reloading, reloadProgress, boostSec })
-// -> a vnode the consumer mounts. Pure presentation; the app owns all state.
-// `h` is the consumer's createElement (webjsx) so the tree composes into the
-// app's existing render() return.
-//
-// Composed from four independent primitives below (Crosshair, AmmoCounter,
-// HealthBar, BoostIndicator) -- each takes the same `h` + a narrow slice of
-// props and returns its own vnode, so a consumer that wants a custom HUD
-// layout (e.g. reposition the ammo counter, drop the boost badge) can import
-// just the pieces it needs instead of the whole composed tree.
-
 /** Center-screen aim reticle. No props beyond `h`. */
 export function Crosshair(h) {
   return h('div', { class: 'sp-hud-crosshair' }, '+')

@@ -1,42 +1,14 @@
 #!/usr/bin/env node
-// component-surface.mjs -- the SINGLE extraction of this package's real
-// exported component surface, shared by every generator that has to describe
-// it. Today that is two consumers:
-//
-//   scripts/generate-component-docs.mjs  -> docs/component-props.md
-//   scripts/generate-component-types.mjs -> types/components.d.ts
-//
-// Both used to be able to drift from each other (two parsers, one truth).
-// They cannot now: there is one parser, and both generators render the same
-// in-memory model. A signature change moves BOTH artifacts or neither, and
-// both have a --check gate, so a stale one fails CI rather than shipping.
-//
-// The extraction itself is unchanged from the original in-line implementation
-// in generate-component-docs.mjs -- see that file's header for the two
-// independent, both-real sources it pulls (a JSDoc block if the author wrote
-// one, plus the ACTUAL destructured signature scanned out of the real source
-// text) and why the signature, not the JSDoc's claim about it, is the
-// authority.
 import { readFileSync, existsSync } from 'node:fs';
-import { join, dirname, relative } from 'node:path';
+import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
-// CRLF -> LF on read: this repo's Windows checkout has core.autocrlf=true,
-// so tracked files check out CRLF while git blobs (and every literal in this
-// script) are LF -- normalize on read or line/offset math silently
-// misaligns (see generate-ui-kit-scaffolds.mjs's own readNormalized note).
 export function readNormalized(p) {
     return readFileSync(p, 'utf8').replace(/\r\n/g, '\n');
 }
 
-// ---- Step 1: parse the barrel's real `export { A, B, C } from './x.js'`
-// blocks into an ordered list of { file, symbols: [name...] } groups. This
-// is the authoritative "what's actually shipped" list -- deliberately not a
-// re-scan of every export in src/components/*.js, since components.js is
-// the curated public surface (some source-file exports are internal helpers
-// never re-exported).
 function parseBarrel(barrelPath) {
     const barrelSrc = readNormalized(barrelPath);
     const exportBlockRe = /export\s*\{([^}]*)\}\s*from\s*'([^']+)';/g;
@@ -47,7 +19,6 @@ function parseBarrel(barrelPath) {
             .split(',')
             .map((s) => s.trim())
             .filter(Boolean)
-            // strip `X as Y` aliasing down to the real exported-from-source name
             .map((s) => (s.includes(' as ') ? s.split(' as ')[0].trim() : s));
         const relFile = m[2].replace(/^\.\//, '');
         groups.push({ file: relFile, symbols });
@@ -56,8 +27,6 @@ function parseBarrel(barrelPath) {
 }
 
 function findJSDocBefore(src, defStart) {
-    // Walk backwards from defStart over blank lines / line comments to see
-    // if a /** ... */ block ends immediately above the definition.
     let i = defStart;
     while (i > 0 && /\s/.test(src[i - 1])) i--;
     if (src.slice(Math.max(0, i - 2), i) !== '*/') return null;
@@ -65,6 +34,44 @@ function findJSDocBefore(src, defStart) {
     const start = src.lastIndexOf('/**', end);
     if (start === -1) return null;
     return src.slice(start, end);
+}
+
+function endOfBalanced(text, open, close) {
+    let depth = 0, i = 0;
+    for (; i < text.length; i++) {
+        if (text[i] === open) depth++;
+        else if (text[i] === close) { depth--; if (depth === 0) { i++; break; } }
+    }
+    return i;
+}
+
+function splitBracedType(afterTag) {
+    if (!afterTag.startsWith('{')) return { type: '', afterType: afterTag };
+    const typeEnd = endOfBalanced(afterTag, '{', '}');
+    return { type: afterTag.slice(1, typeEnd - 1), afterType: afterTag.slice(typeEnd).trimStart() };
+}
+
+function splitParamNameAndDescription(afterType) {
+    if (afterType.startsWith('[')) {
+        const nameEnd = endOfBalanced(afterType, '[', ']');
+        return {
+            rawName: afterType.slice(0, nameEnd),
+            desc: afterType.slice(nameEnd).replace(/^\s*-?\s*/, ''),
+        };
+    }
+    const nameAndDesc = afterType.match(/^(\S+)\s*-?\s*(.*)$/);
+    return { rawName: nameAndDesc ? nameAndDesc[1] : '', desc: nameAndDesc ? nameAndDesc[2] : '' };
+}
+
+function parseParamLine(line) {
+    const afterTag = line.slice('@param'.length).trimStart();
+    const { type, afterType } = splitBracedType(afterTag);
+    const { rawName, desc } = splitParamNameAndDescription(afterType);
+    if (!rawName) return null;
+    const bracketMatch = rawName.match(/^\[(.+)\]$/);
+    const unwrappedName = bracketMatch ? bracketMatch[1] : rawName;
+    const name = unwrappedName.split('=')[0].trim();
+    return { type, name, desc, optional: !!bracketMatch };
 }
 
 export function parseJSDoc(block) {
@@ -80,56 +87,8 @@ export function parseJSDoc(block) {
     let inExample = false;
     for (const line of lines) {
         if (line.startsWith('@param')) {
-            // Standard JSDoc shapes: `@param {Type} name - desc` and the
-            // optional-param bracket form `@param {Type} [name=default] -
-            // desc`. `{Type}` itself may contain nested braces (e.g.
-            // `{Array<{sid:*, title?:string}>}`), so it is extracted with a
-            // balanced-brace scan rather than a `[^}]*` regex, which would
-            // stop at the FIRST inner `}` and corrupt both the type and
-            // every token after it. The bracket form's inner `name=default`
-            // is unwrapped (both the surrounding [...] and the =default) so
-            // downstream drift-checking compares the bare dotted prop path,
-            // not the raw bracketed JSDoc token.
-            const rest0 = line.slice('@param'.length).trimStart();
-            let type = '', afterType = rest0;
-            if (rest0.startsWith('{')) {
-                let depth = 0, i = 0;
-                for (; i < rest0.length; i++) {
-                    if (rest0[i] === '{') depth++;
-                    else if (rest0[i] === '}') { depth--; if (depth === 0) { i++; break; } }
-                }
-                type = rest0.slice(1, i - 1);
-                afterType = rest0.slice(i).trimStart();
-            }
-            // The name token itself may be `[props.x='a default with spaces']`
-            // -- a plain \S+ match stops at the first space inside the
-            // string default, so a bracketed name is located by its own
-            // matching `]` first; only a bare (non-bracket) name falls back
-            // to a \S+ match.
-            let rawName, desc;
-            if (afterType.startsWith('[')) {
-                // Balanced-bracket scan, not "first ]" -- a bracket-indexed
-                // prop name like `[props['aria-label']]` nests its own `]`
-                // (closing the string-literal index) before the outer
-                // optional-wrapper `]`.
-                let bdepth = 0, bi = 0;
-                for (; bi < afterType.length; bi++) {
-                    if (afterType[bi] === '[') bdepth++;
-                    else if (afterType[bi] === ']') { bdepth--; if (bdepth === 0) { bi++; break; } }
-                }
-                rawName = afterType.slice(0, bi);
-                desc = afterType.slice(bi).replace(/^\s*-?\s*/, '');
-            } else {
-                const nm = afterType.match(/^(\S+)\s*-?\s*(.*)$/);
-                rawName = nm ? nm[1] : '';
-                desc = nm ? nm[2] : '';
-            }
-            if (rawName) {
-                const bracketMatch = rawName.match(/^\[(.+)\]$/);
-                const inner = bracketMatch ? bracketMatch[1] : rawName;
-                const name = inner.split('=')[0].trim();
-                params.push({ type, name, desc, optional: !!bracketMatch });
-            }
+            const param = parseParamLine(line);
+            if (param) params.push(param);
             inExample = false;
         } else if (line.startsWith('@returns') || line.startsWith('@return')) {
             returns = line.replace(/^@returns?\s*/, '');
@@ -146,34 +105,14 @@ export function parseJSDoc(block) {
     return { description: description.join(' ').trim(), params, returns, example };
 }
 
-// Balanced-paren scan starting at the `(` right after `function Name`. Also
-// handles the `= {}` default-object suffix that follows the closing `)` on
-// destructured-props components. Returns the raw signature text between the
-// outer parens (still containing nested `{...}` prop-default braces).
 function extractSignature(src, parenStart) {
-    let depth = 0;
-    let i = parenStart;
-    for (; i < src.length; i++) {
-        if (src[i] === '(') depth++;
-        else if (src[i] === ')') { depth--; if (depth === 0) { i++; break; } }
-    }
-    const raw = src.slice(parenStart + 1, i - 1);
-    // Grab a trailing `= { ... }` (the whole-object default) so `= {}` reads
-    // as "no props required" rather than being silently dropped.
-    const restMatch = src.slice(i).match(/^\s*=\s*(\{\s*\})/);
-    return { raw: raw.trim(), hasDefault: !!restMatch };
+    const afterClose = endOfBalanced(src.slice(parenStart), '(', ')') + parenStart;
+    const raw = src.slice(parenStart + 1, afterClose - 1);
+    const wholeObjectDefault = src.slice(afterClose).match(/^\s*=\s*(\{\s*\})/);
+    return { raw: raw.trim(), hasDefault: !!wholeObjectDefault };
 }
 
-function stripLineComments(raw) {
-    // Multi-line destructured signatures sometimes carry an explanatory `//`
-    // comment on its own line between prop groups (e.g. FileGrid's
-    // multi-select-contract note) -- strip full-line `//...` comments before
-    // depth-tracked splitting, or the comment text gets parsed as prop
-    // tokens. Line-based (not a `//` substring strip) so a legitimate
-    // `'//'`-containing default value on an otherwise-real prop line is left
-    // alone; only lines that are ENTIRELY a comment (after trimming) are
-    // dropped, since no real prop declaration in this codebase starts a
-    // line with `//`.
+function stripFullLineComments(raw) {
     return raw
         .split('\n')
         .filter((line) => !line.trim().startsWith('//'))
@@ -215,54 +154,47 @@ function splitPatternAndDefault(text) {
     return { pattern: text.slice(0, equalsAt).trim(), default: text.slice(equalsAt + 1).trim() };
 }
 
-// Extract top-level (depth-1) destructured prop names + their default
-// values from a `{ a, b = 1, c: { x } = {}, 'aria-label': d }`-shaped raw
-// signature. Depth-tracking (not a flat split on ',') is required because
-// prop defaults themselves contain object/array literals with their own
-// commas (e.g. `actions = FILE_ROW_ACTIONS`, `sessions = []`).
-function parseDestructuredProps(raw) {
-    raw = stripLineComments(raw).trim();
-    if (!raw.startsWith('{')) {
-        return splitTopLevel(raw).map((arg) => {
-            const { pattern, default: def } = splitPatternAndDefault(arg);
-            return { name: pattern, default: def, alias: null, positional: true };
-        });
-    }
-    // Strip outer { }
+function parsePositionalArgs(raw) {
+    return splitTopLevel(raw).map((arg) => {
+        const { pattern, default: def } = splitPatternAndDefault(arg);
+        return { name: pattern, default: def, alias: null, positional: true };
+    });
+}
+
+function outerBraceInterior(raw) {
     let depth = 0, start = -1, end = -1;
     for (let i = 0; i < raw.length; i++) {
         if (raw[i] === '{') { if (depth === 0) start = i; depth++; }
         else if (raw[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
     }
-    if (start === -1 || end === -1) return [];
-    const inner = raw.slice(start + 1, end);
-    return splitTopLevel(inner)
-        .map((p) => {
-            const { pattern: namePart, default: def } = splitPatternAndDefault(p);
-            let name = namePart;
-            // rename destructure (`class: className`) -> show as `class` (the
-            // real prop key callers pass), noting the local alias.
-            let alias = null;
-            if (name.includes(':')) {
-                const [key, local] = name.split(':').map((s) => s.trim());
-                name = key.replace(/^['"]|['"]$/g, '');
-                alias = local;
-            }
-            return { name, default: def, alias };
-        });
+    if (start === -1 || end === -1) return null;
+    return raw.slice(start + 1, end);
+}
+
+function parseDestructuredProp(propText) {
+    const { pattern, default: def } = splitPatternAndDefault(propText);
+    let name = pattern;
+    let alias = null;
+    if (name.includes(':')) {
+        const [key, local] = name.split(':').map((s) => s.trim());
+        name = key.replace(/^['"]|['"]$/g, '');
+        alias = local;
+    }
+    return { name, default: def, alias };
+}
+
+function parseDestructuredProps(raw) {
+    raw = stripFullLineComments(raw).trim();
+    if (!raw.startsWith('{')) return parsePositionalArgs(raw);
+    const interior = outerBraceInterior(raw);
+    if (interior === null) return [];
+    return splitTopLevel(interior).map(parseDestructuredProp);
 }
 
 function defRegexFor(name) {
-    // Matches: export function Name(  |  export const Name = (  |  const Name = (...) => ...
     return new RegExp(`(?:export\\s+)?function\\s+${name}\\s*\\(|(?:export\\s+)?const\\s+${name}\\s*=`);
 }
 
-// One-hop re-export resolution: some barrel-target files (freddie.js) don't
-// define a symbol themselves -- they `import { X } from './sub/file.js'`
-// then `export { X };` bare (no `from`, so the earlier `export {} from ''`
-// regex never sees it). Real shape, not a guess: found live via the drift
-// warnings this script itself produces. Resolves the sub-file path relative
-// to the importing file's own directory.
 function resolveReExportSource(src, name, fromDir) {
     const importRe = new RegExp(`import\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*'([^']+)'`);
     const im = importRe.exec(src);
@@ -272,6 +204,41 @@ function resolveReExportSource(src, name, fromDir) {
 
 function exportsBare(src, name) {
     return new RegExp(`export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}(?!\\s*from)`).test(src);
+}
+
+function findDefinitionThroughImport(src, name, fromDir) {
+    const subPath = resolveReExportSource(src, name, fromDir);
+    if (!subPath || !(existsSync(subPath) || existsSync(subPath + '.js'))) return null;
+    const realSubPath = existsSync(subPath) ? subPath : subPath + '.js';
+    const subSrc = readNormalized(realSubPath);
+    const subMatch = defRegexFor(name).exec(subSrc);
+    return subMatch ? { match: subMatch, defSrc: subSrc } : null;
+}
+
+function describeConstValue(defSrc, defStart) {
+    const eqIdx = defSrc.indexOf('=', defStart);
+    const rhsEnd = defSrc.indexOf('\n', eqIdx);
+    const rhs = defSrc.slice(eqIdx + 1, rhsEnd === -1 ? undefined : rhsEnd).trim();
+    let kind;
+    if (/^\w+\s*\(/.test(rhs) && !rhs.startsWith('(')) kind = 'const (factory-wrapped)';
+    else if (/^[A-Z]\w*;?$/.test(rhs.replace(/;$/, ''))) kind = 'const (alias)';
+    else kind = 'const';
+    return { kind, props: [{ name: '(value)', default: rhs.replace(/;$/, ''), alias: null }] };
+}
+
+function jsdocParamDriftWarnings(name, file, jsdoc, props) {
+    const realNames = new Set(props.map((p) => p.name));
+    const warnings = [];
+    for (const p of jsdoc.params) {
+        const bare = p.name
+            .replace(/^props\[['"]([^'"]+)['"]\]$/, '$1')
+            .replace(/^props\./, '')
+            .split('.')[0];
+        if (bare && bare !== 'props' && !realNames.has(bare)) {
+            warnings.push(`${name}: JSDoc @param '${p.name}' not found in the real destructured signature (file: src/${file})`);
+        }
+    }
+    return warnings;
 }
 
 /**
@@ -296,22 +263,15 @@ export function extractComponentSurface() {
         }
         const src = readNormalized(filePath);
         for (const name of group.symbols) {
-            const re = defRegexFor(name);
-            let dm = re.exec(src);
+            let dm = defRegexFor(name).exec(src);
             let defSrc = src;
             let resolvedThroughImport = false;
             if (!dm) {
-                // Try one-hop re-export resolution before giving up.
-                const subPath = resolveReExportSource(src, name, dirname(filePath));
-                if (subPath && (existsSync(subPath) || existsSync(subPath + '.js'))) {
-                    const realSubPath = existsSync(subPath) ? subPath : subPath + '.js';
-                    const subSrc = readNormalized(realSubPath);
-                    const subMatch = defRegexFor(name).exec(subSrc);
-                    if (subMatch) {
-                        dm = subMatch;
-                        defSrc = subSrc;
-                        resolvedThroughImport = true;
-                    }
+                const viaImport = findDefinitionThroughImport(src, name, dirname(filePath));
+                if (viaImport) {
+                    dm = viaImport.match;
+                    defSrc = viaImport.defSrc;
+                    resolvedThroughImport = true;
                 }
             }
             if (!dm) {
@@ -323,44 +283,21 @@ export function extractComponentSurface() {
                 continue;
             }
             const defStart = dm.index;
-            const jsdocBlock = findJSDocBefore(defSrc, defStart);
-            const jsdoc = parseJSDoc(jsdocBlock);
+            const jsdoc = parseJSDoc(findJSDocBefore(defSrc, defStart));
 
-            let props = [];
-            let kind = 'value';
+            let props;
+            let kind;
             const isFn = /function\s+\w+\s*\(/.test(dm[0]);
             if (isFn) {
                 kind = 'component';
                 const parenStart = defSrc.indexOf('(', defStart + dm[0].indexOf(name));
-                const { raw } = extractSignature(defSrc, parenStart);
-                props = parseDestructuredProps(raw);
+                props = parseDestructuredProps(extractSignature(defSrc, parenStart).raw);
             } else {
-                // `export const Name = ...` -- could be a factory-wrapped
-                // component (`makePage((ctx) => {...})`), a re-export alias
-                // (`Card = Panel`), or a plain constant/string. Record the RHS
-                // literally so aliases/constants are documented as themselves
-                // rather than silently skipped.
-                const eqIdx = defSrc.indexOf('=', defStart);
-                let rhsEnd = defSrc.indexOf('\n', eqIdx);
-                const rhs = defSrc.slice(eqIdx + 1, rhsEnd === -1 ? undefined : rhsEnd).trim();
-                if (/^\w+\s*\(/.test(rhs) && !rhs.startsWith('(')) kind = 'const (factory-wrapped)';
-                else if (/^[A-Z]\w*;?$/.test(rhs.replace(/;$/, ''))) kind = 'const (alias)';
-                else kind = 'const';
-                props = [{ name: '(value)', default: rhs.replace(/;$/, ''), alias: null }];
+                ({ kind, props } = describeConstValue(defSrc, defStart));
             }
 
-            // Drift check: JSDoc @param names that don't match any real prop.
             if (jsdoc && jsdoc.params.length && isFn) {
-                const realNames = new Set(props.map((p) => p.name));
-                for (const p of jsdoc.params) {
-                    const bare = p.name
-                        .replace(/^props\[['"]([^'"]+)['"]\]$/, '$1') // props['aria-label'] -> aria-label
-                        .replace(/^props\./, '')
-                        .split('.')[0];
-                    if (bare && bare !== 'props' && !realNames.has(bare)) {
-                        driftWarnings.push(`${name}: JSDoc @param '${p.name}' not found in the real destructured signature (file: src/${group.file})`);
-                    }
-                }
+                driftWarnings.push(...jsdocParamDriftWarnings(name, group.file, jsdoc, props));
             }
 
             components.push({ name, file: group.file, kind, props, jsdoc });

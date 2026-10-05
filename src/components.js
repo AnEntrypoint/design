@@ -1,4 +1,3 @@
-// Component barrel — matches upstream export surface 1:1.
 
 import * as webjsx from '../vendor/webjsx/index.js';
 export const h = webjsx.createElement;

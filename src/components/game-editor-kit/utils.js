@@ -10,7 +10,7 @@ export function showToast(message, type = 'info') {
   })()
 
   const toast = document.createElement('div')
-  const bgColor = type === 'error' ? '#cc2222' : type === 'success' ? '#22aa22' : '#2266dd'
+  const bgColor = type === 'error' ? '#cc2222' : type === 'success' ? '#22aa22' : '#262626'
   const fgColor = '#ffffff'
   toast.style.cssText = `
     background:${bgColor};

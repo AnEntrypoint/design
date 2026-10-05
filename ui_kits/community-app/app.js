@@ -1,11 +1,9 @@
-// Reference kit for mountCommunityApp — a self-contained mock adapter (no
-// backend) demonstrating the full community/chat application GUI. The mock data
-// lives only here, in the reference kit; real consumers (e.g. zellous) supply a
-// live adapter instead. Switching channels, sending a message, and toggling
-// mic/deafen all drive the same render path a real adapter would.
-
 import { mountCommunityApp } from 'ds/community-app.js';
+import { attempt } from 'ds/best-effort.js';
+import { applyTheme, getTheme } from 'ds/theme.js';
 
+
+const THEME_ORDER = ['auto', 'paper', 'ink'];
 const CAT = ['var(--cat-green)', 'var(--cat-purple)', 'var(--cat-mascot)', 'var(--cat-sun)', 'var(--cat-flame)', 'var(--cat-sky)'];
 const color = (id) => CAT[Math.abs([...String(id || '')].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)) % CAT.length];
 
@@ -14,65 +12,13 @@ const channels = [
     { id: 'announcements', name: 'announcements', type: 'announcement', position: 1 },
     { id: 'lounge', name: 'Lounge', type: 'voice', position: 2 },
 ];
-// The rail's server pills are the only always-visible clickable chrome this
-// kit exposes, so the phase switcher rides on them: `switchServer` below
-// routes a `phase:` id to applyPhase instead of changing server.
 const servers = [
     { id: 'zellous', name: 'Zellous' },
-    { id: 'phase:empty', name: 'state: empty' },
-    { id: 'phase:loading', name: 'state: loading' },
-    { id: 'phase:ready', name: 'state: ready' },
-    { id: 'phase:error', name: 'state: error' },
+    { id: 'spoint', name: 'Spoint' },
+    { id: 'flatspace', name: 'Flatspace' },
+    { id: 'mutagen', name: 'Mutagen' },
 ];
 
-const state = {
-    channels, categories: [], servers,
-    currentChannel: channels[0], currentServerId: 'zellous', homeMode: false,
-    // Starts empty on purpose: the empty state is what a brand-new channel
-    // actually looks like, so it is the kit's default view rather than a
-    // branch a reader has to go hunting for.
-    messages: [], typingUsers: [], chatInputValue: '', phase: 'empty', replyTarget: null,
-    currentUser: { username: 'you' }, userId: 'you',
-    isConnected: true,
-    voiceConnected: false, voiceChannelName: '', voiceConnectionState: 'connected',
-    // Kit-mock-local, not part of the adapter contract: whether the Lounge's
-    // participant grid should show occupants. Deliberately separate from
-    // voiceConnected (which drives the cross-channel "in voice, click to
-    // return" VoiceStrip banner elsewhere in the app) -- flipping
-    // voiceConnected on every channel switch was found to surface an
-    // unrelated, pre-existing rendering bug in that banner's own controls
-    // (.cm-voice-strip renders its mic/deafen/leave buttons full-width
-    // instead of as compact icons) that nothing in this kit had ever
-    // exercised before, since no prior code path ever set voiceConnected
-    // true. Gating the grid on its own flag keeps the Lounge fix from
-    // dragging in a separate, unrelated bug.
-    loungeConnected: true,
-    voiceParticipants: [], micMuted: false, voiceDeafened: false,
-    memberCategories: [{ label: 'online — 1', members: [{ identity: 'you', name: 'you', status: 'online', color: color('you') }] }],
-    memberListOpen: false,
-    mobileMenuOpen: false,
-};
-
-// The reference kit ships in the `empty` state by default (zero messages), so
-// mountCommunityApp's own Chat() empty block is already on screen at load. The
-// other three readings a real adapter has to produce -- history rehydrating,
-// a populated channel, and a failed load -- are cycled through here so each is
-// a reachable surface in this kit rather than something only a live backend
-// (zellous) would ever render.
-//
-// mountCommunityApp renders system messages as italic md, which is the shape a
-// real adapter uses for gateway notices, so loading/error are expressed the
-// same way a live consumer would express them rather than via a bespoke prop.
-const PHASES = ['empty', 'loading', 'ready', 'error'];
-
-// Mock voice-channel occupants for the Lounge -- reuses the same jordan/mai
-// identities + avatarColor() helper the text-channel messages already use,
-// so the Lounge doesn't read as a disconnected demo persona set. jordan is
-// mid-sentence (speaking outline) and mai has muted her mic, giving the
-// participant grid two distinct visual states to show off rather than three
-// identical idle tiles. 'you' is appended live in adapter.get() below (not
-// stored here) so the self-tile's mic icon tracks state.micMuted instead of
-// freezing at whatever it was when the channel was joined.
 const VOICE_PEERS = [
     { identity: 'jordan', color: color('jordan'), speaking: true },
     { identity: 'mai', color: color('mai'), muted: true },
@@ -87,11 +33,25 @@ const SAMPLE_MESSAGES = [
     { id: 'm5', userId: 'jordan', username: 'jordan', content: '## review notes\n\nlooks solid. couple things:\n\n- short timeout fallback in case fonts hang\n- announce the `ready` class via `requestIdleCallback`\n- keep no-js fallback to `visibility: visible`\n\n> "ship the rough draft" -- but not the broken one.\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
     { id: 'm6', userId: 'mai', username: 'mai', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'spot the new mascot -- final', timestamp: Date.now() - 480000, delivered: true },
     { id: 'm7', userId: 'you', username: 'you', content: 'attaching the v0.0.27 token sheet for review:', attachments: [{ type: 'file', src: './sample.pdf', name: 'tokens-v0.0.27.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
-    { id: 'm8', userId: 'jordan', username: 'jordan', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design — design system for 247420', desc: 'a coherent visual paradigm — layered surfaces, monospace labels, loud content inside quiet chrome.', thumb: './sample-square.png' }, timestamp: Date.now() - 360000, delivered: true },
+    { id: 'm8', userId: 'jordan', username: 'jordan', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'a coherent visual paradigm: layered surfaces, monospace labels, loud content inside quiet chrome.', thumb: './sample-square.png' }, timestamp: Date.now() - 360000, delivered: true },
     { id: 'm9', userId: 'mai', username: 'mai', type: 'file', url: './sample.pdf', name: 'meeting-notes-2026-05-01.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
 ];
 
 const TYPING_PEERS = [{ id: 'jordan', name: 'jordan', avatar: 'J', color: color('jordan') }];
+
+const state = {
+    channels, categories: [], servers,
+    currentChannel: channels[0], currentServerId: 'zellous', homeMode: false,
+    messages: SAMPLE_MESSAGES.map((m) => ({ ...m })), typingUsers: TYPING_PEERS, chatInputValue: '', replyTarget: null,
+    currentUser: { username: 'you' }, userId: 'you',
+    isConnected: true,
+    voiceConnected: false, voiceChannelName: '', voiceConnectionState: 'connected',
+    loungeConnected: true,
+    voiceParticipants: [], micMuted: false, voiceDeafened: false,
+    memberCategories: [{ label: 'online (1)', members: [{ identity: 'you', name: 'you', status: 'online', color: color('you') }] }],
+    memberListOpen: false,
+    mobileMenuOpen: false,
+};
 
 function toggleReaction(message, emoji) {
     const reactions = (message.reactions || []).map((r) => ({ ...r }));
@@ -102,36 +62,10 @@ function toggleReaction(message, emoji) {
     return reactions.filter((r) => r.count > 0);
 }
 
-function applyPhase(p) {
-    state.phase = p;
-    state.typingUsers = p === 'ready' ? TYPING_PEERS : [];
-    if (p === 'ready') {
-        state.messages = SAMPLE_MESSAGES.map((m) => ({ ...m }));
-        state.isConnected = true;
-    } else if (p === 'loading') {
-        state.messages = [{ id: 'sys-loading', type: 'system', text: 'reading the last 50 messages in this channel...' }];
-        state.isConnected = true;
-    } else if (p === 'error') {
-        // Names the problem AND the recovery, per the craft rule -- a bare
-        // "something went wrong" gives the reader nothing to act on.
-        state.messages = [{ id: 'sys-error', type: 'system', text: 'lost the gateway while loading #' + (state.currentChannel?.name || 'general') + '. the socket closed before history arrived, so this channel is blank rather than actually empty -- switch channels and back to request the backlog again.' }];
-        state.isConnected = false;
-    } else {
-        state.messages = [];
-        state.isConnected = true;
-    }
-    notify();
-}
-
 const subs = new Set();
-const notify = () => subs.forEach(cb => { try { cb(); } catch (_) { /* swallow: a subscriber's error must not block notifying the rest */ } });
+const notify = () => subs.forEach(cb => { attempt(() => { cb(); }); });
 
 const adapter = {
-    // Voice participants are computed here rather than stored on `state`:
-    // the Lounge's tile grid needs jordan+mai (VOICE_PEERS, static) plus a
-    // live 'you' tile whose muted icon must track state.micMuted on every
-    // toggle -- storing a snapshot in state.voiceParticipants would freeze
-    // that icon at whatever it was when the channel was joined.
     get: () => {
         const inVoice = !!(state.currentChannel && state.currentChannel.type === 'voice' && state.loungeConnected);
         if (!inVoice) return state;
@@ -142,9 +76,6 @@ const adapter = {
     actions: {
         switchChannel: (ch) => {
             state.currentChannel = ch; state.mobileMenuOpen = false;
-            // Re-entering the Lounge after a prior "leave voice" click
-            // reconnects (mirrors the real product: picking the voice
-            // channel again is how you rejoin).
             if (ch && ch.type === 'voice') state.loungeConnected = true;
             notify();
         },
@@ -160,10 +91,9 @@ const adapter = {
         toggleMembers: () => { state.memberListOpen = !state.memberListOpen; notify(); },
         openMobileMenu: () => { state.mobileMenuOpen = true; notify(); },
         closeMobileMenu: () => { state.mobileMenuOpen = false; notify(); },
-        openSettings: () => {}, openVoiceSettings: () => {},
+        openSettings: () => { applyTheme(THEME_ORDER[(THEME_ORDER.indexOf(getTheme()) + 1) % THEME_ORDER.length]); }, openVoiceSettings: () => {},
         goHome: () => {}, openServers: () => {},
         switchServer: (id) => {
-            if (typeof id === 'string' && id.startsWith('phase:')) { applyPhase(id.slice(6)); return; }
             state.currentServerId = id; notify();
         },
         channelContext: () => {}, serverContext: () => {}, memberMenu: () => {},
@@ -180,4 +110,4 @@ const adapter = {
 };
 
 const app = mountCommunityApp(document.getElementById('root'), adapter);
-window.__communityApp = { state, adapter, app, notify, applyPhase, PHASES };
+window.__communityApp = { state, adapter, app, notify };

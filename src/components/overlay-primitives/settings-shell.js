@@ -1,9 +1,3 @@
-// SettingsShell — full-screen two-pane settings surface: a category sidebar
-// (grouped sections, active-item highlight) beside a breadcrumb-titled
-// content pane, matching stoat for-web's settings/_layout (Sidebar.tsx +
-// Content.tsx) shape. SettingsPopover stays the small anchored quick-settings
-// popover for a single flat control list; this is for a real multi-category
-// settings app where a flat popover would misrepresent the surface.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';

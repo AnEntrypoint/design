@@ -1,12 +1,8 @@
-// Markdown & Prism cache layer with performance tracking.
-// Ensures libraries are loaded once globally, reused for all subsequent renders.
-// Tracks initialization status and render timings.
 
 import { renderMarkdown, ensureReady as ensureMarkdownReady, isDegraded as isMarkdownDegraded } from './markdown.js';
 import { highlightAllUnder, ensurePrism } from './highlight.js';
 import { register } from './debug.js';
 
-// Simple content-based hash for memoization (FNV-1a 32-bit)
 function simpleHash(str) {
     let h = 2166136261;
     for (let i = 0; i < str.length; i++) {
@@ -16,7 +12,6 @@ function simpleHash(str) {
     return Math.abs(h).toString(36);
 }
 
-// Global cache state
 let _markdownInitialized = false;
 let _prismInitialized = false;
 let _initPromise = null;
@@ -42,7 +37,6 @@ export async function initializeCachesEagerly() {
     _initPromise = (async () => {
         const startTime = performance.now();
 
-        // Parallel initialization
         const [mdOk, prismOk] = await Promise.all([
             (async () => {
                 const t0 = performance.now();
@@ -60,12 +54,6 @@ export async function initializeCachesEagerly() {
             })(),
         ]);
 
-        // Recorded, not printed. This is library code, so an unconditional
-        // console.debug writes into every consuming application's console on
-        // every init. The same numbers are already live-inspectable through
-        // window.__debug['markdown-cache'] (registered at the bottom of this
-        // file), which is the repo's own observability channel and the one a
-        // consumer can actually opt into.
         _stats.totalInitMs = performance.now() - startTime;
 
         return { markdown: mdOk, prism: prismOk };
@@ -84,23 +72,16 @@ export async function renderMarkdownCached(text) {
     const t0 = performance.now();
     const hash = simpleHash(text || '');
 
-    // Check content-based cache
     if (_renderCache.has(hash)) {
         _stats.cacheHits += 1;
         return _renderCache.get(hash);
     }
 
-    // Ensure markdown is ready. NOT latched behind _markdownInitialized: a
-    // failed loader must be retried on a later render (markdown.js owns the
-    // retry backoff), otherwise an offline boot is sticky-degraded forever.
     await ensureMarkdownReady();
     _markdownInitialized = !isMarkdownDegraded();
 
     const html = await renderMarkdown(text);
 
-    // Store in content cache (limit to 500 entries to prevent unbounded growth).
-    // Never cache degraded (escaped-fallback) output: when the loader recovers,
-    // the same content must re-render as real markdown, not replay the fallback.
     if (!isMarkdownDegraded()) {
         _renderCache.set(hash, html);
         if (_renderCache.size > 500) {
@@ -113,7 +94,6 @@ export async function renderMarkdownCached(text) {
     _stats.renderCount += 1;
     _stats.cacheMisses += 1;
     _stats.renderTimes.push(renderMs);
-    // Keep only last 100 samples
     if (_stats.renderTimes.length > 100) _stats.renderTimes.shift();
 
     return html;
@@ -125,7 +105,6 @@ export async function renderMarkdownCached(text) {
  * @returns {Promise<void>}
  */
 export async function highlightCodeBlockCached(el) {
-    // Ensure Prism is ready (cached after first init)
     if (!_prismInitialized) {
         await ensurePrism();
         _prismInitialized = true;
@@ -146,10 +125,6 @@ export function getCacheStats() {
         initMs: {
             markdown: _stats.markdownInitMs,
             prism: _stats.prismInitMs,
-            // Wall-clock for the whole init, which is not the sum of the two
-            // above: they run concurrently under Promise.all, so total is the
-            // slower of the pair plus overhead. Previously only ever printed
-            // to console.debug; exposed here so it is inspectable instead.
             total: _stats.totalInitMs,
         },
         renderStats: {
@@ -169,7 +144,6 @@ export function getCacheStats() {
     };
 }
 
-// Observability: expose markdown/prism cache stats live via window.__debug.
 register('markdown-cache', () => getCacheStats());
 
 /**

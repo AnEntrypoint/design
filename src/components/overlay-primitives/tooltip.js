@@ -1,25 +1,11 @@
-// Tooltip — single shared bubble appended to <body>. One module-scope
-// element and one module-scope scroll listener serve every trigger on the
-// page (per-trigger bubbles/listeners leaked one per element).
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { useFloating, useLongPress, FLOAT_OFFSET_TOOLTIP, kids } from './floating.js';
 
 let _tipEl = null, _tipFloat = null, _tipTimer = null, _tipId = 0;
-// The trigger currently pointed at the shared bubble, plus whatever
-// aria-describedby it already carried. Tracked because the describedby
-// reference MUST come off again when the bubble hides: a hidden bubble is
-// still in the DOM, so a screen reader following a stale reference announces
-// a description for a tooltip that is no longer showing, and the trigger
-// claims a description it no longer has. One bubble serves every trigger, so
-// the attribute also has to be released from the PREVIOUS trigger when a new
-// one takes the bubble over.
 let _tipTrigger = null, _tipPrevDescribedBy = null;
 function _releaseTrigger() {
     if (!_tipTrigger) return;
-    // A caller's own aria-describedby (a form hint, an error node) is restored
-    // rather than removed -- the tooltip borrowed the attribute, it does not
-    // own it.
     if (_tipPrevDescribedBy) _tipTrigger.setAttribute('aria-describedby', _tipPrevDescribedBy);
     else _tipTrigger.removeAttribute('aria-describedby');
     _tipTrigger = null; _tipPrevDescribedBy = null;
@@ -30,8 +16,6 @@ function _hideTip() {
     _releaseTrigger();
     if (_tipEl) { _tipEl.hidden = true; _tipEl.className = 'ds-tooltip'; }
 }
-// One module-scope scroll listener hides the shared bubble on any scroll —
-// registered once, never per-trigger (per-trigger leaked a listener per element).
 if (typeof window !== 'undefined' && !window.__dsTipScrollBound) {
     window.__dsTipScrollBound = true;
     window.addEventListener('scroll', _hideTip, true);

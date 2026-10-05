@@ -1,6 +1,4 @@
-// Terminal-app paint surface — bible classes, pure DOM. Consumer attaches xterm to mount slot.
-// renderTerminal({title, statusText, theme}) -> {node, mount, setTitle, setStatus, dispose}.
-// mount(termInstance) calls termInstance.open(slot) and fit when available; consumer owns xterm lifecycle.
+import { attempt } from '../../best-effort.js';
 
 export function renderTerminal(opts = {}) {
     const { title = 'terminal', statusText = '', theme = 'dark' } = opts;
@@ -30,7 +28,7 @@ export function renderTerminal(opts = {}) {
         term.open(slot);
         if (term._addonManager) {
             const addons = term._addonManager._addons || [];
-            for (const a of addons) { try { a.instance && a.instance.fit && a.instance.fit(); } catch (_) { /* swallow: an addon's fit() failing must not block mounting the terminal */ } }
+            for (const a of addons) { attempt(() => { a.instance && a.instance.fit && a.instance.fit(); }); }
         }
     }
 

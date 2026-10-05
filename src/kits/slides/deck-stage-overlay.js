@@ -1,8 +1,5 @@
 import { iconMarkup } from '../../components/shell.js';
 
-// Same path table + attr contract as every other Icon() consumer (viewBox
-// 0 0 24 24, shared --ds-icon-stroke) — a raw-DOM innerHTML template can't
-// call the webjsx Icon() vnode factory, so it uses the markup-string twin.
 const ICON_PREV = iconMarkup('chevron-left', { size: 16 });
 const ICON_NEXT = iconMarkup('chevron-right', { size: 16 });
 

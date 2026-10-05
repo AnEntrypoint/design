@@ -65,7 +65,7 @@
      actions, live status) in crumb-right, so hiding it strands them. Collapse
      the breadcrumb trail/leaf instead and let the right cluster wrap. */
   .app-crumb { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--space-2-75); }
-  .app-crumb > .sep, .app-crumb > span:not(.crumb-right):not(.leaf) { display: none; }
+  .app-crumb > span:not(.crumb-right) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .app-crumb .crumb-right { margin-left: 0; }
   .chat-head { padding: var(--space-2) var(--space-3) var(--space-2); margin-bottom: var(--space-2); }
   .app-main { padding-left: var(--space-3); padding-right: var(--space-3); }
@@ -108,11 +108,11 @@
 .app-side-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 @container (max-width: 900px) {
   .app-side-toggle { display: inline-flex; }
-  .app-topbar .brand { margin-left: 44px; }
+  .app:has(.app-side-toggle) .app-topbar .brand { margin-left: 44px; }
   /* Merged-chrome layout (.app-chrome > .app-crumb) puts the breadcrumb, not
      the topbar brand, at the left edge where the absolute-positioned toggle
      sits — without this the crumb text renders directly under the button. */
-  .app-chrome > .app-crumb { margin-left: 44px; }
+  .app:has(.app-side-toggle) .app-chrome > .app-crumb { margin-left: 44px; }
 }
 
 /* Desktop: the app shell is exactly viewport-height and contains its own
@@ -151,6 +151,28 @@
     gap: var(--space-2);
   }
   .app-status > :last-child:not(:only-child) { display: none; }
+  .app-status .item:not(:first-of-type), .app-status .spread { display: none; }
+}
+
+/* Mobile (<=480) chrome: one 44px row (hamburger, title, icon-only theme
+   toggle) with the nav as a single scrolling row beneath. The merged chrome's
+   topbar dissolves (display: contents) so the crumb and the theme toggle share
+   the first row instead of the toggle dropping to a row of its own. */
+@media (max-width: 480px) {
+  .app-chrome, .app-topbar { padding-block: var(--space-2); }
+  .app-chrome > .app-topbar { display: contents; }
+  .app-chrome > .app-topbar > .ds-search-field, .app-chrome > .app-topbar > .ds-topbar-search { order: 3; flex: 1 1 100%; max-width: none; }
+  .app-chrome > .app-topbar > nav { order: 4; }
+  .app-chrome > .app-crumb { min-height: 44px; align-items: center; flex-wrap: nowrap; }
+  .app-topbar > .brand {
+    flex: 1 1 0; min-width: 0; min-height: 44px; display: flex; align-items: center;
+    overflow: hidden; white-space: nowrap;
+  }
+  .app-topbar > .app-topbar-theme { order: 2; margin-left: auto; padding-left: 0; }
+  .app-topbar > .app-topbar-theme::before { display: none; }
+  .app-topbar-theme .ds-theme-toggle-label { display: none; }
+  .app-topbar-theme .ds-theme-toggle.btn { min-width: 44px; min-height: 44px; justify-content: center; padding: 0; }
+  .app-side-toggle { top: var(--space-2); }
 }
 
 /* Tiny phone (≤360) topbar compact */
@@ -523,6 +545,32 @@
   .ws-crumb .app-crumb > .sep, .ws-crumb .app-crumb > span:not(.crumb-right):not(.leaf) { display: none; }
   .ws-crumb .app-crumb .leaf { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .ws-crumb .app-crumb .crumb-right { margin-left: 0; flex-wrap: wrap; min-width: 0; display: inline-flex; }
+}
+/* Phones (<=600): a 60px icon strip plus a squeezed 260px chat column is the
+   worst split, and the glyph tiles are unlabeled. The rail becomes a labelled
+   horizontal bar across the top and the content gets the full width. */
+@media (max-width: 600px) {
+  .ws-shell { --ws-rail-h: calc(var(--space-2) * 2 + 44px); }
+  .ws-rail { inset: 0 0 auto 0; width: auto; height: var(--ws-rail-h); flex-direction: row; border-right: 0; border-bottom: var(--bw-hair) solid var(--bg-3); }
+  .ws-rail-inner { flex-direction: row; align-items: center; padding: var(--space-2) var(--space-3); }
+  .ws-rail-head { display: none; }
+  .ws-rail-nav { flex-direction: row; align-items: center; gap: var(--space-1); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .ws-rail .ws-rail-item { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-3); gap: var(--space-2); }
+  .ws-rail .ws-rail-item-label { display: inline; flex: 0 1 auto; }
+  .ws-rail .ws-rail-item-count { display: inline-flex; }
+  .ws-rail-item-glyph { display: none; }
+  .ws-rail-foot { margin-top: 0; padding-top: 0; border-top: 0; }
+  .ws-content { padding-left: 0; padding-top: var(--ws-rail-h); }
+  .ws-sessions { inset: var(--ws-rail-h) auto 0 0; transform: translateX(-110%); }
+  .ws-main { padding-inline: var(--space-3); }
+  .ws-main .agentchat-controls { flex-wrap: wrap; }
+  .ws-main .agentchat-controls .ds-select { flex: 1 1 0; min-width: 0; max-width: none; }
+  .ws-main .agentchat-controls .btn { flex: 0 0 auto; }
+  .ws-main .agentchat-cwd { flex-wrap: nowrap; }
+  .ws-main .agentchat-cwd-text { flex: 1 1 0; min-width: 0; max-width: none; }
+  .ws-main .agentchat-cwd-btn { flex: 0 0 auto; white-space: nowrap; }
+  .ws-main .agentchat-head { flex-wrap: wrap; column-gap: var(--space-2); }
+  .ws-main .agentchat-sub { white-space: nowrap; }
 }
 .ws-drawer-toggle:hover { background: var(--bg-2); color: var(--fg); }
 .ws-drawer-toggle:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }

@@ -1,8 +1,3 @@
-// ChatMinimap — the component itself: a single ref callback owning the
-// imperative lifecycle (scroll listener, ResizeObserver rebinding, throttled
-// node measurement, drag/click-to-scroll, hover tracking, teardown), painting
-// through ./paint.js.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { hasTextContent, isMappedRole, resolveMessageEl } from './preview.js';
 import { paintMinimap } from './paint.js';
@@ -14,9 +9,6 @@ const MEASURE_THROTTLE_MS = 150;
 const MIN_SCROLLABLE_PX = 20;
 
 export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = CHAT_MINIMAP_WIDTH } = {}) {
-    // All mutable state lives on the container element itself (webjsx factories
-    // are pure-render; the ref callback owns the imperative lifecycle, same
-    // pattern as makeThreadAutoScroll in chat.js).
     const state = {
         scrollRatio: 0,
         viewportRatio: 1,
@@ -28,7 +20,7 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
 
     const containerRef = (el) => {
         if (!el) return;
-        if (el._dsMinimapCleanup) return; // already wired for this DOM node
+        if (el._dsMinimapCleanup) return;
         let measureTimer = null;
         let ro = null;
         let threadEl = null;
@@ -54,7 +46,7 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
         };
 
         const measureNodes = () => {
-            if (measureTimer) return; // throttled — one pending pass at a time
+            if (measureTimer) return;
             measureTimer = setTimeout(() => {
                 measureTimer = null;
                 const t = typeof getThreadEl === 'function' ? getThreadEl() : null;
@@ -85,9 +77,6 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
 
         const syncLayout = () => { updateScroll(); measureNodes(); };
 
-        // Rebinds scroll listener + ResizeObserver to whichever thread element
-        // getThreadEl currently resolves to (it may be null on first paint and
-        // become available once the thread's own ref fires).
         const rebind = () => {
             const t = typeof getThreadEl === 'function' ? getThreadEl() : null;
             if (t === threadEl) return;
@@ -103,12 +92,8 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
             syncLayout();
         };
         rebind();
-        // Thread element may not exist yet on first mount; poll briefly (mirrors
-        // upstream's 50ms post-message-change settle) until it appears, then the
-        // ResizeObserver takes over for everything after.
         const rebindPoll = setInterval(rebind, 200);
 
-        // Drag-to-scroll + click-to-jump on the strip itself.
         let dragging = false;
         const scrollToRatio = (viewportTopRatio) => {
             const t = typeof getThreadEl === 'function' ? getThreadEl() : null;
@@ -162,9 +147,6 @@ export function ChatMinimap({ messages = [], getThreadEl, getMessageEl, width = 
         ref: containerRef,
         role: 'navigation',
         'aria-label': 'conversation scroll overview',
-        // A custom-property write, not an inline `width:` — the rail's width is
-        // per-instance data, but the property it drives belongs in chat.css so
-        // media queries and [data-density] can still reach it.
         style: '--chat-minimap-w:' + width + 'px',
     });
 }

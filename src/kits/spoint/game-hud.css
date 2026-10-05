@@ -29,7 +29,7 @@
   width: 200px;
   height: 20px;
   background: var(--bg-3);
-  border-radius: 4px;
+  border-radius: var(--r-0);
   overflow: hidden;
 }
 .sp-hud-health-fill {
@@ -55,6 +55,6 @@
   background: var(--accent);
   color: var(--accent-fg);
   font-weight: bold;
-  border-radius: 6px;
+  border-radius: var(--r-0);
   font-size: var(--fs-xs, 14px);
 }

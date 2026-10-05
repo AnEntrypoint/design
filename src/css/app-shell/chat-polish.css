@@ -17,7 +17,7 @@
 }
 .chat-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 .chat-head .ds-chat-title,
-.chat-head > span:nth-child(2) {
+.chat-head > span:nth-child(2):not(.sub) {
   font-family: var(--ff-body); font-size: var(--fs-h4);
   font-weight: 600; color: var(--fg);
   text-transform: none; letter-spacing: var(--tr-tight, -0.01em); line-height: 1.2;
@@ -57,11 +57,10 @@
   display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--ff-body); font-size: var(--fs-micro); font-weight: var(--fw-medium, 500);
   text-transform: lowercase; letter-spacing: 0.02em; user-select: none;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
   position: relative;
   box-shadow: inset 0 0 0 1px var(--rule);
 }
-.chat-msg:hover .chat-avatar { transform: scale(1.03); box-shadow: 0 1px 4px color-mix(in oklab, var(--fg) 6%, transparent); }
 .chat-msg.you .chat-avatar {
   background: color-mix(in oklab, var(--accent) 18%, var(--bg-3));
   color: var(--accent-ink);
@@ -108,7 +107,6 @@
    turn in a conversation. */
 .chat-msg:not(.you) .chat-bubble { border-bottom-left-radius: var(--r-0); }
 .chat-msg.you .chat-bubble { border-bottom-right-radius: var(--r-0); }
-.chat-msg:hover .chat-bubble { transform: translateY(-1px); box-shadow: 0 2px 8px color-mix(in oklab, var(--fg) 6%, transparent); transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease); }
 /* Own bubble — calm tinted lead, not a full electric fill (chat stays readable). */
 .chat-msg.you .chat-bubble { background: var(--accent-tint); color: var(--fg); }
 .chat-msg.aicat .chat-bubble {
@@ -284,9 +282,7 @@
 .chat-image { position: relative; }
 .chat-image img {
   display: block; width: 100%; height: auto; max-height: 360px; object-fit: cover;
-  transition: transform var(--dur-base, .16s) var(--ease, ease);
 }
-.chat-image:hover img { transform: scale(1.03); }
 /* Hover-zoom cue (magnifier glyph, center-pinned, fades in) signalling the
    embed is click-to-expand — for-web's image embeds carry an equivalent
    affordance; this kit's previously had none, just a bare href-out anchor. */
@@ -298,7 +294,7 @@
   opacity: 0;
   transition: opacity var(--dur-snap, .12s) var(--ease, ease);
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3Cpath d='M11 8v6M8 11h6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3Cpath d='M11 8v6M8 11h6'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: center;
 }
 .chat-image:hover::after { opacity: 1; }
@@ -455,10 +451,10 @@
      proportions. */
   min-height: 24px;
   cursor: pointer; user-select: none; appearance: none;
-  transition: background var(--dur-snap, .12s) var(--ease, ease), border-color var(--dur-snap, .12s) var(--ease, ease), transform 0.12s ease;
+  transition: background var(--dur-snap, .12s) var(--ease, ease), border-color var(--dur-snap, .12s) var(--ease, ease);
   position: relative;
 }
-.chat-reactions .rxn:hover { background: var(--bg-3); transform: scale(1.06); }
+.chat-reactions .rxn:hover { background: var(--bg-3); }
 .chat-reactions .rxn:active {
   transform: scale(0.92);
   transition: transform var(--dur-snap, .08s) var(--ease-spring);
@@ -578,14 +574,14 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .chat-typing span {
-    animation: chat-typing-bounce 1.4s infinite ease-in-out;
+    animation: chat-typing-fade 1.4s infinite ease-in-out;
   }
   .chat-typing span:nth-child(1) { animation-delay: 0s; }
   .chat-typing span:nth-child(2) { animation-delay: 0.18s; }
   .chat-typing span:nth-child(3) { animation-delay: 0.36s; }
-  @keyframes chat-typing-bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.55; }
-    30% { transform: translateY(-5px); opacity: 1; }
+  @keyframes chat-typing-fade {
+    0%, 60%, 100% { opacity: 0.35; }
+    30% { opacity: 1; }
   }
 }
 
@@ -613,7 +609,7 @@
   background: var(--accent); color: var(--accent-fg);
   font-size: 8px; font-weight: var(--fw-medium, 500);
   border: 2px solid var(--bg);
-  box-shadow: 0 0 0 0.5px color-mix(in oklab, var(--fg) 12%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--fg) 12%, transparent);
 }
 .chat-typing-avatar:not(:first-child) { margin-inline-start: -6px; }
 .chat-typing-bar-label {
@@ -1040,9 +1036,9 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   aspect-ratio: 1; font-size: var(--fs-lg, 18px); line-height: 1;
   background: transparent; border: 0; border-radius: var(--r-1, 8px);
   cursor: pointer;
-  transition: background var(--dur-snap, .15s) var(--ease, ease), transform 0.12s ease;
+  transition: background var(--dur-snap, .15s) var(--ease, ease);
 }
-.ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); transform: scale(1.12); }
+.ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); }
 .ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--accent) 18%, transparent); }
 .ov-emoji-empty {
   grid-column: 1 / -1;

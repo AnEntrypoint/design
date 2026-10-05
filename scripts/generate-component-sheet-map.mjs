@@ -1,47 +1,13 @@
 #!/usr/bin/env node
-// generate-component-sheet-map.mjs -- maps every exported component to the
-// source sheet(s) that actually style it, and writes docs/component-sheet-map.md.
-//
-// Why this exists: consumers want a per-consumer CSS subset (dist/247420.css is
-// 866,541 B raw / 203,069 B gzipped and holds 3,829 rules, of which only ~200
-// match a given app view), but the build's only subsetting unit is the SOURCE
-// SHEET, and the sheets are named for app areas -- files.css, chat-polish.css,
-// plugins-config.css -- rather than for components. Nobody could say which
-// sheets a given component needs, so no subset could be expressed safely. This
-// answers that question with measurements instead of intuition.
-//
-// Run:  node scripts/generate-component-sheet-map.mjs
-//       node scripts/generate-component-sheet-map.mjs --check   (drift gate)
-//       node scripts/generate-component-sheet-map.mjs --json    (machine output)
-//
-// THREE MEASUREMENT CORRECTIONS ARE BAKED IN, each one found by a pass that
-// produced obviously wrong numbers. Keep them if you edit this file:
-//
-//  1. Resolve a component to the module that really DEFINES it by walking the
-//     barrel graph transitively. components.js re-exports from freddie.js, which
-//     is itself a 47-line barrel. Searching every file for `const <Name>` instead
-//     matches unrelated local variables -- short names like `voice`, `health`,
-//     `Row` and `tools` collide constantly -- and attributes huge unrelated
-//     regions to a component.
-//  2. Read class names only from a `class:`/`className:` PROP VALUE, not from
-//     every string literal in the region. Collecting all literals sweeps up JSDoc
-//     words ('boolean', 'function') and unrelated labels that happen to match a
-//     class name somewhere in the kit.
-//  3. Separate the SHARED BASE from component-owned classes. A class defined in
-//     >= SHARED_AT sheets (active, group, btn, icon ...) is a state/utility token
-//     every subset must carry anyway; counting it as "this component needs that
-//     sheet" drags a whole sheet in per shared token and makes every component
-//     look scattered. Ownership is measured on distinctive classes only.
 import { writeFileSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { root } from './component-surface.mjs';
+import { die } from './die.mjs';
 
 const CHECK = process.argv.includes('--check');
 const JSON_OUT = process.argv.includes('--json');
 const SHARED_AT = 4;
 
-// The sheets the bundle is built from, in bundle order -- must stay in step with
-// scripts/build.mjs's appShellSplitFiles + cssParts.
 const APP_SHELL_SPLIT = [
     'base.css', 'topbar.css', 'primitives.css', 'panel-row.css', 'hero-content.css',
     'responsive.css', 'chat-basic.css', 'files.css', 'catalog-theme.css', 'chat-polish.css',
@@ -66,9 +32,7 @@ const SHEETS = [
     ['spoint/host-join-lobby.css', 'src/kits/spoint/host-join-lobby.css'],
 ];
 
-// Class names in SELECTOR position (the text before each `{`), so a class name
-// quoted inside a declaration value is never mistaken for a rule.
-function sheetClasses(css) {
+function classesInSelectorPosition(css) {
     const out = new Set();
     const src = css.replace(/\/\*[\s\S]*?\*\//g, '');
     let seg = '';
@@ -86,8 +50,7 @@ function sheetClasses(css) {
     return out;
 }
 
-// Correction 2: the value of a class:/className: prop, bounded at depth 0.
-function classExpressions(text) {
+function classPropValueExpressions(text) {
     const out = [];
     for (const m of text.matchAll(/\bclass(?:Name)?\s*:/g)) {
         let depth = 0, quote = null, buf = '';
@@ -109,26 +72,25 @@ const sheetIndex = [];
 for (const [label, rel] of SHEETS) {
     const abs = path.join(root, rel);
     if (!existsSync(abs)) { console.warn('[sheet-map] missing sheet:', label); continue; }
-    sheetIndex.push({ label, classes: sheetClasses(readFileSync(abs, 'utf8')) });
+    sheetIndex.push({ label, classes: classesInSelectorPosition(readFileSync(abs, 'utf8')) });
 }
 const defCount = new Map();
 for (const s of sheetIndex) for (const c of s.classes) defCount.set(c, (defCount.get(c) || 0) + 1);
 const allClasses = new Set(defCount.keys());
 const isShared = (c) => (defCount.get(c) || 0) >= SHARED_AT;
 
-// Correction 1: every module reachable from the public barrel, followed through
-// nested barrels.
 const modules = new Set();
-(function follow(file) {
+function collectReachableModules(file) {
     if (modules.has(file) || !existsSync(file)) return;
     modules.add(file);
     const src = readFileSync(file, 'utf8');
     const re = /(?:export|import)\s*(?:\*|\{[^}]*\})\s*(?:as\s+\w+\s*)?from\s*['"]([^'"]+)['"]/g;
     for (const m of src.matchAll(re)) {
         if (!m[1].startsWith('.')) continue;
-        follow(path.resolve(path.dirname(file), m[1]));
+        collectReachableModules(path.resolve(path.dirname(file), m[1]));
     }
-})(path.join(root, 'src', 'components.js'));
+}
+collectReachableModules(path.join(root, 'src', 'components.js'));
 
 const defsByModule = new Map();
 for (const f of modules) {
@@ -143,13 +105,12 @@ for (const f of modules) {
 
 function emittedClasses(text) {
     const out = new Set();
-    const scope = classExpressions(text).join('\n');
+    const scope = classPropValueExpressions(text).join('\n');
     for (const m of scope.matchAll(/'([^'\n]*)'|"([^"\n]*)"|`([^`\n]*)`/g)) {
         const lit = m[1] ?? m[2] ?? m[3] ?? '';
         for (const tok of lit.split(/\s+/)) {
             if (!tok || !/^-?[A-Za-z_][\w-]*-?$/.test(tok)) continue;
             if (allClasses.has(tok)) { out.add(tok); continue; }
-            // dynamic composition, e.g. `'tone-' + tone`
             if (tok.endsWith('-')) for (const c of allClasses) if (c.startsWith(tok)) { out.add(c); break; }
         }
     }
@@ -251,8 +212,7 @@ const outPath = path.join(root, 'docs', 'component-sheet-map.md');
 if (CHECK) {
     const cur = existsSync(outPath) ? readFileSync(outPath, 'utf8') : '';
     if (cur !== out) {
-        console.error('[sheet-map] docs/component-sheet-map.md is out of date -- run node scripts/generate-component-sheet-map.mjs');
-        process.exit(1);
+        die('[sheet-map] docs/component-sheet-map.md is out of date -- run node scripts/generate-component-sheet-map.mjs');
     }
     console.log('[sheet-map] up to date');
 } else {

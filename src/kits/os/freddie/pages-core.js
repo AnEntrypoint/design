@@ -1,4 +1,3 @@
-// Core freddie pages: projects, home, sessions, agents, logs.
 import * as webjsx from '../../../../vendor/webjsx/index.js';
 import * as components from '../../../components.js';
 import { pre, form, skillLabel } from '../../../components/freddie/helpers.js';
@@ -44,11 +43,6 @@ export function makeCorePages(ctx) {
             const tools = h0.pi.tools.size;
             const skills = h0.pi.skills.size;
             const health = (typeof h0.pi.health === 'function') ? h0.pi.health() : { ok: true };
-            // Epoch-ms fields (ts, or any *At/*Time-suffixed key) render as raw
-            // 13-digit numbers otherwise -- unreadable and gives no sense of
-            // recency. Format as a locale timestamp; anything that doesn't
-            // parse as a plausible epoch-ms value falls through to String(v)
-            // unchanged so this never mangles a genuine small integer.
             const isEpochMsKey = (k) => k === 'ts' || /(At|Time)$/.test(k);
             const fmtHealthValue = (k, v) => {
                 if (isEpochMsKey(k) && typeof v === 'number' && v > 1e12) return new Date(v).toLocaleString();

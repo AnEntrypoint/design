@@ -119,6 +119,17 @@
 .panel-body > * + * { margin-top: calc(var(--space-3) * var(--density)); }
 .panel.panel-wide .panel-body { padding: 0; }
 
+/* One left edge on an Operate surface: the page title, the panel heading, the
+   heading's hairline and the panel content all start at the surface's own
+   edge. The flat panel's inline padding otherwise indents the heading 40px past
+   the title and the rule 24px, three edges in one column. Block padding goes
+   too -- the panel margin (.ds-panel-gap) already owns vertical separation, and
+   padding on top of it doubled the gap between sections. Bordered and tonal
+   panels keep their padding: they have a visible edge to pad against. */
+.ds-app-surface .panel:not(.panel-tonal):not(.panel-inline):not(.panel--dense) { padding: 0; }
+.ds-app-surface .panel:not(.panel-tonal):not(.panel-inline):not(.panel--dense) > .panel-head,
+.ds-app-surface .panel:not(.panel-tonal):not(.panel-inline):not(.panel--dense) > .panel-body { padding-inline: 0; }
+
 /* ============================================================
    LogRow — one entry in a log or timeline. Dense, quiet, and
    carrying its meaning at the leading edge: the rail colour is

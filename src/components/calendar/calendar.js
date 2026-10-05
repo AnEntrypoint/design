@@ -1,13 +1,3 @@
-// Calendar — controlled date-grid primitive. mode='single' calls
-// onSelect(date) on click/Enter; mode='range' uses a two-click anchor
-// (first click sets the range start, second sets the end) with a
-// hover-preview highlight between anchor and the hovered cell. selected/
-// month are owned entirely by the caller; the only state this module keeps
-// is UI-only (hover-preview cell, keyboard-focused cell) via `ref`-captured
-// DOM roving tabindex, matching the FileGrid/DensityPicker roving pattern in
-// this codebase (querySelectorAll the live day buttons, move focus by index,
-// tabindex follows focus) rather than reimplementing useRovingMenu's popup-
-// menu open/close machinery, which this inline grid does not need.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -18,9 +8,6 @@ import {
 } from './grid.js';
 const h = webjsx.createElement;
 
-// Module-scoped hover-preview state for range mode, keyed by the grid's own
-// wrapper element — pure UI-only concern (never handed back to the caller),
-// same shape as Popover's WeakMap-keyed instance bookkeeping.
 const _hoverPreview = new WeakMap();
 
 function rangeBounds(selected) {
@@ -54,9 +41,7 @@ export function Calendar({ mode = 'single', selected, onSelect, month, onMonthCh
     const onDayActivate = (date) => {
         if (isDisabled(date, minDate, maxDate) || !onSelect) return;
         if (mode === 'single') { onSelect(date); return; }
-        // Range: no anchor yet, or a full range already picked -> start fresh.
         if (!from || (from && to)) { onSelect({ from: date, to: null }); return; }
-        // One anchor set -> this click closes the range (either order).
         onSelect(isBefore(date, from) ? { from: date, to: from } : { from, to: date });
     };
 
@@ -104,9 +89,6 @@ export function Calendar({ mode = 'single', selected, onSelect, month, onMonthCh
             isRangeEnd ? 'ds-cal-day-range-end' : '',
             (inCommittedRange || (inPreviewRange && !isSelected)) ? 'ds-cal-day-in-range' : '',
             disabled ? 'ds-cal-day-disabled' : ''].filter(Boolean).join(' ');
-        // Roving tabindex: only one day is a tab stop at a time (the selected
-        // day, today, or the first in-month day as fallback), matching
-        // DensityPicker's rovingRadio contract in files/grid-controls.js.
         const isTabStop = isSelected || (!selected && isToday) || (!selected && !isToday && idx === cells.findIndex(c => c.inMonth));
         return h('button', {
             key: key(cell.date),

@@ -12,7 +12,7 @@
   width: min(860px, 100%); height: min(76vh, 720px);
   background: var(--bg); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-3);
   display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: var(--shadow-3, 0 8px 32px rgba(0,0,0,0.18));
+  box-shadow: var(--shadow-3);
 }
 .ds-plugins-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -100,7 +100,7 @@
 .ds-plugins-toggle[disabled] { cursor: wait; opacity: 0.65; }
 .ds-plugins-toggle-knob {
   position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--bg); box-shadow: var(--shadow-1, 0 1px 4px rgba(0,0,0,0.22));
+  background: var(--bg); box-shadow: var(--shadow-1);
   transition: left var(--dur-snap) var(--ease);
 }
 .ds-plugins-toggle.on .ds-plugins-toggle-knob { left: 21px; }

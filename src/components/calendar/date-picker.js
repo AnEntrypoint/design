@@ -1,15 +1,3 @@
-// DatePicker / DateRangePicker — trigger button + Popover-hosted Calendar.
-// Fully controlled, matching Dialog/Drawer/Popover's shape exactly: the
-// CALLER owns `open`/`onOpenChange` and `month`/`onMonthChange` as real props
-// (no internal open-state toggle). The one DOM-timing wrinkle: Popover needs
-// the trigger's live DOM node as `anchorEl` at the moment `open` flips true,
-// but that node is a same-render sibling, so a `ref` callback captured during
-// THIS render is too late (Popover is constructed synchronously, before
-// webjsx attaches anything to the DOM). chat/composer.js's EmojiPicker
-// trigger hits the same problem and solves it the same way: look the trigger
-// up via `document.querySelector` (already mounted from the prior closed-
-// state render) rather than a same-pass ref value. `name` gives the query a
-// stable per-instance scope so two pickers on one page don't collide.
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Popover } from '../overlay-primitives/popover.js';
 import { Icon } from '../shell.js';

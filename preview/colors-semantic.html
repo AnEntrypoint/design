@@ -8,16 +8,15 @@
 @media (max-width:640px){.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}:root:root .pv1{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:var(--space-3)}:root:root .pv2{background:var(--warn);color:var(--on-color);padding:var(--space-2-75);min-height:90px}:root:root .pv3{background:var(--green);color:var(--panel-0);padding:var(--space-2-75);min-height:90px}:root:root .pv4{background:var(--panel-text-2);color:var(--panel-0);padding:var(--space-2-75);min-height:90px}:root:root .pv5{background:var(--panel-text-3);color:var(--on-color);padding:var(--space-2-75);min-height:90px}</style><script defer src="./motion-default.js"></script>
 </head><body>
 <div class="dateline"><span>247420 · COLORS · SEMANTIC</span><span class="spread"></span><span>05 TOKENS</span></div>
-<div class="ds-demo-tokens-backlink tokens-backlink">tokens used here: green, on-color, panel, sky, space, warn — <a href="../preview/theme-map.html">tokens -&gt;</a></div>
+<div class="ds-demo-tokens-backlink tokens-backlink">tokens used here: green, on-color, panel, sky, space, warn. <a href="../preview/theme-map.html">all tokens</a></div>
 
 <h1 class="sr-only">Colors semantic</h1>
 <main aria-label="Colors semantic specimens"><div class="preview-grid pv1">
-  <!-- --on-color (#fff, 4.32:1) AND --ink (#0e0e12, 4.45:1) both fail WCAG AA's
-       4.5:1 against --sky at this font size; only true black clears it -->
-  <div style="background:var(--sky);color:#000;padding:12px;min-height:90px">
-    <div class="t-label" style="color:#000">LINK</div>
-    <div class="t-micro" style="margin-top:4px;color:#000">#3A6EFF</div>
-    <div class="t-micro" style="color:#000">--sky · prose only</div>
+  <!-- --sky is neutral #404040; paper text on it is 10.4:1 -->
+  <div style="background:var(--sky);color:var(--paper);padding:12px;min-height:90px">
+    <div class="t-label" style="color:var(--paper)">LINK</div>
+    <div class="t-micro" style="margin-top:4px;color:var(--paper)">#404040</div>
+    <div class="t-micro" style="color:var(--paper)">--sky · prose only</div>
   </div>
   <div class="pv2">
     <div class="t-label" style="color:var(--on-color)">WARN</div>

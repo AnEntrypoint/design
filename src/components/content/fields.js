@@ -1,18 +1,8 @@
-// Form controls — the standalone field primitives (SearchInput, TextField,
-// Select) and the declarative `Form` builder that lays out a fields[] spec.
-// Every control carries a real accessible name; SearchInput additionally
-// owns the single shared clear path (Escape key and visible X button).
-//
-// FillLines belongs here too: it is the printed counterpart of a field, for
-// the case where a record is printed in order to be completed by hand.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
 
 export function SearchInput({ value = '', placeholder = 'search…', onInput, onSubmit, name = 'q', key, label, resultCount }) {
-    // Shared clear path — both the Escape key and the visible clear button
-    // call this, so there is exactly one place that clears the field.
     const doClear = (e) => { if (onInput) onInput('', e); };
     const input = h('input', {
         key: 'i',
@@ -24,16 +14,10 @@ export function SearchInput({ value = '', placeholder = 'search…', onInput, on
         value,
         oninput: onInput ? (e) => onInput(e.target.value, e) : null,
         onkeydown: (e) => {
-            // Escape clears the field in place (stays focused) rather than
-            // falling through to whatever ancestor Escape handler exists.
             if (e.key === 'Escape' && value) { e.preventDefault(); e.stopPropagation(); doClear(e); return; }
-            // IME guard: the Enter that commits a CJK composition must not submit.
             if (onSubmit && e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) onSubmit(e.target.value, e);
         }
     });
-    // Visible clear (X) button — mouse/touch users have no way to discover the
-    // Escape-to-clear shortcut, so this surfaces the same clear path visibly.
-    // Only rendered when there's something to clear.
     const clearBtn = value
         ? h('button', {
             key: 'clr', type: 'button', class: 'ds-search-clear',
@@ -41,13 +25,6 @@ export function SearchInput({ value = '', placeholder = 'search…', onInput, on
             onclick: doClear,
         }, Icon('x'))
         : null;
-    // Always return the same wrapping shape regardless of whether resultCount/
-    // clearBtn are present this render - a conditional bare-input-vs-wrapped-
-    // span return here previously changed SearchInput's VElement type at the
-    // SAME keyed slot from render to render (e.g. typing into an empty filter
-    // makes resultCount go from undefined to a string), and webjsx's applyDiff
-    // has no way to morph one element type into another in place - it produced
-    // a corrupted merged DOM node carrying attributes from both shapes.
     return h('span', { key, class: 'ds-search-input-wrap' },
         h('span', { key: 'fld', class: 'ds-search-field' },
             h('span', { key: 'ic', class: 'ds-search-icon', 'aria-hidden': 'true' }, Icon('search', { size: 15 })),
@@ -72,14 +49,9 @@ export function SearchInput({ value = '', placeholder = 'search…', onInput, on
  * from it, so two suggestion fields on one screen need distinct ones.
  */
 export function TextField({ label, value = '', type = 'text', placeholder = '', onInput, onChange, name, key, hint, multiline, rows = 4, maxLength, min, max, error, title, size = 'md', suggestions, 'aria-label': ariaLabel, 'aria-invalid': ariaInvalid, 'aria-describedby': ariaDescribedBy }) {
-    // size: 'sm' | 'md' | 'lg' — md is the base .ds-field control; sm/lg add a
-    // wrapper modifier that snaps the control height/padding/font to --ctl-*.
     const sizeCls = size === 'sm' ? ' ds-field--sm' : (size === 'lg' ? ' ds-field--lg' : '');
     const errorId = error != null ? ((key ? key : 'tf') + '-err') : null;
     const describedBy = ariaDescribedBy || errorId || null;
-    // Stable across renders (derived from name/key, never a counter) — an id that
-    // changed per render would rewrite the input's `list` attribute on every
-    // keystroke and break the open picker.
     const sugg = (!multiline && Array.isArray(suggestions) && suggestions.length) ? suggestions : null;
     const listId = sugg ? ('ds-dl-' + String(name || key || 'field')) : null;
     const input = multiline
@@ -99,9 +71,6 @@ export function TextField({ label, value = '', type = 'text', placeholder = '', 
             min: min != null ? String(min) : null,
             max: max != null ? String(max) : null,
             list: listId,
-            // Chrome/Safari's own history dropdown would otherwise open on top of
-            // the datalist and offer this browser's past entries beside the real
-            // ones — two lists, one of them nobody else can see.
             autocomplete: sugg ? 'off' : null,
             'aria-label': ariaLabel || null,
             'aria-invalid': error != null ? 'true' : (ariaInvalid || null),
@@ -117,9 +86,6 @@ export function TextField({ label, value = '', type = 'text', placeholder = '', 
             sugg ? h('datalist', { key: 'dl', id: listId },
                 ...sugg.map((s) => {
                     const v = typeof s === 'string' ? s : (s && s.value != null ? String(s.value) : '');
-                    // No text child when there is no label: a datalist option's
-                    // own value is what the browser offers, and an empty text
-                    // node renders as a blank second line beside it.
                     const lab = (typeof s === 'object' && s && s.label != null) ? String(s.label) : null;
                     return lab != null
                         ? h('option', { key: 'o-' + v, value: v }, lab)
@@ -141,17 +107,9 @@ export function Select({ label, value = '', options = [], onChange, name, key, p
         const lab = typeof o === 'string' ? o : (o.label != null ? o.label : (o.id || o.value));
         opts.push(h('option', { key: 'o-' + id, value: id, selected: id === value }, lab));
     }
-    // When this select is returned bare (the no-label/no-hint/md branch below),
-    // it is the node the caller keys, so it must carry the caller's key. The
-    // internal 'i' only has to be unique among THIS component's own children,
-    // which is why the wrapped branches can keep it. Previously 'i' was
-    // hardcoded here and the bare branch dropped `key` on the floor, so two
-    // sibling label-less Selects both keyed as 'i' and webjsx's keyed diff
-    // collapsed them into one on the next re-render.
     const bare = label == null && hint == null && size === 'md';
     const select = h('select', {
         key: bare && key != null ? key : 'i', name, class: 'ds-select',
-        // Guarantee an accessible name even when rendered without a visible label.
         'aria-label': ariaLabel || (label == null ? (title || placeholder || name) : null),
         title,
         onchange: onChange ? (e) => onChange(e.target.value, e) : null
@@ -169,9 +127,6 @@ export function Form({ fields = [], submit = 'submit', onSubmit, columns = 1 }) 
     const cols = columns > 1 ? String(columns) : null;
     return h('form', { class: 'row-form', 'data-columns': cols, onsubmit: (ev) => { ev.preventDefault(); onSubmit && onSubmit(ev); } },
         ...fields.map((f, i) => {
-            // Each control gets a stable id and an associated <label> so the
-            // placeholder is no longer the only (inaccessible) name. The label
-            // text falls back to label -> placeholder -> name.
             const fieldId = 'ds-form-' + (f.name || 'field') + '-' + i;
             const labelText = f.label != null ? f.label : (f.placeholder || f.name || '');
             const control = f.kind === 'textarea'

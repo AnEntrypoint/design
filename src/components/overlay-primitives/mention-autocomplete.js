@@ -1,13 +1,3 @@
-// MentionAutocomplete — dropdown shown above/below the composer while typing
-// a trigger char (@user, #channel). Imperative row diffing, same shape as
-// CommandPalette's list repaint: only the row list ever repaints on
-// selection/query change, never the anchor.
-//
-// Row shape per for-web's floating/AutoComplete.tsx: an avatar + display
-// name for a user match, a hash glyph + name for a channel match, plain
-// name for a role match (color swatch via inline style, same convention
-// content/avatar.js's avatarContrastFg already uses for hashed identity
-// colors elsewhere in this kit).
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { avatarInitial } from '../content/avatar.js';

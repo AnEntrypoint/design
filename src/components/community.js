@@ -1,8 +1,3 @@
-// Community surface — matches upstream signatures.
-//
-// This module is a barrel: every component lives in a single-responsibility
-// submodule under ./community/, and the public export surface here is unchanged
-// — no consumer import needs to move.
 
 import { ServerIcon, ServerRail, ChannelItem, ChannelCategory, ChannelSidebar } from './community/navigation.js';
 import { VoiceUser, UserPanel, MemberItem, MemberList, VoiceStrip, UserCard } from './community/presence.js';

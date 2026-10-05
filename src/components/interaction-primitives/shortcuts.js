@@ -1,6 +1,3 @@
-// Keyboard shortcuts: combo parsing/matching (platform-aware Mod = Cmd on mac,
-// Ctrl elsewhere), the binding registrar that also feeds a global registry, and
-// the three display surfaces — ShortcutHint, ShortcutList, ShortcutHelpDialog.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
@@ -80,8 +77,6 @@ export function ShortcutHelpDialog({ open = false, onClose, registry } = {}) {
     const list = registry || Array.from(SHORTCUT_REGISTRY);
     const groups = {};
     list.forEach(r => { (groups[r.scope] = groups[r.scope] || []).push(r); });
-    // Escape-to-close, Tab focus trap, and autofocus on open — wired through a
-    // ref so teardown runs on the webjsx ref(null) unmount branch.
     const dialogRef = (el) => {
         if (!el) { if (ShortcutHelpDialog._teardown) { ShortcutHelpDialog._teardown(); ShortcutHelpDialog._teardown = null; } return; }
         const focusables = () => el.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
@@ -97,8 +92,6 @@ export function ShortcutHelpDialog({ open = false, onClose, registry } = {}) {
         };
         el.addEventListener('keydown', onKey);
         ShortcutHelpDialog._teardown = () => el.removeEventListener('keydown', onKey);
-        // The dialog itself is focusable (tabindex=-1) so it always has a home
-        // for focus even when it contains no interactive controls.
         const f = focusables();
         (f[0] || el).focus();
     };

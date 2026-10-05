@@ -6,26 +6,13 @@
   <meta name="theme-color" content="#3A9A34" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
   <title>Slide Deck / 247420</title>
-  <meta name="description" content="16:9 slide deck template — keyboard nav, slide counter, SDK chrome.">
+  <meta name="description" content="16:9 slide deck template with keyboard navigation, a slide counter and SDK chrome.">
   <link rel="canonical" href="https://anentrypoint.github.io/design/ui_kits/slide_deck/">
   <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
   <link rel="stylesheet" href="../../colors_and_type.css">
   <link rel="stylesheet" href="../../app-shell.css">
-<!-- Critical pre-stylesheet background: body's real background/color rule
-     lives in src/css/app-shell/base.css, one of ~30 sheets app-shell.css's
-     own @import barrel must fetch before it applies. On a cold cache that
-     barrel resolution can outlast the module script's first render, leaving
-     the UA default (often a stark white-on-transparent, or black under a
-     dark OS theme) visible until every sheet lands -- reported as "blank
-     page on first load, fine on reload" (reload = warm cache = barrel
-     resolves instantly). colors_and_type.css is a render-blocking <link>
-     above this block, so --bg/--fg (which follow data-theme="auto" and the
-     OS scheme) are already defined here; only app-shell.css is the slow one. -->
 <style>
 html,body{background:var(--bg);color:var(--fg)}
-/* Boot spinner: shown while #root:empty (app.js has not mounted yet); it
-   stops matching, and disappears, the moment content is appended. The ring
-   tint is derived from currentColor so it reads on both light and dark. */
 #root:empty{min-height:100vh;display:flex;align-items:center;justify-content:center}
 #root:empty::after{content:"";width:28px;height:28px;border-radius:50%;
   border:3px solid color-mix(in srgb,currentColor 35%,transparent);border-top-color:currentColor;

@@ -1,6 +1,3 @@
-// Community navigation: the server rail and the channel sidebar it selects
-// into — ServerIcon / ServerRail, ChannelItem (with its voice state and
-// participant strip), ChannelCategory, and the composed ChannelSidebar.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -8,7 +5,6 @@ import { Avatar, avatarInitial, avatarContrastFg } from '../content.js';
 import { UserPanel } from './presence.js';
 const h = webjsx.createElement;
 
-// Channel-type -> line-icon name, shared by ChannelItem and MobileHeader.
 export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash' };
 
 export function ServerIcon({ id, name, icon, active, badge, onClick } = {}) {
@@ -72,13 +68,6 @@ export function ChannelItem({ id, name, type = 'text', active, voiceActive, voic
                 }
             },
             tabindex: '0',
-            // NOT role="option": this is channel NAVIGATION, not a select-one
-            // listbox — activating a row changes the view, and each row also
-            // contains its own action buttons, which `option` forbids (its
-            // children must be presentational). A link inside a list is the
-            // structure a screen reader should announce, and the current
-            // channel is conveyed by aria-current="page", the navigation
-            // idiom, rather than aria-selected.
             role: 'link',
             'aria-current': active ? 'page' : null
         },
@@ -116,9 +105,6 @@ export function ChannelCategory({ id, name, channels = [], collapsed, activeId, 
             extraButton ? h('button', { class: 'cm-cat-extra', onclick: (e) => { e.stopPropagation(); extraButton.onClick && extraButton.onClick(id, e); }, 'aria-label': extraButton.title || 'Category action' }, extraButton.icon || extraButton.label || '+') : null,
             onAddChannel ? h('button', { class: 'cm-cat-add', onclick: (e) => { e.stopPropagation(); onAddChannel(id); }, 'aria-label': 'Add channel to ' + name }, '+') : null
         ),
-        // role=list + role=listitem on each wrap: the channel rows are a real
-        // list of navigation targets, so a screen reader announces position
-        // and count ("3 of 7") instead of a flat run of links.
         collapsed ? null : h('div', { class: 'cm-cat-channels', role: 'list', 'aria-label': name + ' channels' },
             ...channels.map(c => ChannelItem({
                 ...c,
@@ -131,8 +117,6 @@ export function ChannelCategory({ id, name, channels = [], collapsed, activeId, 
     );
 }
 
-// Skeleton rows for a cold channel-list load — reuses the kit-wide .ds-skel
-// shimmer primitive (sessions.js / files.js) rather than a bare spinner.
 function ChannelListSkeleton({ rows = 6 } = {}) {
     return h('div', { class: 'cm-channel-list cm-channel-skeleton', 'aria-hidden': 'true' },
         ...Array.from({ length: rows }, (_, i) => h('div', { key: 'csk' + i, class: 'cm-channel-item-skeleton' },

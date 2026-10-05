@@ -1,8 +1,3 @@
-// The Claude-Desktop / cowork multi-column app frame: WorkspaceShell (rail +
-// optional sessions + main + optional context pane) and WorkspaceRail (the
-// rail's own brand/action/nav contents). Both are pure stateless chrome —
-// every collapse/resize/drawer behaviour lives in ./workspace-columns.js.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from './icons.js';
 import { toggleWs, toggleWsDrawer, closeWsDrawers, wsCollapsed, seedWsWidths, WsResizer } from './workspace-columns.js';
@@ -33,13 +28,6 @@ export function WorkspaceShell({ rail, sessions, main, pane, crumb, status, narr
                                  paneLabel = 'context', stableFrame = false, mainFlush = false } = {}) {
     const hasSessions = Boolean(sessions);
     const hasPane = Boolean(pane);
-    // Stable frame: keep the pane grid TRACK present even when this tab has no
-    // pane, so the shell does not re-flow its column count (4/3/2) on every tab
-    // switch - the loudest "separate pages" tell. The track collapses to width 0
-    // (ws-pane-collapsed) instead of being removed (ws-no-pane), so chat/history/
-    // files/live/settings all keep the same column geometry. The sessions column
-    // gets the identical treatment (ws-sessions-collapsed instead of ws-no-sessions)
-    // so files/live/settings do not shift the main column when sessions is null.
     const keepPaneTrack = stableFrame && !hasPane;
     const keepSessionsTrack = stableFrame && !hasSessions;
     const railIsCollapsed = wsCollapsed('rail', railCollapsed);
@@ -54,38 +42,23 @@ export function WorkspaceShell({ rail, sessions, main, pane, crumb, status, narr
         + (narrow ? ' narrow' : '');
     return h('div', { class: shellCls, ref: seedWsWidths },
         h('a', { href: '#ws-main', class: 'skip-link' }, 'skip to main content'),
-        // Left rail column. Its own toggle collapses it to icon-only.
         h('nav', { class: 'ws-rail', role: 'navigation', 'aria-label': railLabel },
             h('button', {
                 class: 'ws-rail-toggle', type: 'button',
-                // Label reflects the ACTION the click performs (expand when
-                // collapsed, collapse when expanded), not a static word - a
-                // stale "collapse navigation" on an already-collapsed rail
-                // mis-announces the control to AT.
                 'aria-label': railIsCollapsed ? 'expand navigation' : 'collapse navigation',
                 title: railIsCollapsed ? 'expand navigation' : 'collapse navigation',
                 'aria-expanded': railIsCollapsed ? 'false' : 'true',
                 onclick: (e) => toggleWs('rail', e.currentTarget),
             }, Icon('menu')),
             rail || null),
-        // Tap-scrim behind an open mobile drawer; click anywhere dismisses.
         h('div', { class: 'ws-scrim', 'aria-hidden': 'true', onclick: (e) => closeWsDrawers(e.currentTarget) }),
-        // Optional sessions column. On mobile it is a drawer; selecting a row
-        // (any button click inside) auto-closes it, mirroring AppShell.
         hasSessions
             ? h('div', { id: 'ws-sessions-col', class: 'ws-sessions', role: 'complementary', 'aria-label': 'conversations',
-                // Drawer mode is detected by geometry (position:fixed only holds
-                // in drawer mode), not window.innerWidth - the shell may live in
-                // an embedded window narrower than the viewport.
                 onclick: (e) => {
                     const col = e.currentTarget;
                     if (getComputedStyle(col).position === 'fixed' && e.target.closest('button, a, [role="button"]')) closeWsDrawers(col);
                 } }, sessions)
             : null,
-        // Primary content column, with an optional thin crumb bar on top. On
-        // mobile the crumb hosts the drawer toggles (sessions on the left, pane
-        // on the right) so both overlay columns are reachable - without them the
-        // conversation list and context pane are dead on <=900px.
         h('div', { class: 'ws-content' },
             crumb
                 ? h('div', { class: 'ws-crumb' },
@@ -95,8 +68,6 @@ export function WorkspaceShell({ rail, sessions, main, pane, crumb, status, narr
                         'aria-controls': 'ws-sessions-col',
                         onclick: (e) => toggleWsDrawer('sessions', null, e.currentTarget),
                     }, Icon('thread')) : null,
-                    // Desktop-only sessions collapse (reclaims its width for a
-                    // full-width thread/grid). Hidden on mobile via CSS.
                     hasSessions ? h('button', {
                         class: 'ws-desktop-toggle ws-sessions-toggle', type: 'button',
                         'aria-label': sessionsIsCollapsed ? 'expand conversations' : 'collapse conversations',
@@ -104,8 +75,6 @@ export function WorkspaceShell({ rail, sessions, main, pane, crumb, status, narr
                         'aria-expanded': sessionsIsCollapsed ? 'false' : 'true', onclick: (e) => toggleWs('sessions', e.currentTarget),
                     }, Icon(sessionsIsCollapsed ? 'chevron-right' : 'chevron-left')) : null,
                     h('div', { class: 'ws-crumb-main' }, crumb),
-                    // Desktop-only context-pane collapse, on the same crumb-level
-                    // chrome idiom as the sessions toggle. Hidden on mobile via CSS.
                     hasPane ? h('button', {
                         class: 'ws-desktop-toggle ws-pane-toggle', type: 'button',
                         'aria-label': paneIsCollapsed ? 'show context pane' : 'hide context pane',
@@ -123,32 +92,16 @@ export function WorkspaceShell({ rail, sessions, main, pane, crumb, status, narr
             h('main', { class: 'ws-main ds-app-surface' + (narrow ? ' narrow' : '') + (mainFlush ? ' ws-main--flush' : ''), id: 'ws-main', tabindex: '0' },
                 ...(Array.isArray(main) ? main : [main])),
             status || null),
-        // Optional right context pane. Its desktop collapse toggle now lives in
-        // the crumb cluster, alongside the sessions toggle.
         hasPane
             ? h('aside', { id: 'ws-pane-col', class: 'ws-pane', role: 'complementary', 'aria-label': paneLabel },
                 pane)
             : null,
-        // Keyboard/pointer column resize handles (desktop only).
         (!narrow && !railIsCollapsed) ? WsResizer('rail') : null,
         (!narrow && (hasSessions || keepSessionsTrack) && !sessionsIsCollapsed) ? WsResizer('sessions') : null,
         (!narrow && (hasPane || keepPaneTrack) && !paneIsCollapsed) ? WsResizer('pane') : null,
     );
 }
 
-// WorkspaceRail — the contents of the WorkspaceShell left rail: a brand/header,
-// a primary action (New chat), and a list of nav items. Each item collapses to
-// an icon when the rail is collapsed (the label is kept in the DOM for AT and
-// shown via CSS when expanded).
-//
-//   brand   : short product name shown in the rail header.
-//   action  : { label, icon, onClick } a prominent primary button (New chat).
-//   items   : [{ key, label, icon, active, count, rail, onClick }] nav entries.
-//             `rail` (optional tone e.g. 'flame') paints an attention dot on the
-//             item — used when something in that surface needs the user's eyes
-//             even though they are looking at a different tab (e.g. a live
-//             session in error while the user is in Chat).
-//   footer  : optional vnode pinned to the rail bottom (e.g. settings/theme).
 export function WorkspaceRail({ brand = '247420', action, items = [], footer } = {}) {
     return h('div', { class: 'ws-rail-inner' },
         h('div', { class: 'ws-rail-head' },

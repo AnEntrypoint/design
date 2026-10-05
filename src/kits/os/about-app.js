@@ -1,7 +1,3 @@
-// About-app paint surface — static info card, bible classes.
-// renderAboutApp({brand, tagline, bullets, links}) -> {node, dispose}.
-// Consumer provides content; module owns layout + classes.
-
 export function renderAboutApp(opts = {}) {
     const {
         brand = 'thebird / web os',

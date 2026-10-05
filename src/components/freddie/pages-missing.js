@@ -1,11 +1,3 @@
-// Freddie pages for sidebar routes that don't have their own dedicated
-// module. `auth`/`settings`/`session-tree` genuinely duplicate a fuller page
-// elsewhere (env/config/sessions) and now re-export those directly rather
-// than carrying a second, weaker implementation of the same data source —
-// see pages-config.js (env, config) and pages-workspace.js (sessions). The
-// remaining pages here (terminal, files, theme, worktree, notifications) are
-// real, standalone implementations with no fuller page to defer to.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { makePage, api, loadingState, errorState, emptyState, refreshError } from './runtime.js';
 import { Table, PageHeader, TextField, Select } from '../content.js';
@@ -23,8 +15,6 @@ const h = webjsx.createElement;
 export { env as auth, config as settings } from './pages-config.js';
 export { sessions as sessionTree } from './pages-workspace.js';
 
-// ---- terminal ---------------------------------------------------------------
-// Backend: GET /api/terminal/status (cwd) + POST /api/terminal/exec (run a command)
 
 export const terminal = makePage((ctx) => {
     Object.assign(ctx.state, { cwd: null, cmd: '', busy: false, history: [] });
@@ -32,7 +22,7 @@ export const terminal = makePage((ctx) => {
         try {
             const status = await api('/api/terminal/status');
             ctx.set({ loading: false, cwd: status.cwd || null, error: null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     async function run() {
         const command = (ctx.state.cmd || '').trim();
@@ -72,12 +62,6 @@ export const terminal = makePage((ctx) => {
     };
 });
 
-// ---- files ------------------------------------------------------------------
-// Backend: GET /api/files/tree?path=... (directory listing) + GET
-// /api/files/read?path=... (file content). Built on the SDK's own file-browser
-// kit (FileGrid/BreadcrumbPath/FileViewer/FilePreview*) rather than a bespoke
-// table, per this SDK's "consumers must not duplicate components inline" rule
-// — those primitives already existed here, unused by this page until now.
 
 function splitPath(p) {
     const norm = String(p || '').replace(/\\/g, '/');
@@ -98,7 +82,7 @@ export const files = makePage((ctx) => {
         try {
             const res = await api('/api/files/tree' + (path ? '?path=' + encodeURIComponent(path) : ''));
             ctx.set({ loading: false, dirPath: res.path, entries: Array.isArray(res.tree) ? res.tree : [], error: null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     async function openEntry(entry) {
         const info = splitPath(ctx.state.dirPath);
@@ -119,13 +103,6 @@ export const files = makePage((ctx) => {
     return () => {
         const s = ctx.state;
         if (s.loading && !s.entries.length) return loadingState('loading files…');
-        // A successful, genuinely-empty/unreadable directory (load() resolved,
-        // entries: []) is a different state from the endpoint never having
-        // answered on the FIRST load (s.error set, dirPath still null). A
-        // failure on a LATER load (e.g. clicking "up" past the sandbox root,
-        // which the server correctly 400s) must still surface -- dirPath/
-        // entries are left at their last-good value below rather than wiped,
-        // so the click doesn't silently do nothing.
         if (s.error && !s.dirPath) return errorState(s.error, () => load());
         const info = splitPath(s.dirPath);
         const segments = info.leadingSlash ? info.parts : info.parts.slice(1);
@@ -159,11 +136,6 @@ export const files = makePage((ctx) => {
     };
 });
 
-// ---- theme ------------------------------------------------------------------
-// A real, interactive theme/accent/density picker over the SDK's own theme
-// controller — previously a read-only table with no way to actually change
-// anything, duplicating ThemeToggle's compact control in the topbar without
-// its interactivity.
 
 const ACCENTS = ['default', 'green', 'purple', 'mascot'];
 const DENSITIES = ['compact', 'comfortable', 'spacious'];
@@ -189,14 +161,9 @@ export const themePage = makePage((ctx) => {
     };
 });
 
-// ---- worktree --------------------------------------------------------------
-// Backend: GET /api/worktree (plugins/gui/gui-worktree) — {cwd, worktrees:
-// [{worktree,head,branch,bare?,detached?}]}, per handler.js parseWorktreeList
-// (git worktree list --porcelain field names, not path/hash).
 
 export const worktree = makePage((ctx) => {
-    // No inner .catch(()=>null) -- see the `terminal`/`files` pages above for why.
-    async function load() { try { ctx.set({ loading: false, data: await api('/api/worktree'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, data: await api('/api/worktree'), error: null }); } catch (e) { ctx.failLoad(e); } }
     load();
     return () => {
         const s = ctx.state;
@@ -212,30 +179,23 @@ export const worktree = makePage((ctx) => {
     };
 });
 
-// ---- notifications -----------------------------------------------------------
-// Backend: GET /api/notifications (plugins/gui-notifications) — array of
-// {id,type,message,severity,timestamp,delivered} per NotificationManager.getAll()
-// (src/agent/notifications.js), not a {time} field -- plus POST
-// /api/notifications/:id/dismiss and POST /api/notifications/dismiss-all,
-// which existed server-side but were entirely unwired from this page.
 
 export const notifications = makePage((ctx) => {
     Object.assign(ctx.state, { busy: null });
     async function load() {
-        // No inner .catch(()=>null) -- see the `terminal`/`files` pages above for why.
         try { ctx.set({ loading: false, data: await api('/api/notifications'), error: null }); }
-        catch (e) { ctx.set({ loading: false, error: e }); }
+        catch (e) { ctx.failLoad(e); }
     }
     async function dismiss(id) {
         ctx.set({ busy: id });
         try { await api('/api/notifications/' + encodeURIComponent(id) + '/dismiss', { method: 'POST' }); await load(); }
-        catch (e) { ctx.set({ error: e }); }
+        catch (e) { ctx.failError(e); }
         ctx.set({ busy: null });
     }
     async function dismissAll() {
         ctx.set({ busy: 'all' });
         try { await api('/api/notifications/dismiss-all', { method: 'POST' }); await load(); }
-        catch (e) { ctx.set({ error: e }); }
+        catch (e) { ctx.failError(e); }
         ctx.set({ busy: null });
     }
     load();

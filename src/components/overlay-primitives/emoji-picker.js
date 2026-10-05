@@ -1,14 +1,8 @@
-// EmojiPicker — fixed popover near (anchorX, anchorY) with category tabs +
-// grid, plus the emoji dataset it presents.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { trapTab, _anchoredOverlayLifecycle } from './floating.js';
 const h = webjsx.createElement;
 
-// Sanctioned literal-emoji exception: an emoji picker's whole purpose is to
-// present emoji, so the glyph ban does not apply to this data table or the
-// per-emoji <button> labels below. This is intentional product content, not
-// decorative chrome.
 const EMOJI_CATEGORIES = [
     { id: 'smileys', label: '😀', emoji: [
         ['😀', 'grinning smile'], ['😁', 'grinning smile happy'], ['😂', 'joy tears laugh'], ['🤣', 'rofl laugh'],
@@ -38,18 +32,10 @@ const EMOJI_CATEGORIES = [
 ];
 const ALL_EMOJI = EMOJI_CATEGORIES.flatMap((c) => c.emoji);
 
-// EmojiPicker — fixed popover near (anchorX, anchorY) with category tabs + grid.
-// `query`, when non-empty, filters across all categories by name/keyword
-// substring match (case-insensitive) instead of showing the active tab.
 export function EmojiPicker({ open, anchorX = 0, anchorY = 0, onSelect, onClose, query = '' } = {}) {
     if (!open) return null;
     let cat = EMOJI_CATEGORIES[0].id;
     let rootEl = null, gridEl = null, searchEl = null, previewEl = null;
-    // Internal search state, seeded from the `query` prop so a consumer that
-    // already knows the typed ':smile' trigger text (e.g. a composer keydown
-    // handler) can still pre-fill it — but typing in the picker's own input
-    // (added here since no consumer previously had anywhere to route text
-    // into `query`) is the primary path now.
     let search = query || '';
     const close = () => onClose && onClose();
 

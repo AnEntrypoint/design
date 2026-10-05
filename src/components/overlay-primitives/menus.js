@@ -1,15 +1,9 @@
-// Trigger-anchored menus — Dropdown (role=menuitem action list),
-// PermissionMenu (role=menuitemcheckbox category toggles) and MenuButton
-// (role=menuitemradio single-select with a check mark). All three share the
-// open/close/outside-click/roving-nav/typeahead machine in ./roving-menu.js
-// and differ only in the DOM/roles they build for their own menu element.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { useRovingMenu } from './roving-menu.js';
 const h = webjsx.createElement;
 
-// Dropdown — button trigger + portaled menu.
 export function Dropdown({ trigger, items = [], onSelect, placement = 'bottom-start', ariaLabel } = {}) {
     const menu = useRovingMenu({ itemSelector: '[role="menuitem"]:not([aria-disabled="true"])', items, typeahead: true, placement });
     const select = (it) => { if (it.disabled || it.separator) return; if (onSelect) onSelect(it.id, it); menu.close(); };
@@ -43,12 +37,6 @@ export function Dropdown({ trigger, items = [], onSelect, placement = 'bottom-st
         : h('button', { type: 'button', class: 'ds-dropdown-trigger', ref: wireRef }, child || 'Menu');
 }
 
-// PermissionMenu — a role=menu of role=menuitemcheckbox rows, one per
-// category, with roving tabindex + Arrow-up/down/Home/End navigation and
-// Escape-closes-and-restores-focus, plus "Approve all"/"Revoke all" actions.
-// Mirrors Dropdown's own open/close + outside-click wiring (a portaled menu
-// element, a document-level mousedown listener, focus restored to the
-// trigger on close) rather than reimplementing that plumbing.
 export function PermissionMenu({ trigger, categories = [], approved = [], onToggle, onToggleAll, placement = 'bottom-start', ariaLabel = 'Permissions' } = {}) {
     const isApproved = (id) => approved.indexOf(id) !== -1;
     const menu = useRovingMenu({ itemSelector: '[role="menuitemcheckbox"]', items: categories, getLabel: (cat) => cat.label || cat.id, typeahead: true, placement });
@@ -81,16 +69,6 @@ export function PermissionMenu({ trigger, categories = [], approved = [], onTogg
         : h('button', { type: 'button', class: 'ov-perm-trigger', ref: wireRef }, child || 'Permissions');
 }
 
-// MenuButton — icon-trigger select menu: one option carries a checkmark
-// (the active selection), roving keyboard nav mirrors Dropdown's own
-// open/close/outside-click/typeahead wiring, plus a stale/unavailable
-// per-item state that renders as a muted "unavailable — retry" row instead
-// of a normal selectable item (ported from docstudio's model-picker menu,
-// which shows a retry affordance when its option list fails to load).
-// Zero-option and single-option lists degrade gracefully: an empty list
-// renders a static "No options available" row (no crash, no keyboard trap,
-// nothing focusable); roving nav on a single-option list simply refocuses
-// the same item on every Arrow press (wrap-to-self), never throws.
 export function MenuButton({ trigger, items = [], selected, onSelect, onRetry, placement = 'bottom-start', ariaLabel = 'Menu', emptyText = 'No options available' } = {}) {
     const menu = useRovingMenu({ itemSelector: '[role="menuitemradio"]:not([aria-disabled="true"])', items, typeahead: true, placement });
     const select = (it) => { if (it.disabled || it.unavailable) return; if (onSelect) onSelect(it.id, it); menu.close(); };
@@ -109,10 +87,6 @@ export function MenuButton({ trigger, items = [], selected, onSelect, onRetry, p
                     : h('button', {
                         key: it.id || i, type: 'button', role: 'menuitemradio',
                         'aria-checked': it.id === selected ? 'true' : 'false',
-                        // No disabled modifier class: editor-primitives.css styles
-                        // .ov-menubutton-item[aria-disabled="true"] directly, so the
-                        // aria attribute below is both the semantics and the hook.
-                        // (This was a ternary whose branches returned the same string.)
                         class: 'ov-menubutton-item',
                         'aria-disabled': it.disabled ? 'true' : 'false',
                         tabindex: '-1', onclick: () => select(it),

@@ -1,7 +1,3 @@
-// Thread containers: Chat (the standard header + log + composer surface),
-// AICat / AICatPortrait (the ascii-mascot variant), and ChatSuggestions (the
-// blank-thread composer-priming CTA).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { t } from '../../i18n.js';
 import { ChatMessage } from './message.js';
@@ -10,17 +6,6 @@ import { ensureCachesInit } from './stats.js';
 
 const h = webjsx.createElement;
 
-// ChatSuggestions — centered blank-thread heading + subtext + a wrapped row
-// of prompt chips that fill the composer textarea on click and auto-dismiss
-// on first send. Ported from docstudio's empty-state composer-priming CTA
-// (distinct from a generic list EmptyState: this exists to seed a first
-// message, not to describe an empty list). `onPick(prompt, item)` is the
-// caller's single hook — the component does not touch the composer DOM
-// itself, so the host decides how "fill the composer" actually happens.
-// A rapid double-click on the same chip (or a click racing the first send)
-// is guarded by a one-shot `_picked` flag: only the first click of any kind
-// dispatches onPick, so the composer is never filled twice and the chips
-// never reappear having already been "used".
 export function ChatSuggestions({ heading = 'What can I help with?', subtext = '', suggestions = [] } = {}) {
     let picked = false;
     return h('div', { class: 'chat-suggestions', role: 'group', 'aria-label': heading },
@@ -36,7 +21,6 @@ export function ChatSuggestions({ heading = 'What can I help with?', subtext = '
 }
 
 export function Chat({ title = 'chat', sub, messages = [], composer, header, suggestions, onSuggestionClick } = {}) {
-    // Warm markdown/Prism caches once so library loading parallelizes.
     ensureCachesInit();
     const threadRef = makeThreadAutoScroll(() => messages.length);
     const msgCount = messages.length;
@@ -67,11 +51,6 @@ export function Chat({ title = 'chat', sub, messages = [], composer, header, sug
     );
 }
 
-// stoat/for-web's MessageContainer collapses the avatar+name header when a
-// message shares its author with the immediately-preceding one (its own
-// `tail` prop), tightening --message-group-spacing instead of the full
-// between-groups gap. Only flat-mode messages carry an avatar/name header
-// worth collapsing; messenger-bubble mode already pairs an avatar per turn.
 function isConsecutive(messages, i) {
     if (i === 0) return false;
     const prev = messages[i - 1];
@@ -89,18 +68,8 @@ function isConsecutive(messages, i) {
 
 export const AICAT_FACE = ` /\\_/\\\n( o.o )\n > ^ <`;
 
-// `status` is opt-in and omitted by default: this component renders IDENTITY
-// (who you're talking to — name, avatar/face), not live conversation state.
-// A caller that also renders a thread head with its own status (AICat below)
-// should leave `status` unset here so there is exactly one place on the page
-// showing dynamic state — passing it back in duplicates that source of truth.
 export function AICatPortrait({ name = 'aicat', status, face } = {}) {
     return h('div', { class: 'aicat-portrait' },
-        // role="img" collapses the ASCII art into a single named image for a
-        // screen reader (otherwise the slashes and parens are read out
-        // character by character as text). It is also what makes the
-        // aria-label legal here: a bare <pre> has no role and so can carry no
-        // accessible name, exactly like the chat reaction spans.
         h('pre', { class: 'aicat-face', role: 'img', 'aria-label': `${name} portrait` }, face || AICAT_FACE),
         h('div', { class: 'aicat-meta' },
             h('span', { class: 'name' }, name),

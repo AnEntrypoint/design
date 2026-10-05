@@ -1,16 +1,9 @@
-// Waypoint Timeline: multi-point path authoring for a host game's waypoint entities (a waypoint is a plain
-// entity carrying custom._waypoint=true + custom.order -- this panel is a live list/timeline view over that
-// existing data model, not a new one). add appends a new waypoint entity, remove destroys one, reorder rewrites
-// every affected entity's custom.order. Migrated from spoint's client/editor/WaypointTimeline.js per the
-// GUI-lives-in-design-kit architecture rule -- host apps wire onAdd/onRemove/onReorder/onSelect to their own
-// entity-placement/EDITOR_UPDATE transport.
 import * as webjsx from '../../../vendor/webjsx/index.js'
 import { Btn, Toolbar, EmptyState } from './ui-components.js'
 import { Icon } from '../shell/icons.js'
 const h = webjsx.createElement
 const applyDiff = webjsx.applyDiff
 
-// Pure: filters+sorts the live entity list down to waypoint rows, independently testable of any DOM.
 export function collectWaypointRows(entities) {
   const flat = []
   const walk = (nodes) => {
@@ -26,15 +19,11 @@ export function collectWaypointRows(entities) {
     .sort((a, b) => a.order - b.order)
 }
 
-// Pure: given the current sorted rows and a from/to swap, returns the {id, order} pairs that actually need a
-// host-side write (only the rows whose order value actually changed, not the whole list every time).
 export function reorderDelta(rows, fromIndex, toIndex) {
   if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= rows.length || toIndex >= rows.length) return []
   const next = rows.slice()
   const [moved] = next.splice(fromIndex, 1)
   next.splice(toIndex, 0, moved)
-  // Renumber densely 0..n-1 in the new order -- simplest invariant to reason about, and guarantees no two
-  // rows ever collide post-move.
   const out = []
   next.forEach((r, i) => { if (r.order !== i) out.push({ id: r.id, order: i }) })
   return out
@@ -86,8 +75,6 @@ export function createWaypointTimeline(container, { onSelect, onAdd, onRemove, o
   render()
 
   return {
-    // Fed the same live entity tree the host editor already tracks -- filtered+sorted down to waypoint rows
-    // here, so this window is always current with the real world.
     updateEntities(entities) { _rows = collectWaypointRows(entities); if (_sel && !_rows.some(r => r.id === _sel)) _sel = null; render() },
     setSelected(id) { _sel = id || null; render() },
     get rows() { return _rows }

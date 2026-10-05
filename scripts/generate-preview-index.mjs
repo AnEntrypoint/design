@@ -1,7 +1,3 @@
-// generate-preview-index.mjs -- builds preview/index.html, a discovery page
-// listing every preview/*.html demo with its title, so previews (the de
-// facto component docs) don't require reading the directory to discover.
-// Run: node scripts/generate-preview-index.mjs
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -13,13 +9,6 @@ const files = readdirSync(previewDir)
   .filter(f => f.endsWith('.html') && f !== 'index.html')
   .sort()
 
-// Other demo surfaces that live outside preview/ (slides/, ui_kits/) and are
-// not part of the generated preview/*.html scan above. D5 (the merged
-// gallery across preview/ui_kits/slides) hasn't landed yet -- it needs
-// scripts/generate-ui-kit-scaffolds.mjs, which doesn't exist -- so this is an
-// interim link-out from the existing preview index rather than a real merge:
-// one more click to reach slides/index.html instead of a separate, undiscoverable
-// demo surface. Remove this block once D5's real merged gallery subsumes it.
 const EXTRA_LINKS = [
   { href: '../slides/index.html', label: 'slides deck (external demo surface)' },
 ]

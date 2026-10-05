@@ -1,19 +1,8 @@
-// Masthead blocks — the page-opening surfaces: Hero (a left-aligned,
-// left-inset single-column stack: oversized display title, body copy, then
-// the badge/CTA cluster as a full-width card below — offset off the left
-// edge rather than dead-centered), HeroFromPageData (the same shape driven
-// by a parsed page-data object), PageHeader (display and dense forms),
-// Marquee (the signature ticker) and Manifesto (long-form prose block).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon, iconMarkup } from '../shell/icons.js';
 const h = webjsx.createElement;
 
 export function Hero({ eyebrow, title, body, accent, actions, badges }) {
-    // Eyebrow + title stack at the top of the single-column layout; badges +
-    // actions render into a full-width card BELOW the body copy (.ds-hero-aside)
-    // rather than a side column, so it still carries real visual weight instead
-    // of sitting empty beside the body copy.
     const badgeList = Array.isArray(badges) ? badges.filter(Boolean) : [];
     const badgeRow = badgeList.length
         ? h('div', { class: 'ds-hero-stats' }, ...badgeList.map((b, i) =>
@@ -34,25 +23,6 @@ export function Hero({ eyebrow, title, body, accent, actions, badges }) {
     );
 }
 
-// HeroFromPageData — a single factory for the "hero block driven by a page-data
-// object" shape that recurs, independently hand-rolled, across every flatspace
-// consumer theme.mjs (heading/subheading/body/badges/ctas/install all read off
-// a `hero` object parsed from the `__site__` JSON script tag). Consumers differ
-// only in which fields their content YAML populates; this factory renders every
-// field it is given and omits what is absent, so it is a drop-in for the
-// narrowest (heading+body only) or richest (badges+ctas+install) hero shape
-// alike. Returns null on a falsy `hero` so callers can write
-// `HeroFromPageData(page.hero)` unconditionally, matching the existing
-// `!home.hero ? null : ...` guard every hand-rolled version repeats.
-//
-// Shape: { heading, title, subheading, body, accent, badges, ctas, install }
-//   heading/title  — hero <h1> text (heading wins if both given)
-//   subheading     — a Lede-style standalone line above `body`
-//   body           — the hero paragraph
-//   accent         — a muted trailing aside appended to `body`
-//   badges         — [{label, desc}] or [string], rendered as a stat strip
-//   ctas           — [{label, href, primary}], rendered as Btn-equivalent links
-//   install        — a single install command string, rendered as a `.cli` block
 export function HeroFromPageData(hero) {
     if (!hero) return null;
     const heading = hero.heading || hero.title || '';
@@ -95,28 +65,11 @@ export function HeroFromPageData(hero) {
 }
 
 export function Marquee({ items = [], sep = '/' }) {
-    // No items -> no ticker: an empty marquee still paints its border-block
-    // rules as an unexplained full-width stripe.
     if (!items.length) return null;
-    // Two identical runs make the -50% translate loop seamless. Each text and
-    // separator is a keyed span so webjsx applyDiff never sees a primitive
-    // sibling beside a keyed VElement. Run 'a' is the real, assistive-tech-
-    // visible content; run 'b' is a purely visual duplicate for the seamless
-    // loop and must not be exposed to screen readers as doubled text, so it
-    // is wrapped in its own aria-hidden container (standard seamless-marquee
-    // technique).
     const run = (runKey) => items.flatMap((it, i) => [
         h('span', { class: 'ds-marquee-item', key: `${runKey}-i${i}` }, it),
         h('span', { class: 'ds-marquee-sep', key: `${runKey}-s${i}`, 'aria-hidden': 'true' }, sep),
     ]);
-    // WCAG 2.2.2 (Pause, Stop, Hide): the previous hover/focus-within-only
-    // pause left keyboard users (marquee items had no tabindex, so
-    // :focus-within could never fire) and touch users with no way to pause
-    // the auto-scroll. A real, always-visible, keyboard-reachable button
-    // toggles a class read by the CSS animation-play-state rule -- mutating
-    // the DOM directly (not re-rendering through webjsx) is deliberate here:
-    // it needs to work identically whether or not this component's owner
-    // re-renders around it.
     const togglePause = (e) => {
         const btn = e.currentTarget;
         const root = btn.closest('.ds-marquee');
@@ -125,9 +78,6 @@ export function Marquee({ items = [], sep = '/' }) {
         btn.setAttribute('aria-label', paused ? 'Play ticker' : 'Pause ticker');
         btn.innerHTML = iconMarkup(paused ? 'play' : 'pause', { size: 14 });
     };
-    // `role="marquee"` is not a real ARIA role (would expose as unknown to
-    // assistive tech) -- `region` + a label is the correct landmark shape
-    // for a piece of live, auto-updating content.
     return h('div', { class: 'ds-marquee', role: 'region', 'aria-label': 'Announcements ticker' },
         h('button', {
             type: 'button', class: 'ds-marquee-pause',
@@ -154,14 +104,6 @@ export function Manifesto({ paragraphs = [], maxWidth }) {
 }
 
 export function PageHeader({ title, lede, eyebrow, right, compact, dense, id }) {
-    // `compact` drops the large leading/trailing section margins so a PageHeader
-    // used as a page's first element top-aligns cleanly without the consumer
-    // having to !important-override the .ds-section margin. `id` lands on the
-    // outermost section so the header can serve as a deep-link anchor.
-    // `dense` is the content-first working-surface form: one row - a small
-    // heading with the lede beside it, clamped to a single muted line - instead
-    // of a display H1 over a paragraph. App surfaces (files, dashboards,
-    // settings) should not spend 150px of fold on an intro.
     if (dense) {
         return h('section', { class: 'ds-section ds-section-compact ds-page-header-dense', ...(id ? { id } : {}) },
             h('div', { class: 'ds-page-header-dense-row' },

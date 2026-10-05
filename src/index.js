@@ -1,6 +1,3 @@
-// 247420 design system — main entry.
-// Drop-in replacement: same export surface as the published SDK.
-//   import { mount, components as C, h, applyDiff, scope } from 'anentrypoint-design';
 
 import * as webjsx from '../vendor/webjsx/index.js';
 import { loadCss, scope } from './styles.js';
@@ -27,6 +24,7 @@ import { formatTime, formatDateTime, formatNumber, formatRelativeTime } from './
 import { queueMessage, listQueued, flushQueue, watchReconnect, isOnline } from './idb-outbox.js';
 import { createVirtualizer, measureRef } from './virtual-scroll.js';
 import { applyMotion, getMotion, isMotionReduced, onMotionChange, initMotion } from './motion-toggle.js';
+import { ignoreFailure } from './best-effort.js';
 
 let _installed = false;
 export async function installStyles(target) {
@@ -45,16 +43,9 @@ export async function installStyles(target) {
     }
 }
 
-// Tracks nodes already mounted via mount() so a second mount() call onto the
-// same DOM node fails loud instead of silently layering a second render loop
-// (double applyDiff/animateTree on one root corrupts webjsx's diff state).
 const _mountedRoots = new WeakSet();
 
 export function mount(rootEl, viewFn, { autoScope = true } = {}) {
-    // installStyles() already guards `typeof document === 'undefined'`;
-    // mount() itself didn't, and mount() calling requestAnimationFrame a few
-    // lines below would fail with a cryptic ReferenceError in a non-DOM
-    // environment (SSR, a worker) instead of naming the actual problem.
     if (typeof document === 'undefined') {
         throw new Error('mount() requires a DOM environment; use page-html.js\'s renderPageHtml for SSR/static output');
     }
@@ -69,9 +60,7 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
         const inheritedFromAncestor = rootEl.closest && rootEl.closest('.' + cls);
         if (!inheritedFromAncestor) rootEl.classList.add(cls);
     }
-    // Auto-inject styles (idempotent) so single-line consumers don't need
-    // to remember installStyles() before mount.
-    installStyles().catch(() => {});
+    installStyles().catch(ignoreFailure);
     const render = () => {
         webjsx.applyDiff(rootEl, viewFn(render));
         requestAnimationFrame(() => motion.animateTree(rootEl));
@@ -80,7 +69,6 @@ export function mount(rootEl, viewFn, { autoScope = true } = {}) {
     return render;
 }
 
-// Side-effect: register <ds-chat> + <freddie-chat> as soon as the SDK loads in a browser.
 if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
     registerChatElement();
     registerFreddieChatElement();
@@ -115,22 +103,15 @@ export { extractAtQuery, buildEntriesFromFiles, filterFileEntries, buildAtInsert
 export const h = webjsx.createElement;
 export const applyDiff = webjsx.applyDiff;
 
-// spoint kit paint surfaces (loading screen, HUD, editor chrome).
 export { renderLoadingScreen } from './kits/spoint/loading-screen.js';
 export { renderGameHud, Crosshair, AmmoCounter, HealthBar, BoostIndicator } from './kits/spoint/game-hud.js';
 export { renderHostJoinLobby } from './kits/spoint/host-join-lobby.js';
 
-// Game editor kit (spoint game editor UI). Exported individually here so the
-// dist bundle carries the kit's CDN-deliverable surface; components with
-// external-URL imports (ModelPreview) stay importable via the kit's own
-// src entry path instead.
 export { createDamageNumbers } from './components/game-editor-kit/DamageNumbers.js';
 export { ResetButton } from './components/game-editor-kit/ResetButton.js';
 export { UndoHistoryPanel } from './components/game-editor-kit/UndoHistoryPanel.js';
 export { LivePreviewControls } from './components/game-editor-kit/LivePreviewControls.js';
 
-// Re-export freddie helpers so consumers can `import { FREDDIE_PAGES } from
-// 'anentrypoint-design'` directly.
 export {
     FREDDIE_PAGES,
     home, chat, voice, sessions, projects, agents, analytics,

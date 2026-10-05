@@ -1,29 +1,4 @@
-// Per-server/per-user dynamic accent — Material-You-style HCT tonal
-// generation, additive to (never replacing) the fixed --accent/--accent-ink
-// Signals tokens colors_and_type.css defines. See stoat's
-// createMaterialColourVariables (materialTheme.ts) for the reference this
-// mirrors: a source color -> HCT hue+chroma -> a small set of ROLE tones,
-// each tone FIXED by construction (not derived from the arbitrary source
-// lightness), which is what gives M3 schemes their contrast guarantee.
-//
-// AGENTS.md's "shadcn-neutral restyle" note: a prior full base-palette swap
-// broke contrast (1.15:1) and was only caught by `npm run a11y`. This module
-// avoids that failure mode structurally: it NEVER varies with the source
-// color's own tone, and callers apply it as a scoped override (inline style
-// on a subtree, e.g. one server's rail item) rather than a document-wide
-// token rewrite. `npm run a11y` includes a ui_kit exercising this at fixed
-// hues so the ratchet actually covers it — see ui_kits/dynamic-accent/.
-//
-// No dependency on @material/material-color-utilities: that package's
-// current npm release has a broken ESM subpath import
-// (dynamiccolor/color_spec_2025.js imports './dynamic_color' without an
-// extension, which Node's ESM resolver rejects) and this repo's own
-// convention (AGENTS.md) is to vendor small, targeted math rather than take
-// a broken heavy dependency — the HCT tone-mapping used here is the
-// well-documented CAM16/Lab tone-at-hue-chroma approach, reimplemented
-// directly and small enough to read end-to-end.
 
-// --- sRGB <-> CIE Lab, enough to place a color at a specific L* (tone) ---
 function srgbToLinear(c) {
     c /= 255;
     return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
@@ -46,7 +21,7 @@ function xyzToRgb(x, y, z) {
     const b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
     return [linearToSrgb(r), linearToSrgb(g), linearToSrgb(b)];
 }
-const WHITE = [0.95047, 1.0, 1.08883]; // D65
+const WHITE = [0.95047, 1.0, 1.08883];
 function fInv(t) { return t > 6 / 29 ? t * t * t : 3 * (6 / 29) ** 2 * (t - 4 / 29); }
 function f(t) { return t > (6 / 29) ** 3 ? Math.cbrt(t) : t / (3 * (6 / 29) ** 2) + 4 / 29; }
 
@@ -84,16 +59,8 @@ function atTone(hue, chroma, tone) {
     return rgbToHex(r, g, bb);
 }
 
-// M3 TonalSpot-equivalent role tones (materialTheme.ts's default scheme).
-// Fixed by role, independent of the source color's own lightness/chroma —
-// this fixedness is the whole contrast guarantee: on-primary is ALWAYS at
-// T100 (paper) against primary ALWAYS at T40 (a mid-dark tone), an >8:1
-// pairing by construction for any hue.
 const LIGHT_TONES = { primary: 40, onPrimary: 100, primaryContainer: 90, onPrimaryContainer: 10 };
 const DARK_TONES = { primary: 80, onPrimary: 20, primaryContainer: 30, onPrimaryContainer: 90 };
-// Chroma is clamped, not passed through raw: an oversaturated source (chroma
-// > ~48) pushed through atTone at low/high tones can round-trip outside
-// sRGB gamut and clip in a way that erodes the intended contrast margin.
 const MAX_CHROMA = 48;
 
 /**

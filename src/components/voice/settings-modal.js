@@ -1,6 +1,3 @@
-// VoiceSettingsModal — mode (PTT / VAD / live), input+output device pickers,
-// VAD threshold, processing toggles, bitrate and master volume, composed from
-// the SettingsRow/SettingsSection primitives (settings-row.js).
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';

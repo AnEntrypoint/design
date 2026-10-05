@@ -1,7 +1,3 @@
-// Freddie infrastructure pages: `gateway` (messaging platform status),
-// `chains` (acptoapi fallback chain CRUD), `machines` (persisted xstate
-// census), and `health` (system + provider checks).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { makePage, api, loadingState, errorState, emptyState, refreshError } from './runtime.js';
 import { Row, Table, PageHeader, TextField } from '../content.js';
@@ -13,20 +9,13 @@ import { section, noteAlert, truncJson } from './shared.js';
 const h = webjsx.createElement;
 
 export const gateway = makePage((ctx) => {
-    async function load() { try { ctx.set({ loading: false, data: await api('/api/gateway'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, data: await api('/api/gateway'), error: null }); } catch (e) { ctx.failLoad(e); } }
     load(); ctx.interval(load, 10000);
     return () => {
         const s = ctx.state;
         if (s.loading) return loadingState('loading gateway…');
         if (s.error && !s.data) return errorState(s.error, load);
         const d = s.data || {};
-        // GET /api/gateway (plugins/gui/gui-gateway/plugin.js) returns
-        // { platforms: [{name, enabled, note}, ...] } -- an ARRAY, not a map
-        // keyed by platform name. Object.entries(array) would render index
-        // keys ("0","1",...) as the platform column instead of real names.
-        // `enabled` is hardcoded false here (the dashboard process doesn't
-        // run the gateway itself) -- surface the backend's own `note`
-        // explaining that rather than mislabeling it "down" with no context.
         const platforms = Array.isArray(d.platforms) ? d.platforms : [];
         const rows = platforms.map(p => [p.name, p.note || (p.enabled ? Chip({ tone: 'ok', children: 'up' }) : Chip({ tone: 'neutral', children: 'not running here' }))]);
         return [
@@ -47,12 +36,9 @@ export const chains = makePage((ctx) => {
                 api('/api/acptoapi/config'),
             ]);
             const [health, list, cfg] = results.map(r => r.status === 'fulfilled' ? r.value : null);
-            // Every sub-fetch failing (acptoapi itself unreachable) is a real
-            // error, not "nothing configured yet" -- report it so the health
-            // chip/empty-state below isn't the only signal.
             const allFailed = results.every(r => r.status === 'rejected');
             ctx.set({ loading: false, health, list, cfg, error: allFailed ? (results[0].reason || new Error('acptoapi unreachable')) : null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     async function create() {
         const name = (ctx.state.name || '').trim();
@@ -60,15 +46,13 @@ export const chains = makePage((ctx) => {
         if (!name || !links.length) { ctx.set({ note: { kind: 'warn', msg: 'name and comma-separated links required' } }); return; }
         ctx.set({ busy: true, note: null });
         try { await api('/api/acptoapi/chains', { method: 'POST', body: { name, links } }); ctx.state.name = ''; ctx.state.links = ''; await load(); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false });
     }
-    // A fallback chain delete is instant and irreversible (unregisterChain,
-    // no undo) -- gate it behind ConfirmDialog rather than a single click.
     async function del(name) {
         ctx.set({ busy: true });
         try { await api('/api/acptoapi/chains/' + encodeURIComponent(name), { method: 'DELETE' }); await load(); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false, confirmDelete: null });
     }
     load();
@@ -76,12 +60,6 @@ export const chains = makePage((ctx) => {
         const s = ctx.state;
         if (s.loading) return loadingState('loading chains…');
         if (s.error && !s.cfg && !s.health) return errorState(s.error, load);
-        // GET /api/acptoapi/chains (forwarded verbatim from acptoapi's
-        // GET /v1/chains) returns { chains: {<name>: [<model>,...]}, builtin,
-        // runtime } -- `chains` is an OBJECT MAP keyed by name, not an array
-        // of {name,links} rows. Array.isArray on it was always false, so
-        // every real chain (built-in and any just created via the form
-        // below) silently never rendered.
         const chainsMap = (s.list && s.list.chains && typeof s.list.chains === 'object' && !Array.isArray(s.list.chains)) ? s.list.chains : {};
         const chainsList = Object.entries(chainsMap).map(([name, links]) => ({ name, links: Array.isArray(links) ? links : [] }));
         const up = s.health && (s.health.ok || s.health.status === 'ok' || s.health.healthy);
@@ -112,15 +90,8 @@ export const machines = makePage((ctx) => {
     Object.assign(ctx.state, { diagrams: null, diagramSvgs: {}, showDiagrams: false });
     let unmounted = false;
     ctx.onCleanup(() => { unmounted = true; });
-    async function load() { try { ctx.set({ loading: false, data: await api('/api/machines'), error: null }); } catch (e) { ctx.set({ loading: false, error: e }); } }
+    async function load() { try { ctx.set({ loading: false, data: await api('/api/machines'), error: null }); } catch (e) { ctx.failLoad(e); } }
     load(); ctx.interval(load, 8000);
-    // GET /api/machines/diagrams (plugins/gui/gui-machines/plugin.js ->
-    // stateMachinesSnapshot) returns { diagrams: {<kind>: {states, initial,
-    // mermaid: <mermaid-source-string>}}, active_snapshots }. This data was
-    // fetched by no page in this SDK -- reachable data with no UI. Static
-    // per machine kind (the FSM shape, not live state), so fetched once on
-    // mount, not on the 8s live-machine-census interval above. Render lazily
-    // (behind a toggle) since it costs a CDN mermaid.js load on first open.
     async function loadDiagrams() {
         if (ctx.state.diagrams) return;
         try {
@@ -131,9 +102,6 @@ export const machines = makePage((ctx) => {
                 if (!d || !d.mermaid) continue;
                 const svg = await renderMermaid(d.mermaid);
                 if (unmounted) return;
-                // renderMermaid fails soft (returns null) on a bad CDN load or
-                // parse error -- the raw mermaid source stays visible as a
-                // fallback in that case rather than an empty pane.
                 if (svg) ctx.set({ diagramSvgs: { ...ctx.state.diagramSvgs, [kind]: svg } });
             }
         } catch (e) { if (!unmounted) ctx.set({ diagramsError: e }); }
@@ -177,7 +145,7 @@ export const health = makePage((ctx) => {
             const [health, providers] = results.map(r => r.status === 'fulfilled' ? r.value : null);
             const allFailed = results.every(r => r.status === 'rejected');
             ctx.set({ loading: false, health, providers, error: allFailed ? (results[0].reason || new Error('health checks unreachable')) : null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     load(); ctx.interval(load, 15000);
     return () => {

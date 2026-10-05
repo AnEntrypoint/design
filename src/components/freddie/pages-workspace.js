@@ -1,7 +1,3 @@
-// Freddie workspace pages: `sessions` (searchable transcript browser),
-// `projects` (isolated-workspace CRUD + activation), and `git` (status /
-// diff / log / worktree management for the active project's cwd).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { makePage, api, loadingState, errorState, emptyState, refreshError } from './runtime.js';
 import { Row, Table, PageHeader, SearchInput, TextField } from '../content.js';
@@ -19,24 +15,17 @@ export const sessions = makePage((ctx) => {
     Object.assign(ctx.state, { q: '', selected: null, messages: [], msgLoading: false });
     async function load() {
         try { ctx.set({ loading: false, list: await api('/api/sessions'), error: null }); }
-        catch (e) { ctx.set({ loading: false, error: e }); }
+        catch (e) { ctx.failLoad(e); }
     }
     async function search(q) {
         if (!q) return load();
         try {
             const hits = await api('/api/search?q=' + encodeURIComponent(q));
-            // GET /api/search (src/sessions.js::search) returns MESSAGE rows
-            // {id, session_id, content} -- not session rows. Remap to the
-            // session-shaped rows the table below renders and open() below
-            // navigates by, so a hit shows its matched text (not a meaningless
-            // message-row id masquerading as a title) and clicking it opens
-            // the real conversation (session_id) instead of a session id that
-            // doesn't exist.
             const list = (Array.isArray(hits) ? hits : []).map(x => ({ id: x.session_id, title: x.content, platform: null, updated_at: null }));
             ctx.set({ loading: false, list, error: null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
-    async function refresh() { ctx.set({ refreshing: true }); try { ctx.set({ list: await api('/api/sessions'), error: null }); } catch (e) { ctx.set({ error: e }); } ctx.set({ refreshing: false }); }
+    async function refresh() { ctx.set({ refreshing: true }); try { ctx.set({ list: await api('/api/sessions'), error: null }); } catch (e) { ctx.failError(e); } ctx.set({ refreshing: false }); }
     async function open(id) {
         ctx.set({ selected: id, msgLoading: true });
         try { ctx.set({ messages: await api('/api/sessions/' + encodeURIComponent(id) + '/messages'), msgLoading: false }); }
@@ -70,33 +59,23 @@ export const projects = makePage((ctx) => {
     Object.assign(ctx.state, { newName: '', newPath: '', busy: false, note: null, confirmDelete: null });
     async function load() {
         try { ctx.set({ loading: false, data: await api('/api/projects'), error: null }); }
-        catch (e) { ctx.set({ loading: false, error: e }); }
+        catch (e) { ctx.failLoad(e); }
     }
     async function create() {
         const name = (ctx.state.newName || '').trim();
         const path = (ctx.state.newPath || '').trim();
         if (!name) { ctx.set({ note: { kind: 'warn', msg: 'name required' } }); return; }
-        // src/projects.js::createProject hard-requires an absolute path
-        // ("name and path are required" / "path must be absolute") -- this
-        // field is not actually optional server-side, so fail the same way
-        // the backend would rather than let a blank submit round-trip to a
-        // generic backend error.
         if (!path) { ctx.set({ note: { kind: 'warn', msg: 'path required (must be an absolute path)' } }); return; }
         ctx.set({ busy: true, note: null });
         try { await api('/api/projects', { method: 'POST', body: { name, path } }); ctx.state.newName = ''; ctx.state.newPath = ''; await load(); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false });
     }
-    async function activate(name) { ctx.set({ busy: true }); try { await api('/api/projects/active', { method: 'POST', body: { name } }); await load(); } catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); } ctx.set({ busy: false }); }
-    // Removing a project is instant with no undo affordance in this UI (it
-    // only drops the registry entry -- src/projects.js::deleteProject does
-    // NOT delete the project's files on disk -- but re-adding it later still
-    // needs the user to remember/re-enter its real path). Gate behind
-    // ConfirmDialog rather than a single click.
+    async function activate(name) { ctx.set({ busy: true }); try { await api('/api/projects/active', { method: 'POST', body: { name } }); await load(); } catch (e) { ctx.failNote(e); } ctx.set({ busy: false }); }
     async function del(name) {
         ctx.set({ busy: true });
         try { await api('/api/projects/' + encodeURIComponent(name), { method: 'DELETE' }); await load(); }
-        catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false, confirmDelete: null });
     }
     load();
@@ -140,11 +119,6 @@ export const git = makePage((ctx) => {
             const active = proj && proj.active;
             const list = (proj && proj.projects) || [];
             if (explicitCwd) {
-                // An explicit switch (WorktreeSwitcher's onSwitch below) must land
-                // on THAT cwd or show an error for it -- falling into the
-                // multi-candidate fallback below would let "switch worktree"
-                // silently redirect to a different project's git state instead of
-                // surfacing a real failure for the one the user actually picked.
                 const qs = '?cwd=' + encodeURIComponent(explicitCwd);
                 const [status, log, worktrees] = await Promise.all([
                     api('/api/git/status' + qs).catch((e) => ({ _err: e })),
@@ -172,7 +146,7 @@ export const git = makePage((ctx) => {
                 break;
             }
             ctx.set({ loading: false, cwd, status, log, worktrees, error: null });
-        } catch (e) { ctx.set({ loading: false, error: e }); }
+        } catch (e) { ctx.failLoad(e); }
     }
     async function openDiff(file) {
         ctx.set({ activeFile: file.path, diffLoading: true, diff: null });
@@ -180,7 +154,7 @@ export const git = makePage((ctx) => {
             const qs = '?cwd=' + encodeURIComponent(ctx.state.cwd || '') + '&file=' + encodeURIComponent(file.path);
             const res = await api('/api/git/diff' + qs);
             ctx.set({ diff: res, diffLoading: false });
-        } catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) }, diffLoading: false }); }
+        } catch (e) { ctx.failNote(e, { diffLoading: false }); }
     }
     async function createWorktree() {
         const path = (ctx.state.newWtPath || '').trim();
@@ -191,7 +165,7 @@ export const git = makePage((ctx) => {
             await api('/api/worktree', { method: 'POST', body: { cwd: ctx.state.cwd || '', path, branch: branch || undefined } });
             ctx.state.newWtPath = ''; ctx.state.newWtBranch = '';
             await load();
-        } catch (e) { ctx.set({ note: { kind: 'error', msg: String(e.message || e) } }); }
+        } catch (e) { ctx.failNote(e); }
         ctx.set({ busy: false });
     }
     load();
@@ -202,12 +176,6 @@ export const git = makePage((ctx) => {
         const statusFailed = s.status && s.status._err;
         const logFailed = s.log && s.log._err;
         const wtFailed = s.worktrees && s.worktrees._err;
-        // GET /api/git/status (plugins/gui/gui-git/handler.js gitStatus)
-        // returns {cwd,staged:[{file,status}],unstaged:[{file,status}],
-        // untracked:[string,...]} — never a unified .files array. Build the
-        // {path,status,staged} shape GitStatusPanel expects, deduping a file
-        // that appears in both staged and unstaged into one row (staged wins,
-        // since that reflects what would actually be committed).
         const files = statusFailed ? [] : (() => {
             const st = s.status || {};
             const byPath = new Map();
@@ -218,9 +186,6 @@ export const git = makePage((ctx) => {
         })();
         const commits = logFailed ? [] : (s.log && s.log.commits) || s.log || [];
         const rawWorktrees = wtFailed ? [] : (s.worktrees && s.worktrees.worktrees) || s.worktrees || [];
-        // parseWorktreeList (plugins/gui/gui-worktree/handler.js) names the
-        // path field `worktree`, not `path` — WorktreeSwitcher expects
-        // {path,branch,current?}, so remap before handing it the list.
         const worktrees = (Array.isArray(rawWorktrees) ? rawWorktrees : []).map(w => ({ path: w.worktree, branch: w.branch, detached: w.detached }));
         const current = (worktrees.find(w => w.path === s.cwd) || {}).path;
         return [
@@ -231,13 +196,6 @@ export const git = makePage((ctx) => {
                 WorktreeSwitcher({
                     worktrees: Array.isArray(worktrees) ? worktrees : [],
                     current,
-                    // No backend "switch active worktree" verb exists (gui-worktree
-                    // is list/create/delete only) — switching here means pointing
-                    // this page's own git calls at the picked worktree's cwd, the
-                    // same client-side cwd override `load()`/`openDiff()` already
-                    // thread through every /api/git/* and /api/worktree call.
-                    // Clearing activeFile/diff avoids showing a stale diff from the
-                    // PREVIOUS worktree while the new one's status is still loading.
                     onSwitch: (wt) => { if (wt && wt.path) { ctx.set({ activeFile: null, diff: null }); load(wt.path); } },
                     onCreate: () => ctx.set({ showWtForm: !s.showWtForm }),
                 }),

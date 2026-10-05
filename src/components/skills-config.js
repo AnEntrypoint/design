@@ -1,39 +1,3 @@
-// SkillsConfig — skill list + detail panel, ported from pi-web's
-// SkillsConfig.tsx UX (modal, sidebar list grouped/searchable, detail pane
-// with enable/disable toggle) but rebuilt over freddie's real skill contract,
-// not pi-web's installable-package model:
-//
-//   { file, name, description, frontmatter, body, platforms? }
-//
-// (see freddie's AGENTS.md — `src/skills/index.js::listSkills/loadSkill`,
-// `skills/<category>/<name>/SKILL.md` with YAML frontmatter). There is no
-// install/update/search-registry flow here: freddie skills are local
-// filesystem discovery only (`skills/`, `~/.freddie/skills/`), so the only
-// host-facing action is enable/disable. `category` (derived from the skill's
-// path — the directory directly under a `skills/` root) replaces pi-web's
-// source/scope grouping (project/global/path), and `platforms` renders as
-// chips in place of pi-web's version/update-check UI.
-//
-// Usage (consumer wires its own state/fetch, this is presentation-only):
-//   SkillsConfig({ skills, selected, onSelect, onToggle, onClose })
-//
-// Props:
-//   skills    : [{ file, name, description, category?, platforms?, enabled, frontmatter?, body? }]
-//               category is derived from `file`'s path when not passed explicitly
-//               (segment directly under the nearest `skills` directory).
-//               enabled drives the toggle and the sidebar status dot.
-//   selected  : name of the currently-selected skill, or null
-//   loading   : bool — sidebar shows a loading row instead of the list
-//   error     : string|null — sidebar shows this instead of the list
-//   busyName  : name of the skill currently mid-toggle, or null
-//   query     : current search text (string) — controlled by the consumer
-//   onQuery   : (text) => void — fired on search input
-//   onSelect  : (name) => void
-//   onToggle  : (skill) => void — fired with the full skill row to flip enabled
-//   onClose   : () => void
-//
-// No decorative glyphs beyond the kit's Icon SVGs — status communicated by a
-// tone dot + text label, never color alone.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
@@ -96,8 +60,6 @@ function SkillDetail({ skill, busy, onToggle }) {
             h('div', { class: 'ds-plugins-detail-title' },
                 h('span', { class: 'ds-plugins-dot tone-' + statusTone(skill), 'aria-hidden': 'true' }),
                 h('span', { class: 'name' }, skill.name)),
-            // Only render when a consumer actually wired onToggle -- an
-            // unwired toggle is a live-looking control that silently no-ops.
             onToggle
                 ? h('button', {
                     type: 'button',
@@ -146,8 +108,6 @@ export function SkillsConfig({
     const selectedSkill = skills.find((s) => s.name === selected) || null;
     const filtered = skills.filter((s) => matchesQuery(s, query));
 
-    // Group filtered skills by category, ordering freddie's five bundled
-    // categories first, then any others (custom/`~/.freddie/skills/`) alphabetically.
     const byCategory = new Map();
     for (const s of filtered) {
         const cat = deriveCategory(s);
@@ -157,18 +117,6 @@ export function SkillsConfig({
     const otherCats = [...byCategory.keys()].filter((c) => !CATEGORY_ORDER.includes(c)).sort();
     const orderedCats = [...CATEGORY_ORDER.filter((c) => byCategory.has(c)), ...otherCats];
 
-    // Each branch gets a distinct `key` -- without it, a transition between
-    // branches (loading -> list is the common one, on the very first data
-    // arrival) reuses the same DOM node in place at this tree position, and
-    // webjsx's diff was observed live leaving the old branch's TEXT content
-    // ("Loading…") stuck in the DOM while patching the wrapper's class/role/
-    // aria-label attributes to the new (list) branch's — i.e. the skills page
-    // rendered a correctly-labeled `.ds-plugins-list[role=listbox]` container
-    // that still displayed "Loading…" with none of the real, already-fetched
-    // skill rows visible. Distinct keys force a clean unmount/remount across
-    // branches instead of an in-place patch, which a same-shaped list (this
-    // one, going from a lone text child to N mapped element children) cannot
-    // safely resolve as effectively-in-place attribute patch.
     const sidebarBody = loading
         ? h('div', { key: 'loading', class: 'ds-plugins-sidebar-status' }, 'Loading…')
         : error

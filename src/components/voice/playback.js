@@ -1,6 +1,3 @@
-// In-call playback surfaces: the mic/deafen/camera/screen/settings/leave
-// control toolbar, and the per-speaker audio queue strip with its
-// pause/resume/skip transport.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -28,10 +25,6 @@ export function VoiceControls({ muted = false, deafened = false, cameraOn = fals
     );
     return h('div', { class: 'vx-vc', role: 'toolbar', 'aria-label': 'voice controls' },
         ...[
-            // stoat's VoiceCallCardActions shows a "return to voice channel"
-            // xs action when the call card is collapsed/floating (props.size
-            // === "xs" branch) -- mirror that affordance here rather than
-            // only offering the leave button.
             collapsed ? btn('vx-vc-return', false, 'Return to voice channel', Icon('arrow-top-left'), onReturn) : null,
             btn('vx-vc-mic', !muted, muted ? 'Unmute' : 'Mute', Icon(muted ? 'mic-off' : 'mic'), onMic),
             btn('vx-vc-deafen', !deafened, deafened ? 'Undeafen' : 'Deafen', Icon(deafened ? 'speaker-off' : 'speaker'), onDeafen),

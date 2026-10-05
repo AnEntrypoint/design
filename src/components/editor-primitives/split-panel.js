@@ -1,15 +1,9 @@
-// Resizable split — ResizeHandle (the draggable/keyboard-nudgeable separator)
-// and SplitPanel (two children separated by one). Stateful via DOM: the
-// dragged size is persisted across applyDiff re-renders by the pane's ref.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { kids } from './shared.js';
+import { attempt } from '../../best-effort.js';
 const h = webjsx.createElement;
 
-// ---------------------------------------------------------------------------
-// ResizeHandle — splitter, axis = 'horizontal' (vertical bar, horiz drag)
-// or 'vertical' (horizontal bar, vertical drag). onResize(delta:px).
-// ---------------------------------------------------------------------------
 export function ResizeHandle({ axis = 'horizontal', onResize, ariaLabel } = {}) {
     const isH = axis === 'horizontal';
     let dragOrigin = null;
@@ -29,7 +23,7 @@ export function ResizeHandle({ axis = 'horizontal', onResize, ariaLabel } = {}) 
     };
     const onPointerUp = (e) => {
         dragOrigin = null;
-        try { e.currentTarget.releasePointerCapture && e.currentTarget.releasePointerCapture(e.pointerId); } catch { /* swallow: pointer capture may already be released, drag end still proceeds */ }
+        attempt(() => { e.currentTarget.releasePointerCapture && e.currentTarget.releasePointerCapture(e.pointerId); });
     };
     const onKeyDown = (e) => {
         const k = e.key;
@@ -59,9 +53,6 @@ export function ResizeHandle({ axis = 'horizontal', onResize, ariaLabel } = {}) 
     });
 }
 
-// ---------------------------------------------------------------------------
-// SplitPanel — two children separated by a ResizeHandle. Stateful via DOM.
-// ---------------------------------------------------------------------------
 export function SplitPanel({ orientation = 'horizontal', initial = '50%', min = 80, max = Infinity, children } = {}) {
     const isH = orientation === 'horizontal';
     const ks = kids(children);
@@ -70,9 +61,6 @@ export function SplitPanel({ orientation = 'horizontal', initial = '50%', min = 
     const sizeProp = isH ? 'width' : 'height';
     const initStyle = typeof initial === 'number' ? initial + 'px' : initial;
     let rootEl = null;
-    // The dragged size is persisted here so a re-render (applyDiff reconciling
-    // the pane's style back to the initial value) does NOT reset the user's
-    // resize. onResize records it; the pane's ref re-applies it after each diff.
     let draggedSize = null;
     const applySize = (a) => {
         if (!a) return;

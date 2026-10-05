@@ -155,8 +155,8 @@ Brand({ name = '247420', leaf })
 
 **Example:**
 ```js
-Brand({ name: 'acme', leaf: 'dashboard' })
-// -> "acme / dashboard"
+Brand({ name: 'orbit', leaf: 'dashboard' })
+// -> "orbit / dashboard"
 ```
 
 ### Chip
@@ -304,7 +304,7 @@ Side({
             group: 'main',
             items: [
                 { label: 'home', glyph: '⌂', href: '#/', active: true },
-                { label: 'settings', glyph: '⚙', href: '#/settings', count: 3 }
+                { label: 'settings', glyph: 'settings', href: '#/settings', count: 3 }
             ]
         }
     ]
@@ -642,12 +642,12 @@ ChatMessage({ role, who = 'them', avatar, text, parts, time, typing, key, aicat,
 **Example:**
 ```js
 // New way
-ChatMessage({ role: 'user', text: 'hello!' })
-ChatMessage({ role: 'assistant', text: 'hi there!' })
+ChatMessage({ role: 'user', text: 'hello' })
+ChatMessage({ role: 'assistant', text: 'hi, how can I help?' })
 
 // Legacy
-ChatMessage({ who: 'you', text: 'hello!' })
-ChatMessage({ who: 'them', text: 'hi there!' })
+ChatMessage({ who: 'you', text: 'hello' })
+ChatMessage({ who: 'them', text: 'hi, how can I help?' })
 ```
 
 **Message parts shape:**

@@ -1,14 +1,9 @@
-// The three non-chat channel content views — ThreadPanel, ForumView, and the
-// sanitized-HTML PageView — plus the shared relative-time and list-skeleton
-// helpers they render through.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { sanitizeHtml } from '../../markdown.js';
 const h = webjsx.createElement;
 
-// Clamp a count to a compact badge string (matches the rail's 99+ convention),
-// so a runaway number never blows out a fixed-width badge or item row.
 const clampCount = (n) => { const v = Number(n) || 0; return v > 99 ? '99+' : String(v); };
 
 function fmtRelTime(ts) {
@@ -24,20 +19,12 @@ function fmtRelTime(ts) {
     return Math.floor(hr / 24) + 'd';
 }
 
-// Skeleton rows for a cold thread/post-list load. Two lines per row (title +
-// meta) mirrors cm-tp-item/cm-forum-item's actual shape so the shimmer
-// doesn't jump on load. Reuses the kit-wide .ds-skel shimmer primitive.
 function ListSkeleton({ cls, rows = 5 } = {}) {
     return h('div', { class: cls + ' cm-list-skeleton', 'aria-hidden': 'true' },
         ...Array.from({ length: rows }, (_, i) => h('div', { key: 'lsk' + i, class: 'cm-list-item-skeleton' },
             h('span', { class: 'ds-skel ds-skel-title' }), h('span', { class: 'ds-skel ds-skel-meta' }))));
 }
 
-// onReply is opt-in: a caller with no reply concept (a plain threaded-channel
-// list) omits it and gets the original list-only panel; a caller that models
-// replies as list entries (forum posts, via selectForumPost's synthetic
-// thread rows) passes it and gets a composer docked under the list, matching
-// the Chat composer pattern already used elsewhere in this file's siblings.
 export function ThreadPanel({ threads = [], activeId = null, title = 'Threads', onSelect, onCreate, onClose, onReply, loading = false } = {}) {
     const list = Array.isArray(threads) ? threads : [];
     let draft = '';
@@ -148,8 +135,6 @@ export function PageView({ title = '', html = '', author = '', updatedAt = 0, is
         ),
         h('div', {
             class: 'cm-page-body',
-            // Page bodies are host/user-authored HTML, so they pass through the
-            // DOMPurify gate before innerHTML — never injected raw (stored-XSS gate).
             ref: (el) => {
                 if (!el) return;
                 if (!html) { el.innerHTML = '<p class="cm-page-empty">This page is empty.</p>'; return; }

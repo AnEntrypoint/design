@@ -4,7 +4,6 @@ const h = webjsx.createElement
 import { getSharedWM, Btn, Toolbar, SearchInput } from './ui-components.js'
 import { showToast } from './utils.js'
 
-// promptText fallback for modal interactions
 function promptText(wm, opts = {}) {
   return new Promise((resolve) => {
     const value = prompt(opts.label || 'Enter value', opts.value || '')
@@ -85,7 +84,7 @@ export function createAssetBrowser(opts = {}) {
         style: 'padding:6px 8px;border-bottom:1px solid var(--panel-border,#eee);cursor:pointer;display:flex;gap:8px;justify-content:space-between;align-items:center'
       }, [
         h('div', { style: 'display:flex;gap:6px;align-items:center;flex:1;min-width:0', onClick: () => { _currentFolder = folderPath; render() } }, [
-          h('span', { style: 'color:var(--panel-text-3,#666)' }, '📁'),
+          h('span', { style: 'color:var(--panel-text-3,#666)' }, Icon('folder', { size: 14 })),
           h('span', { style: 'flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, folderName)
         ]),
         h('div', { style: 'display:flex;gap:4px' }, [
@@ -135,7 +134,7 @@ export function createAssetBrowser(opts = {}) {
         onMouseEnter: (el) => el.target.style.background = 'var(--panel-hover,#f5f5f5)',
         onMouseLeave: (el) => el.target.style.background = 'transparent'
       }, [
-        asset.thumbnail ? h('img', { src: asset.thumbnail, style: 'width:32px;height:32px;border-radius:2px;object-fit:contain', alt: asset.name }) : h('span', { style: 'width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--panel-bg-2,#eee);border-radius:2px' }, '📦'),
+        asset.thumbnail ? h('img', { src: asset.thumbnail, style: 'width:32px;height:32px;border-radius:2px;object-fit:contain', alt: asset.name }) : h('span', { style: 'width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--panel-bg-2,#eee);border-radius:2px' }, Icon('package', { size: 18 })),
         h('div', { style: 'flex:1;min-width:0', onClick: () => onAssetSelect?.(asset) }, [
           h('div', { style: 'font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, asset.name),
           asset.tags && asset.tags.length > 0 ? h('div', { style: 'font-size:10px;color:var(--panel-text-3,#999);margin-top:2px' }, asset.tags.join(', ')) : null
@@ -211,7 +210,7 @@ export function createAssetBrowser(opts = {}) {
       tags.length > 0 ? h('div', { style: 'display:flex;gap:4px;flex-wrap:wrap' }, tags.map(tag =>
         h('button', {
           type: 'button',
-          style: `padding:2px 8px;font-size:10px;border-radius:4px;border:1px solid var(--panel-border,#ddd);background:${_selectedTags.has(tag) ? 'var(--primary,#0066cc)' : 'transparent'};color:${_selectedTags.has(tag) ? '#fff' : 'var(--panel-text-2)'};cursor:pointer`,
+          style: `padding:2px 8px;font-size:10px;border-radius:4px;border:1px solid var(--panel-border,#ddd);background:${_selectedTags.has(tag) ? 'var(--primary,#262626)' : 'transparent'};color:${_selectedTags.has(tag) ? '#fff' : 'var(--panel-text-2)'};cursor:pointer`,
           onClick: () => {
             if (_selectedTags.has(tag)) _selectedTags.delete(tag)
             else _selectedTags.add(tag)

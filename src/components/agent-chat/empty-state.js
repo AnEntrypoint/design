@@ -1,15 +1,9 @@
-// AgentChat's zero-and-between-turn prompts: the fresh-thread empty state
-// (with starter suggestions and the guided agent-install path) and the
-// contextual follow-up chips shown under the last settled assistant turn.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Btn } from '../shell.js';
+import { attempt } from '../../best-effort.js';
 
 const h = webjsx.createElement;
 
-// Empty state: a fresh thread is a void without this. Mirrors the kit's Chat
-// empty surface (title, sub, optional starter prompts) with calm, factual
-// copy rather than blank panel or invitational framing.
 export function AgentEmptyState({ name, selectedAgent, suggestions, onSuggestionClick, installHint }) {
   return h('div', { class: 'agentchat-empty', role: 'status' },
     h('p', { class: 'agentchat-empty-title' }, (selectedAgent || name) ? (selectedAgent || name) + ' is ready.' : 'Select an agent to start.'),
@@ -22,10 +16,6 @@ export function AgentEmptyState({ name, selectedAgent, suggestions, onSuggestion
             onclick: () => { const t = typeof s === 'string' ? s : (s.prompt || s.text || ''); if (onSuggestionClick) onSuggestionClick(t); },
           }, typeof s === 'string' ? s : (s.label || s.text || s.prompt))))
       : null,
-    // Guided install path for a brand-new user with zero installed agents:
-    // a plain copy line, a monospaced command per row (each with its own
-    // copy button, pure-DOM label flip like the code-block copy), and a
-    // recheck button so the user needn't reload after installing.
     installHint
       ? h('div', { class: 'agentchat-install', role: 'group', 'aria-label': 'install an agent' },
           installHint.text ? h('p', { class: 'agentchat-install-text' }, installHint.text) : null,
@@ -40,11 +30,7 @@ export function AgentEmptyState({ name, selectedAgent, suggestions, onSuggestion
                     onclick: (e) => {
                       const btn = e.currentTarget;
                       const done = () => { btn.textContent = 'copied'; setTimeout(() => { btn.textContent = 'copy'; }, 1200); };
-                      // Falls back whenever the async Clipboard API is
-                      // absent OR its promise rejects (permission denied,
-                      // an unfocused document) instead of optimistically
-                      // claiming "copied" before the write is confirmed.
-                      const fallback = () => { try { const t = document.createElement('textarea'); t.value = c.command; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); done(); } catch { /* swallow: no copy mechanism available */ } };
+                      const fallback = () => { attempt(() => { const t = document.createElement('textarea'); t.value = c.command; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); done(); }); };
                       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(c.command).then(done, fallback);
                       else fallback();
                     },
@@ -57,8 +43,6 @@ export function AgentEmptyState({ name, selectedAgent, suggestions, onSuggestion
       : null);
 }
 
-// Contextual follow-up chips below the last SETTLED assistant turn (claude.ai/
-// code / cowork surface these after a turn, not only on an empty thread).
 export function FollowupRow({ followups, onFollowupClick, onSuggestionClick }) {
   return h('div', { class: 'agentchat-followups', role: 'group', 'aria-label': 'suggested follow-ups' },
     ...followups.map((s, i) => h('button', {

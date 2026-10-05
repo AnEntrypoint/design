@@ -16,7 +16,7 @@ scratch); expand it as real inconsistencies get caught, the same way
   because it undercut everything else. Kit captions, empty states, and error
   copy read like `preview/dropzone.html`'s: "dropzone is a tonal panel that
   swaps to `--panel-select` on dragover. **preventDefault must run on
-  document, not just the zone** or the browser will navigate to the dropped
+  document as well as the zone** or the browser navigates to the dropped
   file." — a real technical fact, stated plainly, bold only for the load-
   bearing constraint.
 - **State the real number, not a vibe.** "5.84:1 against --paper", "24 kits",

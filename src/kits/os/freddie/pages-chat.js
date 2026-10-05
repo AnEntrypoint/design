@@ -1,19 +1,9 @@
-// Chat page — dashboard surface for the agent. Renders via the kit's
-// Chat + ChatComposer primitives so the dashboard tab and the OS chat panel
-// share the same bubble / tool-call / empty-state chrome. The bespoke
-// cwd/skill/provider/model selectors live in a collapsible config strip
-// above the thread (mirror of the OS panel cc-strip pattern).
-//
-// Wire-format translation lives in ./chat-protocol.js; provider discovery and
-// the three send strategies (server SSE / in-page agent runtime / direct
-// gateway completion) plus the event->state fold live in ./chat-transport.js.
-// This module owns only the page's own state, DOM wiring, and config strip.
-
 import * as webjsx from '../../../../vendor/webjsx/index.js';
 import * as components from '../../../components.js';
 import { getRecentPaths, saveRecentPath, skillLabel } from '../../../components/freddie/helpers.js';
 import { toKitMessage } from './chat-protocol.js';
 import { loadProviders, fetchChatEvents, applyChatEvents } from './chat-transport.js';
+import { attempt } from '../../../best-effort.js';
 
 const h = webjsx.createElement;
 const { Panel, Receipt, Chip, Icon } = components;
@@ -30,7 +20,6 @@ export function makeChatPage(ctx) {
         };
         if (!chatState.cwd) chatState.cwd = (getRecentPaths()[0] || '');
 
-        // Find the chat container in the live DOM (set on the rendered <ds-chat>).
         const getChatHost = () => root.querySelector('ds-chat.fd-dashboard-chat');
         const syncMessages = () => {
             const host = getChatHost();
@@ -45,7 +34,7 @@ export function makeChatPage(ctx) {
         };
 
         const cancelInFlight = () => {
-            if (chatState.abort) { try { chatState.abort.abort(); } catch { /* swallow: the in-flight request may already be settled, abort() is a no-op then */ } chatState.abort = null; }
+            if (chatState.abort) { attempt(() => { chatState.abort.abort(); }); chatState.abort = null; }
             chatState.busy = false;
             syncMessages();
             renderPage();
@@ -90,14 +79,12 @@ export function makeChatPage(ctx) {
                     ? (chatState.progress || 'agent working…')
                     : 'describe what you want to do in the working directory…';
             }
-            // Refresh disabled state on header buttons.
             const newBtn = root.querySelector('.fd-chat-new');
             if (newBtn) newBtn.disabled = !!chatState.busy;
             const cancelBtn = root.querySelector('.fd-chat-cancel');
             if (cancelBtn) cancelBtn.style.display = chatState.busy ? '' : 'none';
         };
 
-        // After mount, seed messages onto the ds-chat element + wire the send event.
         setTimeout(() => {
             const host = getChatHost();
             if (host && !host._fdBound) {
@@ -139,9 +126,6 @@ export function makeChatPage(ctx) {
                             h('div', { class: 'fd-chat-field fd-chat-field-grow' }, h('label', {}, 'provider'), selProv),
                             h('div', { class: 'fd-chat-field fd-chat-field-grow' }, h('label', {}, 'model (optional)'),
                                 h('input', { name: 'model', type: 'text', placeholder: configuredProviders.find(p => p.name === chatState.provider)?.defaultModel || 'default', value: chatState.model, oninput: (ev) => { chatState.model = ev.target.value; } })))),
-                    // Live chat surface — the kit's ds-chat web component handles
-                    // layout, scroll, empty state, bubble chrome, tool-call cards,
-                    // composer focus rings, send/cancel button swap, etc.
                     h('ds-chat', { class: 'fd-dashboard-chat ds-247420', title: 'chat', placeholder: 'describe what you want to do in the working directory…' }),
                 ],
             }),

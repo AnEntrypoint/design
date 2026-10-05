@@ -1,16 +1,8 @@
-// ---------------------------------------------------------------------------
-// Toast — Toast({message,kind,duration}) component + imperative toast(opts).
-// ---------------------------------------------------------------------------
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
 export function Toast({ message, kind = 'info', duration = 3000, onClose } = {}) {
-    // An error toast is assertive so a screen reader interrupts and announces
-    // it immediately, matching every other error surface in this SDK
-    // (TextField's own error span uses role=alert too) -- 'status'/'polite'
-    // (still correct for info/success) queues behind whatever the user is
-    // already doing, which is wrong for a failure that just happened.
     const isError = kind === 'error';
     return h('div', {
         class: 'ds-ep-toast kind-' + kind,

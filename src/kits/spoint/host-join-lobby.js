@@ -1,10 +1,3 @@
-// Host/join lobby paint surface for the spoint multiplayer setup.
-// renderHostJoinLobby({ onHost, onJoin, onClose }) -> { node, showHosting,
-// showError, dispose }. The consumer owns transport/navigation; this module
-// owns layout + classes. Two actions: Host (start a room, then showHosting
-// surfaces the code + copyable join link) and Join (enter a code or paste a
-// join link). onHost() -> Promise|void; onJoin(rawCodeOrLink) -> void.
-
 export function renderHostJoinLobby(opts = {}) {
   const { onHost, onJoin, onClose } = opts
 

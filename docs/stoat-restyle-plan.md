@@ -48,7 +48,7 @@ consumed by both design's channel rail and member list, mirroring stoat's
 single-token-drives-both-columns convention, instead of two independently
 hardcoded widths.
 
-## Pass 4 — Material 3 radius/shape parity ✅ done (`5794066`)
+## Pass 4 — Material 3 radius/shape parity done (`5794066`)
 
 **Diff observed:** stoat's theme (`stoatWebTheme.ts:66`) derives its corner
 radii from the [Material 3 shape scale](https://m3.material.io/styles/shape/corner-radius-scale)
@@ -68,7 +68,7 @@ hover/selected via a separate left-edge pill indicator (`::before`, fixed
 radius-morph (which had no stoat equivalent) with that same pill-indicator
 pattern, keeping the avatar's `--r-2` fixed.
 
-## Pass 5 — voice view + overlays ✅ done (`96e4c80`)
+## Pass 5 — voice view + overlays done (`96e4c80`)
 
 **Diff observed:** design's `VoiceControls` (mic/deafen/camera/screen/
 settings/leave) already matched stoat's `VoiceCallCardActions` action set.
@@ -87,7 +87,7 @@ menu/modal set (`components/app/menus/*`, `components/modal/*`) and found
 already at structural parity — no unmatched category, so no changes made
 there beyond what Pass 5's voice-controls diff already covered.
 
-## Material-You HCT dynamic-color engine ✅ done (`0404a9d`)
+## Material-You HCT dynamic-color engine done (`0404a9d`)
 
 Previously flagged as "needs a separate explicit decision" because a full
 base-palette swap once broke `npm run a11y` (1.15:1 contrast, see AGENTS.md

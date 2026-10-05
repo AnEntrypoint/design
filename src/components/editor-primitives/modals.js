@@ -1,15 +1,8 @@
-// Modal surfaces — Drawer (slide-in from an edge) and Dialog (centered
-// modal with an actions row). Both are controlled via `open`/`onClose`,
-// backdrop-dismissable (Dialog opt-in via `dismissible`), Escape-closing,
-// and Tab-trapped through the shared trapTabKey helper.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { kids, FOCUSABLE_SEL, trapTabKey } from './shared.js';
 const h = webjsx.createElement;
 
-// ---------------------------------------------------------------------------
-// Drawer — slide-in from side. side='left'|'right'|'bottom'.
-// ---------------------------------------------------------------------------
 export function Drawer({ side = 'left', open = false, onClose, children, ariaLabel } = {}) {
     if (!open) return null;
     const onKey = (e) => { if (e.key === 'Escape') { e.preventDefault(); onClose && onClose(); } };
@@ -28,8 +21,6 @@ export function Drawer({ side = 'left', open = false, onClose, children, ariaLab
                 if (!el || el._dsTrap) return;
                 el._dsTrap = true;
                 el.addEventListener('keydown', (e) => trapTabKey(el, e));
-                // setTimeout(0), not queueMicrotask — see Dialog's identical comment
-                // below: the opening click's own default focus can win a same-tick race.
                 setTimeout(() => {
                     const f = el.querySelector(FOCUSABLE_SEL);
                     (f || el).focus();
@@ -39,9 +30,6 @@ export function Drawer({ side = 'left', open = false, onClose, children, ariaLab
     );
 }
 
-// ---------------------------------------------------------------------------
-// Dialog — modal. actions = [{label, onClick, kind?}], dismissible (backdrop).
-// ---------------------------------------------------------------------------
 export function Dialog({ title, open = false, onClose, children, actions = [], dismissible = false, ariaLabel } = {}) {
     if (!open) return null;
     const opener = (typeof document !== 'undefined') ? document.activeElement : null;
@@ -65,10 +53,6 @@ export function Dialog({ title, open = false, onClose, children, actions = [], d
                 if (!el || el._dsTrap) return;
                 el._dsTrap = true;
                 el.addEventListener('keydown', (e) => trapTabKey(el, e));
-                // setTimeout(0), not queueMicrotask: the triggering click's own default
-                // focus-on-click can win a same-tick microtask race and leave focus on
-                // the trigger button instead of the dialog, breaking Escape/Tab-trap
-                // for keyboard users (keydown only bubbles from the focused element).
                 setTimeout(() => {
                     const f = el.querySelector(FOCUSABLE_SEL);
                     (f || el).focus();

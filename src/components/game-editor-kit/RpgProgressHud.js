@@ -6,7 +6,7 @@ const h = webjsx.createElement
  * @param {Object} [props]
  * @param {number} [props.value=0]
  * @param {number} [props.max=1]
- * @param {string} [props.color='var(--accent,#2266dd)']
+ * @param {string} [props.color='var(--accent,#262626)']
  * @param {string} [props.label] - text drawn over the bar, e.g. "72/100".
  * @param {string} [props.className]
  */
@@ -14,7 +14,7 @@ export function StatBar(props = {}) {
   const {
     value = 0,
     max = 1,
-    color = 'var(--accent,#2266dd)',
+    color = 'var(--accent,#262626)',
     label,
     className = ''
   } = props
@@ -71,7 +71,7 @@ export function LevelBadge(props = {}) {
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: var(--accent,#2266dd);
+      background: var(--accent,#262626);
       color: var(--accent-fg,#fff);
       font-size: 13px;
       font-weight: 700;
@@ -310,7 +310,7 @@ export function RpgProgressHud(props = {}) {
         `
       },
         StatBar({ value: health, max: maxHealth, color: 'var(--danger,#cc3333)' }),
-        StatBar({ value: mana, max: maxMana, color: 'var(--accent,#2266dd)' }),
+        StatBar({ value: mana, max: maxMana, color: 'var(--accent,#262626)' }),
         StatBar({ value: xp, max: xpToNext, color: 'var(--success,#33aa55)', label: `XP ${Math.round(xp)}/${Math.round(xpToNext)}` })
       )
     ),

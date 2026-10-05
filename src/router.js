@@ -1,13 +1,8 @@
-// Hash-based SPA router over webjsx applyDiff. Registers named page
-// components, dispatches on '#/<name>/<params...>', re-renders on
-// popstate/hashchange. No framework-specific routing lib — direct
-// history/hash manipulation, matching how every ui_kit already drives
-// itself off window.ds.applyDiff.
 
 import * as webjsx from '../vendor/webjsx/index.js';
 import { register as registerDebug } from './debug.js';
 
-const MAX_SDK_WAIT_FRAMES = 120; // ~2s at 60fps before giving up
+const MAX_SDK_WAIT_FRAMES = 120;
 
 export class Router {
     constructor({ fallback } = {}) {
@@ -72,14 +67,6 @@ export class Router {
         this.render();
     }
 
-    // Swipe-to-navigate: touch-only (matchMedia (pointer:coarse), same real
-    // gate thebird's theme.css already uses for tap-target sizing, per its
-    // documented viewport contract). Left swipe -> next registered route,
-    // right swipe -> previous, cycling through registration order. A single
-    // touch gesture, not a drag-scroll hijack: only fires past a real
-    // distance+velocity threshold, and only when the touch didn't move
-    // vertically more than horizontally (so a vertical scroll never
-    // misfires as a swipe-nav).
     enableSwipeNav({ minDistance = 60, maxVerticalDrift = 50 } = {}) {
         if (typeof window === 'undefined' || !window.matchMedia) return this;
         if (!window.matchMedia('(pointer:coarse)').matches) return this;

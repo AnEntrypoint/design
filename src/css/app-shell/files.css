@@ -47,19 +47,10 @@
 .ds-event-row-skeleton { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2-75) var(--space-3); pointer-events: none; }
 .ds-skel-rank { height: 12px; width: 2.5ch; }
 .ds-event-state { padding: var(--space-2) var(--space-3); }
-.ds-skel { display: inline-block; border-radius: var(--r-1); background: var(--bg-2); position: relative; overflow: hidden; }
-.ds-skel::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, var(--bg-3), transparent);
-  transform: translateX(-100%);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ds-skel::after { animation: ds-skel-shimmer 1.2s infinite; }
-}
+.ds-skel { display: inline-block; border-radius: var(--r-1); }
 .ds-skel-icon { width: 22px; height: 22px; }
 .ds-skel-title { height: 12px; width: 60%; }
 .ds-skel-meta { height: 10px; width: 64px; margin-left: auto; }
-@keyframes ds-skel-shimmer { 100% { transform: translateX(100%); } }
 @media (prefers-reduced-motion: reduce) { .ds-skel::after { animation: none; } }
 
 /* File row — linear layout (checkbox? · open-button[code · icon · title · meta] · actions).
@@ -490,9 +481,6 @@
   border-color: var(--accent);
   background: var(--accent-tint);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .ds-dropzone.dragover { animation: ds-dropzone-pulse 1.1s var(--ease) infinite; }
-}
 .ds-dropzone.dragover .ds-dropzone-glyph,
 .ds-dropzone.dragover .ds-dropzone-label { color: var(--accent-ink); }
 @keyframes ds-dropzone-pulse {
@@ -630,8 +618,6 @@
            max(var(--space-3), env(safe-area-inset-bottom))
            max(var(--space-3), env(safe-area-inset-left));
   background: color-mix(in oklab, var(--ink) 55%, transparent);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
 }
 @media (prefers-reduced-motion: no-preference) {
   .ds-modal-backdrop { animation: ds-modal-fade var(--dur-base) var(--ease); }

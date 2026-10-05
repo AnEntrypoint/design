@@ -9,9 +9,6 @@ const root = document.getElementById('root');
 const manifest = await (await fetch('./manifest.json')).json();
 const components = manifest.components;
 
-// Group by source file so the sidebar reads as a real module map, matching
-// how the generated docs/component-props.md is already organized -- one
-// explorer, one grouping convention, instead of a second taxonomy.
 const byFile = new Map();
 for (const c of components) {
     if (!byFile.has(c.file)) byFile.set(c.file, []);
@@ -27,11 +24,6 @@ function matches(c, q) {
     return hay.includes(q);
 }
 
-// Live specimens for the components this session's homepage showcase already
-// mounts real instances of (Btn/Chip/Badge/Table) -- proving the props table
-// against an actually-rendered component, not just prose. Every other symbol
-// still gets its full generated prop table; only the live-render panel is
-// conditional on having a known-safe, side-effect-free specimen to mount.
 const SPECIMENS = {
     Btn: () => h('div', { class: 'ds-explorer-specimen-row' },
         Btn({ variant: 'primary', children: 'Primary' }),
@@ -58,7 +50,7 @@ const SPECIMENS = {
 function propRow(p) {
     return h('tr', { key: p.name },
         h('td', {}, h('code', {}, p.name + (p.alias ? ' (local: ' + p.alias + ')' : ''))),
-        h('td', {}, p.default ? h('code', {}, p.default) : h('span', { class: 'dim' }, '—')),
+        h('td', {}, p.default ? h('code', {}, p.default) : h('span', { class: 'dim' }, 'none')),
     );
 }
 

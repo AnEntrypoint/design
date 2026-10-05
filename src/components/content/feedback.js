@@ -1,7 +1,3 @@
-// Status feedback — the transient/ambient state surfaces: Spinner and
-// Skeleton (loading), Alert (result/error messaging) and FilterPills (an
-// in-place category toggle strip).
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
@@ -19,10 +15,6 @@ export function Spinner({ size = 'base', tone = 'accent', label = 'loading', key
     );
 }
 
-// Clamp a caller-supplied CSS length to a sane range so a raw prop like
-// height="9999px" can't blow out the layout. Accepts a CSS length string
-// (px/em/rem/%/vh/vw) or a bare number (treated as px); rejects anything else
-// back to the default. Numeric values are clamped to [2, 600] (px-equivalent).
 function clampLen(v, fallback) {
     if (v == null) return fallback;
     const s = String(v).trim();
@@ -48,13 +40,6 @@ export function Skeleton({ height = '1em', width = '100%', count = 1, label = 'l
     );
 }
 
-// FilterPills — a role=group of pill toggle buttons for quick category filters.
-// `options` is [{ id, label, tone? }]; `selected` the active id; clicking a
-// pill calls onSelect(id). Pressed state is announced via aria-pressed. An
-// option's optional `tone` maps onto the existing .ds-filter-pill tone-*
-// modifier scale (row-print.css) for a status-colored pill (e.g. a stage
-// filter tinted by its own stage color) without a caller needing to
-// hand-roll the pill markup just to add a tone class.
 export function FilterPills({ options = [], selected, onSelect, label = 'filters' } = {}) {
     if (!options.length) return null;
     return h('div', { class: 'ds-filter-pills', role: 'group', 'aria-label': label },

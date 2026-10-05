@@ -1,7 +1,3 @@
-// buttons ui kit demo — every variant/size/state of the shared Btn() component,
-// with the a11y/interaction findings from a design audit addressed directly:
-// disabled contrast (--fg-3, not opacity), a distinct link variant, a labeled
-// size default, a loading state, and a danger+cancel confirm pairing.
 import * as webjsx from 'webjsx';
 import { Topbar, Crumb, Status, AppShell, Heading, Lede, Btn } from 'ds/components/shell.js';
 import { Panel } from 'ds/components/content.js';
@@ -24,9 +20,6 @@ function VariantRow() {
     });
 }
 
-// Real recommended-default label instead of leaving the size ladder
-// unlabeled -- medium is the base .btn rule (no size class) and is the
-// recommended size for primary CTAs; sm/lg are the deliberate exceptions.
 function SizeRow() {
     return Panel({ title: 'sizes', children:
         h('div', { class: 'ds-btn-size-row' },
@@ -34,7 +27,7 @@ function SizeRow() {
                 h('span', { class: 'ds-hint-sm' }, 'small'),
                 Btn({ variant: 'primary', size: 'sm', children: 'save' })),
             h('div', { class: 'ds-btn-size-col' },
-                h('span', { class: 'ds-hint-sm' }, 'medium — default for primary CTAs'),
+                h('span', { class: 'ds-hint-sm' }, 'medium (default)'),
                 Btn({ variant: 'primary', size: 'md', children: 'save' })),
             h('div', { class: 'ds-btn-size-col' },
                 h('span', { class: 'ds-hint-sm' }, 'large'),
@@ -59,9 +52,6 @@ function StateRow() {
     });
 }
 
-// Real destructive-confirm pairing: Danger + secondary Cancel shown together,
-// reusing the same .btn-primary.danger class settings' own delete-account
-// modal uses (files.css), not a bespoke one-off.
 function ConfirmPairRow() {
     return Panel({ title: 'destructive confirm pairing', children:
         h('div', { class: 'ds-btn-row' },
@@ -78,7 +68,7 @@ function App() {
         main: [
             h('div', { class: 'ds-app-surface ds-section-pad' },
                 Heading({ level: 1, children: 'buttons' }),
-                Lede({ children: 'every variant, size, and state the shared Btn() component renders — primary, secondary, ghost, link, danger, loading, disabled.' }),
+                Lede({ children: 'every Btn() variant, size and state: primary, secondary, ghost, link, danger, loading, disabled.' }),
                 VariantRow(),
                 SizeRow(),
                 StateRow(),

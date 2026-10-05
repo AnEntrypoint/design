@@ -1,10 +1,3 @@
-// Pure date-grid math for Calendar — no DOM, no webjsx. Builds the 6x7 cell
-// matrix for a given month (leading/trailing days from adjacent months
-// included so every row is full), plus small date-key/compare helpers shared
-// by grid.js, calendar.js and the picker shells. All dates are normalized to
-// local-midnight Date objects; `key(d)` ('YYYY-MM-DD') is the identity used
-// for selection/range membership comparisons instead of Date reference
-// equality (which two independently-constructed Dates never satisfy).
 
 export const WEEKDAY_LABELS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
@@ -51,13 +44,9 @@ export function isDisabled(d, minDate, maxDate) {
     return false;
 }
 
-// Build the 42-cell (6 week rows x 7) matrix for `monthDate`'s month. Each
-// cell: { date, inMonth }. Always 6 rows so the grid height never reflows
-// between months (a 4-row Feb next to a 6-row Oct would otherwise jump the
-// popover/page height under it).
 export function buildMonthGrid(monthDate) {
     const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-    const startOffset = first.getDay(); // 0=Sun
+    const startOffset = first.getDay();
     const gridStart = addDays(first, -startOffset);
     const cells = [];
     for (let i = 0; i < 42; i++) {

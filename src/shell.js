@@ -1,14 +1,3 @@
-// A real command interpreter for the terminal kit.
-//
-// The kit used to push '(stub) ran: <input>' into an array and render it -- the
-// word "stub" was visible to users, and nothing executed. This module is the
-// execution half: a virtual filesystem plus a command table, both synchronous
-// and dependency-free, so the terminal surface has something genuine to drive.
-//
-// Deliberately NOT a real OS. Commands operate on an in-memory tree; there is
-// no network, no eval, and no host access, so a demo page cannot be turned into
-// an exfiltration surface by typing into it. Unknown input reports a real
-// not-found error the way a shell does, rather than echoing success.
 
 const FS = {
     'readme.md': 'the 247420 design system\n\nan editorial component library. run `ls` to look around,\n`help` for the command list.\n',
@@ -36,7 +25,6 @@ function nodeAt(path) {
 
 const isDir = (n) => n && typeof n === 'object';
 
-// Resolve a user-typed path against cwd, honouring . and .. and a leading /.
 function resolvePath(cwd, raw) {
     const parts = String(raw).split('/').filter(Boolean);
     const out = String(raw).startsWith('/') ? [] : cwd.slice();
@@ -50,8 +38,6 @@ function resolvePath(cwd, raw) {
 
 const promptPath = (cwd) => '~/' + cwd.join('/');
 
-// Each command returns an array of {kind, text} lines, matching the six line
-// kinds the kit's Line() renderer already knows: cmt, cmd, out, ok, warn, log.
 const COMMANDS = {
     help(_args, ctx) {
         const names = Object.keys(COMMANDS).sort();
@@ -115,8 +101,6 @@ COMMANDS.date.desc = 'print the current date';
 COMMANDS.theme.desc = 'switch light/dark';
 COMMANDS.clear.desc = 'clear the scrollback';
 
-// Split a command line into argv, honouring single and double quotes so
-// `echo "two words"` is one argument rather than two.
 export function tokenize(line) {
     const out = [];
     let cur = '';
@@ -137,9 +121,6 @@ export function tokenize(line) {
     return out;
 }
 
-// Complete a partial word against command names (first token) or the current
-// directory's entries (any later token). Returns the completed line, or the
-// original when there is no unambiguous single match.
 export function complete(line, cwd) {
     const argv = tokenize(line);
     const trailing = /\s$/.test(line);
@@ -153,8 +134,6 @@ export function complete(line, cwd) {
     return [...base, hits[0]].join(' ');
 }
 
-// Run one line. ctx carries { cwd, clear, setTheme } so commands can mutate the
-// session without this module reaching into the DOM itself.
 export function run(line, ctx) {
     const argv = tokenize(line);
     if (!argv.length) return [];

@@ -482,12 +482,10 @@ table td.is-num, table th.is-num { text-align: right; font-variant-numeric: tabu
      gap named against the stat tiles. */
   border: 1px solid var(--rule);
   position: relative;
-  transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  transition: border-color var(--dur-snap) var(--ease);
 }
 .kpi-card:hover {
   border-color: color-mix(in oklab, var(--accent) 40%, var(--rule));
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-1, 0 2px 8px rgba(0,0,0,.12));
 }
 /* Number+caption stack, isolated from .kpi-foot below it. Previously the
    number and label were plain block children of .kpi-card with the label's

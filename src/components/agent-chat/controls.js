@@ -1,7 +1,3 @@
-// AgentChat's two chrome bars: the agent-then-model picker (with stop/new,
-// live status, and host-supplied transcript export actions), and the
-// working-directory bar with its roots / recent / inline-browse affordances.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Select } from '../content.js';
 import { Btn } from '../shell.js';
@@ -9,8 +5,6 @@ import { BreadcrumbPath } from '../files.js';
 
 const h = webjsx.createElement;
 
-// The agent picker: agent-then-model, not a flat model list. Unavailable agents
-// are disabled (unless installable via npx). Ordering is the host's concern.
 export function AgentControls({ agents, selectedAgent, models, selectedModel, busy, status, modelsLoading, agentsLoading,
                          onSelectAgent, onSelectModel, onNewChat, onStop, exportActions }) {
   const agentOptions = (agents || []).map((a) => ({
@@ -20,9 +14,6 @@ export function AgentControls({ agents, selectedAgent, models, selectedModel, bu
   }));
   const showModels = (models || []).length > 0;
   return h('div', { class: 'agentchat-controls' },
-    // While agents load on first boot, show a disabled "loading…" placeholder
-    // instead of an empty options list, which is indistinguishable from "this
-    // app has no agents configured" (mirrors the models-loading branch below).
     (agentsLoading && !agentOptions.length)
       ? Select({ key: 'agentsel', value: '', placeholder: 'loading agents…', title: 'Loading agents', disabled: true, options: [] })
       : (agentOptions.length
@@ -32,8 +23,6 @@ export function AgentControls({ agents, selectedAgent, models, selectedModel, bu
               onChange: (v) => onSelectAgent && onSelectAgent(v),
             })
           : null),
-    // While models load for a freshly-picked agent, show a disabled "loading…"
-    // placeholder so the picker doesn't vanish then reappear (a layout flash).
     showModels
       ? Select({
           key: 'modelsel', value: selectedModel, placeholder: '— model —',
@@ -49,9 +38,6 @@ export function AgentControls({ agents, selectedAgent, models, selectedModel, bu
     h('span', { key: 'st', class: 'agentchat-status', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' },
       h('span', { class: 'status-dot-disc ' + (busy ? 'status-dot-live' : ''), 'aria-hidden': 'true' }),
       h('span', {}, status || (busy ? 'streaming…' : 'ready'))),
-    // Host-supplied transcript actions (copy-all / export-md / export-json):
-    // small text-labeled buttons riding the same controls row. All siblings in
-    // this h(...) call are keyed VElements or null — never bare strings.
     ...(exportActions && exportActions.length
       ? exportActions.map((a, i) => h('button', {
           key: 'exp' + i, type: 'button', class: 'agentchat-export-act',
@@ -62,26 +48,6 @@ export function AgentControls({ agents, selectedAgent, models, selectedModel, bu
   );
 }
 
-// A working-directory bar: shows where the agent will run, editable + clearable.
-// `error`/`checking` give inline validation feedback while typing/blur (the host
-// debounces its /api/stat probe and sets these): a plain-language line renders
-// under the input (aria-describedby) and save stays disabled while either is set.
-//
-// Practicality upgrade: setting cwd by typing an exact absolute path from memory
-// was the only path (a fresh user has no way to discover what's even browsable,
-// and a regular user re-types/re-remembers the same handful of paths every
-// session). Three additive affordances, all optional/host-driven so a host that
-// doesn't wire them keeps the old text-only behavior:
-//   - `roots` (fsAllowRoots-equivalent): one-click starting points, always
-//     visible while editing, not buried in a separate Files-tab-only picker.
-//   - `recent` (host's own small MRU list, e.g. localStorage-backed): one-click
-//     chips for the last few cwds actually used, so switching between a
-//     regular handful of working directories needs no typing at all.
-//   - `browse` (host-driven inline directory listing): clicking "browse" asks
-//     the host (via onBrowse) to list a directory's subdirectories (reusing
-//     the same confined listing endpoint the Files tab already uses), and
-//     renders them as a breadcrumb + clickable dir list right in the composer
-//     — no round-trip through the Files tab and back required anymore.
 export function CwdBar({ cwd, editing, draft, onEdit, onSave, onCancel, onClear, onDraft, error, checking,
                    roots, recent, browse, onBrowseCrumb, onBrowseEnter, onBrowsePick, onBrowseToggle, defaultCwd }) {
   if (editing) {
@@ -141,8 +107,6 @@ export function CwdBar({ cwd, editing, draft, onEdit, onSave, onCancel, onClear,
     h('span', { class: 'agentchat-cwd-text', title: cwd || 'server default working directory' },
       'cwd: ' + (cwd || 'server default')),
     h('button', { type: 'button', class: 'agentchat-cwd-btn', onclick: () => onEdit && onEdit() }, cwd ? 'change' : 'set'),
-    // What "default" resolves to previously wasn't visible until clicked -
-    // a title tooltip on the button itself answers that before the click.
     cwd ? h('button', { type: 'button', class: 'agentchat-cwd-btn',
         title: defaultCwd ? ('resets to: ' + defaultCwd) : 'reset to the server default working directory',
         onclick: () => onClear && onClear() }, 'use default') : null);

@@ -1,9 +1,3 @@
-// createDesktopShell — the desktop OS shell: assembles the menubar / apps
-// menu / side rail / drawer / taskbar chrome (built by ./shell-chrome.js),
-// owns the shared mutable state those surfaces read (active context, active
-// instance, taskbar signature, drawer focus return), and drives window
-// spawning through ./shell-geometry.js.
-
 import {
     ensureCss, buildMenubar, buildAppsMenu, buildSideRail, buildDrawer,
     buildTaskbar, buildAppEntries, ic,
@@ -27,15 +21,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
     const { drawer, drawerClose, drawerGrid } = buildDrawer();
     const taskbar = buildTaskbar();
 
-    // The registry is not frozen at shell creation — hosts can register and
-    // unregister apps later (thebird's per-instance user-* apps come and go on
-    // instance switch and fs edits). refreshApps() re-syncs the three launcher
-    // surfaces (apps menu / side rail / drawer grid) surgically: entries for
-    // newly registered apps are appended, entries whose app was unregistered
-    // are removed, and already-rendered entries keep their nodes (listeners,
-    // focus, and any host-side regrouping of the menu intact). The initial
-    // render is the same call. Buttons are tagged data-app-id so removal can
-    // find them again.
     const renderedAppIds = new Set();
     function refreshApps() {
         const apps = typeof registry.list === 'function' ? registry.list() : [...registry.values()];
@@ -78,12 +63,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
     else osRoot.before(mainLandmark);
     document.body.prepend(skipLink);
 
-    // Apps menu keyboard operability (APG menu-button pattern), mirroring the
-    // drawer's capture/restore-focus treatment below: opening moves focus onto
-    // the first menuitem so Tab/arrow-keys start inside the now-visible menu
-    // instead of on a hidden ancestor; closing restores focus to appsBtn (the
-    // only trigger) so keyboard position isn't lost. Arrow keys roam the
-    // role="menuitem" set (roving focus) per the declared role="menu".
     let menuReturnFocus = null;
     function menuItems() { return [...appsMenu.querySelectorAll('[role="menuitem"]')]; }
     function openMenu() {
@@ -109,11 +88,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
         else if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
         else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
     });
-    // Focus management: opening the drawer moves keyboard focus onto its
-    // close button (the first reachable control inside the now-visible
-    // dialog) so Tab starts inside it, not lost on a now-hidden ancestor;
-    // closing restores focus to whichever element opened it (homeBtn is the
-    // only trigger today) so the user's keyboard position isn't lost.
     let drawerReturnFocus = null;
     function openDrawer() {
         drawerReturnFocus = document.activeElement;
@@ -139,10 +113,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
         if (e.key === 'Escape') { closeMenu(); closeDrawer(); }
     });
 
-    // hour12:false, not the locale default: every other timestamp in this
-    // system (terminal kit line kinds, dateline strips, presence rows) is
-    // terse 24-hour mono, and en-US's default AM/PM was the one place that
-    // broke from it.
     function tickClock() { clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }); }
     tickClock();
     const clockTimer = setInterval(tickClock, 30000);
@@ -168,8 +138,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
             if (activeInstanceId && wInst && wInst !== activeInstanceId) continue;
             items.push(w);
         }
-        // Diff-aware rebuild: the 500ms poll must not reset the taskbar's
-        // horizontal scroll (mobile scroll-snap) or button focus every tick.
         const sig = items.map(w => w.id + ' ' + w.title + ' ' + (w.focused ? 1 : 0)).join('');
         if (sig === taskbarSig) return;
         taskbarSig = sig;
@@ -186,16 +154,10 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
             t.className = 'os-task' + (w.focused ? ' focused' : '');
             t.type = 'button';
             t.dataset.winId = w.id;
-            // Same icon-resolution order as buildAppEntries (menu/rail/drawer):
-            // the registered app's own icon, falling back to the id-keyed
-            // default set — so a taskbar entry always matches its apps-menu
-            // counterpart instead of reading as unrelated text-only chrome.
             const app = w.appId && (typeof registry.get === 'function' ? registry.get(w.appId) : registry[w.appId]);
             const iconSvg = (app && app.icon) || icons[w.appId] || '';
             if (iconSvg) t.append(ic(iconSvg));
             t.append(Object.assign(document.createElement('span'), { className: 'os-task-label', textContent: w.title }));
-            // aria-current announces which window is the active one; a
-            // sighted user reads this from the .focused visual state alone.
             if (w.focused) t.setAttribute('aria-current', 'true');
             t.addEventListener('click', () => wm.focus(w.id));
             taskbar.appendChild(t);
@@ -241,9 +203,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
         const sz = app.defaultSize || { w: 520, h: 360 };
         const { w, h, x, y, maximized } = computeSpawnRect(sz, wm.count);
         const titlePrefix = (activeContext && activeContext.titlePrefix) ? activeContext.titlePrefix + ' · ' : '';
-        // A slow async factory (network/worker-backed app) must not read as a
-        // dead click: spawn the window immediately with a loading placeholder
-        // body, then swap in the real content once the factory resolves.
         const win = wm.open({ title: titlePrefix + app.name, body: isAsync ? makeLoadingNode() : result.node, kind: appId, width: w, height: h, x, y, maximized });
         if (activeInstanceId && win.el) {
             win.el.dataset.instanceId = activeInstanceId;
@@ -253,10 +212,6 @@ export function createDesktopShell({ root = document.body, wm, registry, brand =
         refreshTaskbar();
         const finish = (r) => {
             if (isAsync && typeof win.setBody === 'function') win.setBody(r.node);
-            // Keep the FULL factory result on _app (only id is overridden with
-            // the registry's appId): hosts persist/restore per-window view
-            // state through getViewState/restoreViewState hooks on the factory
-            // result — a lossy {id, dispose} wrap silently dropped them.
             win._app = { ...r, id: appId };
             refreshTaskbar();
             return win;

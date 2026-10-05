@@ -1,35 +1,3 @@
-// PluginsConfig — plugin/extension list + detail panel, ported from pi-web's
-// PluginsConfig.tsx UX (modal, sidebar list grouped by scope, detail pane with
-// enable/disable toggle, add-plugin flow, diagnostics footer) but rebuilt over
-// freddie's real plugin contract, not pi-web's npm-package model:
-//
-//   { name, version?, surfaces: 'pi'|'gui'|'both', requires?: [...names], source? }
-//
-// (see freddie's AGENTS.md "Plugin architecture" — `src/host/contract.js`).
-// There is no install/remove/update here: freddie plugins are local-filesystem
-// discovery only (`plugins/<name>/plugin.js`, `~/.freddie/plugins/`), so the
-// only host-facing actions are enable/disable and reload. `requires` renders
-// as a dependency list (freddie's cycle-checked `requires` array) in place of
-// pi-web's package version/resource breakdown.
-//
-// Usage (consumer wires its own state/fetch, this is presentation-only):
-//   PluginsConfig({ plugins, selected, onSelect, onToggle, onReload, onClose })
-//
-// Props:
-//   plugins   : [{ name, version?, surfaces, requires?, source?, enabled, status? }]
-//               status is an optional free-text chip ('loaded'|'error'|...);
-//               enabled drives the toggle and the sidebar status dot.
-//   selected  : name of the currently-selected plugin, or null
-//   loading   : bool — sidebar shows a loading row instead of the list
-//   error     : string|null — sidebar shows this instead of the list
-//   busyName  : name of the plugin currently mid-toggle/reload, or null
-//   onSelect  : (name) => void
-//   onToggle  : (plugin) => void — fired with the full plugin row to flip enabled
-//   onReload  : () => void — optional, re-run host discovery
-//   onClose   : () => void
-//
-// No decorative glyphs beyond the kit's Icon SVGs — status communicated by a
-// tone dot + text label, never color alone.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
@@ -83,12 +51,6 @@ function PluginDetail({ plugin, busy, onToggle, onReload }) {
                 h('span', { class: 'ds-plugins-dot tone-' + statusTone(plugin), 'aria-hidden': 'true' }),
                 h('span', { class: 'name' }, plugin.name),
                 plugin.version ? h('span', { class: 'ds-plugins-version' }, 'v' + plugin.version) : null),
-            // Only render the toggle when a consumer actually wired onToggle
-            // (mirrors the onReload conditional below) -- a consumer with no
-            // real enable/disable backend (freddie's /api/plugins has none;
-            // every plugin is reported enabled:true unconditionally once
-            // loaded) must not show a live, clickable control that silently
-            // does nothing on click.
             onToggle
                 ? h('button', {
                     type: 'button',
@@ -142,10 +104,6 @@ export function PluginsConfig({
                 onClose ? h('button', { type: 'button', class: 'ds-plugins-close', onclick: onClose, 'aria-label': 'Close' }, '×') : null),
             h('div', { class: 'ds-plugins-body' },
                 h('div', { class: 'ds-plugins-sidebar' },
-                    // Distinct `key` per branch -- see skills-config.js's
-                    // identical fix for the live-witnessed failure mode this
-                    // prevents (a stuck "Loading…" text node surviving an
-                    // in-place patch into the real list container).
                     loading
                         ? h('div', { key: 'loading', class: 'ds-plugins-sidebar-status' }, 'Loading…')
                         : error

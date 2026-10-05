@@ -1,6 +1,3 @@
-// Webhook management — stoat for-web's WebhooksList/ViewWebhook shape: a
-// list of channel webhooks (avatar + name + trailing edit/delete) plus an
-// editor form (name/avatar/URL-copy) built from the SettingsRow primitives.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -8,7 +5,6 @@ import { avatarInitial } from '../content.js';
 import { avatarStyle } from './avatar-style.js';
 import { SettingsRow, SettingsRowGroup, SettingsSection } from '../voice/settings-row.js';
 const h = webjsx.createElement;
-
 
 function WebhookAvatar({ name, avatarUrl, color }) {
     if (avatarUrl) return h('img', { class: 'cm-webhook-avatar', src: avatarUrl, alt: '' });

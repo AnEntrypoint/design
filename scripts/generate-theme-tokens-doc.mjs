@@ -1,31 +1,19 @@
 #!/usr/bin/env node
-// Generates docs/theme-tokens.md + preview/theme-map.html from tokens.json
-// (the output of generate-tokens-json.mjs, the REAL existing token
-// enumeration -- this script reuses that file rather than re-parsing
-// colors_and_type.css itself, per the row's own explicit instruction) plus a
-// real grep of every component sheet to find which ones actually consume
-// each token via var(--name). Run: node scripts/generate-tokens-json.mjs &&
-// node scripts/generate-theme-tokens-doc.mjs (theme-tokens-doc always reads
-// a fresh tokens.json rather than assuming one is already current).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { die } from './die.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const tokensPath = path.join(root, 'tokens.json');
 
 if (!fs.existsSync(tokensPath)) {
-    console.error('[theme-tokens-doc] tokens.json missing -- run `node scripts/generate-tokens-json.mjs` first');
-    process.exit(1);
+    die('[theme-tokens-doc] tokens.json missing -- run `node scripts/generate-tokens-json.mjs` first');
 }
 const { tokens, groups, generatedAt } = JSON.parse(fs.readFileSync(tokensPath, 'utf8'));
 
-// The real component sheets (mirrors lint-tokens.mjs's COMPONENT_SHEETS list
-// plus the split app-shell/ parts and spoint kit sheets, so "consumed by"
-// coverage matches every sheet actually shipped, not just the lint-gated
-// subset).
-const SHEETS = [
+const SHIPPED_COMPONENT_SHEETS = [
     'app-shell.css', 'app-surfaces.css', 'chat.css', 'community.css',
     'community-app.css', 'editor-primitives.css', 'gm-prose.css', 'marketing.css',
     'src/css/app-shell/base.css', 'src/css/app-shell/catalog-theme.css',
@@ -41,21 +29,21 @@ const SHEETS = [
     'src/kits/spoint/loading-screen.css',
 ];
 
-// Real per-sheet content, read once, scanned per token via var(--name)
-// substring search (cheap and accurate enough -- CSS custom-property refs
-// are always literal `var(--name` text, never dynamically constructed).
 const sheetContents = {};
-for (const s of SHEETS) {
+for (const s of SHIPPED_COMPONENT_SHEETS) {
     const p = path.join(root, s);
     if (fs.existsSync(p)) sheetContents[s] = fs.readFileSync(p, 'utf8');
 }
 
-function consumersOf(tokenName) {
-    const needle = `var(${tokenName}`;
-    return SHEETS.filter((s) => sheetContents[s] && sheetContents[s].includes(needle));
+function collapseWhitespace(value) {
+    return value.replace(/\s+/g, ' ').trim();
 }
 
-// ---- docs/theme-tokens.md ----
+function consumersOf(tokenName) {
+    const needle = `var(${tokenName}`;
+    return SHIPPED_COMPONENT_SHEETS.filter((s) => sheetContents[s] && sheetContents[s].includes(needle));
+}
+
 
 const groupNames = Object.keys(groups).sort();
 let md = `# Theme tokens\n\n`;
@@ -70,23 +58,17 @@ for (const g of groupNames) {
     for (const [name, value] of entries) {
         const consumers = consumersOf(name);
         const consumerCell = consumers.length ? consumers.map((c) => `\`${c}\``).join(', ') : '_(unused outside colors_and_type.css)_';
-        // Some values (multi-shadow declarations) contain the source file's
-        // own line-wrapping whitespace -- collapse to single-line so the
-        // markdown table row doesn't visually break across lines.
-        const flatValue = value.replace(/\s+/g, ' ').trim();
+        const flatValue = collapseWhitespace(value);
         md += `| \`${name}\` | \`${flatValue.replace(/\|/g, '\\|')}\` | ${consumerCell} |\n`;
     }
     md += `\n`;
 }
 
-// ---- token resolution + WCAG contrast (real math, no deps) ----
-// `tokens` values are exactly what colors_and_type.css wrote — many are
-// `var(--other-token)` aliases (--bg: var(--paper)), not resolved hex. Follow
-// the chain (bounded depth against accidental cycles) to a literal #hex
-// before any contrast math can run on it.
+const MAX_ALIAS_CHAIN_DEPTH = 12;
+
 function resolveTokenValue(name, depth = 0) {
     const raw = tokens[name];
-    if (raw == null || depth > 12) return null;
+    if (raw == null || depth > MAX_ALIAS_CHAIN_DEPTH) return null;
     const m = /^var\((--[a-zA-Z0-9_-]+)\)$/.exec(raw.trim());
     if (m) return resolveTokenValue(m[1], depth + 1);
     return raw.trim();
@@ -99,7 +81,6 @@ function hexToRgb(hex) {
     return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
 }
 
-// WCAG 2.1 relative luminance + contrast ratio (spec formula, sRGB).
 function relLuminance([r, g, b]) {
     const chan = (c) => {
         const s = c / 255;
@@ -117,12 +98,9 @@ function contrastRatio(hexA, hexB) {
     return (lighter + 0.05) / (darker + 0.05);
 }
 
-// Semantic foreground/background token PAIRS actually used together in real
-// component CSS (fg-on-panel, fg-on-accent, status text) — not every
-// combinatorial token cross-product, just the pairs the system actually
-// renders text over. AA text floor is 4.5:1 normal text / 3:1 large text or
-// UI components; every row here is normal body/label text, so 4.5:1 gates.
-const CONTRAST_PAIRS = [
+const AA_NORMAL_TEXT_MIN_RATIO = 4.5;
+
+const TEXT_ON_BACKGROUND_PAIRS = [
     ['--panel-text on --panel-0', '--panel-text', '--panel-0'],
     ['--panel-text-2 on --panel-0', '--panel-text-2', '--panel-0'],
     ['--panel-text-3 on --panel-0', '--panel-text-3', '--panel-0'],
@@ -146,24 +124,17 @@ const CONTRAST_PAIRS = [
 let contrastMd = `## Contrast (WCAG 2.1 AA)\n\n`;
 contrastMd += `Computed here (relative-luminance formula, WCAG 2.1 sec. 1.4.3) from the resolved hex each semantic pair evaluates to at generation time — not a hand-maintained claim. AA text floor: 4.5:1 (normal text). Re-run this generator after any primitive color change to refresh the table. Complements the DOM-level, axe-core-driven checks in \`docs/a11y-report.md\` (which catches *rendered* violations across live component markup); this table checks the *token pairs themselves* independent of any one component's usage.\n\n`;
 contrastMd += `| pair | resolved hex | ratio | AA (4.5:1) |\n|---|---|---|---|\n`;
-for (const [label, fgTok, bgTok] of CONTRAST_PAIRS) {
+for (const [label, fgTok, bgTok] of TEXT_ON_BACKGROUND_PAIRS) {
     const fgHex = resolveTokenValue(fgTok);
     const bgHex = resolveTokenValue(bgTok);
     const ratio = fgHex && bgHex ? contrastRatio(fgHex, bgHex) : null;
     const ratioCell = ratio != null ? ratio.toFixed(2) + ':1' : '_unresolved_';
-    const pass = ratio != null ? (ratio >= 4.5 ? 'PASS' : 'FAIL') : '?';
+    const pass = ratio != null ? (ratio >= AA_NORMAL_TEXT_MIN_RATIO ? 'PASS' : 'FAIL') : '?';
     contrastMd += `| \`${label}\` | \`${fgHex || '?'}\` on \`${bgHex || '?'}\` | ${ratioCell} | ${pass} |\n`;
 }
 contrastMd += `\n`;
 md += contrastMd;
 
-// ---- Indicator-rail colors: documented bounded set ----
-// Two distinct rail concepts exist in colors_and_type.css: the CATEGORY rail
-// (--cat-*, cycled by index across category tags/avatars — see the CAT array
-// in ui_kits/community-app/app.js) and the STATUS-severity rail (--rail-*,
-// picked by name, never cycled). Both are enumerated from tokens.json
-// directly rather than hand-copied, so this section can't drift from the
-// source CSS.
 const CAT_RAIL_TOKENS = ['--cat-green', '--cat-purple', '--cat-mascot', '--cat-sun', '--cat-flame', '--cat-sky'];
 const STATUS_RAIL_TOKENS = ['--rail-info', '--rail-success', '--rail-warning', '--rail-error'];
 
@@ -190,10 +161,6 @@ fs.mkdirSync(path.join(root, 'docs'), { recursive: true });
 fs.writeFileSync(path.join(root, 'docs', 'theme-tokens.md'), md);
 console.log(`[theme-tokens-doc] wrote docs/theme-tokens.md (${Object.keys(tokens).length} tokens, ${groupNames.length} groups)`);
 
-// ---- preview/theme-map.html ----
-// Grouped list view (not force-directed graph -- simpler, real, and matches
-// the row's own explicit "or grouped list view" fallback) showing which
-// sheets consume which tokens, one section per group.
 
 function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
@@ -205,7 +172,7 @@ for (const g of groupNames) {
     for (const [name, value] of entries) {
         const consumers = consumersOf(name);
         rows += `<li class="tm-row">`;
-        const flatValue = value.replace(/\s+/g, ' ').trim();
+        const flatValue = collapseWhitespace(value);
         rows += `<code class="tm-name">${esc(name)}</code>`;
         rows += `<span class="tm-value">${esc(flatValue)}</span>`;
         rows += `<span class="tm-consumers">${consumers.length ? consumers.map(esc).join(', ') : '(unused)'}</span>`;

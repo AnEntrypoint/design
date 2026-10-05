@@ -1,7 +1,3 @@
-// Monitor-app paint surface — bible classes, pure DOM. Consumer supplies getStats().
-// getStats() -> Promise<{instanceId, frames, shells, windows, appsRegistered, jsHeapMb, jsHeapLimitMb, time}>.
-// Field names map directly to displayed lines so consumer controls labels by value, not template.
-
 export function renderMonitorApp(opts = {}) {
     const { getStats, pollMs = 1000 } = opts;
     const node = document.createElement('div');

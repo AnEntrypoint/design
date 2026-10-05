@@ -1,10 +1,3 @@
-// Data-density components: dense observability/dashboard primitives ported
-// from the gmsniff GUI (phase-walk, tree timeline, bar charts, KPI tiles,
-// sub-nav grid, session rows, deviation callouts, live log stream). Pure
-// factories — props in, webjsx vnode out. Theme-aware: every color rides a
-// semantic var(--token) from colors_and_type.css, never a raw hex literal.
-// CSS lives in app-shell.css under the "data density" section (ds- prefix
-// keeps scripts/lint-classes.mjs passing without a PREFIXES change).
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Pill } from './shell.js';
@@ -13,12 +6,6 @@ const h = webjsx.createElement;
 
 export { Progress };
 
-// ---------------------------------------------------------------------------
-// PhaseWalk — compact horizontal phase-progress indicator.
-//   phases  : ordered phase names (default the 5-stage gm chain).
-//   reached : bool[] parallel to phases — true once that phase has been hit.
-//   gapKinds: phase names that are a known gap (red), overrides reached.
-// ---------------------------------------------------------------------------
 export const DEFAULT_PHASES = ['PLAN', 'EXECUTE', 'EMIT', 'VERIFY', 'CONSOLIDATE', 'COMPLETE'];
 
 export function PhaseWalk({ phases = DEFAULT_PHASES, reached = [], gapKinds = [] } = {}) {
@@ -34,11 +21,6 @@ export function PhaseWalk({ phases = DEFAULT_PHASES, reached = [], gapKinds = []
         }));
 }
 
-// ---------------------------------------------------------------------------
-// TreeNode — indented timeline/tree entry with left-border variant coloring.
-//   variant: '' | 'phase' | 'deviation' | 'mutable-resolve' | 'prd-add'
-//   residuals: array of strings, joined with ", " when present.
-// ---------------------------------------------------------------------------
 export function TreeNode({ ts, kind, variant = '', phase, id, keyLabel, reason, deviationLabel, residuals } = {}) {
     const cls = 'ds-tree-node' + (variant ? ' is-' + variant : '');
     const pills = [
@@ -55,12 +37,6 @@ export function TreeNode({ ts, kind, variant = '', phase, id, keyLabel, reason, 
         (residuals && residuals.length) ? h('div', { class: 'ds-tree-node-residuals' }, residuals.join(', ')) : null);
 }
 
-// ---------------------------------------------------------------------------
-// BarRow — inline horizontal bar-chart row (label + track + value).
-//   tone: a CSS color value (var(--token) or color-mix expression) — never a
-//   bare hex string should be passed by a caller; the component itself never
-//   hardcodes one.
-// ---------------------------------------------------------------------------
 export function BarRow({ label, value, pct = 0, tone } = {}) {
     const clamped = Math.max(0, Math.min(100, pct));
     return h('div', {
@@ -73,24 +49,11 @@ export function BarRow({ label, value, pct = 0, tone } = {}) {
         h('span', { class: 'ds-bar-row-value', 'aria-hidden': 'true' }, value));
 }
 
-// ---------------------------------------------------------------------------
-// RateCell — a tone-colored numeric cell for dense admin/observability tables
-// (percentile latency columns, success-rate columns). Ported from docstudio's
-// admin-observability-views.js endpointsView() success-rate coloring, which
-// had no kit equivalent: a plain Table cell has no notion of a value implying
-// good/warn/bad. Host computes the tone (this component has no opinion on
-// thresholds, matching Table's onSort host-owns-logic convention) and passes
-// it plus the display text; renders inline so it drops into any Table row.
-// ---------------------------------------------------------------------------
 export function RateCell({ value, tone = 'neutral' } = {}) {
     const cls = 'ds-rate-cell ds-rate-cell-' + tone;
     return h('span', { class: cls }, value == null ? '–' : String(value));
 }
 
-// ---------------------------------------------------------------------------
-// StatTile / StatsGrid — compact KPI tiles, denser than the existing .kpi.
-//   cls on StatTile selects an accent variant: '' | 'rate-big' | 'err-rate'.
-// ---------------------------------------------------------------------------
 export function StatTile({ val, lbl, cls = '' } = {}) {
     return h('div', { class: 'ds-stat', role: 'group', 'aria-label': `${lbl || 'stat'}: ${val}` },
         h('div', { class: 'ds-stat-val' + (cls ? ' ' + cls : ''), 'aria-hidden': 'true' }, val),
@@ -104,9 +67,6 @@ export function StatsGrid({ items = [] } = {}) {
         ...items.map((it, i) => h('div', { key: it.key || i }, StatTile(it))));
 }
 
-// ---------------------------------------------------------------------------
-// SubGrid — small button grid: big number + label, for category navigation.
-// ---------------------------------------------------------------------------
 export function SubGrid({ items = [] } = {}) {
     if (!items.length) return h('div', { class: 'ds-sub-grid ds-sub-grid-empty' },
         h('span', { class: 'ds-stat-lbl' }, 'no items'));
@@ -118,10 +78,6 @@ export function SubGrid({ items = [] } = {}) {
         }, h('span', { 'aria-hidden': 'true' }, String(it.count)), it.label)));
 }
 
-// ---------------------------------------------------------------------------
-// SessionRow — compact single-line session summary row.
-//   phaseWalkProps: props forwarded to PhaseWalk for the inline phase strip.
-// ---------------------------------------------------------------------------
 export function SessionRow({ sessId, phaseWalkProps, events, verbs, prd, muts, resid, deviations, firstTs, lastTs, onClick } = {}) {
     const counts = [
         events != null ? events + ' ev' : null,
@@ -130,8 +86,6 @@ export function SessionRow({ sessId, phaseWalkProps, events, verbs, prd, muts, r
         muts != null ? muts + ' mut' : null,
         resid != null ? resid + ' resid' : null,
     ].filter(Boolean).join(' · ');
-    // Keyboard activation parity: role=button + tabindex without onkeydown is
-    // announced as a button but inert to Enter/Space (mirrors Table()).
     return h('div', {
         class: 'ds-session-row', onclick: onClick || null,
         role: onClick ? 'button' : null, tabindex: onClick ? '0' : null,
@@ -145,10 +99,6 @@ export function SessionRow({ sessId, phaseWalkProps, events, verbs, prd, muts, r
         (firstTs || lastTs) ? h('span', { class: 'ds-session-row-span' }, [firstTs, lastTs].filter(Boolean).join(' -> ')) : null);
 }
 
-// ---------------------------------------------------------------------------
-// DevRow — deviation/error callout row. Uses the danger-surface token, never
-// a bare hex background.
-// ---------------------------------------------------------------------------
 export function DevRow({ ts, event, sess, operation, residuals } = {}) {
     const pills = [
         sess ? Pill({ key: 'sess', children: sess }) : null,
@@ -161,12 +111,6 @@ export function DevRow({ ts, event, sess, operation, residuals } = {}) {
         (residuals && residuals.length) ? h('div', { class: 'ds-tree-node-residuals' }, residuals.join(', ')) : null);
 }
 
-// ---------------------------------------------------------------------------
-// LiveLog / LiveLogEntry — scrollable dense log stream with a colored
-// subsystem tag + bold event name + muted payload preview.
-//   entries[i].tone is a CSS color value; the background derives from it via
-//   color-mix at render time (no raw "#hex22" alpha-suffix hack).
-// ---------------------------------------------------------------------------
 export function LiveLogEntry({ ts, sub, tone, event, preview } = {}) {
     const tagStyle = tone
         ? `background:color-mix(in oklab, ${tone} 18%, transparent);color:${tone}`

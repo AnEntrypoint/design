@@ -1,8 +1,3 @@
-// Pure DOM paint: rebuilds the minimap's children from current `state`. Kept
-// outside webjsx's own vdom diff (this subtree is imperative, like a canvas)
-// because dot count/positions and hover/tooltip visibility change far more
-// often than a full component re-render is warranted for.
-
 import { messagePreview } from './preview.js';
 
 const TOOLTIP_HEIGHT = 22;

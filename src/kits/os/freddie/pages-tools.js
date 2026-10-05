@@ -1,7 +1,7 @@
-// Tools-ish freddie pages: analytics, models, cron, skills, config, env, tools, batch, gateway.
 import * as webjsx from '../../../../vendor/webjsx/index.js';
 import * as components from '../../../components.js';
 import { pre, form, skillLabel } from '../../../components/freddie/helpers.js';
+import { attempt } from '../../../best-effort.js';
 
 const h = webjsx.createElement;
 const { Panel, Row, Receipt, Kpi, Table, Section, EmptyState, Chip, Icon } = components;
@@ -91,7 +91,7 @@ export function makeToolsPages(ctx) {
                     submit: 'save',
                     onSubmit: async (ev) => {
                         let v = ev.target.elements.value.value;
-                        try { v = JSON.parse(v); } catch { /* swallow: value may be a plain string, not JSON — keep it as-is */ }
+                        attempt(() => { v = JSON.parse(v); });
                         await h0.pi.config.saveValue(ev.target.elements.key.value, v);
                         rerender();
                     },
