@@ -40,14 +40,14 @@ Useful scripts (see `"scripts"` in `package.json` for the full list):
 
 - **`src/components/`**: the component source, split into single-responsibility
   modules (`shell.js`, `content.js`, `chat.js`, `files.js`, etc.); `src/components.js`
-  is the re-export barrel every consumer actually imports from. A module that
+  is a re-export barrel that is not extended; kits and consumers import from the submodules. A module that
   outgrows ~200 lines becomes a thin barrel of its own over a sibling directory
   (e.g. `src/components/editor-primitives.js` over `editor-primitives/*.js`):
   the public export surface never moves.
 - **`preview/`**: one static HTML page per primitive/pattern, used for visual
   QA, the a11y audit, and visual regression baselines.
 - **`ui_kits/`**: full working example apps (buildless, loading the SDK from
-  this repo), `homepage`, `chat`, `file_browser`, `dashboard`, etc. Each kit's
+  this repo), `homepage`, `community-app`, `file_browser`, `dashboard`, etc. Each kit's
   generated `index.html` comes from `ui_kits/kits.config.mjs` via
   `npm run generate:ui-kits`: never hand-edit a kit's `index.html`.
 - **`site/`**: the flatspace-driven marketing/docs site (`site/theme.mjs` +

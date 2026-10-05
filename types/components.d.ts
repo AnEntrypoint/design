@@ -1,4 +1,4 @@
-// types/components.d.ts -- GENERATED, do not hand-edit.
+// types/components.d.ts: GENERATED, do not hand-edit.
 //
 // Produced by `node scripts/generate-component-types.mjs` from the same
 // extraction that produces docs/component-props.md, so the declarations
@@ -75,7 +75,7 @@ export interface BtnProps {
 export declare function Btn(props?: BtnProps): VNode;
 
 /**
- * A themeable inline text/character glyph (font-size + optional color from tokens) -- for a real icon shape, use Icon()/iconMarkup() from shell/icons.js instead; Glyph is for short text/character content only. Decorative (aria-hidden) by default; pass `label` to expose it as a real accessible image instead.
+ * A themeable inline text/character glyph (font-size + optional color from tokens): for a real icon shape, use Icon()/iconMarkup() from shell/icons.js instead; Glyph is for short text/character content only. Decorative (aria-hidden) by default; pass `label` to expose it as a real accessible image instead.
  *
  * Props for {@link Glyph} (src/components/shell.js).
  */
@@ -91,7 +91,7 @@ export interface GlyphProps {
 }
 export declare function Glyph(props?: GlyphProps): VNode;
 
-/** Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either call shape: `Icon('search', { size: 20 })` (the primary, historical signature) or `Icon({ name: 'search', size: 20 })` (a single props object, matching every other factory in this kit) -- both resolve through the same iconArgs() normalization below. An out-of-set name renders an empty `<span class="glyph">` rather than throwing. */
+/** Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either call shape: `Icon('search', { size: 20 })` (the primary, historical signature) or `Icon({ name: 'search', size: 20 })` (a single props object, matching every other factory in this kit): both resolve through the same iconArgs() normalization below. An out-of-set name renders an empty `<span class="glyph">` rather than throwing. */
 export declare function Icon(name?: any, arg1?: any): VNode;
 
 /**
@@ -111,7 +111,7 @@ export interface IconButtonProps {
 export declare function IconButton(props?: IconButtonProps): VNode;
 
 /**
- * A small count/variant/status marker (unread count, label chip inline with text). Distinct from Chip (a status-tone indicator element in its own right) and Pill (a plain non-interactive tag label) -- see the comments at each below for the three-way split.
+ * A small count/variant/status marker (unread count, label chip inline with text). Distinct from Chip (a status-tone indicator element in its own right) and Pill (a plain non-interactive tag label): see the comments at each below for the three-way split.
  *
  * Props for {@link Badge} (src/components/shell.js).
  */
@@ -379,7 +379,7 @@ export interface DetailRowProps {
 export declare function DetailRow(props?: DetailRowProps): VNode;
 
 /**
- * One entry in a LOG or timeline: a dense single line, with a coloured rail marking what kind of thing happened.  The kit's fourth row shape, and it is a different species from the other three rather than a variant of them. `Row` is a grid-laid LIST row with a background, a radius and hover chrome -- right for an item you click into, wrong for a hundred consecutive audit lines. `DetailRow` is a record's field. `Receipt` is a static key/value table. A timeline entry is none of those: it is quiet, dense, unclickable by default, and its most important signal is a colour at the leading edge telling you at a glance whether this line is an inbound message, a reply, an automated observation or a warning.  `EventList` already existed and does NOT cover this -- it composes `Row`, so it renders events as clickable list rows. This is the log-line shape that a case timeline, an audit trail or an activity feed actually wants.  Slots map to the parts a log line always has: `leading` an icon, `label` the fixed-width what/who column, `text` the body that takes the remaining width, `trailing` any per-entry control, and `meta` the timestamp pinned at the end.
+ * One entry in a LOG or timeline: a dense single line, with a coloured rail marking what kind of thing happened.  The kit's fourth row shape, and it is a different species from the other three rather than a variant of them. `Row` is a grid-laid LIST row with a background, a radius and hover chrome: right for an item you click into, wrong for a hundred consecutive audit lines. `DetailRow` is a record's field. `Receipt` is a static key/value table. A timeline entry is none of those: it is quiet, dense, unclickable by default, and its most important signal is a colour at the leading edge telling you at a glance whether this line is an inbound message, a reply, an automated observation or a warning.  `EventList` already existed and does NOT cover this: it composes `Row`, so it renders events as clickable list rows. This is the log-line shape that a case timeline, an audit trail or an activity feed actually wants.  Slots map to the parts a log line always has: `leading` an icon, `label` the fixed-width what/who column, `text` the body that takes the remaining width, `trailing` any per-entry control, and `meta` the timestamp pinned at the end.
  *
  * Props for {@link LogRow} (src/components/content.js).
  */
@@ -776,7 +776,7 @@ export interface FormProps {
 export declare function Form(props?: FormProps): VNode;
 
 /**
- * Ruled writing lines that exist only on paper.  A record printed to be READ wants a screen's "nothing recorded" placeholder. A record printed to be FILLED IN by hand wants the opposite: no placeholder text at all, and enough ruled space to write the answer. The same page is often used both ways -- an operator prints the case to carry into the field, and writes into the gaps. This renders nothing on screen and, in print, the blank lines to write on.  Pair it with `ds-print-blank` on whatever placeholder the field shows on screen, so the two swap over cleanly at the page boundary.  Lines are ruled with a real border rather than a background gradient on purpose: browsers omit background graphics from printing by default, so a gradient rule silently prints as nothing on the common setting.
+ * Ruled writing lines that exist only on paper.  A record printed to be READ wants a screen's "nothing recorded" placeholder. A record printed to be FILLED IN by hand wants the opposite: no placeholder text at all, and enough ruled space to write the answer. The same page is often used both ways: an operator prints the case to carry into the field, and writes into the gaps. This renders nothing on screen and, in print, the blank lines to write on.  Pair it with `ds-print-blank` on whatever placeholder the field shows on screen, so the two swap over cleanly at the page boundary.  Lines are ruled with a real border rather than a background gradient on purpose: browsers omit background graphics from printing by default, so a gradient rule silently prints as nothing on the common setting.
  *
  * Props for {@link FillLines} (src/components/content.js).
  */
@@ -1576,7 +1576,7 @@ export interface FileRowProps {
 export declare function FileRow(props?: FileRowProps): VNode;
 
 /**
- * The directory listing.  `loading` and `busy` are NOT two spellings of one state -- they are the two halves of this SDK's standing distinction, and FileGrid is the component that takes both because it is the one place both are in play at once:  loading -- a DATA FETCH is in flight. Owns which SHAPE renders: with no rows yet it is a cold load and the whole grid is replaced by FileSkeleton; with rows already on screen it is a refresh and the existing rows stay mounted and dim (is-refreshing), because flashing a populated directory back to shimmer reads as data loss. busy    -- a USER ACTION is in flight (a rename/move/delete round-trip). Owns INTERACTIVITY, not shape: it is forwarded to each FileRow as `busy`, which disables that row's open + mutation controls so a second click cannot fire the same mutation twice.  A grid can be `busy` while not `loading` (a delete is posting, rows fully rendered) and `loading` while not `busy` (a plain refresh). Passing one for the other is a real bug, not a style choice, so they are deliberately not merged and neither is an alias of the other.
+ * The directory listing.  `loading` and `busy` are NOT two spellings of one state: they are the two halves of this SDK's standing distinction, and FileGrid is the component that takes both because it is the one place both are in play at once:  loading: a DATA FETCH is in flight. Owns which SHAPE renders: with no rows yet it is a cold load and the whole grid is replaced by FileSkeleton; with rows already on screen it is a refresh and the existing rows stay mounted and dim (is-refreshing), because flashing a populated directory back to shimmer reads as data loss. busy:    a USER ACTION is in flight (a rename/move/delete round-trip). Owns INTERACTIVITY, not shape: it is forwarded to each FileRow as `busy`, which disables that row's open + mutation controls so a second click cannot fire the same mutation twice.  A grid can be `busy` while not `loading` (a delete is posting, rows fully rendered) and `loading` while not `busy` (a plain refresh). Passing one for the other is a real bug, not a style choice, so they are deliberately not merged and neither is an alias of the other.
  *
  * Props for {@link FileGrid} (src/components/files.js).
  */

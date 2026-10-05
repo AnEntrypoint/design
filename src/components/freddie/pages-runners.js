@@ -43,7 +43,7 @@ export const cron = makePage((ctx) => {
                 Btn({ variant: 'primary', disabled: s.busy, children: s.busy ? 'working…' : 'add job', onClick: add })),
             s.confirmDelete ? ConfirmDialog({
                 title: 'Delete cron job?',
-                message: 'This permanently removes "' + s.confirmDelete.cron + '" -- ' + trunc(s.confirmDelete.prompt, TRUNC_SUB).text + '. This cannot be undone.',
+                message: 'This permanently removes "' + s.confirmDelete.cron + '": ' + trunc(s.confirmDelete.prompt, TRUNC_SUB).text + '. This cannot be undone.',
                 destructive: true, confirmLabel: 'delete', busy: s.busy, busyLabel: 'deleting…',
                 onConfirm: () => del(s.confirmDelete),
                 onCancel: () => ctx.set({ confirmDelete: null }),

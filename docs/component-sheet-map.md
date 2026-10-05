@@ -9,7 +9,7 @@ without this map no consumer can declare what it needs.
 
 ## How to read it
 
-A class defined in 4 or more sheets is treated as SHARED BASE -- a state or
+A class defined in 4 or more sheets is treated as SHARED BASE: a state or
 utility token (active, group, btn, icon) that any subset has to carry regardless of
 which components it includes. "Owned" sheets are those carrying a component's
 distinctive classes. This split matters: counted naively, one shared token drags a
@@ -38,9 +38,9 @@ These are the ones that make a safe subset impossible to express today.
 | component | sheets | where |
 | --- | --- | --- |
 | mountCommunityApp | 10 | app-shell/base.css, app-shell/topbar.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/sidebar-misc.css, app-shell/row-print.css, editor-primitives.css, community-app.css, app-surfaces.css |
+| Kpi | 8 | app-shell/base.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, app-shell/dashboard.css, editor-primitives.css, app-surfaces.css |
 | SearchInput | 8 | app-shell/base.css, app-shell/topbar.css, app-shell/states-interactions.css, app-shell/responsive2-workspace.css, app-shell/dashboard.css, chat.css, editor-primitives.css, app-surfaces.css |
 | WorkspaceShell | 7 | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/sidebar-misc.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-surfaces.css |
-| Kpi | 7 | app-shell/base.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, editor-primitives.css, app-surfaces.css |
 | loadingState | 7 | app-shell/base.css, app-shell/primitives.css, app-shell/panel-row.css, app-shell/hero-content.css, app-shell/loading-alerts.css, app-shell/row-print.css, community.css |
 | AppShell | 6 | app-shell/base.css, app-shell/topbar.css, app-shell/responsive.css, app-shell/responsive2-workspace.css, app-shell/row-print.css, app-surfaces.css |
 | Row | 6 | app-shell/base.css, app-shell/panel-row.css, app-shell/row-print.css, chat.css, editor-primitives.css, app-surfaces.css |
@@ -87,7 +87,7 @@ These are the ones that make a safe subset impossible to express today.
 | Form | 3 | app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css |
 | AICatPortrait | 3 | app-shell/hero-content.css, app-shell/chat-polish.css, app-shell/plugins-config.css |
 | AgentChat | 3 | app-shell/responsive2-workspace.css, chat.css, app-surfaces.css |
-| ContextPane | 3 | app-shell/panel-row.css, app-shell/responsive.css, chat.css |
+| ContextPane | 3 | app-shell/panel-row.css, app-shell/responsive.css, app-shell/context-pane.css |
 | SpreadsheetPreview | 3 | app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css |
 | GitDiffView | 3 | app-shell/chat-polish.css, app-shell/git-status.css, app-shell/plugins-config.css |
 | DropZone | 3 | app-shell/files.css, app-shell/chat-polish.css, chat.css |
@@ -148,7 +148,7 @@ These are the ones that make a safe subset impossible to express today.
 | Manifesto | src/components/content/hero.js | app-shell/base.css, app-shell/panel-row.css, app-shell/hero-content.css, gm-prose.css |
 | Section | src/components/content/panel.js | app-shell/base.css |
 | PageHeader | src/components/content/hero.js | app-shell/base.css, app-shell/hero-content.css, app-shell/files.css, app-shell/kits-appended.css |
-| Kpi | src/components/content/charts.js | app-shell/base.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, editor-primitives.css, app-surfaces.css |
+| Kpi | src/components/content/charts.js | app-shell/base.css, app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css, app-shell/dashboard.css, editor-primitives.css, app-surfaces.css |
 | Sparkline | src/components/content/charts.js | app-shell/hero-content.css |
 | BarChart | src/components/content/charts.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css |
 | Table | src/components/content/table.js | app-shell/primitives.css, app-shell/hero-content.css, app-shell/responsive.css, app-shell/states-interactions.css, app-shell/kits-appended.css, community.css |
@@ -193,10 +193,10 @@ These are the ones that make a safe subset impossible to express today.
 | fmtTime | src/components/sessions/format.js | (no distinctive rules) |
 | fmtAgo | src/components/sessions/format.js | (no distinctive rules) |
 | AgentListSkeleton | src/components/sessions/detail-bits.js | chat.css |
-| ContextPane | src/components/context-pane/pane.js | app-shell/panel-row.css, app-shell/responsive.css, chat.css |
-| ContextMeter | src/components/context-pane/meter.js | chat.css |
-| ContextTreemap | src/components/context-pane/treemap.js | chat.css |
-| ContextXRayPanel | src/components/context-pane/xray.js | chat.css |
+| ContextPane | src/components/context-pane/pane.js | app-shell/panel-row.css, app-shell/responsive.css, app-shell/context-pane.css |
+| ContextMeter | src/components/context-pane/meter.js | app-shell/context-pane.css |
+| ContextTreemap | src/components/context-pane/treemap.js | app-shell/context-pane.css |
+| ContextXRayPanel | src/components/context-pane/xray.js | app-shell/context-pane.css |
 | SpreadsheetPreview | src/components/spreadsheet-preview.js | app-shell/hero-content.css, app-shell/responsive.css, app-shell/kits-appended.css |
 | GitStatusPanel | src/components/git-status.js | app-shell/primitives.css, app-shell/git-status.css |
 | GitDiffView | src/components/git-status.js | app-shell/chat-polish.css, app-shell/git-status.css, app-shell/plugins-config.css |

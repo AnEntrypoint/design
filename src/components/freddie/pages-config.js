@@ -130,7 +130,7 @@ export const env = makePage((ctx) => {
             otherRows.length ? section('other environment', Table({ headers: ['key', 'status'], rows: otherRows })) : null,
             s.confirmRemove ? ConfirmDialog({
                 title: 'Remove key?',
-                message: 'This removes the stored ' + s.confirmRemove.provider + ' key (' + s.confirmRemove.env + '). The raw value is never retrievable once removed -- you would need to paste it in again from wherever you originally got it.',
+                message: 'This removes the stored ' + s.confirmRemove.provider + ' key (' + s.confirmRemove.env + '). The raw value is never retrievable once removed: you would need to paste it in again from wherever you originally got it.',
                 destructive: true, confirmLabel: 'remove', busy: s.busy === s.confirmRemove.provider, busyLabel: 'removing…',
                 onConfirm: () => removeKey(s.confirmRemove.provider),
                 onCancel: () => ctx.set({ confirmRemove: null }),

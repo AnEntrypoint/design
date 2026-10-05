@@ -23,19 +23,13 @@ function Delta({ delta, tone, invert }) {
 }
 
 function Metrics() {
-    const [leadValue, leadLabel, leadMeta] = kpis[0];
-    return h('div', { class: 'ds-metric-split' },
-        h('div', { class: 'ds-metric-lead' },
-            h('div', { class: 'ds-metric-lead-num' }, leadValue),
-            h('div', { class: 'ds-metric-lead-lbl' }, leadLabel),
-            h('div', { class: 'ds-metric-lead-foot' },
-                Delta(leadMeta),
-                Sparkline({ values: leadMeta.spark, width: 160, height: 44, tone: 'up' }))),
-        h('div', { class: 'ds-metric-list' }, ...kpis.slice(1).map(([value, label, meta], i) =>
-            h('div', { key: 'm' + i, class: 'ds-metric-item' },
-                h('span', { class: 'ds-metric-item-lbl' }, label),
-                h('span', { class: 'ds-metric-item-num' }, value),
-                Delta(meta)))));
+    return h('div', { class: 'ds-metric-list' }, ...kpis.map(([value, label, meta], i) =>
+        h('div', { key: 'm' + i, class: 'ds-metric-item' },
+            h('span', { class: 'ds-metric-item-lbl' }, label),
+            h('span', { class: 'ds-metric-item-num' }, value),
+            Delta(meta),
+            h('span', { class: 'ds-metric-item-spark' },
+                meta.spark ? Sparkline({ values: meta.spark, width: 96, height: 28, tone: 'up' }) : null))));
 }
 
 const channelBreakdown = [
@@ -73,26 +67,25 @@ function copyCommit(e) {
         attempt(() => { fallbackCopy(text); done(); });
     }
 }
-const COMMIT_HASH = '8799035';
+const COMMIT_HASH = 'b9a2e83';
 const receipt = [
-    ['environment', 'production'],
-    ['region',      'eu-west-1'],
-    ['build',       'v0.4.12-7a3f9'],
-    ['deployed',    '2026-05-10 14:22'],
+    ['environment', 'github pages'],
+    ['build',       'v1.0.34'],
+    ['deployed',    '2026-10-05'],
     ['commit',      h('button', { type: 'button', class: 'btn-link', 'data-commit': COMMIT_HASH, 'aria-label': 'copy commit hash ' + COMMIT_HASH, onclick: copyCommit },
         Icon('copy', { size: 12 }), COMMIT_HASH)],
     ['by',          'lanmower']
 ];
 
 const changelog = [
-    { date: '2026-05-10', ver: 'v0.4.12', msg: 'fix homepage kit motion ref · add dashboard kit · tune panel shadows' },
-    { date: '2026-05-09', ver: 'v0.4.11', msg: 'cache warmup on cold start · lower retry interval' },
-    { date: '2026-05-07', ver: 'v0.4.10', msg: 'migrate session store · add p99 to /metrics' }
+    { date: '2026-10-05', ver: 'b9a2e83', msg: 'layout polish · token-only css · plain copy' },
+    { date: '2026-10-05', ver: '464ef30', msg: 'plain copy · restrained heroes · truthful docs' },
+    { date: '2026-10-05', ver: '5a2bb35', msg: 'polish pass · contrast gate' }
 ];
 
 const events = [
-    { title: 'deploy succeeded',  sub: 'v0.4.12 · all regions',  meta: '2m',  rail: 'green' },
-    { title: 'cache flushed',     sub: 'edge-cache · eu-west-1', meta: '14m' },
+    { title: 'deploy succeeded',  sub: 'v1.0.34 · pages',  meta: '2m',  rail: 'green' },
+    { title: 'cache flushed',     sub: 'edge cache · pages', meta: '14m' },
     { title: 'p95 spike',         sub: '/api/upload · 1.4s',     meta: '38m', rail: 'flame' },
     { title: 'cron ran',          sub: 'reindex-search · ok',    meta: '1h',  rail: 'green' },
     { title: 'config reloaded',   sub: 'feature flags',          meta: '3h' }

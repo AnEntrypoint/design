@@ -14,7 +14,7 @@ const APP_SHELL_SPLIT = [
     'sidebar-misc.css', 'states-interactions.css', 'loading-alerts.css',
     'responsive2-workspace.css', 'row-print.css', 'data-density.css', 'kits-appended.css',
     'git-status.css', 'plugins-config.css', 'models-config.css', 'skills-config.css',
-    'slider.css', 'otp-input.css', 'carousel.css', 'calendar.css', 'collab.css',
+    'slider.css', 'otp-input.css', 'carousel.css', 'calendar.css', 'collab.css', 'context-pane.css',
     'dashboard.css',
 ];
 const SHEETS = [
@@ -166,7 +166,7 @@ lines.push('without this map no consumer can declare what it needs.');
 lines.push('');
 lines.push('## How to read it');
 lines.push('');
-lines.push(`A class defined in ${SHARED_AT} or more sheets is treated as SHARED BASE -- a state or`);
+lines.push(`A class defined in ${SHARED_AT} or more sheets is treated as SHARED BASE: a state or`);
 lines.push('utility token (active, group, btn, icon) that any subset has to carry regardless of');
 lines.push('which components it includes. "Owned" sheets are those carrying a component\'s');
 lines.push('distinctive classes. This split matters: counted naively, one shared token drags a');
@@ -212,10 +212,10 @@ const outPath = path.join(root, 'docs', 'component-sheet-map.md');
 if (CHECK) {
     const cur = existsSync(outPath) ? readFileSync(outPath, 'utf8') : '';
     if (cur !== out) {
-        die('[sheet-map] docs/component-sheet-map.md is out of date -- run node scripts/generate-component-sheet-map.mjs');
+        die('[sheet-map] docs/component-sheet-map.md is out of date: run node scripts/generate-component-sheet-map.mjs');
     }
     console.log('[sheet-map] up to date');
 } else {
     writeFileSync(outPath, out);
-    console.log(`[sheet-map] wrote docs/component-sheet-map.md -- ${rows.length} components, ${one.length} single-sheet, ${many.length} spanning 3+`);
+    console.log(`[sheet-map] wrote docs/component-sheet-map.md: ${rows.length} components, ${one.length} single-sheet, ${many.length} spanning 3+`);
 }

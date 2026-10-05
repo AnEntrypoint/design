@@ -31,7 +31,7 @@ while being invisible to both these gates and to any consumer that `<link>`s
    (28%, a visible seam), `--rule-control` (alias of `--rule-strong` --
    interactive-element boundaries need >=3:1, WCAG 1.4.11, which `--rule`
    alone can't clear), `--border`/`--border-w` (aliases of `--rule-control`/
-   `--bw-hair` -- real tokens some component sheets already consumed with no
+   `--bw-hair`: real tokens some component sheets already consumed with no
    fallback and no definition anywhere; now defined). A theme rebinds these;
    components read them. Also: `--on-accent` / `--on-color` (foreground on a
    saturated fill), `--scrim` / `--scrim-strong` / `--scrim-media` (overlay
@@ -68,8 +68,8 @@ attributes that select tokens. All are independent and composable:
 
 | Attribute        | Values                                              | Effect |
 |------------------|------------------------------------------------------|--------|
-| `data-theme`     | `auto` `paper` `ink` `dark` `thebird` `github-dark`   | Surface theme. `auto` follows OS `prefers-color-scheme`. `dark` is a full alias of `ink` (same CSS block, both names accepted for it). `light` is **not** a valid value -- it has never existed and silently no-ops to the root default (which happens to look like `paper`); use `paper`. |
-| `data-accent`    | `acid` `green` `purple` `mascot`                      | Accent hue. Absent = the neutral default (`--accent` `#262626`); the four presets recolor it. |
+| `data-theme`     | `auto` `paper` `ink` `dark` `thebird` `github-dark`   | Surface theme. `auto` follows OS `prefers-color-scheme`. `dark` is a full alias of `ink` (same CSS block, both names accepted for it). `light` is **not** a valid value: it has never existed and silently no-ops to the root default (which happens to look like `paper`); use `paper`. |
+| `data-accent`    | `acid` `green` `purple` `mascot`                      | Accent hue. Absent = the neutral default (`--accent` `#262626`); the four presets recolor it: `acid` is the brand green `#247420`, `green`, `purple` and `mascot` are neutral greys kept under their historical names. |
 | `data-density`   | `compact` `comfortable` `spacious`                    | Scales `--density` -> padding/gutters/spacing, and switches control heights to a discrete per-tier px table. |
 | `data-typescale` | `sm` `lg`                                             | Bumps body/lg/xl reading sizes. |
 

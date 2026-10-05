@@ -27,7 +27,7 @@ function heroNode(hero) {
     ) : null,
     Array.isArray(hero.ctas) && hero.ctas.length
       ? h('div', { class: 'ds-hero-actions' }, ...hero.ctas.map((c, i) =>
-          h('a', { key: i, class: i === 0 ? 'btn btn-accent' : 'btn btn-ghost', href: c.href || '#' }, c.label || c.cta || 'go')))
+          h('a', { key: i, class: c.primary ? 'btn btn-primary' : 'btn btn-ghost', href: c.href || '#' }, c.label || c.cta || 'go')))
       : null,
     badgeRow,
   );
@@ -47,16 +47,12 @@ function showcaseNode(showcase) {
     C.Chip({ key: 'c1', tone: 'green', children: 'live' }),
     C.Chip({ key: 'c2', tone: 'blue', children: 'beta' }),
     C.Chip({ key: 'c3', tone: 'purple', children: 'new' }),
-    C.Badge({ key: 'c4', tone: 'success', children: '0 violations' }),
+    showcase.a11yTotal == null ? null : C.Badge({ key: 'c4', tone: showcase.a11yTotal ? 'danger' : 'success', children: showcase.a11yTotal + ' a11y violations' }),
   );
   const table = C.Table({
-    caption: 'ship status for three representative kits, from the same manifest the kits panel below reads.',
-    headers: ['kit', 'status', 'a11y'],
-    rows: [
-      ['chat', 'shipped', 'pass'],
-      ['dashboard', 'shipped', 'pass'],
-      ['os', 'beta', 'pass'],
-    ],
+    caption: 'counts read at build time from the kit folders, the component manifest and the accessibility baseline.',
+    headers: ['measure', 'value'],
+    rows: Array.isArray(showcase.stats) ? showcase.stats.map((s) => [s.label, String(s.value)]) : [],
     compact: true,
   });
   return C.Section({
@@ -100,9 +96,7 @@ function examplesNode(examples) {
   return C.Section({
     title: 'explore',
     children: examples.map((e, i) => {
-      const code = e.code == null ? '' : String(e.code).trim();
       const kids = [];
-      if (code) kids.push(h('span', { key: 'c', class: 'code' }, code));
       kids.push(h('span', { key: 't', class: 'title' }, String(e.label || e.name || e.href || '')));
       if (e.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, e.desc));
       kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, 'open'));
@@ -114,10 +108,10 @@ function examplesNode(examples) {
 const PANEL_ICON = {
   kits: 'grid',
   file_browser: 'folder',
-  desktop_os: 'square',
+  desktop_os: 'screen',
   web_components: 'page',
   api_exports: 'link',
-  decks: 'screen',
+  decks: 'play',
   docs: 'file-text',
   previews: 'eye',
   features: 'info',
@@ -136,8 +130,22 @@ function categoryPillsNode(categories, items, rerender) {
     onclick: () => { kitsFilterState.category = key; rerender(); },
   }, label, h('span', { class: 'ds-cat-pill-count' }, String(count)));
   return h('div', { class: 'ds-cat-pills', role: 'group', 'aria-label': 'filter kits by category' },
-    pill('all', 'All', items.length),
+    pill('all', 'all', items.length),
     ...categories.map((c) => pill(c.key, c.label, counts.get(c.key) || 0)));
+}
+
+function groupedPreviewRows(items) {
+  const groups = new Map();
+  for (const it of items) {
+    const g = String(it.meta || 'other').toLowerCase();
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push(it);
+  }
+  return [...groups].map(([name, list]) => h('div', { key: name, class: 'ds-group' },
+    h('h3', { class: 'ds-group-head' }, name, h('span', { class: 'ds-group-count' }, String(list.length))),
+    ...list.map((it, i) => h('a', { key: i, class: 'row', href: it.href || '#' },
+      h('span', { key: 't', class: 'title' }, String(it.title || '')),
+      it.sub ? h('span', { key: 'm', class: 'meta dim' }, it.sub) : null))));
 }
 
 function panelNode(panel, idx, rerender) {
@@ -187,24 +195,20 @@ function panelNode(panel, idx, rerender) {
   }
   const rows = panel.layout === 'cards'
     ? items.map((it, i) => {
-        const code = it.code == null ? '' : String(it.code).trim();
         return h('a', { key: i, class: 'ds-kit-card', href: it.href || '#' },
-          code ? h('span', { key: 'c', class: 'ds-kit-card-code' }, code) : null,
           h('span', { key: 't', class: 'ds-kit-card-title' }, String(it.title || it.name || '')),
           (it.sub || it.desc) ? h('span', { key: 'm', class: 'ds-kit-card-sub' }, it.sub || it.desc) : null,
-          h('span', { key: 'a', class: 'ds-kit-card-arrow' }, it.meta || 'open'),
+          h('span', { key: 'a', class: 'ds-kit-card-arrow' }, String(it.meta || 'open').toLowerCase()),
         );
       })
     : items.map((it, i) => {
-        const code = it.code == null ? '' : String(it.code).trim();
         const kids = [];
-        if (code) kids.push(h('span', { key: 'c', class: 'code' }, code));
         kids.push(h('span', { key: 't', class: 'title' }, String(it.title || it.name || '')));
         if (it.sub || it.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, it.sub || it.desc));
-        kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, it.meta || 'open'));
+        kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, String(it.meta || 'open').toLowerCase()));
         return h('a', { key: i, class: 'row', href: it.href || '#' }, ...kids);
       });
-  const rowsWrapped = panel.layout === 'cards' ? h('div', { class: 'ds-kit-card-grid' }, ...rows) : rows;
+  const rowsWrapped = panel.layout === 'cards' ? h('div', { class: 'ds-kit-card-grid' }, ...rows) : (panel.id === 'previews' ? groupedPreviewRows(items) : rows);
   const panelEl = C.Panel({ id: panel.id || null, title: titleNode, count: items.length, children: rowsWrapped });
   return (filterInput || pillsNode) ? h('div', { class: 'ds-kits-panel-wrap' }, pillsNode, filterInput, panelEl) : panelEl;
 }
@@ -264,9 +268,18 @@ function quickstartNode(quickstart) {
   });
 }
 
+const SIDE_ICON = {
+  everything: 'rows', 'ui kits': 'grid', decks: 'play', previews: 'eye', docs: 'file-text',
+  readme: 'file-text', skill: 'file-code', tokens: 'contrast', source: 'github', 'mit license': 'shield',
+};
+
 function sideNode(sidebar) {
   if (!sidebar || !Array.isArray(sidebar.sections) || !sidebar.sections.length || !C.Side) return null;
-  return C.Side({ sections: sidebar.sections });
+  const sections = sidebar.sections.map((sec) => ({
+    ...sec,
+    items: sec.items.map((it) => (SIDE_ICON[it.label] ? { ...it, glyph: C.Icon(SIDE_ICON[it.label], { size: 16 }) } : it)),
+  }));
+  return C.Side({ sections });
 }
 
 function __slug(s) { return String(s || '').trim().toLowerCase().replace(/[^\\w\\s-]/g, '').replace(/\\s+/g, '-'); }

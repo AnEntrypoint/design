@@ -145,7 +145,7 @@ export function Form({ fields = [], submit = 'submit', onSubmit, columns = 1 }) 
  * A record printed to be READ wants a screen's "nothing recorded" placeholder.
  * A record printed to be FILLED IN by hand wants the opposite: no placeholder
  * text at all, and enough ruled space to write the answer. The same page is
- * often used both ways -- an operator prints the case to carry into the field,
+ * often used both ways: an operator prints the case to carry into the field,
  * and writes into the gaps. This renders nothing on screen and, in print, the
  * blank lines to write on.
  *

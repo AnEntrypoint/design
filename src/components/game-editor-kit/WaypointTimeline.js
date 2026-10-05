@@ -44,7 +44,7 @@ export function createWaypointTimeline(container, { onSelect, onAdd, onRemove, o
     let body
     if (!_rows.length) {
       body = h('div', { style: 'display:flex;align-items:center;justify-content:center;text-align:center;flex:1' },
-        EmptyState({ text: 'No waypoints yet -- click "+ Waypoint" to drop the first one, or place a "waypoint" app from the Add menu' }))
+        EmptyState({ text: 'No waypoints yet: click "+ Waypoint" to drop the first one, or place a "waypoint" app from the Add menu' }))
     } else {
       body = h('div', { style: 'flex:1;min-height:0;overflow-y:auto' },
         ..._rows.map((r, i) => h('div', {

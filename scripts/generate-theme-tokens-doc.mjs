@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '..');
 const tokensPath = path.join(root, 'tokens.json');
 
 if (!fs.existsSync(tokensPath)) {
-    die('[theme-tokens-doc] tokens.json missing -- run `node scripts/generate-tokens-json.mjs` first');
+    die('[theme-tokens-doc] tokens.json missing: run `node scripts/generate-tokens-json.mjs` first');
 }
 const { tokens, groups, generatedAt } = JSON.parse(fs.readFileSync(tokensPath, 'utf8'));
 
@@ -47,7 +47,7 @@ function consumersOf(tokenName) {
 
 const groupNames = Object.keys(groups).sort();
 let md = `# Theme tokens\n\n`;
-md += `Generated from \`colors_and_type.css\` via \`node scripts/generate-tokens-json.mjs && node scripts/generate-theme-tokens-doc.mjs\`. Do not hand-edit -- re-run after any token change.\n\n`;
+md += `Generated from \`colors_and_type.css\` via \`node scripts/generate-tokens-json.mjs && node scripts/generate-theme-tokens-doc.mjs\`. Do not hand-edit: re-run after any token change.\n\n`;
 md += `${Object.keys(tokens).length} root tokens across ${groupNames.length} groups. Source snapshot: ${generatedAt}.\n\n`;
 
 for (const g of groupNames) {

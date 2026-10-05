@@ -82,14 +82,14 @@ export function RowLink({ code, title, sub, meta, href = '#', key, target }) {
  *
  * The kit's fourth row shape, and it is a different species from the other
  * three rather than a variant of them. `Row` is a grid-laid LIST row with a
- * background, a radius and hover chrome -- right for an item you click into,
+ * background, a radius and hover chrome: right for an item you click into,
  * wrong for a hundred consecutive audit lines. `DetailRow` is a record's
  * field. `Receipt` is a static key/value table. A timeline entry is none of
  * those: it is quiet, dense, unclickable by default, and its most important
  * signal is a colour at the leading edge telling you at a glance whether this
  * line is an inbound message, a reply, an automated observation or a warning.
  *
- * `EventList` already existed and does NOT cover this -- it composes `Row`,
+ * `EventList` already existed and does NOT cover this: it composes `Row`,
  * so it renders events as clickable list rows. This is the log-line shape
  * that a case timeline, an audit trail or an activity feed actually wants.
  *

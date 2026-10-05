@@ -20,24 +20,24 @@ const servers = [
 ];
 
 const VOICE_PEERS = [
-    { identity: 'priya', color: color('priya'), speaking: true },
-    { identity: 'tomas', color: color('tomas'), muted: true },
+    { identity: 'reviewer', color: color('reviewer'), speaking: true },
+    { identity: 'author', color: color('author'), muted: true },
 ];
 
 const SAMPLE_MESSAGES = [
-    { id: 'm1', userId: 'priya', username: 'priya', content: 'shipped the community adapter contract. the mock lives in the kit, the real one lives in the app that uses it.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
-    { id: 'm1b', userId: 'priya', username: 'priya', content: 'no backend anywhere in this kit. one state object and a set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
-    { id: 'm2', userId: 'tomas', username: 'tomas', content: 'so the kit never talks to a server at all?', timestamp: Date.now() - 780000, delivered: true },
+    { id: 'm1', userId: 'reviewer', username: 'reviewer', content: 'shipped the community adapter contract. the mock lives in the kit, the real one lives in the app that uses it.', timestamp: Date.now() - 900000, delivered: true, reactions: [{ emoji: 'yay', count: 3, you: true }, { emoji: 'eyes', count: 1 }] },
+    { id: 'm1b', userId: 'reviewer', username: 'reviewer', content: 'no backend anywhere in this kit. one state object and a set of subscribers is the whole store.', timestamp: Date.now() - 890000, delivered: true },
+    { id: 'm2', userId: 'author', username: 'author', content: 'so the kit never talks to a server at all?', timestamp: Date.now() - 780000, delivered: true },
     { id: 'm3', userId: 'you', username: 'you', content: 'right. it only has to provide get, subscribe and actions.', timestamp: Date.now() - 700000, delivered: true, read: true },
     { id: 'm4', userId: 'you', username: 'you', type: 'code', lang: 'css', content: 'html { visibility: hidden; }\nhtml.ready { visibility: visible; }\n\n@media (prefers-reduced-motion: reduce) {\n  * { animation-duration: 0ms !important; }\n}', timestamp: Date.now() - 650000, delivered: true, read: true },
-    { id: 'm5', userId: 'priya', username: 'priya', content: '## review notes\n\nlooks solid. a few things:\n\n- add a short timeout fallback in case the stylesheet hangs\n- set the `ready` class from `requestIdleCallback`\n- keep a no-js fallback of `visibility: visible`\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
-    { id: 'm6', userId: 'tomas', username: 'tomas', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'new mascot draft, final colours', timestamp: Date.now() - 480000, delivered: true },
+    { id: 'm5', userId: 'reviewer', username: 'reviewer', content: '## review notes\n\nlooks solid. a few things:\n\n- add a short timeout fallback in case the stylesheet hangs\n- set the `ready` class from `requestIdleCallback`\n- keep a no-js fallback of `visibility: visible`\n\nwill review the rest tonight.', timestamp: Date.now() - 600000, delivered: true, reactions: [{ emoji: 'done', count: 2, you: true }] },
+    { id: 'm6', userId: 'author', username: 'author', type: 'image', url: './sample-svg.svg', alt: 'design system mascot', caption: 'new mascot draft, final colours', timestamp: Date.now() - 480000, delivered: true },
     { id: 'm7', userId: 'you', username: 'you', content: 'attaching the token sheet for review.', attachments: [{ type: 'file', src: './sample.pdf', name: 'token-sheet.pdf', size: 782 }], timestamp: Date.now() - 420000, delivered: true, read: true },
-    { id: 'm8', userId: 'priya', username: 'priya', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'tokens, components and kits for dense, tonal interfaces.' }, timestamp: Date.now() - 360000, delivered: true },
-    { id: 'm9', userId: 'tomas', username: 'tomas', type: 'file', url: './sample.pdf', name: 'review-notes.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
+    { id: 'm8', userId: 'reviewer', username: 'reviewer', content: '', linkPreview: { href: 'https://github.com/AnEntrypoint/design', host: 'github.com', title: 'AnEntrypoint/design: design system for 247420', desc: 'tokens, components and kits for dense, tonal interfaces.' }, timestamp: Date.now() - 360000, delivered: true },
+    { id: 'm9', userId: 'author', username: 'author', type: 'file', url: './sample.pdf', name: 'review-notes.pdf', size: 782, timestamp: Date.now() - 300000, delivered: true, reactions: [{ emoji: 'pin', count: 1 }] },
 ];
 
-const TYPING_PEERS = [{ id: 'priya', name: 'priya', avatar: 'P', color: color('priya') }];
+const TYPING_PEERS = [{ id: 'reviewer', name: 'reviewer', avatar: 'R', color: color('reviewer') }];
 
 const state = {
     channels, categories: [], servers,

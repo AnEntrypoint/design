@@ -249,7 +249,7 @@ export function extractComponentSurface() {
     const barrelPath = join(root, 'src', 'components.js');
     const groups = parseBarrel(barrelPath);
     if (!groups.length) {
-        throw new Error('[component-surface] parsed zero export groups from src/components.js -- barrel shape changed, update the parser');
+        throw new Error('[component-surface] parsed zero export groups from src/components.js: barrel shape changed, update the parser');
     }
 
     const components = [];

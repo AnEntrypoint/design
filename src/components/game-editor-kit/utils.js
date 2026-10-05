@@ -4,21 +4,21 @@ export function showToast(message, type = 'info') {
   const toastContainer = document.getElementById('game-editor-kit-toast-container') || (() => {
     const container = document.createElement('div')
     container.id = 'game-editor-kit-toast-container'
-    container.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px'
+    container.style.cssText = 'position:fixed;top:16px;right:16px;z-index:var(--z-toast,900);display:flex;flex-direction:column;gap:8px'
     document.body.appendChild(container)
     return container
   })()
 
   const toast = document.createElement('div')
-  const bgColor = type === 'error' ? '#cc2222' : type === 'success' ? '#22aa22' : '#262626'
-  const fgColor = '#ffffff'
+  const bgColor = type === 'error' ? 'var(--danger,#cc2222)' : type === 'success' ? 'var(--success,#22aa22)' : 'var(--accent,#262626)'
+  const fgColor = 'var(--on-color,#ffffff)'
   toast.style.cssText = `
     background:${bgColor};
     color:${fgColor};
     padding:12px 16px;
     border-radius:4px;
     font-size:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    box-shadow:var(--shadow-overlay,0 2px 8px rgba(0,0,0,0.3));
     max-width:300px;
     word-wrap:break-word;
     animation:slideIn 200ms ease-out;

@@ -43,10 +43,11 @@ const FILL_PAIRS = [
     ['--warn-fg', '--warn'],
     ['--warn-fg', '--flame'],
     ['--danger-fg', '--danger'],
+    ['--danger-fill-fg', '--danger-fill'],
     ['--ink', '--sun'],
     ['--green-deep', '--green-tint'],
     ['--purple-deep', '--purple-tint'],
-    ['--ink', '--mascot-tint'],
+    ['--mascot-chip-fg', '--mascot-tint'],
 ];
 
 const UI_PAIRS = [

@@ -284,7 +284,8 @@
 .ds-prim-panel { --primer-inset-min: 10px; --primer-inset-y-max: 14px; --primer-inset-x-max: 18px; padding: clamp(var(--primer-inset-min), 2.5vw, var(--primer-inset-y-max)) clamp(var(--primer-inset-min), 3vw, var(--primer-inset-x-max)); display: flex; flex-direction: column; gap: 18px; }
 .ds-prim-row { display: flex; gap: var(--space-2-5); flex-wrap: wrap; align-items: center; }
 
-.ds-prim-row-collab { position: relative; min-height: 64px; }
+.ds-prim-stage { position: relative; flex: 1 1 14rem; min-height: var(--space-7); }
+.ds-prim-fixture { flex: 1 1 14rem; max-width: 24rem; min-width: 0; }
 .ds-prim-label { flex: 0 0 64px; font-family: var(--ff-mono); font-size: var(--fs-nano); color: var(--fg-3); }
 
 .ds-prim-label-status { flex: 0 1 auto; white-space: nowrap; }
@@ -345,7 +346,11 @@
 .ds-table-sort-btn.is-active { color: var(--accent-ink, var(--accent)); }
 .ds-table-sort-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
-.ds-settings-main { padding: 0; }
+.ds-settings-main { padding: 0; display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.ds-settings-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: var(--space-4); scrollbar-width: thin; scrollbar-color: var(--rule-strong) transparent; }
+.ds-settings-scroll::-webkit-scrollbar { width: 8px; }
+.ds-settings-scroll::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: var(--r-pill); }
+.ds-settings-scroll::-webkit-scrollbar-track { background: transparent; }
 
 .ds-settings-body { padding: 0; }
 .ds-settings-body-stack { display: flex; flex-direction: column; gap: calc(var(--space-2-5) * var(--density)); }
@@ -387,14 +392,13 @@
 .ds-btn-mascot { color: var(--mascot-deep); }
 
 .ds-savebar {
-  position: sticky; bottom: var(--space-2); z-index: var(--z-sticky);
+  flex: none;
   display: flex; align-items: center;
   justify-content: flex-end; gap: var(--space-2); flex-wrap: wrap;
   padding: calc(var(--space-2-75) * var(--density)) calc(var(--space-3) * var(--density));
   background: var(--panel-2); border-radius: var(--r-1);
   border: var(--bw-hair) solid var(--rule);
-  margin: calc(var(--space-5) * var(--density)) 0 var(--space-2);
-  box-shadow: var(--shadow-2, var(--shadow-1));
+  margin: var(--space-3) 0 0;
 }
 .ds-savebar-note { flex: 1 1 160px; min-width: 0; color: var(--panel-text-2); }
 .ds-modal-body-form { padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2-75); }

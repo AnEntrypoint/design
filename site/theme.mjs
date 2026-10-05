@@ -29,6 +29,13 @@ function countManifestComponents() {
   } catch { return 0; }
 }
 
+function a11yBaselineTotal() {
+  const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+  try {
+    return JSON.parse(readFileSync(join(repoRoot, 'scripts', 'a11y.baseline.json'), 'utf8')).total;
+  } catch { return null; }
+}
+
 const isBareOrdinal = (code) => /^\d+$/.test(String(code).trim());
 
 function toRows(items, categories) {
@@ -157,7 +164,15 @@ export default {
           : hero.badges,
         ctas: hero.ctas,
       } : null,
-      showcase: home.showcase ? { heading: home.showcase.heading, lede: home.showcase.lede } : null,
+      showcase: home.showcase ? {
+        heading: home.showcase.heading, lede: home.showcase.lede,
+        a11yTotal: a11yBaselineTotal(),
+        stats: [
+          { label: 'ui kits', value: totalKits },
+          { label: 'components in the manifest', value: totalComponents },
+          { label: 'blocking a11y violations (baseline)', value: a11yBaselineTotal() },
+        ].filter((s) => s.value != null),
+      } : null,
       panels,
       examples: home.examples && home.examples.items ? home.examples.items.map((e) => ({
         label: e.name || e.title, desc: e.desc, href: e.href,

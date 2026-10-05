@@ -26,7 +26,7 @@ function foldableBody(part, cacheKey, text, preProps, defaultOpen) {
         ontoggle: (e) => { part[openFlag] = e.currentTarget.open; },
     },
         h('summary', { class: 'chat-tool-longbody-summary' },
-            `${lines.toLocaleString()} lines, ${text.length.toLocaleString()} chars -- click to expand`),
+            `${lines.toLocaleString()} lines, ${text.length.toLocaleString()} chars: click to expand`),
         preNode);
 }
 

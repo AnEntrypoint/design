@@ -27,7 +27,7 @@ export const models = makePage((ctx) => {
                 try { fresh = await api('/api/models/availability'); } catch { continue; }
                 if (fresh && fresh.timestamp && fresh.timestamp !== startedAt) { ctx.set({ data: fresh, error: null }); landed = true; break; }
             }
-            if (!landed) ctx.set({ rebuildError: new Error('still running after 3 min of polling -- the rebuild continues in the background; refresh this page in a bit to check for a newer result') });
+            if (!landed) ctx.set({ rebuildError: new Error('still running after 3 min of polling: the rebuild continues in the background; refresh this page in a bit to check for a newer result') });
         } catch (e) { ctx.set({ rebuildError: e }); }
         if (!unmounted) ctx.set({ rebuilding: false });
     }

@@ -1,4 +1,4 @@
-// types/index.d.ts -- GENERATED, do not hand-edit.
+// types/index.d.ts: GENERATED, do not hand-edit.
 //
 // The package entry surface, enumerated from src/index.js's real export
 // statements by `node scripts/generate-component-types.mjs`. Component

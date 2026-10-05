@@ -57,7 +57,7 @@ export function Chip({ tone = '', size = 'md', tag = false, onRemove, children }
 export function Btn({ href, variant = 'default', size = 'md', children, onClick, 'aria-label': ariaLabel, title, primary, ghost, danger, disabled, class: className, key }) {
     if (primary || ghost || danger) {
         const used = primary ? 'primary' : (ghost ? 'ghost' : 'danger');
-        console.warn(`[247420] Btn's "${used}" boolean prop is deprecated -- use variant="${used}" instead. No removal version set yet (tracked in MIGRATION_GUIDE.md); both still work.`);
+        console.warn(`[247420] Btn's "${used}" boolean prop is deprecated: use variant="${used}" instead. No removal version set yet (tracked in MIGRATION_GUIDE.md); both still work.`);
     }
     const resolvedVariant = variant !== 'default' ? variant : (primary ? 'primary' : (ghost ? 'ghost' : (danger ? 'danger' : 'default')));
     const sizeCls = size === 'sm' ? ' btn-sm' : (size === 'lg' ? ' btn-lg' : '');
@@ -109,7 +109,7 @@ export function IconButton({ icon, onClick, title, size = 'base', variant = 'gho
 /**
  * A small count/variant/status marker (unread count, label chip inline with
  * text). Distinct from Chip (a status-tone indicator element in its own
- * right) and Pill (a plain non-interactive tag label) -- see the comments at
+ * right) and Pill (a plain non-interactive tag label): see the comments at
  * each below for the three-way split.
  * @param {Object} props
  * @param {*} props.children
@@ -130,7 +130,7 @@ export function Pill({ tone = '', children, key } = {}) {
 
 /**
  * A themeable inline text/character glyph (font-size + optional color from
- * tokens) -- for a real icon shape, use Icon()/iconMarkup() from
+ * tokens): for a real icon shape, use Icon()/iconMarkup() from
  * shell/icons.js instead; Glyph is for short text/character content only.
  * Decorative (aria-hidden) by default; pass `label` to expose it as a real
  * accessible image instead.

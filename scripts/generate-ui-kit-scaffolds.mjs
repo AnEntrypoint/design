@@ -116,7 +116,7 @@ for (const kit of kits) {
 
 if (CHECK) {
   if (drift) {
-    die(`[generate-ui-kit-scaffolds] ${drift} kit(s) drifted from template -- run 'node scripts/generate-ui-kit-scaffolds.mjs' to regenerate`);
+    die(`[generate-ui-kit-scaffolds] ${drift} kit(s) drifted from template: run 'node scripts/generate-ui-kit-scaffolds.mjs' to regenerate`);
   }
   console.log(`[generate-ui-kit-scaffolds] all ${kits.length} thin kits match generated output`);
 } else {

@@ -131,7 +131,7 @@ export function mountCommunityApp(root, adapter = {}) {
             href: '#', class: active ? 'active' : '', 'aria-label': sv._home ? 'home' : (sv.name || sv.id),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },
             oncontextmenu: sv._home ? null : (e) => { e.preventDefault(); A.serverContext && A.serverContext(sv.id, e.clientX, e.clientY); },
-        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 15 }) : (sv.name || '?').slice(0, 2).toLowerCase()),
+        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 15 }) : (sv.abbr || sv.name || '?').slice(0, 2).toLowerCase()),
             h('span', {}, sv.name || sv.id),
             sv.unreadCount ? h('span', { class: 'count' }, sv.unreadCount > 99 ? '99+' : String(sv.unreadCount)) : null);
     };

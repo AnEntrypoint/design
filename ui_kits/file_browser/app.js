@@ -6,18 +6,20 @@ const SAMPLE = [
     { name: 'src', type: 'dir', size: null, modified: '2026.10.05' },
     { name: 'ui_kits', type: 'dir', size: null, modified: '2026.10.05' },
     { name: 'docs', type: 'dir', size: null, modified: '2026.10.05' },
-    { name: 'favicon.svg', type: 'image', size: 270, modified: '2026.04.21' },
-    { name: 'colors_and_type.css', type: 'code', size: 17882, modified: '2026.10.05' },
-    { name: 'app-shell.css', type: 'code', size: 1477, modified: '2026.10.05' },
+    { name: 'scripts', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'vendor', type: 'dir', size: null, modified: '2026.09.16' },
+    { name: 'favicon.svg', type: 'image', size: 270, modified: '2026.09.03' },
+    { name: 'robots.txt', type: 'text', size: 172, modified: '2026.09.03' },
+    { name: 'sitemap.xml', type: 'code', size: 6630, modified: '2026.09.28' },
     { name: 'package.json', type: 'code', size: 6322, modified: '2026.10.05' },
-    { name: 'README.md', type: 'text', size: 25050, modified: '2026.10.05' },
-    { name: 'CHANGELOG.md', type: 'text', size: 79060, modified: '2026.10.05' },
-    { name: 'LICENSE', type: 'text', size: 1090, modified: '2026.08.04' }
+    { name: 'README.md', type: 'text', size: 24954, modified: '2026.10.05' },
+    { name: 'CHANGELOG.md', type: 'text', size: 78876, modified: '2026.10.05' },
+    { name: 'LICENSE', type: 'text', size: 1069, modified: '2026.09.03' }
 ];
 
 const PREVIEW_TEXT = `# 247420 file browser
 this is a static demo wired to the design system.
-the listing is sample data: components only, no real file access.`;
+the listing is a fixed snapshot of this repo's root at one commit: components only, no real file access.`;
 
 const PREVIEW_CODE = `export function FileRow({ name, type, size, modified, onOpen }) {
     return h('div', { class: 'ds-file-row', 'data-file-type': type, onclick: onOpen },
@@ -29,7 +31,7 @@ const PREVIEW_CODE = `export function FileRow({ name, type, size, modified, onOp
 
 const state = {
     files: SAMPLE,
-    crumbs: ['design', 'src'],
+    crumbs: ['design'],
     dragover: false,
     uploads: [],
     viewer: null,

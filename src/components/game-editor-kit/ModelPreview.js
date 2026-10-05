@@ -112,7 +112,7 @@ export class ModelPreview {
 
   _setupUI() {
     const uiContainer = document.createElement('div')
-    uiContainer.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:100'
+    uiContainer.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:var(--z-raised,100)'
 
     const toggleWireframe = document.createElement('button')
     toggleWireframe.textContent = 'Wireframe'

@@ -271,7 +271,7 @@ export const chat = makePage((ctx) => {
         if (!isOnline()) {
             await queueMessage('chat', { prompt: t });
             s().messages = s().messages.slice(0, -1);
-            s().messages.push({ id: curMsg.id, role: 'assistant', content: '(offline -- queued, will send when connection returns)', time: formatTime(Date.now()) });
+            s().messages.push({ id: curMsg.id, role: 'assistant', content: '(offline: queued, will send when connection returns)', time: formatTime(Date.now()) });
             ctx.set({ busy: false });
             return;
         }

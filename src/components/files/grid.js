@@ -11,17 +11,17 @@ const FILE_GRID_CAP = 200;
 /**
  * The directory listing.
  *
- * `loading` and `busy` are NOT two spellings of one state -- they are the two
+ * `loading` and `busy` are NOT two spellings of one state: they are the two
  * halves of this SDK's standing distinction, and FileGrid is the component
  * that takes both because it is the one place both are in play at once:
  *
- *   loading -- a DATA FETCH is in flight. Owns which SHAPE renders: with no
+ *   loading: a DATA FETCH is in flight. Owns which SHAPE renders: with no
  *              rows yet it is a cold load and the whole grid is replaced by
  *              FileSkeleton; with rows already on screen it is a refresh and
  *              the existing rows stay mounted and dim (is-refreshing), because
  *              flashing a populated directory back to shimmer reads as data
  *              loss.
- *   busy    -- a USER ACTION is in flight (a rename/move/delete round-trip).
+ *   busy:    a USER ACTION is in flight (a rename/move/delete round-trip).
  *              Owns INTERACTIVITY, not shape: it is forwarded to each FileRow
  *              as `busy`, which disables that row's open + mutation controls
  *              so a second click cannot fire the same mutation twice.

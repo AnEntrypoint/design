@@ -4,7 +4,7 @@ const EDITOR_PRIMITIVES_RULES = 'editor-primitives.css';
 export const kits = [
   {
     id: 'buttons',
-    title: 'Buttons',
+    title: 'buttons',
     description: 'Buttons kit: every Btn variant, size and state (primary, secondary, ghost, link, danger, loading, disabled).',
     screenLabel: '17 Buttons',
     htmlTheme: true,
@@ -14,7 +14,7 @@ export const kits = [
   },
   {
     id: 'aicat',
-    title: 'AICat',
+    title: 'aicat',
     description: 'AICat kit: assistant chat with a cat persona, ascii portrait and thinking dots.',
     screenLabel: '07 AICat',
     htmlTheme: true,
@@ -34,7 +34,7 @@ export const kits = [
   },
   {
     id: 'gallery',
-    title: 'Gallery',
+    title: 'gallery',
     description: 'Gallery kit: visual grid, lightbox and tonal cards.',
     screenLabel: '14 Gallery',
     htmlTheme: true,
@@ -44,7 +44,7 @@ export const kits = [
   },
   {
     id: 'search',
-    title: 'Search',
+    title: 'search',
     description: 'Search kit: query bar, faceted filters and ranked results.',
     screenLabel: '12 Search',
     htmlTheme: true,
@@ -54,7 +54,7 @@ export const kits = [
   },
   {
     id: 'settings',
-    title: 'Settings',
+    title: 'settings',
     description: 'Settings kit: sectioned forms, toggles, inputs and a save bar.',
     screenLabel: '10 Settings',
     htmlTheme: true,
@@ -64,7 +64,7 @@ export const kits = [
   },
   {
     id: 'slide_deck',
-    title: 'Slide Deck',
+    title: 'slide deck',
     description: '16:9 slide deck template with keyboard navigation, a slide counter and SDK chrome.',
     screenLabel: '17 Slide Deck',
     htmlTheme: true,
@@ -74,7 +74,7 @@ export const kits = [
   },
   {
     id: 'system_primer',
-    title: 'System Primer',
+    title: 'system primer',
     description: 'Design system showcase: palette swatches, type scale and primitives on one page.',
     screenLabel: '16 System Primer',
     htmlTheme: true,
@@ -84,7 +84,7 @@ export const kits = [
   },
   {
     id: 'terminal',
-    title: 'Terminal',
+    title: 'terminal',
     description: 'Terminal kit: cli prompt, command lines and a log viewer.',
     screenLabel: '09 Terminal',
     htmlTheme: true,
@@ -94,7 +94,7 @@ export const kits = [
   },
   {
     id: 'gm_inspector',
-    title: 'GM Inspector',
+    title: 'gm inspector',
     description: 'GM Inspector kit: session list, process tree, deviations, PRD and mutable editors, and a query builder, built from AppShell and the data-density components.',
     screenLabel: 'gm inspector',
     htmlTheme: true,
@@ -104,7 +104,7 @@ export const kits = [
   },
   {
     id: 'dashboard',
-    title: 'Dashboard',
+    title: 'dashboard',
     description: 'Dashboard kit: kpis, tables, receipts, a changelog and panels.',
     screenLabel: '08 Dashboard',
     htmlTheme: true,
@@ -114,7 +114,7 @@ export const kits = [
   },
   {
     id: 'signin',
-    title: 'Sign in',
+    title: 'sign in',
     description: 'Sign in kit: authentication panel, providers and a tonal form.',
     screenLabel: '11 Sign in',
     htmlTheme: true,
@@ -124,7 +124,7 @@ export const kits = [
   },
   {
     id: 'homepage',
-    title: 'Homepage',
+    title: 'homepage',
     description: 'Landing page for the 247420 collective: works, writing and manifesto.',
     screenLabel: '01 Homepage',
     htmlTheme: true,
@@ -157,7 +157,7 @@ export const kits = [
   },
   {
     id: 'file_browser',
-    title: 'File Browser',
+    title: 'file browser',
     description: 'File browser: rails by file type, drop-zone upload and modal preview.',
     screenLabel: '08 File Browser',
     htmlTheme: true,

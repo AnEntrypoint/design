@@ -99,7 +99,7 @@ function writeReport(results) {
     const lines = ['# a11y audit report', ''];
     lines.push(`Generated ${new Date().toISOString().slice(0, 10)} by \`node scripts/a11y-audit.mjs\` against the live rendered DOM via axe-core, WCAG-tagged rules only: \`${WCAG_TAGS.join(', ')}\`.`);
     lines.push('');
-    lines.push('**This is not a WCAG AA conformance statement.** Automated rules cover a real but partial slice of WCAG success criteria, and this run explicitly excludes best-practice checks outside the WCAG tag set above -- notably `bypass` (skip-link presence) and `page-has-heading-one` (a real `<h1>`), so a kit can score 0 here with no skip link and no `h1`. See `docs/accessibility.md` for what manual verification (screen readers, keyboard-only traversal, zoom/reflow, target size) has and has not been done.');
+    lines.push('**This is not a WCAG AA conformance statement.** Automated rules cover a real but partial slice of WCAG success criteria, and this run explicitly excludes best-practice checks outside the WCAG tag set above: notably `bypass` (skip-link presence) and `page-has-heading-one` (a real `<h1>`), so a kit can score 0 here with no skip link and no `h1`. See `docs/accessibility.md` for what manual verification (screen readers, keyboard-only traversal, zoom/reflow, target size) has and has not been done.');
     lines.push('');
     const totalBlocking = results.reduce((s, r) => s + blockingCount(r), 0);
     lines.push(`${results.length} kit(s) scanned, ${totalBlocking} blocking (serious/critical) node-level violation(s).`);
@@ -143,6 +143,9 @@ function compareAgainstBaseline(counts, baseline) {
         }
         if (count > base) regressed.push(`${kit}: ${count} blocking violation(s), baseline ${base}`);
         else if (count < base) improved.push(`${kit}: ${count} < baseline ${base}`);
+    }
+    for (const kit of Object.keys(baseline.kits)) {
+        if (!(kit in counts)) regressed.push(`${kit}: listed in the baseline but no such kit exists`);
     }
     return { regressed, improved };
 }

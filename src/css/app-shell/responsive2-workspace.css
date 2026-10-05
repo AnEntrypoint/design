@@ -34,11 +34,11 @@
   }
   .app-side .group { width: 100%; }
 
-  .app-crumb { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--space-2-75); }
+  .app-crumb { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-2) var(--page-gutter); }
   .app-crumb > span:not(.crumb-right) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .app-crumb .crumb-right { margin-left: 0; }
   .chat-head { padding: var(--space-2) var(--space-3) var(--space-2); margin-bottom: var(--space-2); }
-  .app-main { padding-left: var(--space-3); padding-right: var(--space-3); }
+  .app-main { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
 }
 
 .app-side-scrim {
@@ -100,8 +100,8 @@
   .app-chrome > .app-topbar { display: contents; }
   .app-chrome > .app-topbar > .ds-search-field, .app-chrome > .app-topbar > .ds-topbar-search { order: 3; flex: 1 1 100%; max-width: none; }
   .app-chrome > .app-topbar > nav { order: 4; }
-  .app-chrome > .app-crumb { flex: 1 1 0; min-width: 0; min-height: 44px; align-items: center; flex-wrap: nowrap; }
-  .app-chrome > .app-crumb > .crumb-right { flex: 0 100 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-chrome > .app-crumb { flex: 1 1 0; min-width: 0; min-height: 44px; align-items: center; flex-wrap: wrap; }
+  .app-chrome > .app-crumb > .crumb-right { flex: 0 100 auto; min-width: 0; overflow-wrap: anywhere; }
   .app-topbar > .brand {
     flex: 1 1 0; min-width: 0; min-height: 44px; display: flex; align-items: center;
     overflow: hidden; white-space: nowrap;
@@ -407,7 +407,8 @@
   .ws-rail-foot { margin-top: 0; padding-top: 0; border-top: 0; }
   .ws-content { padding-left: 0; padding-top: var(--ws-rail-h); }
   .ws-sessions { inset: var(--ws-rail-h) auto 0 0; transform: translateX(-110%); }
-  .ws-main { padding-inline: var(--space-3); }
+  .ws-main, .ws-main.ds-app-surface { padding-inline: var(--page-gutter); }
+  .ws-main .agentchat { padding-inline: 0; }
   .ws-main .agentchat-controls { flex-wrap: wrap; }
   .ws-main .agentchat-controls .ds-select { flex: 1 1 0; min-width: 0; max-width: none; }
   .ws-main .agentchat-controls .btn { flex: 0 0 auto; }

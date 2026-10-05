@@ -2,7 +2,7 @@
 
 247420 automatically scans every shipped kit surface for axe-core's
 WCAG-tagged rule set, live rather than asserted. That is a real, continuous
-check and a genuinely useful floor -- it is **not** a WCAG 2.1 AA conformance
+check and a genuinely useful floor: it is **not** a WCAG 2.1 AA conformance
 claim (see "What this does and doesn't cover" below).
 
 ## Current status
@@ -14,7 +14,7 @@ The baseline is a ratchet: it can only go down. Raising it to pass a new violati
 ## What this does and doesn't cover
 
 axe-core's automated rules cover a real but partial slice of WCAG success
-criteria -- industry estimates put automated coverage at roughly a third to
+criteria: industry estimates put automated coverage at roughly a third to
 half of all criteria; the rest (focus order making logical sense, whether
 alt text is actually meaningful, keyboard-operability of custom widgets,
 screen-reader announcement quality) needs a human. This scan also runs

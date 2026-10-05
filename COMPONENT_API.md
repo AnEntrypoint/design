@@ -1393,7 +1393,7 @@ All components include ARIA attributes where applicable:
 
 The list above is the general house style; these are the specific, load-bearing
 keyboard/ARIA/focus contracts for the flagship interactive surfaces. Each is
-already implemented in source -- this section documents the contract so a
+already implemented in source: this section documents the contract so a
 future change can be checked against it, not a pending gap.
 
 - **`WorkspaceShell` (`src/components/shell.js`)**: the persistent rail and
@@ -1401,7 +1401,7 @@ future change can be checked against it, not a pending gap.
   windows (used inside workspace-shaped layouts) carry `role="dialog"` +
   `aria-label` on the window chrome, a Tab/Shift+Tab focus trap gated on the
   window's focused state, and `role="separator"` + `aria-orientation` on
-  resize grips -- the grips are POINTER-ONLY (not keyboard-resizable) and are
+  resize grips: the grips are POINTER-ONLY (not keyboard-resizable) and are
   explicitly commented as such in source rather than silently shipping a
   mouse-only interaction unacknowledged.
 - **`ConfirmDialog` / `PromptDialog` / `FileViewer` (`src/components/files-modals.js`)**:
@@ -1411,7 +1411,7 @@ future change can be checked against it, not a pending gap.
   incrementing counter that would go stale across re-renders), Escape-to-close
   (suppressed while `busy`, so an in-flight mutation cannot be dismissed out
   from under itself), and focus restoration to the invoking element on close.
-  A mutation error renders `role="alert"` INSIDE the modal body -- inside the
+  A mutation error renders `role="alert"` INSIDE the modal body: inside the
   focus trap, not a sibling stuck in page flow behind the fixed backdrop.
 - **`Chat` / `ChatComposer` (`src/components/chat.js`)**: the message thread
   carries `role="log"` + `aria-live="polite"` so streamed assistant turns are
@@ -1420,7 +1420,7 @@ future change can be checked against it, not a pending gap.
   `aria-valuenow`/`aria-valuemin`/`aria-valuemax`; `StatTile`/`StatsGrid` use
   `role="group"` + `aria-label`; `LiveLog` uses `role="log"` + `aria-label`.
 
-None of the above requires any visual chrome change -- every item is an ARIA
+None of the above requires any visual chrome change: every item is an ARIA
 attribute, a keyboard handler, or a focus-management call, invisible to a
 sighted mouse user and load-bearing for everyone else.
 

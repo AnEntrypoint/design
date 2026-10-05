@@ -12,9 +12,9 @@ const root = document.getElementById('root');
 
 const state = {
     section: 'profile',
-    name: 'Priya Raman',
-    email: 'priya@example.test',
-    handle: '@priya',
+    name: 'sample user',
+    email: 'sample@example.test',
+    handle: '@sample-user',
     bio: 'maintainer. reviews pull requests and publishes releases.',
     theme: 'auto',
     motion: true,
@@ -257,10 +257,11 @@ function App() {
             ]
         }),
         main: [
-            h('div', { class: 'ds-app-surface ds-settings-main' },
+            h('div', { class: 'ds-settings-main' },
+              h('div', { class: 'ds-app-surface ds-settings-scroll' },
                 Heading({ level: 1, children: 'settings' }),
                 Lede({ children: 'account preferences for ' + state.name + '.' }),
-                view,
+                view),
                 state.showRestorePrompt ? RestoreDraftModal({
                     onDismiss: () => { clearDraft(); state.showRestorePrompt = false; kit.render(); },
                     onRestore: () => { restoreDraft(state.draft); state.dirty = true; state.showRestorePrompt = false; kit.render(); }

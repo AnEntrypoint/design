@@ -14,7 +14,7 @@ const _warned = { theme: new Set(), accent: new Set(), density: new Set() };
 function warnOnce(kind, attr, value, fallbackNote) {
     if (typeof console === 'undefined' || _warned[kind].has(value)) return;
     _warned[kind].add(value);
-    console.warn(`[247420] unrecognised ${attr}="${value}" -- ${fallbackNote}`);
+    console.warn(`[247420] unrecognised ${attr}="${value}": ${fallbackNote}`);
 }
 
 function isBrowser() {

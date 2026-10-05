@@ -117,7 +117,7 @@ export function createUploadProgress(opts = {}) {
       h('div', { style: 'display:flex;gap:8px;justify-content:flex-end' }, [
         (_uploadState.status === 'uploading' || _uploadState.status === 'idle') && h('button', {
           type: 'button',
-          style: 'padding:6px 12px;font-size:12px;border-radius:3px;background:var(--danger,#dc3545);color:#fff;border:none;cursor:pointer',
+          style: 'padding:6px 12px;font-size:12px;border-radius:3px;background:var(--danger,#dc3545);color:var(--on-color,#fff);border:none;cursor:pointer',
           onClick: () => {
             if (_abortController) _abortController.abort()
             _uploadState.status = 'cancelled'
@@ -128,7 +128,7 @@ export function createUploadProgress(opts = {}) {
 
         _uploadState.status === 'completed' && h('button', {
           type: 'button',
-          style: 'padding:6px 12px;font-size:12px;border-radius:3px;background:var(--fg-2);color:#fff;border:none;cursor:pointer',
+          style: 'padding:6px 12px;font-size:12px;border-radius:3px;background:var(--fg-2);color:var(--on-color,#fff);border:none;cursor:pointer',
           onClick: () => {
             _container.innerHTML = ''
           }

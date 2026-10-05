@@ -9,8 +9,14 @@
   --ink:         #1A1A1A;
   --ink-2:       #333333;
   --ink-3:       #595959;
-  --ink-3-dark:  #4D4D4D;
+  --ink-3-dark:  #212121;
   --paper-3-dark: #BFBFBF;
+  --dark-bg:      #0F0F0F;
+  --dark-bg-2:    #171717;
+  --dark-code:    #0A0A0A;
+  --dark-fg:      #FAFAFA;
+  --dark-fg-2:    #B3B3B3;
+  --dark-fg-3:    #9A9A9A;
 
   --brand-green:      #247420;
   --brand-green-deep: #133F10;
@@ -27,6 +33,7 @@
   --mascot-tint: #E5E5E5;
   --mascot-deep: #262626;
   --mascot-on-ink: #D4D4D4;
+  --mascot-chip-fg: var(--ink);
   --success-on-ink: #5CBF52;
 
   --sun:         #F5C344;
@@ -172,6 +179,7 @@
   --pad-y:       var(--space-5);
   --pad-x:       var(--space-6);
   --gutter:      var(--space-4);
+  --page-gutter: var(--space-3);
 
   --bw-hair:     1px;
   --bw-rule:     2px;
@@ -298,17 +306,22 @@
 }
 
 :root:not(:where(.ds-247420 .ds-247420)) {
-  --dark-accent:      #BFBFBF;
-  --dark-accent-fg:   var(--ink);
-  --dark-accent-ink:  var(--paper);
-  --dark-danger:      oklch(0.73 0.19 25);
+  --dark-accent:      #FAFAFA;
+  --dark-accent-fg:   var(--dark-code);
+  --dark-accent-ink:  var(--dark-fg);
+  --dark-danger:      #F05050;
+  --dark-danger-fill: #B91C1C;
   --dark-flame:       var(--dark-warn);
   --dark-amber:       #D9A93A;
-  --dark-warn:        #FF706A;
+  --dark-warn:        #F05050;
   --dark-sky:         #BFBFBF;
   --dark-mascot-deep: #D4D4D4;
   --dark-purple-2:    #BFBFBF;
   --dark-green:       #5CBF52;
+  --dark-green-tint:  #1C2B1A;
+  --dark-green-deep:  #9BDB92;
+  --dark-neutral-tint: #262626;
+  --dark-neutral-deep: #D4D4D4;
 }
 
 [data-theme] {
@@ -341,21 +354,23 @@
 [data-theme="dark"],
 [data-theme="github-dark"] {
   color-scheme: dark;
-  --bg:        var(--ink);
-  --bg-2:      var(--ink-2);
+  --bg:        var(--dark-bg);
+  --bg-2:      var(--dark-bg-2);
   --bg-3:      var(--ink-3-dark);
-  --code-surface: var(--ink-2);
-  --fg:        var(--paper);
-  --fg-2:      var(--paper-2);
-  --fg-3:      var(--paper-3-dark);
-  --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
+  --code-surface: var(--dark-code);
+  --fg:        var(--dark-fg);
+  --fg-2:      var(--dark-fg-2);
+  --fg-3:      var(--dark-fg-3);
+  --panel-3:   color-mix(in oklab, var(--fg) 14%, transparent);
   --accent:    var(--dark-accent);
   --accent-fg: var(--dark-accent-fg);
   --accent-ink: var(--dark-accent-ink);
   --accent-bright: var(--dark-accent);
-  --accent-tint: color-mix(in oklab, var(--accent) 22%, var(--bg));
+  --accent-tint: color-mix(in oklab, var(--accent) 14%, var(--bg));
   --danger:    var(--dark-danger);
-  --danger-fg: var(--ink);
+  --danger-fg: var(--dark-code);
+  --danger-fill: var(--dark-danger-fill);
+  --danger-fill-fg: var(--dark-fg);
   --flame:     var(--dark-flame);
   --amber:     var(--dark-amber);
   --warn:      var(--dark-warn);
@@ -364,6 +379,12 @@
   --mascot-deep: var(--dark-mascot-deep);
   --purple-2:  var(--dark-purple-2);
   --green:     var(--dark-green);
+  --green-tint: var(--dark-green-tint);
+  --green-deep: var(--dark-green-deep);
+  --purple-tint: var(--dark-neutral-tint);
+  --purple-deep: var(--dark-neutral-deep);
+  --mascot-tint: var(--dark-neutral-tint);
+  --mascot-chip-fg: var(--dark-neutral-deep);
   --success:   var(--green);
   --cat-green-ink:  var(--dark-green);
   --cat-purple-ink: var(--dark-purple-2);
@@ -397,21 +418,23 @@
 @media (prefers-color-scheme: dark) {
   [data-theme="auto"] {
     color-scheme: dark;
-    --bg:        var(--ink);
-    --bg-2:      var(--ink-2);
+    --bg:        var(--dark-bg);
+    --bg-2:      var(--dark-bg-2);
     --bg-3:      var(--ink-3-dark);
-    --code-surface: var(--ink-2);
-    --fg:        var(--paper);
-    --fg-2:      var(--paper-2);
-    --fg-3:      var(--paper-3-dark);
-    --panel-3:   color-mix(in oklab, var(--fg) 20%, transparent);
+    --code-surface: var(--dark-code);
+    --fg:        var(--dark-fg);
+    --fg-2:      var(--dark-fg-2);
+    --fg-3:      var(--dark-fg-3);
+    --panel-3:   color-mix(in oklab, var(--fg) 14%, transparent);
     --accent:    var(--dark-accent);
     --accent-fg: var(--dark-accent-fg);
     --accent-ink: var(--dark-accent-ink);
     --accent-bright: var(--dark-accent);
-    --accent-tint: color-mix(in oklab, var(--accent) 22%, var(--bg));
+    --accent-tint: color-mix(in oklab, var(--accent) 14%, var(--bg));
     --danger:    var(--dark-danger);
-    --danger-fg: var(--ink);
+    --danger-fg: var(--dark-code);
+    --danger-fill: var(--dark-danger-fill);
+    --danger-fill-fg: var(--dark-fg);
     --flame:     var(--dark-flame);
     --amber:     var(--dark-amber);
     --warn:      var(--dark-warn);
@@ -420,6 +443,12 @@
     --mascot-deep: var(--dark-mascot-deep);
     --purple-2:  var(--dark-purple-2);
     --green:     var(--dark-green);
+    --green-tint: var(--dark-green-tint);
+    --green-deep: var(--dark-green-deep);
+    --purple-tint: var(--dark-neutral-tint);
+    --purple-deep: var(--dark-neutral-deep);
+    --mascot-tint: var(--dark-neutral-tint);
+    --mascot-chip-fg: var(--dark-neutral-deep);
     --success:   var(--green);
     --cat-green-ink:  var(--dark-green);
     --cat-purple-ink: var(--dark-purple-2);
@@ -476,9 +505,9 @@
 
 [data-theme="herd-ink"] {
   color-scheme: dark;
-  --bg: var(--ink); --bg-2: var(--ink-2); --bg-3: var(--ink-3-dark);
-  --code-surface: var(--ink-2);
-  --fg: var(--paper); --fg-2: var(--paper-2); --fg-3: var(--paper-3-dark);
+  --bg: var(--dark-bg); --bg-2: var(--dark-bg-2); --bg-3: var(--ink-3-dark);
+  --code-surface: var(--dark-code);
+  --fg: var(--dark-fg); --fg-2: var(--dark-fg-2); --fg-3: var(--dark-fg-3);
   --accent: #F59A4B;
   --accent-fg: #000000;
   --accent-ink: #F59A4B;
@@ -494,6 +523,12 @@
   --mascot-deep: var(--dark-mascot-deep);
   --purple-2: var(--dark-purple-2);
   --green: var(--dark-green);
+  --green-tint: var(--dark-green-tint);
+  --green-deep: var(--dark-green-deep);
+  --purple-tint: var(--dark-neutral-tint);
+  --purple-deep: var(--dark-neutral-deep);
+  --mascot-tint: var(--dark-neutral-tint);
+  --mascot-chip-fg: var(--dark-neutral-deep);
   --success: var(--green);
   --cat-green-ink: var(--dark-green);
   --cat-purple-ink: var(--dark-purple-2);

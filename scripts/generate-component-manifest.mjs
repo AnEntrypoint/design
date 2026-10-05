@@ -24,11 +24,11 @@ const json = JSON.stringify(manifest, null, 2) + '\n';
 
 if (CHECK) {
     if (!existsSync(outPath)) {
-        die(`[component-manifest] FAIL -- ${outPath} does not exist. Run: node scripts/generate-component-manifest.mjs`);
+        die(`[component-manifest] FAIL: ${outPath} does not exist. Run: node scripts/generate-component-manifest.mjs`);
     }
     const current = readFileSync(outPath, 'utf8');
     if (current !== json) {
-        die(`[component-manifest] FAIL -- ${outPath} is stale. Run: node scripts/generate-component-manifest.mjs`);
+        die(`[component-manifest] FAIL: ${outPath} is stale. Run: node scripts/generate-component-manifest.mjs`);
     }
     console.log(`[component-manifest] ${outPath} is up to date (${manifest.components.length} components)`);
     process.exit(0);

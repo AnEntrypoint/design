@@ -4,7 +4,7 @@ const FS = {
     'colors_and_type.css': '/* the token bible: --brand-green, --ink, --paper, the --fs-* scale */\n',
     src: {
         'components.js': '// barrel over src/components/<group>.js\n',
-        'bootstrap.js': '// mountKit() -- every kit boots through here\n',
+        'bootstrap.js': '// mountKit(): every kit boots through here\n',
         css: { 'app-shell.css': '/* @import barrel over app-shell/*.css */\n' },
     },
     ui_kits: {

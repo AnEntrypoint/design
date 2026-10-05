@@ -22,19 +22,15 @@ function ScrollbackEmpty() {
 }
 
 const demoScript = [
-    { d: 0,    kind: 'cmt', text: '# build pipeline · main' },
-    { d: 280,  kind: 'cmd', text: 'npm install' },
-    { d: 600,  kind: 'out', text: 'added 412 packages in 6.2s' },
-    { d: 220,  kind: 'cmd', text: 'npm run build' },
-    { d: 180,  kind: 'out', text: '> 247420-design build' },
-    { d: 180,  kind: 'out', text: '[247420] css gzip+base64: 18.4kb (raw 96.1kb)' },
-    { d: 220,  kind: 'ok',  text: 'bundle written to dist/247420.js (84.0 kb)' },
-    { d: 280,  kind: 'cmd', text: 'npm test' },
-    { d: 500,  kind: 'out', text: '116 assertions, 0 failures' },
-    { d: 200,  kind: 'ok',  text: 'all tests passed' },
+    { d: 0,    kind: 'cmt', text: '# simulated build pipeline' },
+    { d: 280,  kind: 'cmd', text: 'npm run build' },
+    { d: 180,  kind: 'out', text: '> anentrypoint-design build' },
+    { d: 220,  kind: 'out', text: 'running lint gates' },
+    { d: 260,  kind: 'out', text: 'bundling css and sdk' },
+    { d: 220,  kind: 'ok',  text: 'dist/247420.css and dist/247420.js written' },
     { d: 320,  kind: 'cmd', text: 'git push' },
-    { d: 240,  kind: 'out', text: 'remote: Deploying to gh-pages…' },
-    { d: 900,  kind: 'ok',  text: 'deploy in 11s' }
+    { d: 240,  kind: 'out', text: 'remote: deploying to gh-pages' },
+    { d: 900,  kind: 'ok',  text: 'deployed' }
 ];
 const reduced = typeof matchMedia !== 'undefined'
     && matchMedia('(prefers-reduced-motion: reduce)').matches;

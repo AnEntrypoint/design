@@ -1,6 +1,6 @@
 # Component props reference
 
-Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit -- re-run after any component signature or JSDoc change.
+Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit: re-run after any component signature or JSDoc change.
 
 314 exported symbols across 32 source files.
 
@@ -19,8 +19,8 @@ The wordmark used in Topbar/AppShell headers.
 **Documented params:**
 
 - `props` _(Object)_
-- `props.name` _(string)_ -- the brand text.
-- `props.leaf` _(*)_ -- optional trailing breadcrumb-style leaf, rendered after a " / " separator.
+- `props.name` _(string)_: the brand text.
+- `props.leaf` _(*)_: optional trailing breadcrumb-style leaf, rendered after a " / " separator.
 
 **Returns:** {*} webjsx vnode
 
@@ -35,10 +35,10 @@ A small pill/tag label.
 **Documented params:**
 
 - `props` _(Object)_
-- `props.tone` _(string)_ -- semantic color tone (empty = neutral).
+- `props.tone` _(string)_: semantic color tone (empty = neutral).
 - `props.size` _('sm'|'md'|'lg')_
-- `props.tag` _(boolean)_ -- true renders a rectangular sentence-case variant for dense data (drops the all-caps pill styling). Orthogonal to tone.
-- `props.onRemove` _(Function)_ -- if given, renders a trailing dismiss (x) button that calls onRemove() on click. Omitted entirely (no button) when not supplied.
+- `props.tag` _(boolean)_: true renders a rectangular sentence-case variant for dense data (drops the all-caps pill styling). Orthogonal to tone.
+- `props.onRemove` _(Function)_: if given, renders a trailing dismiss (x) button that calls onRemove() on click. Omitted entirely (no button) when not supplied.
 - `props.children` _(*)_
 
 **Returns:** {*} webjsx vnode
@@ -54,25 +54,25 @@ The standard button/link factory. Renders an `<a>` when `href` is given, otherwi
 **Documented params:**
 
 - `props` _(Object)_
-- `props.href` _(string)_ -- if present, renders as a link instead of a button.
+- `props.href` _(string)_: if present, renders as a link instead of a button.
 - `props.variant` _('default'|'primary'|'ghost'|'danger'|'link')_
 - `props.size` _('sm'|'md'|'lg')_
 - `props.children` _(*)_
 - `props.onClick` _(Function)_
 - `props['aria-label']` _(string)_
-- `props.title` _(string)_ -- native tooltip text; also serves as the accessible name when no aria-label and no text child is given (the icon-only case).
-- `props.primary` _(boolean)_ -- legacy alias for variant:'primary', kept for backward compatibility.
-- `props.ghost` _(boolean)_ -- legacy alias for variant:'ghost'.
-- `props.danger` _(boolean)_ -- legacy alias for variant:'danger'.
+- `props.title` _(string)_: native tooltip text; also serves as the accessible name when no aria-label and no text child is given (the icon-only case).
+- `props.primary` _(boolean)_: legacy alias for variant:'primary', kept for backward compatibility.
+- `props.ghost` _(boolean)_: legacy alias for variant:'ghost'.
+- `props.danger` _(boolean)_: legacy alias for variant:'danger'.
 - `props.disabled` _(boolean)_
-- `props.class` _(string)_ -- extra class name(s) appended to the generated class list.
+- `props.class` _(string)_: extra class name(s) appended to the generated class list.
 - `props.key` _(*)_
 
 **Returns:** {*} webjsx vnode
 
 ### Glyph
 
-A themeable inline text/character glyph (font-size + optional color from tokens) -- for a real icon shape, use Icon()/iconMarkup() from shell/icons.js instead; Glyph is for short text/character content only. Decorative (aria-hidden) by default; pass `label` to expose it as a real accessible image instead.
+A themeable inline text/character glyph (font-size + optional color from tokens): for a real icon shape, use Icon()/iconMarkup() from shell/icons.js instead; Glyph is for short text/character content only. Decorative (aria-hidden) by default; pass `label` to expose it as a real accessible image instead.
 
 **Kind:** component
 
@@ -81,16 +81,16 @@ A themeable inline text/character glyph (font-size + optional color from tokens)
 **Documented params:**
 
 - `props` _(Object)_
-- `props.children` _(*)_ -- the glyph content (a character/short string).
-- `props.color` _(string)_ -- CSS color value; omit to inherit currentColor.
+- `props.children` _(*)_: the glyph content (a character/short string).
+- `props.color` _(string)_: CSS color value; omit to inherit currentColor.
 - `props.size` _('sm'|'base'|'lg')_
-- `props.label` _(string)_ -- accessible name; when set, renders role="img" instead of aria-hidden.
+- `props.label` _(string)_: accessible name; when set, renders role="img" instead of aria-hidden.
 
 **Returns:** {*} webjsx vnode
 
 ### Icon
 
-Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either call shape: `Icon('search', { size: 20 })` (the primary, historical signature) or `Icon({ name: 'search', size: 20 })` (a single props object, matching every other factory in this kit) -- both resolve through the same iconArgs() normalization below. An out-of-set name renders an empty `<span class="glyph">` rather than throwing.
+Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either call shape: `Icon('search', { size: 20 })` (the primary, historical signature) or `Icon({ name: 'search', size: 20 })` (a single props object, matching every other factory in this kit): both resolve through the same iconArgs() normalization below. An out-of-set name renders an empty `<span class="glyph">` rather than throwing.
 
 **Kind:** component
 
@@ -104,7 +104,7 @@ Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts either
 
 ### Badge
 
-A small count/variant/status marker (unread count, label chip inline with text). Distinct from Chip (a status-tone indicator element in its own right) and Pill (a plain non-interactive tag label) -- see the comments at each below for the three-way split.
+A small count/variant/status marker (unread count, label chip inline with text). Distinct from Chip (a status-tone indicator element in its own right) and Pill (a plain non-interactive tag label): see the comments at each below for the three-way split.
 
 **Kind:** component
 
@@ -115,7 +115,7 @@ A small count/variant/status marker (unread count, label chip inline with text).
 - `props` _(Object)_
 - `props.children` _(*)_
 - `props.variant` _(string)_
-- `props.tone` _(string)_ -- semantic tone keyword, applies a `tone-{tone}` class.
+- `props.tone` _(string)_: semantic tone keyword, applies a `tone-{tone}` class.
 - `props.size` _('sm'|'md'|'lg')_
 
 **Returns:** {*} webjsx vnode
@@ -167,15 +167,15 @@ A Claude-Desktop / cowork three-(or four-)column app shell.  Pure stateless chro
 **Documented params:**
 
 - `props` _(Object)_
-- `props.rail` _(*)_ -- the persistent left workspace nav (icon+label items, collapsible to icon-only). Pass the result of WorkspaceRail() or any vnode.
-- `props.sessions` _(*)_ -- an OPTIONAL second column (a conversation/session list) shown between the rail and the main content. Null hides it.
-- `props.main` _(*)_ -- the primary content column (chat thread, files view, dashboard...).
-- `props.pane` _(*)_ -- an OPTIONAL right context pane (per-conversation context, file preview...). Null hides it; collapsible when present.
-- `props.crumb` _(*)_ -- an optional thin top chrome bar (breadcrumb + status), spanning the content area only (the rail has its own header).
-- `props.status` _(*)_ -- an optional footer.
-- `props.narrow` _(boolean)_ -- caller's isNarrow(), drives the mobile single-column collapse.
-- `props.railCollapsed` _(boolean)_ -- initial rail collapse (persisted state wins).
-- `props.paneCollapsed` _(boolean)_ -- initial pane collapse (persisted state wins).
+- `props.rail` _(*)_: the persistent left workspace nav (icon+label items, collapsible to icon-only). Pass the result of WorkspaceRail() or any vnode.
+- `props.sessions` _(*)_: an OPTIONAL second column (a conversation/session list) shown between the rail and the main content. Null hides it.
+- `props.main` _(*)_: the primary content column (chat thread, files view, dashboard...).
+- `props.pane` _(*)_: an OPTIONAL right context pane (per-conversation context, file preview...). Null hides it; collapsible when present.
+- `props.crumb` _(*)_: an optional thin top chrome bar (breadcrumb + status), spanning the content area only (the rail has its own header).
+- `props.status` _(*)_: an optional footer.
+- `props.narrow` _(boolean)_: caller's isNarrow(), drives the mobile single-column collapse.
+- `props.railCollapsed` _(boolean)_: initial rail collapse (persisted state wins).
+- `props.paneCollapsed` _(boolean)_: initial pane collapse (persisted state wins).
 
 **Returns:** {*} webjsx vnode
 
@@ -243,7 +243,7 @@ A Claude-Desktop / cowork three-(or four-)column app shell.  Pure stateless chro
 
 ### LogRow
 
-One entry in a LOG or timeline: a dense single line, with a coloured rail marking what kind of thing happened.  The kit's fourth row shape, and it is a different species from the other three rather than a variant of them. `Row` is a grid-laid LIST row with a background, a radius and hover chrome -- right for an item you click into, wrong for a hundred consecutive audit lines. `DetailRow` is a record's field. `Receipt` is a static key/value table. A timeline entry is none of those: it is quiet, dense, unclickable by default, and its most important signal is a colour at the leading edge telling you at a glance whether this line is an inbound message, a reply, an automated observation or a warning.  `EventList` already existed and does NOT cover this -- it composes `Row`, so it renders events as clickable list rows. This is the log-line shape that a case timeline, an audit trail or an activity feed actually wants.  Slots map to the parts a log line always has: `leading` an icon, `label` the fixed-width what/who column, `text` the body that takes the remaining width, `trailing` any per-entry control, and `meta` the timestamp pinned at the end.
+One entry in a LOG or timeline: a dense single line, with a coloured rail marking what kind of thing happened.  The kit's fourth row shape, and it is a different species from the other three rather than a variant of them. `Row` is a grid-laid LIST row with a background, a radius and hover chrome: right for an item you click into, wrong for a hundred consecutive audit lines. `DetailRow` is a record's field. `Receipt` is a static key/value table. A timeline entry is none of those: it is quiet, dense, unclickable by default, and its most important signal is a colour at the leading edge telling you at a glance whether this line is an inbound message, a reply, an automated observation or a warning.  `EventList` already existed and does NOT cover this: it composes `Row`, so it renders events as clickable list rows. This is the log-line shape that a case timeline, an audit trail or an activity feed actually wants.  Slots map to the parts a log line always has: `leading` an icon, `label` the fixed-width what/who column, `text` the body that takes the remaining width, `trailing` any per-entry control, and `meta` the timestamp pinned at the end.
 
 **Kind:** component
 
@@ -251,14 +251,14 @@ One entry in a LOG or timeline: a dense single line, with a coloured rail markin
 
 **Documented params:**
 
-- `tone` _('accent'|'ok'|'warn'|'muted')_ -- Rail colour at the leading edge.
-- `leading` _(any)_ -- Icon or marker before the label.
-- `label` _(any)_ -- Fixed-width what/who column.
-- `text` _(any)_ -- The entry body.
-- `trailing` _(any)_ -- Per-entry control, rendered before the meta.
-- `meta` _(any)_ -- Timestamp or similar, pinned at the end.
-- `kind` _(string)_ -- Machine name for the entry type, emitted as data-kind.
-- `key` _(string)_ -- webjsx list key.
+- `tone` _('accent'|'ok'|'warn'|'muted')_: Rail colour at the leading edge.
+- `leading` _(any)_: Icon or marker before the label.
+- `label` _(any)_: Fixed-width what/who column.
+- `text` _(any)_: The entry body.
+- `trailing` _(any)_: Per-entry control, rendered before the meta.
+- `meta` _(any)_: Timestamp or similar, pinned at the end.
+- `kind` _(string)_: Machine name for the entry type, emitted as data-kind.
+- `key` _(string)_: webjsx list key.
 
 ### PanelFromItems
 
@@ -420,7 +420,7 @@ A single-line or multi-line text field.  `suggestions` turns it into a COMBO BOX
 
 ### FillLines
 
-Ruled writing lines that exist only on paper.  A record printed to be READ wants a screen's "nothing recorded" placeholder. A record printed to be FILLED IN by hand wants the opposite: no placeholder text at all, and enough ruled space to write the answer. The same page is often used both ways -- an operator prints the case to carry into the field, and writes into the gaps. This renders nothing on screen and, in print, the blank lines to write on.  Pair it with `ds-print-blank` on whatever placeholder the field shows on screen, so the two swap over cleanly at the page boundary.  Lines are ruled with a real border rather than a background gradient on purpose: browsers omit background graphics from printing by default, so a gradient rule silently prints as nothing on the common setting.
+Ruled writing lines that exist only on paper.  A record printed to be READ wants a screen's "nothing recorded" placeholder. A record printed to be FILLED IN by hand wants the opposite: no placeholder text at all, and enough ruled space to write the answer. The same page is often used both ways: an operator prints the case to carry into the field, and writes into the gaps. This renders nothing on screen and, in print, the blank lines to write on.  Pair it with `ds-print-blank` on whatever placeholder the field shows on screen, so the two swap over cleanly at the page boundary.  Lines are ruled with a real border rather than a background gradient on purpose: browsers omit background graphics from printing by default, so a gradient rule silently prints as nothing on the common setting.
 
 **Kind:** component
 
@@ -428,8 +428,8 @@ Ruled writing lines that exist only on paper.  A record printed to be READ wants
 
 **Documented params:**
 
-- `lines` _(number)_ -- How many lines to rule. Clamped to 1..20.
-- `key` _(string)_ -- webjsx list key.
+- `lines` _(number)_: How many lines to rule. Clamped to 1..20.
+- `key` _(string)_: webjsx list key.
 
 ### InputOTP
 
@@ -442,13 +442,13 @@ Segmented one-time-code / PIN entry.
 **Documented params:**
 
 - `props` _(Object)_
-- `props.length` _(number)_ -- number of boxes.
-- `props.value` _(string)_ -- the full code so far (controlled).
-- `props.onChange` _(Function)_ -- called with (nextValue:string, event) on every edit.
-- `props.onComplete` _(Function)_ -- called with (code:string) once all boxes are filled.
+- `props.length` _(number)_: number of boxes.
+- `props.value` _(string)_: the full code so far (controlled).
+- `props.onChange` _(Function)_: called with (nextValue:string, event) on every edit.
+- `props.onComplete` _(Function)_: called with (code:string) once all boxes are filled.
 - `props.disabled` _(boolean)_
 - `props.error` _(boolean)_
-- `props.label` _(string)_ -- accessible name for the group.
+- `props.label` _(string)_: accessible name for the group.
 - `props.key` _(*)_
 
 **Returns:** {*} webjsx vnode
@@ -605,25 +605,25 @@ The Claude-Desktop "Chats" column. Sessions grouped by a caller-supplied group l
 
 - `props` _(Object)_
 - `props.sessions` _(Array<{sid:*, title?:string, project?:string, agent?:string, time?:string, running?:boolean, unread?:boolean, rail?:string, parentSid?:*}>)_
-- `props.selected` _(*)_ -- the active sid.
-- `props.groups` _(Array<{label:string, sids:Array<*>}>)_ -- OPTIONAL buckets for the rows; else one flat list.
-- `props.search` _({value:string, onInput:Function, placeholder?:string})_ -- inline filter (optional).
-- `props.onSelect` _(Function)_ -- onSelect(session).
-- `props.onNew` _(Function)_ -- onNew().
+- `props.selected` _(*)_: the active sid.
+- `props.groups` _(Array<{label:string, sids:Array<*>}>)_: OPTIONAL buckets for the rows; else one flat list.
+- `props.search` _({value:string, onInput:Function, placeholder?:string})_: inline filter (optional).
+- `props.onSelect` _(Function)_: onSelect(session).
+- `props.onNew` _(Function)_: onNew().
 - `props.emptyText` _(string)_
 - `props.loading` _(boolean)_
 - `props.error` _(*)_
-- `props.tree` _(boolean)_ -- OPTIONAL: nest rows whose `parentSid` matches
-- `props.expanded` _(Set<*>|Array<*>)_ -- sids whose children are shown, when `tree`.
-- `props.onToggleExpand` _(Function)_ -- onToggleExpand(sid), when `tree`.
-- `props.onRename` _(Function)_ -- onRename(session, newTitle). Presence enables the
-- `props.renaming` _(*)_ -- sid of the row currently in rename-edit mode (host-driven).
-- `props.onStartRename` _(Function)_ -- onStartRename(session) - fired by the rename
-- `props.onCancelRename` _(Function)_ -- onCancelRename() - Escape / blur-without-change.
-- `props.onDelete` _(Function)_ -- onDelete(session). Presence enables the hover-revealed
-- `props.confirmingDelete` _(*)_ -- sid currently showing the armed delete-confirm state.
-- `props.onArmDelete` _(Function)_ -- onArmDelete(session) - first delete click.
-- `props.onCancelDelete` _(Function)_ -- onCancelDelete() - confirm-row Cancel click.
+- `props.tree` _(boolean)_: OPTIONAL: nest rows whose `parentSid` matches
+- `props.expanded` _(Set<*>|Array<*>)_: sids whose children are shown, when `tree`.
+- `props.onToggleExpand` _(Function)_: onToggleExpand(sid), when `tree`.
+- `props.onRename` _(Function)_: onRename(session, newTitle). Presence enables the
+- `props.renaming` _(*)_: sid of the row currently in rename-edit mode (host-driven).
+- `props.onStartRename` _(Function)_: onStartRename(session) - fired by the rename
+- `props.onCancelRename` _(Function)_: onCancelRename() - Escape / blur-without-change.
+- `props.onDelete` _(Function)_: onDelete(session). Presence enables the hover-revealed
+- `props.confirmingDelete` _(*)_: sid currently showing the armed delete-confirm state.
+- `props.onArmDelete` _(Function)_: onArmDelete(session) - first delete click.
+- `props.onCancelDelete` _(Function)_: onCancelDelete() - confirm-row Cancel click.
 
 **Returns:** {*} webjsx vnode
 
@@ -644,10 +644,10 @@ The live multi-session command center ("Live" dashboard).  The stop-all / stop-s
 **Documented params:**
 
 - `props` _(Object)_
-- `props.sessions` _(Array<Object>)_ -- session shape: `{ sid, realSid, title, agent, model, cwd, elapsedMs, counter, lastActivity, currentTool, status, stopping, external, isNew, cost, tokens }`.
-- `props.onStop` _(Function)_ -- onStop(session).
-- `props.onOpen` _(Function)_ -- onOpen(session).
-- `props.onView` _(Function)_ -- onView(session).
+- `props.sessions` _(Array<Object>)_: session shape: `{ sid, realSid, title, agent, model, cwd, elapsedMs, counter, lastActivity, currentTool, status, stopping, external, isNew, cost, tokens }`.
+- `props.onStop` _(Function)_: onStop(session).
+- `props.onOpen` _(Function)_: onOpen(session).
+- `props.onView` _(Function)_: onView(session).
 - `props.onStopAll` _(Function)_
 - `props.onStopSelected` _(Function)_
 - `props.confirmingStopAll` _(boolean)_
@@ -874,7 +874,7 @@ The live multi-session command center ("Live" dashboard).  The stop-all / stop-s
 
 ### FileGrid
 
-The directory listing.  `loading` and `busy` are NOT two spellings of one state -- they are the two halves of this SDK's standing distinction, and FileGrid is the component that takes both because it is the one place both are in play at once:  loading -- a DATA FETCH is in flight. Owns which SHAPE renders: with no rows yet it is a cold load and the whole grid is replaced by FileSkeleton; with rows already on screen it is a refresh and the existing rows stay mounted and dim (is-refreshing), because flashing a populated directory back to shimmer reads as data loss. busy    -- a USER ACTION is in flight (a rename/move/delete round-trip). Owns INTERACTIVITY, not shape: it is forwarded to each FileRow as `busy`, which disables that row's open + mutation controls so a second click cannot fire the same mutation twice.  A grid can be `busy` while not `loading` (a delete is posting, rows fully rendered) and `loading` while not `busy` (a plain refresh). Passing one for the other is a real bug, not a style choice, so they are deliberately not merged and neither is an alias of the other.
+The directory listing.  `loading` and `busy` are NOT two spellings of one state: they are the two halves of this SDK's standing distinction, and FileGrid is the component that takes both because it is the one place both are in play at once:  loading: a DATA FETCH is in flight. Owns which SHAPE renders: with no rows yet it is a cold load and the whole grid is replaced by FileSkeleton; with rows already on screen it is a refresh and the existing rows stay mounted and dim (is-refreshing), because flashing a populated directory back to shimmer reads as data loss. busy:    a USER ACTION is in flight (a rename/move/delete round-trip). Owns INTERACTIVITY, not shape: it is forwarded to each FileRow as `busy`, which disables that row's open + mutation controls so a second click cannot fire the same mutation twice.  A grid can be `busy` while not `loading` (a delete is posting, rows fully rendered) and `loading` while not `busy` (a plain refresh). Passing one for the other is a real bug, not a style choice, so they are deliberately not merged and neither is an alias of the other.
 
 **Kind:** component
 
@@ -882,11 +882,11 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state 
 
 **Documented params:**
 
-- `files` _(Array)_ -- the directory entries to render.
-- `loading` _(boolean)_ -- a data fetch is in flight (skeleton when cold, dim when refreshing).
-- `busy` _(boolean)_ -- a user-initiated mutation is in flight; disables every row's controls. Per-entry `f.busy` is used when this is not passed.
-- `emptyText` _(string)_ -- copy for the empty/filtered-miss state.
-- `density` _('list'|'compact'|'thumb')_ -- row density; 'thumb' switches to the multi-column cell grid.
+- `files` _(Array)_: the directory entries to render.
+- `loading` _(boolean)_: a data fetch is in flight (skeleton when cold, dim when refreshing).
+- `busy` _(boolean)_: a user-initiated mutation is in flight; disables every row's controls. Per-entry `f.busy` is used when this is not passed.
+- `emptyText` _(string)_: copy for the empty/filtered-miss state.
+- `density` _('list'|'compact'|'thumb')_: row density; 'thumb' switches to the multi-column cell grid.
 
 ### FileSkeleton
 
@@ -1403,8 +1403,8 @@ A single-value range slider (track + fill + thumb) built on a real, invisible na
 - `props.min` _(number)_
 - `props.max` _(number)_
 - `props.step` _(number)_
-- `props.onChange` _(Function)_ -- called with (value:number, event) on input.
-- `props.label` _(string)_ -- accessible name; also rendered visibly when given.
+- `props.onChange` _(Function)_: called with (value:number, event) on input.
+- `props.label` _(string)_: accessible name; also rendered visibly when given.
 - `props.disabled` _(boolean)_
 - `props.hint` _(string)_
 - `props.key` _(*)_
@@ -1425,9 +1425,9 @@ A scroll-snap content carousel with prev/next controls.
 
 - `props` _(Object)_
 - `props.items` _(Array)_
-- `props.renderItem` _(Function)_ -- (item, index) => vnode.
+- `props.renderItem` _(Function)_: (item, index) => vnode.
 - `props.orientation` _('horizontal'|'vertical')_
-- `props.label` _(string)_ -- accessible name for the region.
+- `props.label` _(string)_: accessible name for the region.
 - `props.key` _(*)_
 
 **Returns:** {*} webjsx vnode
@@ -2126,13 +2126,13 @@ A month date-grid. Fully controlled: `selected`/`month` are owned by the caller,
 
 - `props` _(Object)_
 - `props.mode` _('single'|'range')_
-- `props.selected` _(Date|{from:?Date,to:?Date})_ -- a Date in single mode, `{from,to}` in range mode.
-- `props.onSelect` _(Function)_ -- single mode: `onSelect(date)`. range mode: `onSelect({from,to})`.
-- `props.month` _(Date)_ -- the currently-displayed month (any date within it).
-- `props.onMonthChange` _(Function)_ -- `onMonthChange(newMonthDate)`, fired by the prev/next nav.
+- `props.selected` _(Date|{from:?Date,to:?Date})_: a Date in single mode, `{from,to}` in range mode.
+- `props.onSelect` _(Function)_: single mode: `onSelect(date)`. range mode: `onSelect({from,to})`.
+- `props.month` _(Date)_: the currently-displayed month (any date within it).
+- `props.onMonthChange` _(Function)_: `onMonthChange(newMonthDate)`, fired by the prev/next nav.
 - `props.minDate` _(Date)_
 - `props.maxDate` _(Date)_
-- `props.locale` _(string)_ -- BCP-47 locale for weekday/month labels; defaults to the SDK's active locale.
+- `props.locale` _(string)_: BCP-47 locale for weekday/month labels; defaults to the SDK's active locale.
 
 **Returns:** {*} webjsx vnode
 
@@ -2147,16 +2147,16 @@ Trigger button that opens a Popover hosting a single-mode Calendar.
 **Documented params:**
 
 - `props` _(Object)_
-- `props.value` _(Date)_ -- the selected date.
-- `props.onChange` _(Function)_ -- `onChange(date)`, fired on day select.
-- `props.open` _(boolean)_ -- popover open state, owned by the caller.
-- `props.onOpenChange` _(Function)_ -- `onOpenChange(nextOpen)`, fired by the trigger click and on close (Escape/outside-click/selection).
-- `props.month` _(Date)_ -- displayed month; defaults to `value` or today when omitted.
-- `props.onMonthChange` _(Function)_ -- `onMonthChange(newMonthDate)`, fired by the prev/next nav.
-- `props.placeholder` _(string)_ -- trigger label when `value` is unset.
+- `props.value` _(Date)_: the selected date.
+- `props.onChange` _(Function)_: `onChange(date)`, fired on day select.
+- `props.open` _(boolean)_: popover open state, owned by the caller.
+- `props.onOpenChange` _(Function)_: `onOpenChange(nextOpen)`, fired by the trigger click and on close (Escape/outside-click/selection).
+- `props.month` _(Date)_: displayed month; defaults to `value` or today when omitted.
+- `props.onMonthChange` _(Function)_: `onMonthChange(newMonthDate)`, fired by the prev/next nav.
+- `props.placeholder` _(string)_: trigger label when `value` is unset.
 - `props.minDate` _(Date)_
 - `props.maxDate` _(Date)_
-- `props.name` _(string)_ -- stable id distinguishing multiple pickers' anchor lookup; set explicitly when rendering more than one DatePicker on a page.
+- `props.name` _(string)_: stable id distinguishing multiple pickers' anchor lookup; set explicitly when rendering more than one DatePicker on a page.
 - `props.locale` _(string)_
 
 **Returns:** {*} webjsx vnode
@@ -2173,15 +2173,15 @@ Trigger button that opens a Popover hosting a range-mode Calendar.
 
 - `props` _(Object)_
 - `props.value` _({from:?Date,to:?Date})_
-- `props.onChange` _(Function)_ -- `onChange({from,to})`, fired on each click.
-- `props.open` _(boolean)_ -- popover open state, owned by the caller.
-- `props.onOpenChange` _(Function)_ -- `onOpenChange(nextOpen)`; also fired with `false` once both ends of the range are picked.
+- `props.onChange` _(Function)_: `onChange({from,to})`, fired on each click.
+- `props.open` _(boolean)_: popover open state, owned by the caller.
+- `props.onOpenChange` _(Function)_: `onOpenChange(nextOpen)`; also fired with `false` once both ends of the range are picked.
 - `props.month` _(Date)_
 - `props.onMonthChange` _(Function)_
 - `props.placeholder` _(string)_
 - `props.minDate` _(Date)_
 - `props.maxDate` _(Date)_
-- `props.name` _(string)_ -- stable id distinguishing multiple pickers' anchor lookup.
+- `props.name` _(string)_: stable id distinguishing multiple pickers' anchor lookup.
 - `props.locale` _(string)_
 
 **Returns:** {*} webjsx vnode
@@ -2222,15 +2222,15 @@ Create a damage numbers manager.
 
 **Documented params:**
 
-- `scene` _(THREE.Scene)_ -- Accepted for API symmetry with the host's scene; not used by the projection.
-- `camera` _(THREE.Camera)_ -- The THREE.js camera (for projection math).
-- `config` _(Object)_ -- Configuration object.
-- `config.container` _(HTMLElement)_ -- Element whose on-screen box the 3D view occupies. Defaults to the viewport. Numbers are not mounted inside it.
-- `config.defaultColor` _(string)_ -- Default color for numbers. Defaults to the --danger-ink token.
-- `config.defaultFontSize` _(number)_ -- Default font size in pixels. Defaults to the --fs-h2 token.
-- `config.defaultDuration` _(number)_ -- Lifetime in milliseconds.
-- `config.maxActive` _(number)_ -- Most numbers on screen at once; past it the oldest is retired first.
-- `config.useLargerFontForBigDamage` _(boolean)_ -- Scale font size with damage amount.
+- `scene` _(THREE.Scene)_: Accepted for API symmetry with the host's scene; not used by the projection.
+- `camera` _(THREE.Camera)_: The THREE.js camera (for projection math).
+- `config` _(Object)_: Configuration object.
+- `config.container` _(HTMLElement)_: Element whose on-screen box the 3D view occupies. Defaults to the viewport. Numbers are not mounted inside it.
+- `config.defaultColor` _(string)_: Default color for numbers. Defaults to the --danger-ink token.
+- `config.defaultFontSize` _(number)_: Default font size in pixels. Defaults to the --fs-h2 token.
+- `config.defaultDuration` _(number)_: Lifetime in milliseconds.
+- `config.maxActive` _(number)_: Most numbers on screen at once; past it the oldest is retired first.
+- `config.useLargerFontForBigDamage` _(boolean)_: Scale font size with damage amount.
 
 **Returns:** {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.
 

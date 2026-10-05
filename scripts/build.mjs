@@ -70,6 +70,7 @@ const appShellSplitFiles = [
     'carousel.css',
     'calendar.css',
     'collab.css',
+    'context-pane.css',
     'shared-blocks.css',
     'dashboard.css',
 ];

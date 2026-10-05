@@ -97,10 +97,10 @@ export function createAssetPickerModal(opts = {}) {
     const filtered = getFilteredAssets()
 
     return h('div', {
-      style: 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000'
+      style: 'position:fixed;top:0;left:0;right:0;bottom:0;background:var(--scrim,rgba(0,0,0,0.5));display:flex;align-items:center;justify-content:center;z-index:var(--z-modal,800)'
     }, [
       h('div', {
-        style: 'background:var(--panel-bg,#fff);border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,0.2);width:90vw;max-width:800px;max-height:80vh;display:flex;flex-direction:column'
+        style: 'background:var(--panel-bg,#fff);border-radius:8px;box-shadow:var(--shadow-overlay,0 2px 16px rgba(0,0,0,0.2));width:90vw;max-width:800px;max-height:80vh;display:flex;flex-direction:column'
       }, [
         h('div', { style: 'padding:16px;border-bottom:1px solid var(--panel-border,#ddd)' }, [
           h('div', { style: 'font-weight:600;font-size:14px;margin-bottom:12px' }, 'Select Asset'),
@@ -131,7 +131,7 @@ export function createAssetPickerModal(opts = {}) {
             }, 'Cancel'),
             h('button', {
               type: 'button',
-              style: `padding:6px 16px;border-radius:4px;background:${_selectedAsset ? 'var(--primary,#262626)' : 'var(--fg-3,#ccc)'};color:#fff;border:none;cursor:pointer;font-size:12px`,
+              style: `padding:6px 16px;border-radius:4px;background:${_selectedAsset ? 'var(--primary,#262626)' : 'var(--fg-3,#ccc)'};color:var(--on-color,#fff);border:none;cursor:pointer;font-size:12px`,
               disabled: !_selectedAsset,
               onClick: () => {
                 if (_selectedAsset) {

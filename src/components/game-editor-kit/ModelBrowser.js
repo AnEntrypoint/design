@@ -222,7 +222,7 @@ export function createModelBrowser(container, opts = {}) {
   function renderPreview() {
     if (!_previewMode || !_selectedModel) return
     const overlay = h('div', {
-      style: 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000',
+      style: 'position:fixed;top:0;left:0;right:0;bottom:0;background:var(--scrim-strong,rgba(0,0,0,0.7));display:flex;align-items:center;justify-content:center;z-index:var(--z-modal,800)',
       onclick: (e) => {
         if (e.target === e.currentTarget) { _previewMode = false; render() }
       }

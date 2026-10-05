@@ -116,7 +116,7 @@ export function iconMarkup(name, { size = 16 } = {}) {
  * Renders a monochrome line icon from ICON_PATHS as a webjsx vnode. Accepts
  * either call shape: `Icon('search', { size: 20 })` (the primary,
  * historical signature) or `Icon({ name: 'search', size: 20 })` (a single
- * props object, matching every other factory in this kit) -- both resolve
+ * props object, matching every other factory in this kit): both resolve
  * through the same iconArgs() normalization below. An out-of-set name
  * renders an empty `<span class="glyph">` rather than throwing.
  * @example h('button', {}, Icon('settings', { size: 16 }), 'Settings')

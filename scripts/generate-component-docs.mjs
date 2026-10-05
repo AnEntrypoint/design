@@ -27,9 +27,9 @@ function renderProps(props) {
 }
 
 let md = `# Component props reference\n\n`;
-md += `Generated from \`src/components.js\`'s real export barrel + each symbol's real definition in \`src/components/*.js\`, via \`node scripts/generate-component-docs.mjs\`. Do not hand-edit -- re-run after any component signature or JSDoc change.\n\n`;
+md += `Generated from \`src/components.js\`'s real export barrel + each symbol's real definition in \`src/components/*.js\`, via \`node scripts/generate-component-docs.mjs\`. Do not hand-edit: re-run after any component signature or JSDoc change.\n\n`;
 md += `${components.length} exported symbols across ${fileOrder.length} source files.`;
-if (driftWarnings.length) md += ` **${driftWarnings.length} drift warning(s) found -- see bottom of file.**`;
+if (driftWarnings.length) md += ` **${driftWarnings.length} drift warning(s) found: see bottom of file.**`;
 md += `\n\n---\n\n`;
 
 for (const file of fileOrder) {
@@ -44,7 +44,7 @@ for (const file of fileOrder) {
         if (c.jsdoc && c.jsdoc.params.length) {
             md += `**Documented params:**\n\n`;
             for (const p of c.jsdoc.params) {
-                md += `- \`${p.name}\`${p.type ? ` _(${p.type})_` : ''}${p.desc ? ` -- ${p.desc}` : ''}\n`;
+                md += `- \`${p.name}\`${p.type ? ` _(${p.type})_` : ''}${p.desc ? `: ${p.desc}` : ''}\n`;
             }
             md += `\n`;
         }
@@ -65,7 +65,7 @@ const outPath = join(root, 'docs', 'component-props.md');
 if (CHECK) {
     const existing = existsSync(outPath) ? readNormalized(outPath) : null;
     if (existing !== md) {
-        die(`[component-docs] docs/component-props.md is stale -- run \`node scripts/generate-component-docs.mjs\` and commit the result`);
+        die(`[component-docs] docs/component-props.md is stale: run \`node scripts/generate-component-docs.mjs\` and commit the result`);
     }
     console.log(`[component-docs] docs/component-props.md is up to date (${components.length} symbols, 0 drift)`);
     process.exit(0);

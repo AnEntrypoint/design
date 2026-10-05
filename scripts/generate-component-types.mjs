@@ -160,7 +160,7 @@ function typeForProp(c, p, docTypes, body) {
 }
 
 let out = '';
-out += `// types/components.d.ts -- GENERATED, do not hand-edit.\n`;
+out += `// types/components.d.ts: GENERATED, do not hand-edit.\n`;
 out += `//\n`;
 out += `// Produced by \`node scripts/generate-component-types.mjs\` from the same\n`;
 out += `// extraction that produces docs/component-props.md, so the declarations\n`;
@@ -328,7 +328,7 @@ function shapeOfExport(entry) {
 const indexExports = collectIndexExports(indexSrc);
 
 let idx = '';
-idx += `// types/index.d.ts -- GENERATED, do not hand-edit.\n`;
+idx += `// types/index.d.ts: GENERATED, do not hand-edit.\n`;
 idx += `//\n`;
 idx += `// The package entry surface, enumerated from src/index.js's real export\n`;
 idx += `// statements by \`node scripts/generate-component-types.mjs\`. Component\n`;
@@ -372,7 +372,7 @@ if (CHECK) {
     if ((existsSync(outPath) ? readNormalized(outPath) : null) !== out) stale.push('types/components.d.ts');
     if ((existsSync(idxPath) ? readNormalized(idxPath) : null) !== idx) stale.push('types/index.d.ts');
     if (stale.length) {
-        die(`[component-types] ${stale.join(' and ')} ${stale.length > 1 ? 'are' : 'is'} stale -- run \`node scripts/generate-component-types.mjs\` and commit the result`);
+        die(`[component-types] ${stale.join(' and ')} ${stale.length > 1 ? 'are' : 'is'} stale: run \`node scripts/generate-component-types.mjs\` and commit the result`);
     }
     console.log(`[component-types] types/*.d.ts up to date (${components.length} component symbols, ${indexExports.length} entry exports, 0 drift)`);
     process.exit(0);

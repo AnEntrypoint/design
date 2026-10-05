@@ -82,7 +82,7 @@ function Swatch(name, v, big) {
 
 function PaletteGrid() {
     return Panel({ id: 'palette', title: 'palette tokens', count: PALETTE.length + ' colors', class: 'ds-panel-gap', children: [
-        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens with the value each one resolves to in the active theme. flame is an alias of warn.'),
+        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens with the value each one resolves to in the active theme. flame is an alias of warn. purple, mascot and sky are historical names: all three now resolve to neutral greys and are kept so existing consumers keep working.'),
         h('div', { class: 'ds-swatch-grid-sm' },
             ...PALETTE.map(p => Swatch(p.name, p.v, false))
         )
@@ -158,8 +158,8 @@ const COLLAB_USERS = [
 
 const CONTEXT_SEGMENTS = [
     { id: 'sys',   label: 'system',    value: 1840, tone: 'system' },
-    { id: 'files', label: 'files',     value: 7320, tone: 'files' },
-    { id: 'chat',  label: 'chat',      value: 4210, tone: 'chat' },
+    { id: 'files', label: 'files',     value: 7320, tone: 'user' },
+    { id: 'chat',  label: 'chat',      value: 4210, tone: 'assistant' },
     { id: 'tools', label: 'tool defs', value: 1130, tone: 'other' },
 ];
 
@@ -295,19 +295,19 @@ function BackfillPanel() {
                 PresenceBar({ users: COLLAB_USERS }),
                 AgentPresenceChip({ userId: 'u9', label: 'solo agent', color: 'var(--purple-2)', status: 'active' })
             ),
-            h('div', { class: 'ds-prim-row ds-prim-row-collab' },
+            h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'collab overlays'), RowTag('fixture'),
-                LiveCursorOverlay({ cursors: [{ userId: 'u1', label: 'ana', color: 'var(--purple)', x: 40, y: 18 }, { userId: 'u3', label: 'agent', color: 'var(--mascot)', x: 120, y: 44 }] }),
+                h('div', { class: 'ds-prim-stage' }, LiveCursorOverlay({ cursors: [{ userId: 'u1', label: 'ana', color: 'var(--purple)', x: 40, y: 18 }, { userId: 'u3', label: 'agent', color: 'var(--mascot)', x: 120, y: 44 }] }),
                 RemoteSelectionRings({ selections: [{ userId: 'u2', color: 'var(--green)', rect: { left: 20, top: 12, width: 90, height: 18 } }] }),
-                RecentEditHighlightFlash({ edits: [{ timestamp: 1, color: 'var(--purple)', rect: { left: 12, top: 60, width: 70, height: 16 } }] })
+                RecentEditHighlightFlash({ edits: [{ timestamp: 1, color: 'var(--purple)', rect: { left: 12, top: 60, width: 70, height: 16 } }] }))
             ),
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'context meter'), RowTag('fixture'),
-                ContextMeter({ used: totalTokens, total: 32000, segments: CONTEXT_SEGMENTS })
+                h('div', { class: 'ds-prim-fixture' }, ContextMeter({ used: totalTokens, total: 32000, segments: CONTEXT_SEGMENTS }))
             ),
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'context treemap'), RowTag('fixture'),
-                ContextTreemap({ items: CONTEXT_SEGMENTS, width: 280, height: 160 })
+                h('div', { class: 'ds-prim-fixture' }, ContextTreemap({ items: CONTEXT_SEGMENTS, width: 280, height: 160 }))
             ),
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'context x-ray'), RowTag('fixture'),

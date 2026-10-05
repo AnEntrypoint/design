@@ -121,7 +121,7 @@ function SessionsBody() {
     if (p === 'loading') return RowSkeleton(5, 'sk-sess-');
     if (p === 'error') return StoreError(
         'session store unreachable',
-        'the plugkit event store at ~/.gm/events.jsonl could not be opened -- the file is held by another writer. no session can be listed until that lock clears.',
+        'the plugkit event store at ~/.gm/events.jsonl could not be opened: the file is held by another writer. no session can be listed until that lock clears.',
         'retry read'
     );
     if (p === 'empty') return StoreEmpty(
@@ -156,7 +156,7 @@ function DevBody() {
     );
     if (p === 'empty') return StoreEmpty(
         'no deviations on this walk',
-        'this is the good outcome -- every dispatch cleared its admission gate. a denied gate or an unwitnessed edit would be listed here.'
+        'this is the good outcome: every dispatch cleared its admission gate. a denied gate or an unwitnessed edit would be listed here.'
     );
     return h('div', {}, ...deviations.map((d, i) => h('div', { key: 'dv' + i }, DevRow(d))));
 }

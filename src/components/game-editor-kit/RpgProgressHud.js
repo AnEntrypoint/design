@@ -42,7 +42,7 @@ export function StatBar(props = {}) {
         font-size: 10px;
         font-weight: 600;
         color: var(--fg,#ccc);
-        text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        text-shadow: 0 1px 2px var(--scrim-strong,rgba(0,0,0,$1));
         white-space: nowrap;
       `
     }, label != null ? String(label) : `${Math.round(value)}/${Math.round(max)}`)
@@ -149,7 +149,7 @@ export function AbilitySlot(props = {}) {
         right: 0;
         bottom: 0;
         height: ${cooldownFrac > 0 ? cooldownFrac * 100 : 100}%;
-        background: rgba(0,0,0,0.65);
+        background: var(--scrim-strong,rgba(0,0,0,0.65));
       `
     }) : null,
     onCooldown ? h('div', {
@@ -162,7 +162,7 @@ export function AbilitySlot(props = {}) {
         font-size: 11px;
         font-weight: 700;
         color: var(--fg,#ccc);
-        text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+        text-shadow: 0 1px 2px var(--scrim-strong,rgba(0,0,0,$1));
       `
     }, String(Math.ceil(cooldownRemaining))) : null,
     hotkey != null ? h('div', {
@@ -227,7 +227,7 @@ export function RpgProgressHud(props = {}) {
       gap: 8px;
       font-family: system-ui, -apple-system, sans-serif;
       pointer-events: none;
-      z-index: 9000;
+      z-index: var(--z-dock,600);
       user-select: none;
     `
   },

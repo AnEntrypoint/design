@@ -14,7 +14,7 @@ const APP_SHELL_SPLIT = [
   'loading-alerts.css', 'responsive2-workspace.css', 'row-print.css',
   'data-density.css', 'kits-appended.css', 'git-status.css', 'plugins-config.css',
   'models-config.css', 'skills-config.css', 'slider.css', 'otp-input.css',
-  'carousel.css', 'calendar.css', 'collab.css',
+  'carousel.css', 'calendar.css', 'collab.css', 'context-pane.css',
   'dashboard.css',
 ];
 
