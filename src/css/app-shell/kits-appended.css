@@ -661,6 +661,7 @@
    floor other controls in this row (the link text, the input fields) sit
    above. Sized up on the existing --space-2-5 token, no new primitive. */
 .ds-auth-remember input[type="checkbox"] { width: var(--space-2-5); height: var(--space-2-5); margin: 0; }
+@media (pointer: coarse) { .ds-auth-remember { min-height: 44px; } }
 .ds-auth-remember-text { color: var(--panel-text-2); font-size: var(--fs-tiny); }
 /* --accent-ink, not --accent, per the design system's text-vs-fill split
    (AGENTS.md): --accent is a background/border-color lead only, --accent-ink

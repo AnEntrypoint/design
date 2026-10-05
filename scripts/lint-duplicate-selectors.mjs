@@ -43,6 +43,7 @@ const APP_SHELL_SPLIT = [
   'data-density.css', 'kits-appended.css', 'git-status.css', 'plugins-config.css',
   'models-config.css', 'skills-config.css', 'slider.css', 'otp-input.css',
   'carousel.css', 'calendar.css', 'collab.css',
+  'dashboard.css',
 ];
 
 export const CSS_PARTS = [

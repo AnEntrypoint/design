@@ -49,6 +49,7 @@ const APP_SHELL_SPLIT = [
     'responsive2-workspace.css', 'row-print.css', 'data-density.css', 'kits-appended.css',
     'git-status.css', 'plugins-config.css', 'models-config.css', 'skills-config.css',
     'slider.css', 'otp-input.css', 'carousel.css', 'calendar.css', 'collab.css',
+    'dashboard.css',
 ];
 const SHEETS = [
     ['colors_and_type.css', 'colors_and_type.css'],
