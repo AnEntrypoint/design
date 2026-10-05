@@ -796,7 +796,7 @@
 /* Per-row copy button on command lines only (kind==='cmd', see terminal
    app.js's Line()) -- hover/focus-reveal like the chat surface's
    .chat-code-copy so the scrollback stays a clean transcript at rest. */
-.ds-term-line-copyable { position: relative; padding-right: 40px; }
+.ds-term-body .ds-term-line-copyable { position: relative; padding-right: var(--space-6); }
 .ds-term-line-copy {
   position: absolute; top: 0; right: 0;
   opacity: 0; pointer-events: none;
@@ -813,6 +813,7 @@
 .ds-term-line-copy.is-copied { color: var(--accent); opacity: 1; pointer-events: auto; }
 @media (pointer: coarse) {
   /* No hover on touch -- always visible so the affordance is reachable. */
+  .ds-term-body .ds-term-line-copyable { padding-right: calc(44px + var(--space-1)); min-height: 44px; }
   .ds-term-line-copy { opacity: 1; pointer-events: auto; min-width: 44px; min-height: 44px; }
   .ds-auth-forgot, .ds-auth-mode-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 }
@@ -833,13 +834,12 @@
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
-/* The input itself is a prompt line, not a form control, so it is NOT floored
-   to 44px (that would break the terminal's line rhythm). Instead the whole
-   prompt ROW becomes the tap target, and the font goes to 16px so focusing it
-   does not trigger iOS zoom — a sub-16px input is what causes that. */
+/* On touch the prompt row and the input both floor at 44px, so the input is
+   itself the tap target; the font goes to 16px so focusing it does not trigger
+   iOS zoom — a sub-16px input is what causes that. */
 @media (pointer: coarse) {
   .ds-term-input-row { min-height: 44px; align-items: center; }
-  .ds-term-input { font-size: max(16px, var(--fs-micro)); }
+  .ds-term-input { min-height: 44px; font-size: max(16px, var(--fs-micro)); }
 }
 /* full-viewport render root (community-app) */
 .ds-root-viewport { height: 100vh; height: 100dvh; }
@@ -1129,6 +1129,10 @@
 .ds-kit-controls summary:focus-visible {
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
+}
+@media (pointer: coarse) {
+  .ds-kit-controls summary { display: flex; align-items: center; min-height: 44px; }
+  .ds-kit-controls summary::before { white-space: pre; }
 }
 .ds-kit-controls-body {
   padding: 0 var(--space-3) var(--space-3);

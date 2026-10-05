@@ -124,6 +124,9 @@
 .ds-dp-trigger:hover { background: var(--bg-3); }
 .ds-dp-trigger:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-dp-trigger-label { white-space: nowrap; }
+@media (pointer: coarse) {
+  .ds-dp-trigger { min-height: 44px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ds-dp-trigger { transition: none; }

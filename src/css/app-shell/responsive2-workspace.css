@@ -251,8 +251,10 @@
 .ws-sessions-collapsed .ws-resizer-sessions,
 .ws-pane-collapsed .ws-resizer-pane { display: none; }
 /* Coarse-pointer hit target for hybrid touch laptops above the drawer breakpoint
-   (the 8px sliver is un-grabbable by touch). */
-@media (pointer: coarse) { .ws-resizer { width: 16px; margin-right: -8px; } }
+   (the 8px sliver is un-grabbable by touch). The grid cell is a fixed track, so
+   the 44px box overlays neighbours without moving any track; the 2px line and
+   grip stay centred, so the visible handle is unchanged. */
+@media (pointer: coarse) { .ws-resizer { width: 44px; margin-right: -22px; } }
 /* Ease the rail/pane collapse. Track COUNT stays stable on collapse (only a
    width var flips), so grid-template-columns is animatable; reduced-motion
    drops it to an instant swap. */
@@ -317,6 +319,7 @@
 .ws-rail-item:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: -2px; }
 .ws-rail-item.active { background: var(--accent-tint); color: var(--fg); }
 .ws-rail-item-label { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.ws-rail-item-glyph { flex: none; width: var(--icon-sm); height: var(--icon-sm); }
 /* Shape/color come from the shared .ds-badge component (see app-shell/primitives.css);
    this class is now just the rail-item layout hook (spacing, collapsed-state targeting). */
 .ws-rail-item-count { flex: none; margin-inline-start: var(--space-1); }

@@ -396,6 +396,9 @@
     border-radius: var(--r-1, 8px);
     padding: var(--space-hair, 2px) var(--space-1, 4px);
 }
+@media (pointer: coarse) {
+    .ds-ep-inline-input.ds-ep-inline-input { min-height: 44px; }
+}
 .ds-ep-inline-input.ds-ep-inline-input:focus-visible {
     outline: none;
     border-color: var(--accent);
@@ -1221,7 +1224,7 @@
     padding: var(--space-hair) var(--space-1-5); cursor: pointer;
 }
 .ov-menubutton-retry:hover, .ov-menubutton-retry:focus-visible { background: var(--panel-2, var(--rule)); outline: none; }
-.ov-menubutton-trigger {
+.ov-menubutton-trigger, .ov-perm-trigger {
     appearance: none;
     background: var(--panel-2, transparent);
     color: inherit; font: inherit;
@@ -1233,7 +1236,7 @@
     display: inline-flex; align-items: center;
 }
 @media (pointer: coarse) {
-    .ov-menubutton-trigger { min-height: 44px; }
+    .ov-menubutton-trigger, .ov-perm-trigger { min-height: 44px; }
 }
 
 /* ---------------------------------------------------------------

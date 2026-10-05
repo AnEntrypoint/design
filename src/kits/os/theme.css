@@ -1944,6 +1944,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
   /* window chrome */
   .ds-247420 .wm-btns .wm-btn { min-width: var(--os-tap, 44px); min-height: var(--os-tap, 44px); }
   .ds-247420 .wm-resize { width: var(--os-tap, 44px); height: var(--os-tap, 44px); }
+  .ds-247420 .os-btn { min-height: var(--os-tap, 44px); }
   /* taskbar tasks (also widen and snap on the whole touch band, not mobile-only) */
   .ds-247420 .os-task {
     min-height: var(--os-tap, 44px); min-width: 120px;

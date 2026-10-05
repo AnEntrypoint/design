@@ -63,6 +63,9 @@
   outline: var(--focus-w) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
+@media (pointer: coarse) {
+  .ds-side-tree-summary { min-height: 44px; }
+}
 .ds-side-tree-summary .glyph { font-family: var(--ff-body); font-size: var(--fs-tiny); font-weight: 600; color: var(--fg-3); }
 .ds-side-tree-summary .count {
   margin-left: auto; padding: 1px var(--space-2); font-size: var(--fs-micro); font-weight: 700;

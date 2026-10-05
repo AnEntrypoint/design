@@ -67,6 +67,9 @@
   height: var(--ctl-lg); min-height: var(--ctl-lg);
   padding: 0 var(--space-4); font-size: var(--fs-body); gap: var(--space-2);
 }
+@media (pointer: coarse) {
+  .btn-lg, .btn-lg.btn-primary, .btn-lg.btn-ghost { min-height: 44px; }
+}
 
 /* App chrome is compact/dense (see --fs-h1-app etc in colors_and_type.css) --
    the marketing-scale hover lift/shadow reads as an oversized flourish at
@@ -373,6 +376,9 @@
 .ds-menubar-trigger:hover { background: var(--bg-3); }
 .ds-menubar-trigger:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-menubar-trigger.is-open { background: var(--bg-3); }
+@media (pointer: coarse) {
+  .ds-menubar-trigger { min-height: 44px; min-width: 44px; justify-content: center; }
+}
 @media (prefers-reduced-motion: reduce) {
   .ds-menubar-trigger { transition: none; }
 }

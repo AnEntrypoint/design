@@ -962,6 +962,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 }
 @media (pointer: coarse) {
   .chat-composer-toolbar .composer-btn { width: 44px; height: 44px; }
+  .chat-composer textarea { min-height: 44px; }
 }
 
 .chat-composer-note {
