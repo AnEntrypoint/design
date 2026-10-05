@@ -264,7 +264,7 @@
   align-items: baseline;
   gap: .5em;
 }
-.agentchat-title { font-size: 1em; margin: 0; }
+.agentchat-title { font-size: inherit; margin: 0; }
 .agentchat-sub { font-size: var(--fs-tiny); color: var(--fg-3); }
 /* Optional inline content viewer beside the thread (sidePanel prop) - a
    docstudio-cue addition (its chat view keeps a document/PDF preview open

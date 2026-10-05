@@ -395,18 +395,14 @@ table td.is-num, table th.is-num { text-align: right; font-variant-numeric: tabu
 /* ============================================================
    Changelog
    ============================================================ */
-.ds-changelog-row {
-  /* The !important is load-bearing and was empirically confirmed so -- do not
-     remove it on a specificity argument. A changelog row carries three tracks
-     (date, version, message) where a plain .row carries two, and the responsive
-     blocks in responsive.css legitimately rewrite .row's template at several
-     breakpoints. Those blocks are later in the cascade, so at tablet width the
-     two-track override wins on source order and collapses the version column:
-     measured live, removing this flag changes the computed template from
-     "120.75px 77.625px 70.125px" to "103.5px 0px 165px" -- a zero-width column
-     and the version silently gone. Scoping to .app does not help, because the
-     competing rules would need to be scoped in lockstep. */
-  grid-template-columns: minmax(110px, 14ch) minmax(60px, 9ch) minmax(0, 1fr) !important;
+/* Three tracks (date, version, message) where a plain .row has two. The
+   .app .row.ds-changelog-row selector is (0,3,0) so it out-ranks the generic
+   .app .row template rewritten at every responsive breakpoint by specificity
+   rather than by !important; the bare .row.ds-changelog-row form covers rows
+   rendered outside .app, where those generic rules do not apply either. */
+.app .row.ds-changelog-row,
+.row.ds-changelog-row {
+  grid-template-columns: minmax(110px, 14ch) minmax(60px, 9ch) minmax(0, 1fr);
 }
 .ds-changelog-ver {
   font-family: var(--ff-body); font-weight: 600; font-size: var(--fs-sm);

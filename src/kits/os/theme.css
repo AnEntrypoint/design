@@ -802,9 +802,9 @@ html, body {
  * Density bar-height is genuinely OS-shell-specific, so it stays;
  * --os-accent-tint maps to the canonical accent tint. */
 :root { --os-accent-tint: var(--accent-tint); }
-:root[data-density="compact"]     { --os-bar-h: 28px; --os-tile-pad: 6px;  --os-gap: 6px;  }
-:root[data-density="comfortable"] { --os-bar-h: 36px; --os-tile-pad: 10px; --os-gap: 10px; }
-:root[data-density="spacious"]    { --os-bar-h: 44px; --os-tile-pad: 14px; --os-gap: 14px; }
+:root[data-density="compact"]     { --os-tile-pad: 6px;  --os-gap: 6px;  }
+:root[data-density="comfortable"] { --os-tile-pad: 10px; --os-gap: 10px; }
+:root[data-density="spacious"]    { --os-tile-pad: 14px; --os-gap: 14px; }
 
 /* ============================================================
  * thebird brand layer (migrated from thebird's local thebird-brand.css
@@ -825,14 +825,11 @@ html, body {
 .ds-247420 {
     --ff-ui: var(--ff-body);
     /* uniform bar height: 22px button + 6px+6px padding = 34px.
-     * LOAD-BEARING !important: `:root[data-density="compact"|"comfortable"|
-     * "spacious"]` (this file, "data-attr theme/accent" block above) redefines
-     * --os-bar-h at (0,2,0) — HIGHER than this rule's (0,1,0) — on the same
-     * <html> element. Without the flag the density presets silently override
-     * the brand's uniform 34px bar geometry. */
-    --os-bar-h: 34px !important;
-    --os-bar-h-mobile: 34px !important;
-    --os-dock-h: 34px !important;
+     * The density presets above deliberately leave --os-bar-h alone: bar height
+     * is brand geometry, not a density axis. */
+    --os-bar-h: 34px;
+    --os-bar-h-mobile: 34px;
+    --os-dock-h: 34px;
     /* Brand identity, scoped so it never leaks to other portfolio consumers.
      * The base theme's auto/paper/ink presets let --accent drift to the bright
      * --green-2 (#3A9A34) in ink mode; thebird's brand accent is the deep green
@@ -841,15 +838,16 @@ html, body {
      * opt into [data-theme="thebird"], which the OS boots past with
      * data-theme="auto". --accent-bright is pinned too so the ink-mode
      * --accent: var(--accent-bright, ...) chain still resolves to brand green.
-     * LOAD-BEARING !important: colors_and_type.css defines --accent on
-     * `[data-accent="acid"|"green"|...]` and `[data-theme="ink"]` — attribute
-     * selectors at (0,1,0), the SAME specificity as this `.ds-247420` class
-     * rule, on the same <html> element. colors_and_type.css is always loaded
-     * first, but equal specificity + later source order would still let a
-     * [data-accent] preset win. The flag is the only thing pinning brand green. */
-    --accent: var(--green) !important;
-    --accent-bright: var(--green) !important;
+     * The brand accent itself is pinned in the doubled-class rule below. */
     --paper: #F5F0E4;
+}
+/* colors_and_type.css defines --accent on [data-accent=...] and
+ * [data-theme="ink"], attribute selectors at (0,1,0) on the same <html>
+ * element. The doubled class lifts this to (0,2,0) so brand green wins
+ * whatever the source order, with no !important. */
+.ds-247420.ds-247420 {
+    --accent: var(--green);
+    --accent-bright: var(--green);
 }
 /* Themed scrollbars for every scrollable node under the OS shell (panels,
  * sidebars, panes, modals) that doesn't already opt into its own scrollbar
@@ -903,16 +901,12 @@ html, body {
   }
 }
 /* Instance filtering hides off-instance windows via class, not inline style.
- * LOAD-BEARING !important: must beat wm.css's `.wm-win.wm-max{...!important}`
- * geometry and any display set by the window's own state classes — a hidden
- * window must stay hidden no matter which layout rule matched it. */
+ * The three-class selector out-ranks every window state class. */
 .ds-247420 .wm-win.wm-inst-hidden,
-.wm-win.wm-inst-hidden { display: none !important; }
-/* LOAD-BEARING !important: `.os-menubar`/`.os-taskbar` carry `display:flex`
- * from rules at equal-or-higher specificity in this sheet and in the responsive
- * bands below; the tilde-key hide must beat all of them unconditionally. */
+.wm-win.wm-inst-hidden { display: none; }
+/* The tilde-key hide: (0,2,1) beats the .os-menubar/.os-taskbar display rules. */
 html.bars-hidden .os-menubar,
-html.bars-hidden .os-taskbar { display: none !important; }
+html.bars-hidden .os-taskbar { display: none; }
 .ds-247420 .os-task { border-radius: var(--r-pill, 999px); }
 .os-brand { font-family: var(--ff-display); font-weight: 700; }
 
@@ -1854,10 +1848,7 @@ html.ds-247420 { touch-action: pan-x pan-y; overscroll-behavior: none; -webkit-t
  * layer pinned --os-bar-h-mobile to 34px which left no room for 44px tap
  * targets in the bar. Restore 52px on mobile/touch. --- */
 @media (max-width: 767px), (max-height: 500px) and (orientation: landscape) {
-  /* LOAD-BEARING !important: same reason as the brand block's --os-bar-h —
-   * `:root[data-density="…"]` redefines --os-bar-h at (0,2,0), higher than
-   * this (0,1,0) class rule on the same <html> element. */
-  .ds-247420 { --os-bar-h-mobile: 52px !important; --os-bar-h: 52px !important; }
+  .ds-247420 { --os-bar-h-mobile: 52px; --os-bar-h: 52px; }
 }
 
 /* --- mobile + landscape-phone full-screen windows. The earlier

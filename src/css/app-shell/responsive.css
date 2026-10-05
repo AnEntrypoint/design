@@ -101,14 +101,8 @@
   }
   .row .sub { grid-column: 1 / -1; order: 3; }
   .row .title { font-size: var(--fs-sm); }
-  /* Changelog carries 3 children: give date+ver line one, message wraps below
-     (the generic 2-col .row override staggers it into an implicit row).
-     Needs (0,3,0) to clear BOTH the `.app .row` rule directly above and
-     `.ds-changelog-row`'s own !important base in hero-content.css — an
-     !important base can only be beaten by another !important, so this one
-     stays until that upstream flag is removed (hero-content.css is outside
-     this change's scope). */
-  .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr) !important; }
+  /* Changelog carries 3 children: date+ver share line one, the message wraps below. */
+  .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr); }
   .ds-changelog-row .title { grid-column: 1 / -1; }
 
   .btn:not(.btn-sm):not(.btn-lg), .btn-primary:not(.btn-sm):not(.btn-lg), .btn-ghost:not(.btn-sm):not(.btn-lg) {
@@ -206,9 +200,7 @@
      the later `@media` `.row` rules in this file without a flag. */
   .app .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: var(--space-1); }
   .row .sub { grid-column: 1 / -1; order: 3; }
-  /* (0,3,0) + !important: still required to beat `.ds-changelog-row`'s
-     !important base in hero-content.css (see the 480px block). */
-  .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr) !important; }
+  .app .row.ds-changelog-row { grid-template-columns: minmax(70px, 10ch) minmax(0, 1fr); }
   .ds-changelog-row .title { grid-column: 1 / -1; }
 }
 

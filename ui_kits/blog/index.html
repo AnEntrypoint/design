@@ -45,7 +45,7 @@
   /* font-size is the GLYPH size of the decorative open-quote mark, matched to
      the mark's optical weight beside 15px prose, not a type-ladder tier — the
      same treatment lint-tokens.mjs gives icon sizes set via font-size. */
-  blockquote::before{content:'“';color:var(--panel-accent);font-family:var(--ff-display);font-size:28px;margin-right:var(--space-1-75);line-height:0;vertical-align:-4px;}
+  blockquote::before{content:'“';color:var(--panel-accent);font-family:var(--ff-display);font-size:var(--fs-2xl);margin-right:var(--space-1-75);line-height:0;vertical-align:-4px;}
   /* No own max-width, same reasoning as blockquote above: the .ds-prose
      container already caps the reading measure at --measure (78ch); a
      narrower 62ch here just double-capped it and left dead space to the
