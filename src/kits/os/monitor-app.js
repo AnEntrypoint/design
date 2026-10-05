@@ -12,18 +12,17 @@ export function renderMonitorApp(opts = {}) {
     async function tick() {
         const s = (await Promise.resolve(getStats())) || {};
         node.classList.remove('is-error');
-        const heap = (s.jsHeapMb != null && s.jsHeapLimitMb != null)
-            ? `js heap: ${Number(s.jsHeapMb).toFixed(1)} MB / ${Number(s.jsHeapLimitMb).toFixed(0)} MB`
-            : 'js heap: n/a';
-        node.textContent = [
-            `instance: ${s.instanceId ?? ''}`,
-            `worker frames: ${s.frames ?? 0}`,
-            `shells: ${s.shells ?? 0}`,
-            `windows: ${s.windows ?? 0}`,
-            `apps registered: ${s.appsRegistered ?? 0}`,
-            heap,
-            `now: ${s.time ?? new Date().toLocaleTimeString()}`,
-        ].join('\n');
+        const hasHeap = s.jsHeapMb != null && s.jsHeapLimitMb != null;
+        const rows = [
+            ['instance', s.instanceId ?? ''],
+            ['worker frames', s.frames],
+            ['shells', s.shells],
+            ['windows', s.windows ?? 0],
+            ['apps registered', s.appsRegistered ?? 0],
+            ['js heap', hasHeap ? `${Number(s.jsHeapMb).toFixed(1)} MB / ${Number(s.jsHeapLimitMb).toFixed(0)} MB` : null],
+            ['now', s.time ?? new Date().toLocaleTimeString()],
+        ];
+        node.textContent = rows.filter(([, v]) => v != null).map(([k, v]) => `${k}: ${v}`).join('\n');
     }
 
     tick().catch(renderError);

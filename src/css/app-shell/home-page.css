@@ -1,0 +1,33 @@
+.ds-home-hero-wrap { padding: 0 var(--space-2, 8px); }
+.ds-home-panel { margin: var(--space-2, 8px); }
+@media (max-width: 480px) {
+  .ds-home-panel { margin: var(--space-1, 4px) 0; }
+}
+
+.tabs[role="tablist"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1, 4px);
+  font-size: var(--fs-sm);
+}
+.tabs[role="tablist"] a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1, 4px);
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  border-radius: var(--r-pill);
+  color: var(--fg-2);
+  transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
+}
+.tabs[role="tablist"] a:hover { background: var(--bg-2); color: var(--fg); }
+.tabs[role="tablist"] a.active {
+  color: var(--accent-ink);
+  background: color-mix(in oklab, var(--accent) 16%, transparent);
+  font-weight: 600;
+}
+.ds-quickstart {
+  padding: var(--space-3, 16px) var(--space-4, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-75, 6px);
+}

@@ -1,6 +1,7 @@
 import * as webjsx from '../../../../vendor/webjsx/index.js';
 import * as components from '../../../components.js';
-import { getRecentPaths, saveRecentPath, skillLabel } from '../../../components/freddie/helpers.js';
+import { getRecentPaths, saveRecentPath } from '../../../components/freddie/recent-paths.js';
+import { skillLabel } from '../../../components/freddie/skill-label.js';
 import { toKitMessage } from './chat-protocol.js';
 import { loadProviders, fetchChatEvents, applyChatEvents } from './chat-transport.js';
 import { attempt } from '../../../best-effort.js';

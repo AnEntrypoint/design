@@ -9,8 +9,8 @@ const root = document.getElementById('root');
 const kpis = [
     ['24,891', 'requests · 24h', { delta: '+12.4%', tone: 'up',   spark: [8, 11, 9, 14, 16, 15, 19, 22, 20, 24] }],
     ['184ms',  'avg latency · p50', { delta: '-6.1%', tone: 'down', invert: true, spark: [210, 204, 199, 201, 196, 192, 190, 188, 186, 184] }],
-    ['0.42%',  'error rate · 5xx+4xx', { delta: '+0.08%', tone: 'up', invert: true, spark: [34, 36, 35, 38, 37, 39, 40, 41, 41, 42] }],
-    ['94.7%',  'cache hit · edge', { delta: '+1.2%', tone: 'up', spark: [935, 938, 936, 940, 942, 941, 944, 945, 946, 947] }]
+    ['0.42%',  'error rate · 5xx+4xx', { delta: '+0.08%', tone: 'up', invert: true, spark: [34, 41, 36, 33, 38, 45, 39, 35, 40, 42] }],
+    ['94.7%',  'cache hit · edge', { delta: '+1.2%', tone: 'up', spark: [941, 947, 939, 944, 937, 946, 942, 945, 940, 947] }]
 ];
 
 function Delta({ delta, tone, invert }) {

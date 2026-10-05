@@ -1,0 +1,63 @@
+.ds-cli-cmt .cmd { color: var(--paper-3-dark); }
+.ds-cli-out .cmd { color: var(--paper-2); }
+.ds-cli-ok .prompt, .ds-cli-ok .cmd { color: var(--success-on-ink); }
+.ds-cli-warn .prompt, .ds-cli-warn .cmd { color: var(--mascot-on-ink); }
+.ds-cli-log .prompt { color: var(--paper-3-dark); }
+.ds-cli-log .cmd { color: var(--paper-2); font-family: var(--ff-mono); }
+
+.ds-term-body {
+  padding: var(--space-3) var(--space-3-5);
+  display: flex; flex-direction: column; gap: 0;
+  background: var(--code-surface); border-radius: var(--r-1);
+  font-family: var(--ff-mono); font-size: var(--fs-micro); line-height: 1.65;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+.ds-term-body .cli {
+  display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start; gap: var(--space-1-5);
+  padding: 0; background: none; border-radius: 0;
+  font-size: inherit; font-family: inherit; line-height: inherit;
+  overflow-x: visible;
+}
+
+.ds-term-body .cli .prompt { flex: 0 0 auto; width: 1ch; text-align: center; opacity: 0.75; }
+.ds-term-body .cli .cmd { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible; }
+.ds-term-body--tall { min-height: 280px; }
+
+.ds-term-body .ds-term-line-copyable { position: relative; padding-right: var(--space-6); }
+.ds-term-line-copy {
+  position: absolute; top: 0; right: 0;
+  opacity: 0; pointer-events: none;
+  background: none; border: 0; color: var(--paper-3-dark);
+  font-family: var(--ff-mono); font-size: var(--fs-micro);
+  cursor: pointer; padding: 0 var(--space-1);
+  transition: opacity var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
+}
+.ds-term-line-copyable:hover .ds-term-line-copy,
+.ds-term-line-copyable:focus-within .ds-term-line-copy {
+  opacity: 1; pointer-events: auto;
+}
+.ds-term-line-copy:hover { color: var(--paper); }
+.ds-term-line-copy.is-copied { color: var(--accent); opacity: 1; pointer-events: auto; }
+@media (pointer: coarse) {
+  .ds-term-body .ds-term-line-copyable { padding-right: calc(44px + var(--space-1)); min-height: 44px; }
+  .ds-term-line-copy { opacity: 1; pointer-events: auto; min-width: 44px; min-height: 44px; }
+  .ds-auth-forgot, .ds-auth-mode-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+}
+.ds-term-input-row { margin-top: var(--space-1-75); }
+.ds-term-input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--paper); caret-color: var(--brand-green); }
+.ds-term-input::placeholder { color: var(--paper-3-dark); }
+
+.ds-term-input[type='text'] { background: transparent; border: 0; border-radius: 0; box-shadow: none; height: auto; }
+
+.ds-term-input:focus-visible {
+  outline: var(--focus-w) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+@media (pointer: coarse) {
+  .ds-term-input-row { min-height: 44px; align-items: center; }
+  .ds-term-input { min-height: 44px; font-size: max(16px, var(--fs-micro)); }
+}

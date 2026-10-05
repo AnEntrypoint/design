@@ -158,7 +158,7 @@ dark page).
 Three different "small marked surface" primitives exist and are easy to
 reach for interchangeably; they are not interchangeable:
 
-- **Stamp** (`.stamp`, `preview/stamps.html` / `preview/stamps-lore.html`):
+- **Stamp** (`.stamp`, `preview/stamps.html`):
   decorative, rotated rubber-stamp motif. Editorial flourish only: a one-off
   "approved" / "live · vX" / "do not ship" mark on a hero or receipt-style
   surface. Never used for live/repeating UI state, never more than one per

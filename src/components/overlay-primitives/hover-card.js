@@ -1,7 +1,7 @@
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Popover } from './popover.js';
-import { kids } from './floating.js';
+import { kids, cloneVNode } from './floating.js';
 const h = webjsx.createElement;
 
 const _timers = new WeakMap();
@@ -33,8 +33,8 @@ export function HoverCard({ trigger, content, open, onOpenChange, openDelay = 70
         el.addEventListener('pointerenter', () => schedule(el, 'open', openDelay));
         el.addEventListener('pointerleave', () => schedule(el, 'close', closeDelay));
         el.addEventListener('focusin', () => schedule(el, 'open', openDelay));
-        el.addEventListener('focusout', () => schedule(el, 'close', closeDelay));
+        el.addEventListener('focusout', (e) => { if (!(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.ds-popover'))) schedule(el, 'close', closeDelay); });
     };
     return h('span', { class: 'ds-hovercard', ref: anchorRef },
-        webjsx.createElement(child.type, { ...(child.props || {}) }, ...(child.children || [])));
+        cloneVNode(child));
 }

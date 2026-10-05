@@ -250,7 +250,7 @@ function BackfillPanel() {
     return Panel({ id: 'overlays', title: 'range, overlays, collab, context', class: 'ds-panel-gap', children:
         h('div', { class: 'ds-prim-panel' },
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'date range'), RowTag('live'),
+                h('span', { class: 'ds-prim-label' }, 'date range'),
                 DateRangePicker({
                     value: moreState.rangeValue,
                     onChange: (v) => { moreState.rangeValue = v; kit.render(); },
@@ -265,7 +265,7 @@ function BackfillPanel() {
                         : 'none selected')
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'menubar'), RowTag('live'),
+                h('span', { class: 'ds-prim-label' }, 'menubar'),
                 Menubar({
                     openIndex: moreState.menuOpenIndex,
                     onOpenIndexChange: (i) => { moreState.menuOpenIndex = i; kit.render(); },
@@ -279,38 +279,39 @@ function BackfillPanel() {
                     moreState.menuPicked ? 'chose: ' + moreState.menuPicked : 'nothing chosen yet')
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'carousel'), RowTag('live'),
+                h('span', { class: 'ds-prim-label' }, 'carousel'),
                 Carousel({
                     label: 'primer demo carousel',
                     items: ['one', 'two', 'three', 'four'],
                     renderItem: (item) => h('div', { class: 'ds-prim-label' }, item),
                 })
             ),
+            h('div', { class: 'ds-prim-row' }, RowTag('fixture'), h('span', { class: 'ds-prim-label' }, 'the rows below render static fixture data')),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'aspect ratio'), RowTag('fixture'),
-                AspectRatio({ ratio: '16 / 9', children: h('div', { class: 'ds-prim-label' }, '16 / 9') })
+                h('span', { class: 'ds-prim-label' }, 'aspect ratio'),
+                h('div', { class: 'ds-prim-fixture' }, AspectRatio({ ratio: '16 / 9', children: h('div', { class: 'ds-prim-aspect-fill' }, 'ratio 16 / 9') }))
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'presence'), RowTag('fixture'),
+                h('span', { class: 'ds-prim-label' }, 'presence'),
                 PresenceBar({ users: COLLAB_USERS }),
                 AgentPresenceChip({ userId: 'u9', label: 'solo agent', color: 'var(--purple-2)', status: 'active' })
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'collab overlays'), RowTag('fixture'),
+                h('span', { class: 'ds-prim-label' }, 'collab overlays'),
                 h('div', { class: 'ds-prim-stage' }, LiveCursorOverlay({ cursors: [{ userId: 'u1', label: 'ana', color: 'var(--purple)', x: 40, y: 18 }, { userId: 'u3', label: 'agent', color: 'var(--mascot)', x: 120, y: 44 }] }),
                 RemoteSelectionRings({ selections: [{ userId: 'u2', color: 'var(--green)', rect: { left: 20, top: 12, width: 90, height: 18 } }] }),
                 RecentEditHighlightFlash({ edits: [{ timestamp: 1, color: 'var(--purple)', rect: { left: 12, top: 60, width: 70, height: 16 } }] }))
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'context meter'), RowTag('fixture'),
+                h('span', { class: 'ds-prim-label' }, 'context meter'),
                 h('div', { class: 'ds-prim-fixture' }, ContextMeter({ used: totalTokens, total: 32000, segments: CONTEXT_SEGMENTS }))
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'context treemap'), RowTag('fixture'),
+                h('span', { class: 'ds-prim-label' }, 'context treemap'),
                 h('div', { class: 'ds-prim-fixture' }, ContextTreemap({ items: CONTEXT_SEGMENTS, width: 280, height: 160 }))
             ),
             h('div', { class: 'ds-prim-row' },
-                h('span', { class: 'ds-prim-label' }, 'context x-ray'), RowTag('fixture'),
+                h('span', { class: 'ds-prim-label' }, 'context x-ray'),
                 ContextXRayPanel({
                     segments: CONTEXT_SEGMENTS,
                     openId: moreState.xrayOpenId,

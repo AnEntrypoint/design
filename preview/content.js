@@ -23,10 +23,10 @@ const view = () => h('div', { class: 'spec-page' },
 
     spec('Hero', 'Left-inset single-column lead. badges fill a full-width card below the body.',
         Hero({
-            title: 'the creative department of the internet.',
-            body: 'ships fast, breaks things on purpose, documents honestly.',
-            accent: 'all of it open source.',
-            badges: ['35 exports', '1 module', 'live'],
+            title: 'small tools, documented honestly.',
+            body: 'each project ships early and says plainly what is unfinished.',
+            accent: 'all of it is open source.',
+            badges: ['35 exports', '1 module'],
         })),
 
     spec('Marquee', 'Signature ticker.', Marquee({ items: ['gm', 'zellous', 'spoint', 'flatspace'] })),
@@ -76,7 +76,7 @@ const view = () => h('div', { class: 'spec-page' },
 
     spec('WritingList', 'Dated post rows.',
         WritingList({ posts: [
-            { date: '2026.04.14', title: 'we were here first', tag: 'lore', href: './index.html' },
+            { date: '2026.04.14', title: 'a short history of 247420', tag: 'history', href: './index.html' },
             { date: '2026.03.22', title: 'why state machines', tag: 'gm', href: './index.html' },
         ] })),
 

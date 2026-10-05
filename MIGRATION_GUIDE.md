@@ -232,7 +232,7 @@ ChannelItem({ voiceActive: false | true })
 ### Phase 3: ChatMessage Component (Moderate Impact)
 - [ ] Search codebase: `grep -r "who:" src/components/ --include="*.js"`
 - [ ] Update message objects in: `src/components/chat.js`
-- [ ] Update message objects in: `src/components/freddie/helpers.js`
+- [ ] Update message objects in: `src/components/freddie/chat-message-list.js`
 - [ ] Update message data in: `ui_kits/*/app.js`
 - [ ] Handle spread patterns: `{ ...message }`
 

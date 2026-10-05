@@ -1,6 +1,8 @@
+import * as webjsx from '../../../vendor/webjsx/index.js';
 
 export const FOCUSABLE_SEL = 'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
 export const kids = (c) => c == null ? [] : (Array.isArray(c) ? c : [c]);
+export const cloneVNode = (child, extraProps = {}) => webjsx.createElement(child.type, { ...(child.props || {}), ...extraProps }, ...kids(child.props && child.props.children));
 
 const CLAMP_MARGIN = 8;
 const FLOAT_EDGE = 4;

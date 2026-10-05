@@ -2,7 +2,7 @@
 
 This is the documented breakpoint scale actually in use across the kit surfaces
 (sourced from `@media` rules in `src/css/app-shell/responsive.css` and
-`src/css/app-shell/responsive2-workspace.css`). There is no separate token
+`src/css/app-shell/app-side-drawer.css`, `src/css/app-shell/workspace-shell.css`). There is no separate token
 file for these, breakpoints are expressed as raw `px` values in `@media`
 queries, consistent with the rest of the codebase's CSS.
 
@@ -42,6 +42,6 @@ For any new narrow-viewport fallback (collapsing nav to a hamburger, stacking
 a grid to single column, etc.), use **`max-width: 480px`** as the standard
 mobile cutoff; it's the value already established in
 `src/css/app-shell/responsive.css` and reused by
-`src/css/app-shell/responsive2-workspace.css`. This is the breakpoint reused
+`src/css/app-shell/app-side-drawer.css`. This is the breakpoint reused
 by the OS-shell, file-browser, dashboard, terminal, and sidebar responsive
 fixes documented in this repo.

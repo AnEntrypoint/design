@@ -19,6 +19,7 @@ import { lintEmptyCatchOrThrow } from './lint-empty-catch.mjs';
 import { lintInlineCssOrThrow } from './lint-inline-css.mjs';
 import { lintDeadControlsOrThrow } from './lint-dead-controls.mjs';
 import { lintYamlParseOrThrow } from './lint-yaml-parse.mjs';
+import { lintCssParseOrThrow } from './lint-css-parse.mjs';
 import { lintContrastOrThrow } from './lint-contrast.mjs';
 
 const CHECKS = [
@@ -41,6 +42,7 @@ const CHECKS = [
     ['empty-catch', lintEmptyCatchOrThrow],
     ['dead-controls', lintDeadControlsOrThrow],
     ['yaml-parse', lintYamlParseOrThrow],
+    ['css-parse', lintCssParseOrThrow],
 ];
 
 export function runLintCss() {

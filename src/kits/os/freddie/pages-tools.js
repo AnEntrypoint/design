@@ -1,6 +1,7 @@
 import * as webjsx from '../../../../vendor/webjsx/index.js';
 import * as components from '../../../components.js';
-import { pre, form, skillLabel } from '../../../components/freddie/helpers.js';
+import { pre, form } from '../../../components/freddie/page-blocks.js';
+import { skillLabel } from '../../../components/freddie/skill-label.js';
 import { attempt } from '../../../best-effort.js';
 
 const h = webjsx.createElement;

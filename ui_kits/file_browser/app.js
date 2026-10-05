@@ -49,7 +49,7 @@ function previewBody(file) {
             name: file.name,
             src: file.type === 'image'
                 ? 'data:image/svg+xml;utf8,' + encodeURIComponent(
-                    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360"><rect width="600" height="360" fill="#3F8A4A"/><text x="300" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="48" fill="#F5F0E4">${file.name}</text></svg>`
+                    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360"><rect width="600" height="360" fill="#737373"/><text x="300" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="48" fill="#F5F5F5">${file.name}</text></svg>`
                 )
                 : ''
         });

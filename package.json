@@ -131,7 +131,8 @@
     "visual": "node scripts/visual-baseline.mjs check",
     "visual:update": "node scripts/visual-baseline.mjs update",
     "lint:dead-controls": "node scripts/lint-dead-controls.mjs",
-    "lint:yaml-parse": "node scripts/lint-yaml-parse.mjs"
+    "lint:yaml-parse": "node scripts/lint-yaml-parse.mjs",
+    "lint:css-parse": "node scripts/lint-css-parse.mjs"
   },
   "repository": {
     "type": "git",

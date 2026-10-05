@@ -1,0 +1,73 @@
+.chat-composer {
+  display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  background: var(--bg-2);
+  border: none;
+  border-radius: var(--r-3);
+  box-shadow: none;
+  flex-shrink: 0;
+}
+.chat-composer:focus-within {
+  background: var(--bg);
+}
+.chat-composer.is-error,
+.chat-composer:has(textarea[aria-invalid="true"]) {
+  border-color: var(--flame);
+}
+.chat-composer textarea {
+  flex: 1; min-width: 0; padding: var(--space-2) var(--space-1);
+  background: none; color: var(--fg);
+  border: none; border-radius: 0; box-shadow: none; outline: none;
+  font-family: inherit; font-size: var(--fs-sm);
+  line-height: 1.5; resize: none;
+  min-height: 40px; max-height: 200px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.chat-composer textarea::placeholder { color: var(--fg-3); }
+.chat-composer textarea:focus { background: none; border: none; box-shadow: none; outline: none; }
+.chat-composer .send {
+  border-radius: var(--r-1);
+  background: var(--accent); color: var(--accent-fg);
+  border: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--dur-snap, .15s) var(--ease, ease), transform var(--dur-snap, .08s) var(--ease-spring);
+}
+.chat-composer .send:disabled { opacity: .5; cursor: not-allowed; }
+
+.composer-btn {
+  background: transparent; color: var(--fg-3);
+  border: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--dur-snap, .15s) var(--ease, ease), color var(--dur-snap, .15s) var(--ease, ease), transform var(--dur-snap, .08s) var(--ease-spring);
+}
+.composer-btn:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
+.composer-btn:active { transform: scale(0.88); }
+.chat-composer .send:hover { background: color-mix(in oklab, var(--accent) 85%, var(--bg)); }
+.chat-composer .send:active { background: color-mix(in oklab, var(--accent) 78%, var(--bg)); transform: scale(0.92); }
+.chat-composer .send:focus-visible,
+.composer-btn:focus-visible {
+  outline: var(--focus-w) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+.chat-composer .send:disabled {
+  background: var(--bg-3); color: var(--fg-3); cursor: not-allowed; transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-composer,
+  .chat-composer textarea,
+  .chat-composer .send,
+  .composer-btn,
+  .chat-msg-action,
+  .chat-reactions .rxn {
+    transition: none;
+  }
+  .chat-composer .send:active,
+  .composer-btn:active,
+  .chat-msg-action:active,
+  .chat-reactions .rxn:active,
+  .chat-reactions .rxn:hover { transform: none; }
+}

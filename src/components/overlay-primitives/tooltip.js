@@ -1,6 +1,6 @@
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
-import { useFloating, useLongPress, FLOAT_OFFSET_TOOLTIP, kids } from './floating.js';
+import { useFloating, useLongPress, FLOAT_OFFSET_TOOLTIP, kids, cloneVNode } from './floating.js';
 
 let _tipEl = null, _tipFloat = null, _tipTimer = null, _tipId = 0;
 let _tipTrigger = null, _tipPrevDescribedBy = null;
@@ -59,5 +59,5 @@ export function Tooltip({ children, label, placement = 'top', delay = 350, kind 
     };
     const prevRef = child.props && child.props.ref;
     const wrap = (el) => { refFn(el); if (typeof prevRef === 'function') prevRef(el); };
-    return webjsx.createElement(child.type, { ...(child.props || {}), ref: wrap }, ...(child.children || []));
+    return cloneVNode(child, { ref: wrap });
 }

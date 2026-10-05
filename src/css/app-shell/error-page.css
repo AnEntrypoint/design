@@ -1,0 +1,16 @@
+.ds-err-page { width: 100%; max-width: var(--stage-ultra); margin: 0 auto; }
+.ds-err-hero {
+  --hero-inset-y-max: 36px; --hero-inset-x-max: 22px; --hero-gap: 14px; padding: clamp(var(--space-3), 5vw, var(--hero-inset-y-max)) clamp(var(--space-2-75), 4vw, var(--hero-inset-x-max));
+  text-align: center; display: flex; flex-direction: column; gap: var(--hero-gap); align-items: center;
+}
+.ds-err-numeral {
+  font-family: var(--ff-mono); font-size: clamp(56px, 20vw, 120px);
+  font-weight: 600;
+  line-height: 1; color: var(--panel-text-3); letter-spacing: -0.03em;
+}
+.ds-err-path {
+  display: inline-flex; gap: var(--space-1-75); align-items: baseline; flex-wrap: wrap; max-width: 100%;
+  font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--panel-text-2);
+  background: var(--panel-1); padding: var(--space-1-75) var(--space-2-75); border-radius: var(--r-0);
+  overflow-wrap: anywhere; word-break: break-all;
+}

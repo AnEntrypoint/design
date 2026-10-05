@@ -14,7 +14,7 @@ const navItems = [
 ];
 
 const shipping = [
-    { name: 'gm', sub: 'state machine v0.4.1', live: true },
+    { name: 'gm', sub: 'state machine for coding agents', live: true },
     { name: 'zellous', sub: 'push-to-talk', live: true },
     { name: 'thebird', sub: 'browser OS shell and agent runtime', live: false }
 ];

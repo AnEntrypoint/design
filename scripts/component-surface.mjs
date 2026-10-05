@@ -206,13 +206,16 @@ function exportsBare(src, name) {
     return new RegExp(`export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}(?!\\s*from)`).test(src);
 }
 
-function findDefinitionThroughImport(src, name, fromDir) {
+const MAX_BARREL_HOPS = 4;
+
+function findDefinitionThroughImport(src, name, fromDir, hops = 1) {
     const subPath = resolveReExportSource(src, name, fromDir);
     if (!subPath || !(existsSync(subPath) || existsSync(subPath + '.js'))) return null;
     const realSubPath = existsSync(subPath) ? subPath : subPath + '.js';
     const subSrc = readNormalized(realSubPath);
     const subMatch = defRegexFor(name).exec(subSrc);
-    return subMatch ? { match: subMatch, defSrc: subSrc } : null;
+    if (subMatch) return { match: subMatch, defSrc: subSrc };
+    return hops < MAX_BARREL_HOPS ? findDefinitionThroughImport(subSrc, name, dirname(realSubPath), hops + 1) : null;
 }
 
 function describeConstValue(defSrc, defStart) {

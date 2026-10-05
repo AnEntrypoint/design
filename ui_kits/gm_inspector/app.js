@@ -12,12 +12,6 @@ const demoState = { page: 1, pageCount: 6, prdText: 'audit gmsniff GUI consumer 
 
 const densityState = { numberedPage: 4, numberedCount: 22, openSettingsId: 'general' };
 
-const kpis = [
-    { val: '26,357', lbl: 'total events' },
-    { val: '45',      lbl: 'days' },
-    { val: '61',      lbl: 'prd rows' },
-    { val: '0',       lbl: 'unresolved mutables' }
-];
 
 const sessions = [
     { sessId: 'sess-a1f9c2e0', events: 512, verbs: 88, prd: 24, muts: 3, resid: 0, deviations: 0,
@@ -37,6 +31,13 @@ const sessions = [
       phaseWalkProps: { reached: [true, false, false, false, false] } }
 ];
 
+const sumOf = (key) => sessions.reduce((n, s) => n + s[key], 0);
+const kpis = [
+    { val: sumOf('events').toLocaleString('en-US'), lbl: 'total events' },
+    { val: String(new Set(sessions.map((s) => s.firstTs.slice(0, 10))).size), lbl: 'days' },
+    { val: String(sumOf('prd')), lbl: 'prd rows' },
+    { val: '0',       lbl: 'unresolved mutables' }
+];
 const treeNodes = [
     { ts: '09:12:03', kind: 'phase.transitioned', variant: 'phase', phase: 'PLAN' },
     { ts: '09:14:41', kind: 'prd.added', variant: 'prd-add', id: 'add-project-registry' },

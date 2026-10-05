@@ -52,7 +52,6 @@
     var presets = {
       'buttons.html': ['button, .btn, .btn-primary, .btn-ghost'],
       'colors-core.html': ['.sw'],
-      'colors-lore.html': ['body > div:nth-of-type(2) > div'],
       'colors-semantic.html': ['body > div:nth-of-type(2) > div'],
       'dateline.html': ['.dateline'],
       'header.html': ['.app-topbar', '.app-crumb'],
@@ -62,7 +61,6 @@
       'manifesto.html': ['.prin'],
       'rules.html': ['.rule, .rule-double, .rule-dotted'],
       'spacing.html': ['body > div:nth-of-type(2) > div'],
-      'stamps-lore.html': ['.stamp, .btn-stamp'],
       'stamps.html': ['.stamp'],
       'theme-ink.html': ['body > *'],
       'type-display.html': ['.t-hero, .t-h1'],

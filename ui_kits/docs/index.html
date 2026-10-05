@@ -80,12 +80,12 @@
         <h1 id="introduction">introduction</h1>
         <p class="lede">a state machine for coding agents. it plans, executes and verifies each step before moving on.</p>
 
-        <p>gm is what happens when you stop trying to make an llm "smart" and start giving it a scaffolding to be useful inside of. it's a small, deterministic runtime that says: <em>here is where you are, here are the transitions available, pick one.</em> that's the whole idea.</p>
+        <p>gm is a small, deterministic runtime that wraps an llm coding agent. at each step it reports the current state and the transitions allowed from it, and the agent picks one.</p>
 
-        <p>the rest of this document explains how to install it, how to wire it up, and how to stay out of its way.</p>
+        <p>the rest of this page covers installation and a first run.</p>
 
         <h2 id="install">install</h2>
-        <p>one command installs it.</p>
+        <p>install it from the claude code plugin marketplace.</p>
         <pre><span class="c"># via claude code plugin marketplace</span>
 <span class="k">claude</span> plugin marketplace add AnEntrypoint/gm-cc
 <span class="k">claude</span> plugin install -s user gm@gm-cc</pre>
@@ -100,8 +100,8 @@
 
       <div class="ds-prose">
         <h2 id="quickstart">quickstart</h2>
-        <h3>the 30-second version</h3>
-        <p>start the repl, ask it to do something, watch it work. press <code>Ctrl</code>+<code>C</code> if it goes somewhere you didn't mean.</p>
+        <h3>first run</h3>
+        <p>start the repl, ask it to do something, watch it work. press <code>Ctrl</code>+<code>C</code> to interrupt a run.</p>
         <pre><span class="k">gm</span> start
 <span class="c">-> state: idle</span>
 <span class="c">-> tools available: 19</span>
@@ -112,7 +112,7 @@
 <span class="c">-> state: done</span></pre>
 
         <h2 id="philosophy">philosophy</h2>
-        <p>there is no philosophy. read the source.</p>
+        <p>gm keeps the agent inside a fixed set of states and checks each step before moving to the next. the source is the reference for the exact transitions.</p>
       </div>
     </main>
   </div>

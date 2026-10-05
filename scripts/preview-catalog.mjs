@@ -1,10 +1,9 @@
 export const PREVIEW_GROUPS = ['color', 'type and spacing', 'components', 'file browser', 'brand', 'reference'];
 
 export const PREVIEWS = [
-  { name: 'colors-core', group: 'color', title: 'core colors', description: 'the four base swatches: paper, ink and their two shades each.' },
-  { name: 'colors-lore', group: 'color', title: 'palette tokens', description: 'the raw palette tokens, including the legacy-named ones.' },
+  { name: 'colors-core', group: 'color', title: 'core colors', description: 'the four base swatches: paper, a raised paper tone, ink and the accent fill.' },
   { name: 'colors-semantic', group: 'color', title: 'semantic colors', description: 'role tokens (link, warn, on-color) that components use instead of raw hex.' },
-  { name: 'theme-ink', group: 'color', title: 'ink theme', description: 'the dark theme: how paper and ink invert while the accent stays put.' },
+  { name: 'theme-ink', group: 'color', title: 'ink theme', description: 'the dark theme: how paper and ink invert and the neutral accent retunes.' },
   { name: 'type-display', group: 'type and spacing', title: 'display type', description: 'hero and section headlines in the system sans, with size and tracking.' },
   { name: 'type-mono', group: 'type and spacing', title: 'mono type', description: 'labels, meta text and body in the platform monospace.' },
   { name: 'type-prose', group: 'type and spacing', title: 'prose type', description: 'long-form paragraph styling: measure, leading and emphasis.' },
@@ -28,7 +27,6 @@ export const PREVIEWS = [
   { name: 'dropzone', group: 'file browser', title: 'drop zone', description: 'upload target with idle and drag-over states and no dashed border.' },
   { name: 'wordmarks', group: 'brand', title: 'wordmarks', description: 'typographic project wordmarks; there are no pictorial marks.' },
   { name: 'manifesto', group: 'brand', title: 'manifesto block', description: 'numbered statement paragraphs as used on the homepage.' },
-  { name: 'stamps-lore', group: 'brand', title: 'brand stamps', description: 'the full set of brand stamps, including the playful ones.' },
   { name: 'icons-unicode', group: 'reference', title: 'unicode glyph set', description: 'the small set of plain unicode symbols allowed in copy.' },
   { name: 'theme-map', group: 'reference', title: 'theme token map', description: 'every root token, its default value and which sheets consume it.' },
 ];

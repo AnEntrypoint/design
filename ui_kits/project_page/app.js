@@ -32,10 +32,11 @@ const receiptRows = [
 ];
 
 const changelog = [
-    { date: 'unreleased', ver: 'next', msg: 'chat kit merged into community-app, one kit for chat and community.' },
-    { date: 'unreleased', ver: 'next', msg: 'github pages workflow added: lint gates, build, deploy of the full static tree.' },
-    { date: 'unreleased', ver: 'next', msg: 'tooltip releases aria-describedby when the bubble hides.' },
-    { date: 'unreleased', ver: 'next', msg: 'appshell renders one banner landmark instead of two stacked headers.' }
+    { date: 'unreleased', ver: 'feat', msg: 'token system restyled to a neutral grayscale palette; the hero is now a centered stack.' },
+    { date: 'unreleased', ver: 'refactor', msg: 'chat kit merged into community-app, one kit for chat and community.' },
+    { date: 'unreleased', ver: 'ci', msg: 'github pages workflow added: lint gates, build, deploy of the full static tree.' },
+    { date: 'unreleased', ver: 'fix', msg: 'tooltip releases aria-describedby when the bubble hides.' },
+    { date: 'unreleased', ver: 'fix', msg: 'appshell renders one banner landmark instead of two stacked headers.' }
 ];
 
 function copyInstall(cmd) {

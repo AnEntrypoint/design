@@ -2,6 +2,7 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { useRovingMenu } from './roving-menu.js';
+import { cloneVNode } from './floating.js';
 const h = webjsx.createElement;
 
 export function Dropdown({ trigger, items = [], onSelect, placement = 'bottom-start', ariaLabel } = {}) {
@@ -33,7 +34,7 @@ export function Dropdown({ trigger, items = [], onSelect, placement = 'bottom-st
     const child = (typeof trigger === 'function') ? trigger() : trigger;
     const wireRef = (el) => { refFn(el); if (el) { el.addEventListener('click', onTrigClick); el.addEventListener('keydown', onTrigKey); } };
     return (child && child.type)
-        ? webjsx.createElement(child.type, { ...(child.props || {}), ref: wireRef }, ...(child.children || []))
+        ? cloneVNode(child, { ref: wireRef })
         : h('button', { type: 'button', class: 'ds-dropdown-trigger', ref: wireRef }, child || 'Menu');
 }
 
@@ -65,7 +66,7 @@ export function PermissionMenu({ trigger, categories = [], approved = [], onTogg
     const child = (typeof trigger === 'function') ? trigger() : trigger;
     const wireRef = (el) => { refFn(el); if (el) { el.addEventListener('click', onTrigClick); el.addEventListener('keydown', onTrigKey); } };
     return (child && child.type)
-        ? webjsx.createElement(child.type, { ...(child.props || {}), ref: wireRef }, ...(child.children || []))
+        ? cloneVNode(child, { ref: wireRef })
         : h('button', { type: 'button', class: 'ov-perm-trigger', ref: wireRef }, child || 'Permissions');
 }
 
@@ -104,6 +105,6 @@ export function MenuButton({ trigger, items = [], selected, onSelect, onRetry, p
     const child = (typeof trigger === 'function') ? trigger() : trigger;
     const wireRef = (el) => { refFn(el); if (el) { el.addEventListener('click', onTrigClick); el.addEventListener('keydown', onTrigKey); } };
     return (child && child.type)
-        ? webjsx.createElement(child.type, { ...(child.props || {}), ref: wireRef }, ...(child.children || []))
+        ? cloneVNode(child, { ref: wireRef })
         : h('button', { type: 'button', class: 'ov-menubutton-trigger', ref: wireRef }, child || 'Select');
 }

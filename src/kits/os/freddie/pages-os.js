@@ -1,5 +1,5 @@
 import * as components from '../../../components.js';
-import { pre } from '../../../components/freddie/helpers.js';
+import { pre } from '../../../components/freddie/page-blocks.js';
 
 const { Panel, Kpi, Table, EmptyState, Icon } = components;
 

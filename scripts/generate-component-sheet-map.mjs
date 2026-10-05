@@ -10,9 +10,9 @@ const SHARED_AT = 4;
 
 const APP_SHELL_SPLIT = [
     'base.css', 'topbar.css', 'primitives.css', 'panel-row.css', 'hero-content.css',
-    'responsive.css', 'chat-basic.css', 'files.css', 'catalog-theme.css', 'chat-polish.css',
-    'sidebar-misc.css', 'states-interactions.css', 'loading-alerts.css',
-    'responsive2-workspace.css', 'row-print.css', 'data-density.css', 'kits-appended.css',
+    'responsive.css', 'chat-basic.css', 'files.css', 'catalog-theme.css', 'chat-thread-messages.css', 'chat-attachments.css', 'chat-message-chrome.css', 'chat-composer.css', 'aicat-portrait.css', 'chat-composer-context.css', 'emoji-picker.css',
+    'side-nav-items.css', 'select-control.css', 'chat-composer-textarea.css', 'states-interactions.css', 'loading-alerts.css',
+    'app-side-drawer.css', 'workspace-shell.css', 'row-print.css', 'data-density.css', 'preview-media-controls.css', 'app-surface-layout.css', 'deck-slides.css', 'error-page.css', 'gallery-and-primer-specimens.css', 'home-page.css', 'table-wrap.css', 'settings-forms.css', 'auth-forms.css', 'kit-page-parts.css', 'terminal-body.css', 'viewport-and-avatar.css', 'sheet-preview.css', 'community-thread.css', 'pattern-notes-and-kit-controls.css',
     'git-status.css', 'plugins-config.css', 'models-config.css', 'skills-config.css',
     'slider.css', 'otp-input.css', 'carousel.css', 'calendar.css', 'collab.css', 'context-pane.css',
     'dashboard.css',

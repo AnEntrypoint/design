@@ -13,8 +13,8 @@ const swatchTokens = [
     { name: 'panel-1',     hint: 'one shade up · panel bg' },
     { name: 'panel-2',     hint: 'two shades up · row bg' },
     { name: 'panel-3',     hint: 'three shades up · header strip' },
-    { name: 'panel-accent',hint: 'green ink · primary cta' },
-    { name: 'panel-select',hint: 'mint hover/select tone' }
+    { name: 'panel-accent',hint: 'dark neutral fill · primary action' },
+    { name: 'panel-select',hint: 'neutral gray · hover and selection' }
 ];
 
 const items = [

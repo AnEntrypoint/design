@@ -1,6 +1,3 @@
-   --fs-* 8pt scale, with the var(--token, fallback) idiom so the kit's
-   standalone theme.css resolves cleanly. */
-
 .app-fd .fd-pre {
     font-family: var(--os-mono, monospace);
     font-size: var(--fs-tiny, 12px);

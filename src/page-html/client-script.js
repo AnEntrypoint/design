@@ -44,9 +44,8 @@ function showcaseNode(showcase) {
     C.Btn({ key: 'b4', variant: 'danger', children: 'danger' }),
   );
   const chipRow = h('div', { class: 'ds-showcase-row' },
-    C.Chip({ key: 'c1', tone: 'green', children: 'live' }),
-    C.Chip({ key: 'c2', tone: 'blue', children: 'beta' }),
-    C.Chip({ key: 'c3', tone: 'purple', children: 'new' }),
+    C.Chip({ key: 'c1', tone: 'accent', children: 'accent' }),
+    C.Chip({ key: 'c2', tone: 'dim', children: 'dim' }),
     showcase.a11yTotal == null ? null : C.Badge({ key: 'c4', tone: showcase.a11yTotal ? 'danger' : 'success', children: showcase.a11yTotal + ' a11y violations' }),
   );
   const table = C.Table({

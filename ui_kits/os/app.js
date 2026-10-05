@@ -75,8 +75,9 @@ const registry = createDemoRegistry([
             return {
                 node: renderMonitorApp({
                     getStats: () => ({
-                        instanceId: 'demo', frames: 0, shells: 0,
+                        instanceId: 'demo',
                         windows: wm.count, appsRegistered: registry.list().length,
+                        ...(performance.memory ? { jsHeapMb: performance.memory.usedJSHeapSize / 1048576, jsHeapLimitMb: performance.memory.jsHeapSizeLimit / 1048576 } : {}),
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
                     }),
                 }).node,

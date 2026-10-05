@@ -1,0 +1,65 @@
+.ov-emoji-root {
+  position: fixed;
+  display: flex; flex-direction: column; gap: var(--space-2);
+  width: 280px; max-height: 320px;
+  padding: var(--space-2-5);
+  background: var(--bg);
+  border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+  border-radius: var(--r-2);
+  box-shadow: var(--shadow-overlay, var(--shadow-3));
+  z-index: var(--z-dropdown, var(--z-raised));
+}
+.ov-emoji-search {
+  width: 100%; box-sizing: border-box;
+  font: inherit; font-size: var(--fs-sm); color: var(--fg);
+  background: var(--bg-2); border: 0;
+  box-shadow: var(--ring-line);
+  border-radius: var(--r-1);
+  height: var(--ctl-sm, 32px);
+  padding: 0 var(--space-2-5);
+  transition: box-shadow var(--dur-snap, .15s) var(--ease, ease);
+}
+.ov-emoji-search::placeholder { color: var(--fg-3); }
+.ov-emoji-search:focus-visible,
+.ov-emoji-search:focus {
+  outline: none;
+  box-shadow: var(--ring-accent);
+}
+.ov-emoji-tabs {
+  display: flex; gap: var(--space-1);
+  border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+  padding-bottom: var(--space-1);
+}
+.ov-emoji-tab {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 30px; font-size: var(--fs-sm);
+  background: transparent; border: 0; border-radius: var(--r-1);
+  cursor: pointer;
+  transition: background var(--dur-snap, .15s) var(--ease, ease);
+}
+.ov-emoji-tab:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); }
+.ov-emoji-tab[aria-selected="true"] { background: color-mix(in oklab, var(--accent) 16%, transparent); }
+.ov-emoji-tab:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
+.ov-emoji-grid { overflow-y: auto; flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent; }
+.ov-emoji-grid-inner {
+  display: grid; grid-template-columns: repeat(9, 1fr); gap: var(--space-1, 4px);
+}
+.ov-emoji-cell {
+  display: inline-flex; align-items: center; justify-content: center;
+  aspect-ratio: 1; font-size: var(--fs-lg, 18px); line-height: 1;
+  background: transparent; border: 0; border-radius: var(--r-1, 8px);
+  cursor: pointer;
+  transition: background var(--dur-snap, .15s) var(--ease, ease);
+}
+.ov-emoji-cell:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); }
+.ov-emoji-cell:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; background: color-mix(in oklab, var(--accent) 18%, transparent); }
+.ov-emoji-empty {
+  grid-column: 1 / -1;
+  text-align: center; color: var(--fg-3); font-size: var(--fs-xs);
+  padding: var(--space-3) 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ov-emoji-cell { transition: background var(--dur-snap, .15s) var(--ease, ease); }
+  .ov-emoji-cell:hover { transform: none; }
+}
