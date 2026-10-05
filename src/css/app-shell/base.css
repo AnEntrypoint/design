@@ -81,24 +81,43 @@ body {
 }
 .app * { min-width: 0; }
 
-.app, .ds-stage, .app *, .ds-stage * {
-  scrollbar-width: thin;
-  scrollbar-color: var(--bg-3) transparent;
+.app, .ds-stage {
+  --scrollbar-size: 10px;
+  --scrollbar-inset: 2px;
+  --scrollbar-thumb: color-mix(in oklab, var(--fg) 22%, transparent);
+  --scrollbar-thumb-hover: color-mix(in oklab, var(--fg) 40%, transparent);
 }
 
 .app::-webkit-scrollbar, .ds-stage::-webkit-scrollbar,
 .app *::-webkit-scrollbar, .ds-stage *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
 }
 .app::-webkit-scrollbar-track, .ds-stage::-webkit-scrollbar-track,
-.app *::-webkit-scrollbar-track, .ds-stage *::-webkit-scrollbar-track {
+.app *::-webkit-scrollbar-track, .ds-stage *::-webkit-scrollbar-track,
+.app *::-webkit-scrollbar-corner, .ds-stage *::-webkit-scrollbar-corner {
   background: transparent;
+}
+.app *::-webkit-scrollbar-button, .ds-stage *::-webkit-scrollbar-button {
+  display: none;
 }
 .app::-webkit-scrollbar-thumb, .ds-stage::-webkit-scrollbar-thumb,
 .app *::-webkit-scrollbar-thumb, .ds-stage *::-webkit-scrollbar-thumb {
-  background: var(--bg-3);
-  border-radius: var(--r-pill, 999px);
+  background: var(--scrollbar-thumb);
+  background-clip: padding-box;
+  border: var(--scrollbar-inset) solid transparent;
+  border-radius: var(--r-pill);
+}
+.app *::-webkit-scrollbar-thumb:hover, .ds-stage *::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .app, .ds-stage, .app *, .ds-stage * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
 }
 
 h1, .t-h1 { font-family: var(--ff-display); font-size: var(--fs-h1); line-height: var(--lh-snug); letter-spacing: var(--tr-tight); font-weight: var(--fw-semibold); margin: 0; }
@@ -195,6 +214,9 @@ h3 + .lede, h3 + .t-lede,
   line-height: var(--lh-base);
   color: var(--fg-3);
 }
+
+.ds-prose-code { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); margin: 0 0 var(--space-4); }
+.ds-prose-code > pre { align-self: stretch; margin: 0; }
 
 .dim { color: var(--fg-3); }
 

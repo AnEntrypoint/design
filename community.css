@@ -199,14 +199,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-hair);
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklab, var(--fg) 18%, transparent) transparent;
-}
-.cm-channel-list::-webkit-scrollbar { width: 8px; }
-.cm-channel-list::-webkit-scrollbar-track { background: transparent; }
-.cm-channel-list::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--fg) 18%, transparent);
-  border-radius: var(--r-0);
 }
 
 .cm-channel-category {
@@ -749,8 +741,6 @@
   overflow-x: hidden;
   background: var(--bg-2);
   padding: var(--space-3) 0;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklab, var(--fg) 18%, transparent) transparent;
   transition: width var(--dur-base) var(--ease), flex-basis var(--dur-base) var(--ease), transform var(--dur-base) var(--ease-drawer);
   contain: layout style;
 }
@@ -762,11 +752,6 @@
   visibility: hidden;
   opacity: 0;
   transform: translateX(100%);
-}
-.cm-member-list::-webkit-scrollbar { width: 8px; }
-.cm-member-list::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--fg) 18%, transparent);
-  border-radius: var(--r-0);
 }
 
 .cm-member-category {

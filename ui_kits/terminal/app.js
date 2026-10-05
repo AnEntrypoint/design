@@ -22,7 +22,7 @@ function ScrollbackEmpty() {
 }
 
 const demoScript = [
-    { d: 0,    kind: 'cmt', text: '# simulated build pipeline' },
+    { d: 0,    kind: 'cmt', text: 'simulated build pipeline' },
     { d: 280,  kind: 'cmd', text: 'npm run build' },
     { d: 180,  kind: 'out', text: '> anentrypoint-design build' },
     { d: 220,  kind: 'out', text: 'running lint gates' },

@@ -2,12 +2,7 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   max-width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: var(--rule-strong) transparent;
 }
-.ds-table-wrap::-webkit-scrollbar { height: 8px; }
-.ds-table-wrap::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: var(--r-pill, 999px); }
-.ds-table-wrap::-webkit-scrollbar-track { background: transparent; }
 .ds-table-wrap > table { min-width: 100%; }
 
 .ds-table-sort-btn {

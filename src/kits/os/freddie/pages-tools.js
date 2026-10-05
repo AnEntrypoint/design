@@ -1,11 +1,12 @@
 import * as webjsx from '../../../../vendor/webjsx/index.js';
-import * as components from '../../../components.js';
+import { Chip, Icon } from '../../../components/shell.js';
+import { Panel, Row, Receipt, Kpi, Table, Section } from '../../../components/content.js';
+import { EmptyState } from '../../../components/files/chrome.js';
 import { pre, form } from '../../../components/freddie/page-blocks.js';
 import { skillLabel } from '../../../components/freddie/skill-label.js';
 import { attempt } from '../../../best-effort.js';
 
 const h = webjsx.createElement;
-const { Panel, Row, Receipt, Kpi, Table, Section, EmptyState, Chip, Icon } = components;
 
 export function makeToolsPages(ctx) {
     const { rerender } = ctx;

@@ -1,5 +1,7 @@
 import * as webjsx from 'webjsx';
-import { Topbar, Crumb, AppShell, Status, Btn, Icon, FileGrid, FileToolbar, DropZone, UploadProgress, BreadcrumbPath, ConfirmDialog, PromptDialog, FileViewer, FilePreviewMedia, FilePreviewCode, FilePreviewText } from '../../src/components.js';
+import { Topbar, Crumb, AppShell, Status, Btn, Icon } from '../../src/components/shell.js';
+import { FileGrid, FileToolbar, DropZone, UploadProgress, BreadcrumbPath } from '../../src/components/files.js';
+import { ConfirmDialog, PromptDialog, FileViewer, FilePreviewMedia, FilePreviewCode, FilePreviewText } from '../../src/components/files-modals.js';
 const h = webjsx.createElement;
 
 const SAMPLE = [

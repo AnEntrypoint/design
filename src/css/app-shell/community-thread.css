@@ -22,11 +22,7 @@
   min-height: 0;
   overflow-y: auto;
   padding: var(--space-3);
-  scrollbar-width: thin;
-  scrollbar-color: var(--bg-3) transparent;
 }
-.ds-community-messages::-webkit-scrollbar { width: 8px; }
-.ds-community-messages::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: var(--r-0); }
 
 .ds-community-msg {
   display: flex;

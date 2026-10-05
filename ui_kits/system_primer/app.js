@@ -24,13 +24,13 @@ const PALETTE = [
     { name: 'ink-3',     v: 'var(--ink-3)' },
     { name: 'green',     v: 'var(--green)' },
     { name: 'green-2',   v: 'var(--green-2)' },
-    { name: 'purple',    v: 'var(--purple)' },
-    { name: 'purple-2',  v: 'var(--purple-2)' },
-    { name: 'mascot',    v: 'var(--mascot)' },
-    { name: 'mascot-2',  v: 'var(--mascot-2)' },
+    { name: 'preset a',   v: 'var(--purple)' },
+    { name: 'preset a text', v: 'var(--purple-2)' },
+    { name: 'preset b',   v: 'var(--mascot)' },
+    { name: 'preset b bright', v: 'var(--mascot-2)' },
     { name: 'sun',       v: 'var(--sun)' },
     { name: 'flame',     v: 'var(--flame)' },
-    { name: 'sky',       v: 'var(--sky)' },
+    { name: 'category 6', v: 'var(--sky)' },
     { name: 'warn',      v: 'var(--warn)' }
 ];
 
@@ -82,7 +82,7 @@ function Swatch(name, v, big) {
 
 function PaletteGrid() {
     return Panel({ id: 'palette', title: 'palette tokens', count: PALETTE.length + ' colors', class: 'ds-panel-gap', children: [
-        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens with the value each one resolves to in the active theme. flame is an alias of warn. purple, mascot and sky are historical names: all three now resolve to neutral greys and are kept so existing consumers keep working.'),
+        h('p', { class: 'ds-panel-caption' }, 'raw palette tokens with the value each one resolves to in the active theme. flame is an alias of warn. preset a and preset b are the two alternate data-accent colours.'),
         h('div', { class: 'ds-swatch-grid-sm' },
             ...PALETTE.map(p => Swatch(p.name, p.v, false))
         )

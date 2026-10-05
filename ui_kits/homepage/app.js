@@ -21,7 +21,7 @@ const shipping = [
 
 const GH = 'https://github.com/AnEntrypoint/';
 const works = [
-    { code: '001', title: 'gm', sub: 'state machine for coding agents', meta: '2025 · live', body: 'a small deterministic state machine that keeps an llm coding agent on a plan: it records state, gates each step and resumes after interruptions.', href: GH + 'gm', source: GH + 'gm' },
+    { code: '001', title: 'gm', sub: 'state machine for coding agents', meta: '2025 · live', body: 'a small deterministic state machine that keeps an LLM coding agent on a plan: it records state, gates each step and resumes after interruptions.', href: GH + 'gm', source: GH + 'gm' },
     { code: '002', title: 'zellous', sub: 'production push-to-talk', meta: '2024 · shipped', body: 'hold the button. talk. someone on the other side hears you. opus codec, dynamic rooms, 50-message replay.', href: GH + 'zellous', source: GH + 'zellous' },
     { code: '003', title: 'spoint', sub: 'spawnpoint', meta: '2024 · shipped', body: 'a spawn-point directory: one url opens one room and everyone who follows it lands in the same place.', href: GH + 'spoint', source: GH + 'spoint' },
     { code: '004', title: 'flatspace', sub: 'flat-file cms', meta: 'wip', body: 'a cms where every page is a yaml file in the repo. flatspace build renders them to static html and ships the result to gh-pages.', href: GH + 'flatspace', source: GH + 'flatspace' },
@@ -67,7 +67,7 @@ function App() {
         main: [
             Hero({
                 title: 'tools for agents and live rooms.',
-                body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser os shell. every project is open source on github.',
+                body: '247420 builds a state machine for coding agents, push-to-talk rooms, a flat-file cms and a browser OS shell. every project is open source on github.',
                 actions: [
                     h('a', { key: 'works', class: 'btn btn-primary', href: '#works' }, 'browse the works')
                 ],

@@ -1466,30 +1466,6 @@ input.ov-set-control[type="range"] { padding: 0; accent-color: var(--accent); }
 .ov-lightbox-video { max-width: 92vw; max-height: 82vh; border-radius: var(--r-1); background: var(--media-letterbox); }
 .ov-lightbox-label { color: var(--on-color); font-size: var(--fs-tiny); opacity: .85; }
 
-.ds-ep-panel,
-.ds-ep-panel-body,
-.ds-ep-tree,
-.ds-ep-eventlog,
-.ds-ep-drawer { scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
-.ds-ep-panel ::-webkit-scrollbar,
-.ds-ep-panel-body::-webkit-scrollbar,
-.ds-ep-tree::-webkit-scrollbar,
-.ds-ep-eventlog::-webkit-scrollbar { width: 8px; height: 8px; }
-.ds-ep-panel ::-webkit-scrollbar-track,
-.ds-ep-panel-body::-webkit-scrollbar-track,
-.ds-ep-tree::-webkit-scrollbar-track,
-.ds-ep-eventlog::-webkit-scrollbar-track { background: transparent; }
-.ds-ep-panel ::-webkit-scrollbar-thumb,
-.ds-ep-panel-body::-webkit-scrollbar-thumb,
-.ds-ep-tree::-webkit-scrollbar-thumb,
-.ds-ep-eventlog::-webkit-scrollbar-thumb {
-    background: var(--rule); border-radius: var(--r-pill, 999px);
-    border: 2px solid transparent; background-clip: padding-box;
-}
-.ds-ep-panel ::-webkit-scrollbar-thumb:hover,
-.ds-ep-panel-body::-webkit-scrollbar-thumb:hover {
-    background: var(--panel-text-3, var(--rule)); background-clip: padding-box;
-}
 
 .ds-ep-propfield-value input.ds-input-color { width: 28px; flex: 0 0 auto; }
 .ds-ep-propfield-value input.ds-input-check { width: 16px; flex: 0 0 auto; }

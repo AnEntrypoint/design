@@ -41,7 +41,7 @@
 .ov-emoji-tab:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); }
 .ov-emoji-tab[aria-selected="true"] { background: color-mix(in oklab, var(--accent) 16%, transparent); }
 .ov-emoji-tab:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
-.ov-emoji-grid { overflow-y: auto; flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent; }
+.ov-emoji-grid { overflow-y: auto; flex: 1; min-height: 0; }
 .ov-emoji-grid-inner {
   display: grid; grid-template-columns: repeat(9, 1fr); gap: var(--space-1, 4px);
 }

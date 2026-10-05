@@ -1,8 +1,5 @@
 .ds-settings-main { padding: 0; display: flex; flex-direction: column; height: 100%; min-height: 0; }
-.ds-settings-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: var(--space-4); scrollbar-width: thin; scrollbar-color: var(--rule-strong) transparent; }
-.ds-settings-scroll::-webkit-scrollbar { width: 8px; }
-.ds-settings-scroll::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: var(--r-pill); }
-.ds-settings-scroll::-webkit-scrollbar-track { background: transparent; }
+.ds-settings-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: var(--space-4); }
 
 .ds-settings-body { padding: 0; }
 .ds-settings-body-stack { display: flex; flex-direction: column; gap: calc(var(--space-2-5) * var(--density)); }

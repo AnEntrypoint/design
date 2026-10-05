@@ -1,10 +1,11 @@
 import * as webjsx from '../../../../vendor/webjsx/index.js';
-import * as components from '../../../components.js';
+import { Icon } from '../../../components/shell.js';
+import { Panel, Row, Hero, Receipt, Kpi, Table } from '../../../components/content.js';
+import { EmptyState } from '../../../components/files/chrome.js';
 import { pre, form } from '../../../components/freddie/page-blocks.js';
 import { skillLabel } from '../../../components/freddie/skill-label.js';
 
 const h = webjsx.createElement;
-const { Panel, Row, Hero, Receipt, Kpi, Table, EmptyState, Icon } = components;
 
 export function makeCorePages(ctx) {
     return {

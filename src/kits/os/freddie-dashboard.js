@@ -1,12 +1,13 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
-import * as components from '../../components.js';
+import { AppShell, Topbar, Side, Crumb, Status, Chip, Icon } from '../../components/shell.js';
+import { Panel } from '../../components/content.js';
+import { EmptyState } from '../../components/files/chrome.js';
 import { ROUTES, OS_ROUTE_DEFS } from './freddie/routes.js';
 import { makeCorePages } from './freddie/pages-core.js';
 import { makeChatPage } from './freddie/pages-chat.js';
 import { makeToolsPages } from './freddie/pages-tools.js';
 import { makeOsPages } from './freddie/pages-os.js';
 
-const { AppShell, Topbar, Side, Crumb, Status, Panel, Chip, EmptyState, Icon } = components;
 
 function pre(obj) {
     return webjsx.createElement('pre', { class: 'fd-pre' }, typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2));

@@ -1,7 +1,8 @@
-import * as components from '../../../components.js';
+import { Icon } from '../../../components/shell.js';
+import { Panel, Kpi, Table } from '../../../components/content.js';
+import { EmptyState } from '../../../components/files/chrome.js';
 import { pre } from '../../../components/freddie/page-blocks.js';
 
-const { Panel, Kpi, Table, EmptyState, Icon } = components;
 
 export function makeOsPages(ctx) {
     const { osSurfaces, instance } = ctx;

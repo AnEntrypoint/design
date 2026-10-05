@@ -86,8 +86,13 @@ and aggregates one pass/fail report:
 - **`lint-classes.mjs`**: every class a component emits belongs to a named
   prefix family (`ds-`/`app-`/`ws-`/`chat-`/…), a public utility class, or the
   frozen legacy bare-name list; nothing new and unprefixed.
-- **`lint-css.mjs`**: the shared driver described above; also home to the
-  font-size, `!important`, and spacing ratchet checks bundled inline.
+- **`lint-css.mjs`**: owns the `CHECKS` list and the shared pass/fail summary that
+  `lint.mjs` runs; gate implementations live in the other `lint-*.mjs` files.
+- **`lint-contrast.mjs`**, **`lint-css-parse.mjs`**, **`lint-yaml-parse.mjs`**:
+  contrast pairs, strict CSS tokenising, and YAML plain-scalar safety. The token
+  gates (`tokens`, `tokens-json`, `radius`, `zindex`, `transition-all`,
+  `dark-parity`) and the spacing, font-size and `!important` ratchets live in
+  `lint-tokens.mjs` and `lint-shared.mjs`.
 - **`lint-dead-controls.mjs`**: flags a rendered control that cannot act: an
   empty/no-op handler, or a bare `href="#"`.
 - **`lint-duplicate-selectors.mjs`**: the same CSS selector defined twice with
@@ -112,10 +117,10 @@ and aggregates one pass/fail report:
   through `attempt()` / `attemptAsync()`, and `.catch(ignoreFailure)`, from
   `src/best-effort.js`; the helper name is the statement of intent.
 
-Four gates are hard zero-tolerance (`lint-tokens`, plus raw `border-radius`,
-raw `z-index`, and `transition: all` bans folded into `lint-css.mjs`). Four
-are ratchets frozen against a baseline that may only move down
-(`lint-spacing`, `lint-fontsize`, `lint-important`, `lint-dead-controls`).
+Hard zero-tolerance gates: `tokens`, `radius`, `zindex`, `transition-all`,
+`dark-parity` and `css-parse`. Ratchets frozen against a baseline file that may
+only move down: `spacing`, `fontsize`, `important`, `inline-css` and
+`inline-styles`. `dead-controls` has no baseline file; it is zero.
 
 `npm run a11y` is a separate, runtime companion: axe-core against the live
 rendered DOM of every kit via CDP, blocking on serious/critical WCAG

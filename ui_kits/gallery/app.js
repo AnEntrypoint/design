@@ -17,6 +17,8 @@ const swatchTokens = [
     { name: 'panel-select',hint: 'neutral gray · hover and selection' }
 ];
 
+const TONE_NAMES = { 'panel-1': 'panel surface', 'panel-2': 'row surface', 'panel-3': 'header surface' };
+
 const items = [
     { id: 'a', label: 'folder',  icon: 'folder',     tone: 'panel-1' },
     { id: 'b', label: 'image',   icon: 'file-image', tone: 'panel-2' },
@@ -42,7 +44,7 @@ function Tile(it) {
         h('div', { class: 'ds-tile-cap', 'aria-hidden': 'true' }, Icon(it.icon, { size: 32 })),
         h('div', { class: 'ds-tile-meta' },
             h('span', { class: 'ds-tile-label' }, it.label),
-            h('span', { class: 'ds-tile-glyph', 'aria-hidden': 'true' }, it.tone)
+            h('span', { class: 'ds-tile-glyph', 'aria-hidden': 'true' }, TONE_NAMES[it.tone])
         )
     );
 }

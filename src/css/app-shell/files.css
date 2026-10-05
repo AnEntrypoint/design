@@ -639,21 +639,10 @@
 
 .ds-preview-glyph { --glyph-size: 34px; font-size: var(--glyph-size); opacity: 0.6; }
 
-.ds-preview-code, .ds-preview-text, .ds-modal-body, .ds-preview-body {
-  scrollbar-width: thin;
-}
-.ds-preview-code::-webkit-scrollbar,
-.ds-preview-text::-webkit-scrollbar,
-.ds-preview-body::-webkit-scrollbar,
-.ds-modal-body::-webkit-scrollbar { width: 8px; height: 8px; }
 .ds-preview-code::-webkit-scrollbar-thumb,
 .ds-preview-text::-webkit-scrollbar-thumb {
   background: color-mix(in oklab, var(--paper) 28%, transparent);
   border-radius: var(--r-pill); border: 2px solid transparent; background-clip: padding-box;
-}
-.ds-preview-body::-webkit-scrollbar-thumb,
-.ds-modal-body::-webkit-scrollbar-thumb {
-  background: var(--bg-3); border-radius: var(--r-pill);
 }
 
 @media (max-width: 560px) {

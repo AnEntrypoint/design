@@ -77,9 +77,10 @@
   --on-accent:   var(--accent-fg);
   --on-color:    #fff;
 
-  --scrim:        color-mix(in oklab, var(--fg) 40%, transparent);
-  --scrim-strong: color-mix(in oklab, var(--fg) 72%, transparent);
-  --scrim-media:  color-mix(in oklab, var(--fg) 85%, transparent);
+  --scrim-base:   var(--dark-bg);
+  --scrim:        color-mix(in oklab, var(--scrim-base) 40%, transparent);
+  --scrim-strong: color-mix(in oklab, var(--scrim-base) 72%, transparent);
+  --scrim-media:  color-mix(in oklab, var(--scrim-base) 85%, transparent);
 
   --cat-green:   var(--green-2);
   --cat-purple:  var(--purple-2);
@@ -103,7 +104,6 @@
   --panel-text:   var(--fg);
   --panel-text-2: var(--fg-2);
   --panel-text-3: var(--fg-3);
-  --panel-accent-2: var(--accent-bright, var(--accent));
   --panel-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
   --panel-shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
 
@@ -139,7 +139,6 @@
   --icon-xs: 12px;
   --icon-sm: 16px;
   --icon-md: 20px;
-  --icon-lg: 24px;
 
   --fs-h1-app:   clamp(1.75rem, 2.8cqi, 2.25rem);
   --fs-h2-app:   clamp(1rem, 1.4cqi, 1.1875rem);
@@ -158,7 +157,6 @@
 
   --space-hair:  calc(0.125rem * var(--density));
   --space-half:  calc(0.1875rem * var(--density));
-  --space-0:     0;
   --space-1:     calc(0.25rem * var(--density));
   --space-1-5:   calc(0.3125rem * var(--density));
   --space-1-75:  calc(0.375rem * var(--density));
@@ -173,7 +171,6 @@
   --space-7:     calc(4rem * var(--density));
   --space-8:     calc(6rem * var(--density));
   --space-9:     calc(8rem * var(--density));
-  --space-10:    calc(12rem * var(--density));
 
   --density:     1;
   --pad-y:       var(--space-5);
@@ -184,7 +181,6 @@
   --bw-hair:     1px;
   --bw-rule:     2px;
   --bw-chunk:    4px;
-  --bw-slab:     8px;
 
   --rule:        color-mix(in oklab, currentColor 8%, transparent);
   --rule-strong: color-mix(in oklab, currentColor 28%, transparent);
@@ -211,7 +207,6 @@
   --ease-collapse:   cubic-bezier(0.2, 0, 0, 1);
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 
-  --ink-offset:  0.1875rem;
 
   --z-below:      -1;
   --z-base:        0;
@@ -237,15 +232,12 @@
   --stage-ultra: min(96%, 2100px);
 
   --sidebar-width:           256px;
-  --sidebar-width-collapsed: 64px;
 
   --ca-rail-icon-width:       var(--size-lg, 56px);
   --ca-channel-column-width:  220px;
 
   --lh-tall:     1.4;
 
-  --size-sm:     32px;
-  --size-base:   42px;
   --size-lg:     56px;
 
   --ctl-sm:      1.75rem;
@@ -341,12 +333,12 @@
   --panel-text:   var(--fg);
   --panel-text-2: var(--fg-2);
   --panel-text-3: var(--fg-3);
-  --panel-accent-2: var(--accent-bright, var(--accent));
   --panel-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent);
   --panel-shadow-1: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
-  --scrim:        color-mix(in oklab, var(--fg) 40%, transparent);
-  --scrim-strong: color-mix(in oklab, var(--fg) 72%, transparent);
-  --scrim-media:  color-mix(in oklab, var(--fg) 85%, transparent);
+  --scrim-base:   var(--dark-bg);
+  --scrim:        color-mix(in oklab, var(--scrim-base) 40%, transparent);
+  --scrim-strong: color-mix(in oklab, var(--scrim-base) 72%, transparent);
+  --scrim-media:  color-mix(in oklab, var(--scrim-base) 85%, transparent);
   --success:      var(--green);
 }
 
@@ -359,6 +351,7 @@
   --bg-3:      var(--ink-3-dark);
   --code-surface: var(--dark-code);
   --fg:        var(--dark-fg);
+  --scrim-base: #000;
   --fg-2:      var(--dark-fg-2);
   --fg-3:      var(--dark-fg-3);
   --panel-3:   color-mix(in oklab, var(--fg) 14%, transparent);
@@ -423,6 +416,7 @@
     --bg-3:      var(--ink-3-dark);
     --code-surface: var(--dark-code);
     --fg:        var(--dark-fg);
+    --scrim-base: #000;
     --fg-2:      var(--dark-fg-2);
     --fg-3:      var(--dark-fg-3);
     --panel-3:   color-mix(in oklab, var(--fg) 14%, transparent);

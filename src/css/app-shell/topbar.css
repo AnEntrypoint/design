@@ -154,11 +154,7 @@ body.canvas-host { background: transparent !important; }
 .app-side-shell {
   background: var(--bg-2); overflow-y: auto; min-height: 0;
   padding-bottom: var(--app-status-h-live, var(--app-status-h));
-  scrollbar-width: thin; scrollbar-color: var(--rule-strong) transparent;
 }
-.app-side-shell::-webkit-scrollbar { width: 8px; }
-.app-side-shell::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: var(--r-pill, 999px); }
-.app-side-shell::-webkit-scrollbar-track { background: transparent; }
 .app-body { display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); align-items: stretch; align-content: stretch; flex: 1; min-height: 0; }
 .app-body.no-side { grid-template-columns: minmax(0, 1fr); }
 
@@ -232,11 +228,7 @@ body.canvas-host { background: transparent !important; }
 .app-main { scrollbar-gutter: stable; }
 
 .app-main {
-  scrollbar-width: thin; scrollbar-color: var(--rule-strong) transparent;
 }
-.app-main::-webkit-scrollbar { width: 8px; }
-.app-main::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: var(--r-pill, 999px); }
-.app-main::-webkit-scrollbar-track { background: transparent; }
 
 .app-main [id] { scroll-margin-top: var(--space-4); }
 

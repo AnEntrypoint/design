@@ -37,7 +37,7 @@ kits:
   heading: "ui kits"
   layout: cards
   categories:
-    - { key: "ai-chat",    label: "ai & chat" }
+    - { key: "ai-chat",    label: "AI & chat" }
     - { key: "devtools",   label: "devtools" }
     - { key: "dashboards", label: "dashboards" }
     - { key: "apps",       label: "apps" }
@@ -47,7 +47,7 @@ kits:
     - { code: "02", title: "project page", sub: "hero, receipt, install, changelog",  desc: "a product page template with hero, install steps and changelog.",                      href: "./ui_kits/project_page/", category: "apps" }
     - { code: "03", title: "docs",         sub: "long-form prose chrome",                desc: "sidebar navigation, mono headings, and code blocks for documentation.",            href: "./ui_kits/docs/", category: "apps" }
     - { code: "04", title: "blog",         sub: "dated index and reading view",            desc: "a dated post index with author bylines and a distraction-free reading view.",                            href: "./ui_kits/blog/", category: "apps" }
-    - { code: "06", title: "aicat",        sub: "AI assistant with a cat persona",         desc: "an animated ASCII cat portrait with thinking states and mood changes.",  href: "./ui_kits/aicat/", category: "ai-chat" }
+    - { code: "06", title: "aicat",        sub: "ASCII cat portrait assistant",         desc: "an animated ASCII cat portrait with thinking states and mood changes.",  href: "./ui_kits/aicat/", category: "ai-chat" }
     - { code: "07", title: "file browser", sub: "type-aware rails, drop zone, preview",   desc: "every file-row primitive wired to a static demo backed by fsbrowse.", href: "./ui_kits/file_browser/", category: "devtools" }
     - { code: "08", title: "dashboard",    sub: "kpis, tables, receipts, changelog",  desc: "kpis, tables and receipts tracked with a running changelog in one operations surface.", href: "./ui_kits/dashboard/", category: "dashboards" }
     - { code: "09", title: "terminal",     sub: "CLI prompt, command lines, log view", desc: "five line kinds (comment, command, output, ok, warning) over a tonal log panel.", href: "./ui_kits/terminal/", category: "devtools" }
@@ -56,7 +56,7 @@ kits:
     - { code: "12", title: "search",       sub: "topbar query, faceted filters, rows", desc: "faceted results ranking, reusing the same RowLink primitive every list uses.", href: "./ui_kits/search/", category: "devtools" }
     - { code: "13", title: "404",          sub: "plain heading, suggested routes",        desc: "one sentence on what was not found and a where-to-go list of links.",      href: "./ui_kits/error_404/", category: "apps" }
     - { code: "14", title: "gallery",      sub: "visual grid, tonal cards, lightbox",  desc: "tiles on shared panel tokens that open into a matching lightbox.", href: "./ui_kits/gallery/", category: "apps" }
-    - { code: "15", title: "os shell",     sub: "menubar, window manager, taskbar", desc: "a runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
+    - { code: "15", title: "OS shell",     sub: "menubar, window manager, taskbar", desc: "a runnable desktop-shell demo with its own window manager and app registry.", href: "./ui_kits/os/", category: "shells" }
     - { code: "16", title: "buttons",      sub: "every variant, size, and state",   desc: "primary, secondary, ghost, link, and danger, plus loading and disabled states.", href: "./ui_kits/buttons/", category: "devtools" }
     - { code: "17", title: "chat & community", sub: "threads, composer, servers, voice, members", desc: "one chat and community app: message thread with reactions, code, images, files and link cards, plus a server rail, channels, voice strip and member list, all mountCommunityApp wired to an injected adapter.", href: "./ui_kits/community-app/", category: "ai-chat" }
     - { code: "19", title: "system primer", sub: "palette, type scale and primitives on one page", desc: "every color token, type step and form primitive rendered side by side.", href: "./ui_kits/system_primer/", category: "devtools" }
@@ -108,7 +108,7 @@ quickstart:
     - { kind: "cmd", text: "git clone https://github.com/AnEntrypoint/design.git" }
 
 desktop_os:
-  heading: "desktop os shell"
+  heading: "desktop OS shell"
   count: "in-page window manager"
   items:
     - { code: "os", title: "live demo",           sub: "menubar, apps drawer, side rail, taskbar, floating windows", desc: "a runnable desktop shell with its own window manager and a 2-app registry",   href: "./ui_kits/os/",   cta: "open" }

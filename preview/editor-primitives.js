@@ -22,6 +22,10 @@ function box(...children) {
     return h('div', { class: 'spec-box' }, ...children);
 }
 
+function stage(...children) {
+    return h('div', { class: 'spec-stage' }, ...children);
+}
+
 const view = () => h('div', { class: 'spec-page' },
     spec('Toolbar + ToolbarRow', 'Leading/trailing action strip. ToolbarRow groups actions.',
         Toolbar({
@@ -124,15 +128,18 @@ const view = () => h('div', { class: 'spec-page' },
             { title: 'gates', rows: [{ label: 'lint', value: '16/16' }, { label: 'a11y', value: '0 blocking' }] },
         ], onRefresh: inertSpecimenHandler })),
 
-    spec('Dialog', 'Shown open. The closed state renders nothing.',
-        Dialog({ title: 'confirm', open: true, dismissible: true,
-            children: h('p', {}, 'dialog body copy.'),
-            actions: [{ label: 'cancel', kind: 'ghost' }, { label: 'confirm', kind: 'primary' }],
-            onClose: inertSpecimenHandler })),
+    spec('Dialog', 'Shown open inside a bounded stage. The closed state renders nothing.',
+        stage(Dialog({ title: 'discard changes', open: true, dismissible: true,
+            children: h('p', {}, 'Three unsaved edits to settings.yaml will be lost.'),
+            actions: [{ label: 'keep editing', kind: 'ghost' }, { label: 'discard', kind: 'danger' }],
+            onClose: inertSpecimenHandler }))),
 
-    spec('Drawer', 'Shown open, anchored left.',
-        box(Drawer({ side: 'left', open: true, ariaLabel: 'example drawer',
-            children: h('p', {}, 'drawer body.'),
+    spec('Drawer', 'Shown open inside a bounded stage, anchored left.',
+        stage(Drawer({ side: 'left', open: true, ariaLabel: 'example drawer',
+            children: [
+                h('h3', { key: 'dh' }, 'filters'),
+                h('p', { key: 'dp' }, 'Narrow the file list by type, owner or last modified date.'),
+            ],
             onClose: inertSpecimenHandler }))),
 
     spec('Toast', 'All four kinds.',
@@ -144,3 +151,9 @@ const view = () => h('div', { class: 'spec-page' },
 );
 
 webjsx.applyDiff(root, view());
+
+const releaseSpecimenFocus = () => {
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    window.scrollTo(0, 0);
+};
+setTimeout(releaseSpecimenFocus, 50);

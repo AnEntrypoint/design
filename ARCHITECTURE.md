@@ -39,7 +39,7 @@ design  --publish to npm (always-latest)-->  thebird  (docs/vendor/ via refresh-
 
 ## Relationship to webjsx-toolkit
 
-`webjsx-toolkit` (a sibling project, `C:/dev/agent-jsx/webjsx-toolkit`) is a separate, independent
+`webjsx-toolkit` (a sibling project outside this repo) is a separate, independent
 port of a shadcn/ui-style component set onto the `webjsx` runtime, Button/Dialog/Tabs/Select/etc.
 with a Tailwind+`class-variance-authority` styling approach and Radix-derived behavior, reimplemented
 by hand since webjsx has no React-hooks/component-tag model for Radix itself to run on. It is **not**
@@ -65,11 +65,8 @@ component API surface or its underlying webjsx-native (not Tailwind) implementat
 for iteration (consumers hot-reload via their own dev flow after a `refresh-design.mjs` pull, or
 via `link-local-design.mjs`-style local linking during active cross-repo work).
 
-**Build** (`npm run build:ci`, `scripts/build.mjs`): runs the lint gate block (19 gates via
-`scripts/lint.mjs`, whose `CHECKS` list and shared reporting live in `lint-css.mjs`: tokens,
-tokens-json, radius, zindex, transition-all, dark-parity, contrast, spacing, fontsize, important,
-inline-css, glyphs, null-children, classes, inline-styles, duplicate-selectors, empty-catch,
-dead-controls, yaml-parse), then bundles with esbuild + postcss into `dist/`. The gates
+**Build** (`npm run build:ci`, `scripts/build.mjs`): runs the lint gate block (every gate in the `CHECKS` list in
+`scripts/lint-css.mjs`, invoked through `scripts/lint.mjs`), then bundles with esbuild + postcss into `dist/`. The gates
 scan the component sheets, expanded transitively from a smaller entry-point list through the
 `@import` graph: the root `app-shell.css` is a barrel over `src/css/app-shell/*.css` and lints
 nothing on its own, and every sheet in that directory must be reachable from it. `build.mjs`

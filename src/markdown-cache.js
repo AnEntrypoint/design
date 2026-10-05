@@ -1,6 +1,6 @@
 
 import { renderMarkdown, ensureReady as ensureMarkdownReady, isDegraded as isMarkdownDegraded } from './markdown.js';
-import { highlightAllUnder, ensurePrism } from './highlight.js';
+import { highlightAllUnder } from './highlight.js';
 import { register } from './debug.js';
 
 function simpleHash(str) {
@@ -32,26 +32,12 @@ export async function initializeCachesEagerly() {
     _initPromise = (async () => {
         const startTime = performance.now();
 
-        const [mdOk, prismOk] = await Promise.all([
-            (async () => {
-                const t0 = performance.now();
-                const ok = await ensureMarkdownReady();
-                _stats.markdownInitMs = performance.now() - t0;
-                _markdownInitialized = true;
-                return ok;
-            })(),
-            (async () => {
-                const t0 = performance.now();
-                const ok = await ensurePrism();
-                _stats.prismInitMs = performance.now() - t0;
-                _prismInitialized = true;
-                return ok;
-            })(),
-        ]);
+        const mdOk = await ensureMarkdownReady();
+        _stats.markdownInitMs = performance.now() - startTime;
+        _markdownInitialized = true;
+        _stats.totalInitMs = _stats.markdownInitMs;
 
-        _stats.totalInitMs = performance.now() - startTime;
-
-        return { markdown: mdOk, prism: prismOk };
+        return { markdown: mdOk, prism: _prismInitialized };
     })();
 
     return _initPromise;
@@ -89,12 +75,8 @@ export async function renderMarkdownCached(text) {
 }
 
 export async function highlightCodeBlockCached(el) {
-    if (!_prismInitialized) {
-        await ensurePrism();
-        _prismInitialized = true;
-    }
-
     await highlightAllUnder(el);
+    _prismInitialized = true;
 }
 
 export function getCacheStats() {

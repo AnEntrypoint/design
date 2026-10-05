@@ -80,7 +80,7 @@
         <h1 id="introduction">introduction</h1>
         <p class="lede">a state machine for coding agents. it plans, executes and verifies each step before moving on.</p>
 
-        <p>gm is a small, deterministic runtime that wraps an llm coding agent. at each step it reports the current state and the transitions allowed from it, and the agent picks one.</p>
+        <p>gm is a small, deterministic runtime that wraps an LLM coding agent. at each step it reports the current state and the transitions allowed from it, and the agent picks one.</p>
 
         <p>the rest of this page covers installation and a first run.</p>
 
@@ -154,12 +154,12 @@
   }
   Array.prototype.slice.call(document.querySelectorAll('.ds-prose pre')).forEach(function (pre) {
     var shell = document.createElement('div');
-    shell.className = 'chat-code-block';
+    shell.className = 'ds-prose-code';
     pre.parentNode.insertBefore(shell, pre);
     shell.appendChild(pre);
     var btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'chat-code-copy';
+    btn.className = 'btn btn-ghost btn-sm';
     btn.setAttribute('aria-label', 'copy code');
     btn.textContent = 'copy';
     btn.addEventListener('click', function () { copy(pre.innerText, btn); });

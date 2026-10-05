@@ -7,7 +7,7 @@ const h = webjsx.createElement;
 const root = document.getElementById('root');
 
 const corpus = [
-    { code: 'kit', title: 'aicat',         sub: 'ai assistant with cat persona: ascii portrait and mood face', kind: 'kit',     href: '../aicat/' },
+    { code: 'kit', title: 'aicat',         sub: 'chat assistant with an ascii portrait and mood face', kind: 'kit',     href: '../aicat/' },
     { code: 'kit', title: 'community-app', sub: 'chat + community app: threads, composer, servers, voice',     kind: 'kit',     href: '../community-app/' },
     { code: 'kit', title: 'dashboard',     sub: 'kpis, tables, receipts, changelog, panels',                  kind: 'kit',     href: '../dashboard/' },
     { code: 'kit', title: 'file_browser',  sub: 'rails by file type, drop, preview',                          kind: 'kit',     href: '../file_browser/' },

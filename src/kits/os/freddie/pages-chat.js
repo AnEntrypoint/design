@@ -1,5 +1,6 @@
 import * as webjsx from '../../../../vendor/webjsx/index.js';
-import * as components from '../../../components.js';
+import { Chip, Icon } from '../../../components/shell.js';
+import { Panel, Receipt } from '../../../components/content.js';
 import { getRecentPaths, saveRecentPath } from '../../../components/freddie/recent-paths.js';
 import { skillLabel } from '../../../components/freddie/skill-label.js';
 import { toKitMessage } from './chat-protocol.js';
@@ -7,7 +8,6 @@ import { loadProviders, fetchChatEvents, applyChatEvents } from './chat-transpor
 import { attempt } from '../../../best-effort.js';
 
 const h = webjsx.createElement;
-const { Panel, Receipt, Chip, Icon } = components;
 
 export function makeChatPage(ctx) {
     return async function chat(h0) {
