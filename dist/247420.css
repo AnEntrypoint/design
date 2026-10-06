@@ -12698,6 +12698,10 @@
 }
 .ds-247420.ds-247420 .ca-app .cm-reply-bar { border-left: 0; border-radius: var(--r-2); padding: var(--space-1-75) var(--space-3); }
 
+@media (max-width: 900px) {
+  .ds-247420.ds-247420 .ca-app { position: relative; overflow: hidden; }
+}
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
