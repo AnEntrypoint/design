@@ -62,7 +62,8 @@ export function SettingsRowTriState({ icon = 'blank', label, description, value 
     });
 }
 
-export function SettingsRowSelect({ icon = 'blank', label, description, value, options = [], onChange, ariaLabel } = {}) {
+export function SettingsRowSelect({ icon = 'blank', label, description, value, options: given = [], onChange, ariaLabel } = {}) {
+    const options = given.length ? given : [{ value: '', label: 'System default' }];
     const active = options.find(o => o.value === value);
     return SettingsRow({
         icon, label,

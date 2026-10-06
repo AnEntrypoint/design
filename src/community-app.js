@@ -226,10 +226,11 @@ export function mountCommunityApp(root, adapter = {}) {
             title: ch.name || 'general', sub, messages: mapMessages(s), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, replyPreview, typingBar, ChatComposer({
                 value: s.chatInputValue || '',
-                placeholder: rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
+                placeholder: s.composerLockedReason ? s.composerLockedReason : rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
                 onInput: (v) => A.setInput && A.setInput(v),
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
                 onAttach: A.attachFiles ? (files) => A.attachFiles(files) : null,
+                disabled: !!s.composerLockedReason, disabledReason: s.composerLockedReason || undefined,
             })),
         });
     };
@@ -313,7 +314,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 ),
             ),
             MobileHeader({ channelType: ch.type || 'text', channelName: ch.name || '', onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
-            Banner({ tone: 'warning', message: 'No relay connected. Reconnecting…', visible: s.isConnected === false }),
+            Banner({ tone: 'warning', message: 'No relay connected. Reconnecting…', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
                 h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : '') }, railServersView(s), railChannelsView(s)),
