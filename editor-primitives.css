@@ -1661,3 +1661,7 @@ input.ov-set-control[type="range"] { padding: 0; accent-color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .ds-ep-tab-close, .ds-ep-btngrp-btn { transition: none; }
 }
+
+@media (max-width: 480px) {
+    .ov-set-root { max-height: calc(100dvh - 72px); }
+}
