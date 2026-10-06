@@ -3340,9 +3340,9 @@
 .ds-247420 .chat-image:hover {
   border-color: var(--rule);
 }
-.ds-247420 .chat-image { position: relative; }
+.ds-247420 .chat-image { position: relative; align-self: flex-start; width: fit-content; }
 .ds-247420 .chat-image img {
-  display: block; width: 100%; height: auto; max-height: 360px; object-fit: cover;
+  display: block; width: auto; max-width: 100%; height: auto; max-height: 360px; object-fit: contain;
 }
 
 .ds-247420 .chat-image::after {

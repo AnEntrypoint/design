@@ -231,9 +231,9 @@
 .chat-image:hover {
   border-color: var(--rule);
 }
-.chat-image { position: relative; }
+.chat-image { position: relative; align-self: flex-start; width: fit-content; }
 .chat-image img {
-  display: block; width: 100%; height: auto; max-height: 360px; object-fit: cover;
+  display: block; width: auto; max-width: 100%; height: auto; max-height: 360px; object-fit: contain;
 }
 
 .chat-image::after {
