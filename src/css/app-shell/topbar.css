@@ -335,4 +335,8 @@ body.canvas-host { background: transparent !important; }
   content: ''; flex: 1 1 auto;
   border-bottom: var(--bw-hair, 1px) dotted var(--rule-strong);
 }
+@media (max-width: 480px) {
+  .dateline { flex-wrap: wrap; }
+  .dateline span { white-space: normal; overflow: visible; text-overflow: clip; }
+}
 

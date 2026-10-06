@@ -1201,6 +1201,10 @@
   content: ''; flex: 1 1 auto;
   border-bottom: var(--bw-hair, 1px) dotted var(--rule-strong);
 }
+@media (max-width: 480px) {
+  .ds-247420 .dateline { flex-wrap: wrap; }
+  .ds-247420 .dateline span { white-space: normal; overflow: visible; text-overflow: clip; }
+}
 
 .ds-247420 svg.ds-icon { flex-shrink: 0; }
 

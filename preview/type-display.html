@@ -2,22 +2,35 @@
 <html lang="en" data-theme="auto" class="ds-247420"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>type display / 247420 preview</title><link rel="stylesheet" href="../colors_and_type.css">
 <link rel="stylesheet" href="../app-shell.css">
-<style>.td-hero{--specimen-size:96px;font-size:var(--specimen-size);}.td-h1{--specimen-size:56px;font-size:var(--specimen-size);}body{padding:var(--space-3-5);background:var(--panel-0);color:var(--panel-text);}
-.t-hero,.t-h1{overflow-wrap:anywhere;word-break:break-word;}
-@media (max-width:640px){.t-hero{font-size:48px !important;}.t-h1{font-size:32px !important;}}</style><script defer src="./motion-default.js"></script>
+<style>body{padding:var(--space-3-5);background:var(--panel-0);color:var(--panel-text);}
+.td-stage{--td-bearing:-0.06em;--td-fill:22cqi;container-type:inline-size;margin-top:var(--space-6);}
+.td-line{display:block;font-family:var(--ff-display);font-size:max(var(--fs-mega),var(--td-fill));line-height:var(--lh-tight);letter-spacing:var(--tr-tighter);margin:0;white-space:nowrap;}
+.td-bold{font-weight:var(--fw-bold);margin-inline-start:var(--td-bearing);}
+.td-light{font-weight:var(--fw-regular);color:var(--fg-2);text-align:end;}
+.td-register{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));align-items:baseline;gap:var(--space-5);margin-top:var(--space-7);padding-top:var(--space-3);border-top:1px solid var(--rule);}
+.td-cell{display:grid;gap:var(--space-2);align-content:start;container-type:inline-size;}
+.td-cell .t-hero,.td-cell .t-h1{overflow-wrap:anywhere;}
+.td-spec{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-3);}
+</style><script defer src="./motion-default.js"></script>
 </head><body>
 <div class="dateline"><span>247420 · TYPE · DISPLAY</span><span class="spread"></span><span>SYSTEM SANS</span></div>
 <div class="ds-demo-tokens-backlink tokens-backlink">token families: panel, space. <a href="../preview/theme-map.html">all tokens</a></div>
 
 <h1 class="sr-only">Type display</h1>
-<main aria-label="Type display specimens"><div class="ds-mt-3-5">
-  <div class="t-hero td-hero">Display headline</div>
-  <div class="t-micro ds-mt-2">HERO / 96px · system-ui · letter-spacing -0.02em</div>
+<main aria-label="Type display specimens">
+<div class="td-stage">
+  <span class="td-line td-bold">Display</span>
+  <span class="td-line td-light">headline</span>
 </div>
-<hr class="rule ds-mt-3">
-<div class="ds-mt-3">
-  <div class="t-h1 td-h1">Section heading</div>
-  <div class="t-micro ds-mt-2">H1 / 56px</div>
+<div class="td-register">
+  <div class="td-cell">
+    <div class="t-hero">Plain, loud</div>
+    <div class="td-spec t-micro"><span>HERO</span><span>--fs-hero</span><span>700</span><span>--tr-tighter</span></div>
+  </div>
+  <div class="td-cell">
+    <div class="t-h1">Section heading</div>
+    <div class="td-spec t-micro"><span>H1</span><span>--fs-h1</span><span>600</span><span>--tr-tight</span></div>
+  </div>
 </div>
 </main>
 </body></html>
