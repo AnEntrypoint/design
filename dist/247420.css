@@ -1202,6 +1202,8 @@
   border-bottom: var(--bw-hair, 1px) dotted var(--rule-strong);
 }
 
+.ds-247420 svg.ds-icon { flex-shrink: 0; }
+
 .ds-247420 .btn, .ds-247420 .btn-primary, .ds-247420 .btn-ghost {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1-75);
   height: var(--ctl-md); min-height: var(--ctl-md);
