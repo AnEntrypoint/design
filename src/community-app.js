@@ -48,6 +48,12 @@ const brandContext = (s, ch) => {
     ];
 };
 
+const serverAbbr = (sv) => {
+    if (sv.abbr) return sv.abbr;
+    const words = String(sv.name || '?').trim().split(/\s+/).filter(Boolean);
+    return (words.length > 1 ? words[0][0] + words[1][0] : (words[0] || '?').slice(0, 2)).toUpperCase();
+};
+
 export function mountCommunityApp(root, adapter = {}) {
     if (!root) throw new Error('mountCommunityApp: root required');
     const get = typeof adapter.get === 'function' ? adapter.get : () => ({});
@@ -81,6 +87,7 @@ export function mountCommunityApp(root, adapter = {}) {
     };
 
     const railChannelsView = (s) => {
+        if (s.homeMode) return dmRailView(s);
         const out = [];
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
         const text = channels.filter(c => c.type !== 'voice' && c.type !== 'threaded');
@@ -100,6 +107,19 @@ export function mountCommunityApp(root, adapter = {}) {
             for (const c of voice) out.push(railPill(c, cur, true, s));
         }
         return h('div', { class: 'ca-rail-channels' }, ...out);
+    };
+
+    const dmRailView = (s) => {
+        const convos = s.dmConversations || [];
+        const items = convos.map((c) => h('a', {
+            href: '#', class: s.activeDmPeer === c.id ? 'active' : '', 'aria-label': 'conversation with ' + c.name,
+            onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); },
+        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('user', { size: 15 })), h('span', {}, c.name)));
+        return h('div', { class: 'ca-rail-channels' },
+            h('div', { class: 'group group-header' },
+                h('span', {}, 'direct messages'),
+                A.newDm ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'new message', title: 'New message', onclick: (e) => { e.preventDefault(); A.newDm(); } }, Icon('plus', { size: 13 })) : null),
+            ...(items.length ? items : [h('div', { class: 'rail-empty', role: 'status' }, 'no conversations yet')]));
     };
 
     const groupHeader = (label, s) => h('div', { class: 'group group-header' },
@@ -131,7 +151,7 @@ export function mountCommunityApp(root, adapter = {}) {
             href: '#', class: active ? 'active' : '', 'aria-label': sv._home ? 'home' : (sv.name || sv.id),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },
             oncontextmenu: sv._home ? null : (e) => { e.preventDefault(); A.serverContext && A.serverContext(sv.id, e.clientX, e.clientY); },
-        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 15 }) : (sv.abbr || sv.name || '?').slice(0, 2).toLowerCase()),
+        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 15 }) : serverAbbr(sv)),
             h('span', {}, sv.name || sv.id),
             sv.unreadCount ? h('span', { class: 'count' }, sv.unreadCount > 99 ? '99+' : String(sv.unreadCount)) : null);
     };
@@ -195,7 +215,7 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const chatView = (s) => {
         const ch = s.currentChannel || {};
-        const sub = ch.type === 'voice' ? 'voice' : ch.type === 'forum' ? 'forum' : ch.type === 'page' ? 'page' : ch.type === 'announcement' ? 'announcement' : 'public';
+        const sub = s.homeMode ? 'encrypted' : ch.type === 'voice' ? 'voice' : ch.type === 'forum' ? 'forum' : ch.type === 'page' ? 'page' : ch.type === 'announcement' ? 'announcement' : 'public';
         const rt = s.replyTarget;
         const replyPreview = rt ? ReplyBar({
             quotedAuthor: rt.username || 'User', quotedMessage: rt.content || '',
@@ -206,7 +226,7 @@ export function mountCommunityApp(root, adapter = {}) {
             title: ch.name || 'general', sub, messages: mapMessages(s), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, replyPreview, typingBar, ChatComposer({
                 value: s.chatInputValue || '',
-                placeholder: rt ? 'reply to ' + (rt.username || 'User') + '…' : 'message #' + (ch.name || 'general') + '…',
+                placeholder: rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
                 onInput: (v) => A.setInput && A.setInput(v),
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
                 onAttach: A.attachFiles ? (files) => A.attachFiles(files) : null,
