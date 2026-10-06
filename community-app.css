@@ -379,3 +379,19 @@ html.ds-247420 .ca-drop-overlay-label {
   html.ds-247420 .ca-rail-server-explore,
   html.ds-247420 .ca-rail-channels a { transition: none; }
 }
+
+@media (max-width: 900px) {
+  html.ds-247420 .ca-app .cm-member-list {
+    top: calc(48px + env(safe-area-inset-top));
+    width: min(280px, 86vw); flex-basis: min(280px, 86vw);
+  }
+  html.ds-247420 .ca-app:has(.cm-member-list.open) .app-main { position: relative; }
+  html.ds-247420 .ca-app:has(.cm-member-list.open) .app-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-drawer);
+    background: color-mix(in oklab, var(--ink, #000) 40%, transparent);
+    pointer-events: none;
+  }
+}

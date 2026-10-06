@@ -12646,6 +12646,22 @@
   .ds-247420.ds-247420 .ca-rail-channels a { transition: none; }
 }
 
+@media (max-width: 900px) {
+  .ds-247420.ds-247420 .ca-app .cm-member-list {
+    top: calc(48px + env(safe-area-inset-top));
+    width: min(280px, 86vw); flex-basis: min(280px, 86vw);
+  }
+  .ds-247420.ds-247420 .ca-app:has(.cm-member-list.open) .app-main { position: relative; }
+  .ds-247420.ds-247420 .ca-app:has(.cm-member-list.open) .app-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-drawer);
+    background: color-mix(in oklab, var(--ink, #000) 40%, transparent);
+    pointer-events: none;
+  }
+}
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
