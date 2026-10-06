@@ -22,7 +22,7 @@ export function VoiceUser({ identity, speaking, color, muted, camera, videoEl } 
     );
 }
 
-export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen, onSettings } = {}) {
+export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen, onSettings, onMembers, membersOpen } = {}) {
     const initial = avatarInitial(name);
     const handleSettings = (e) => {
         e.preventDefault();
@@ -46,7 +46,8 @@ export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen,
         h('div', { class: 'cm-user-controls' },
             h('button', { class: 'cm-user-btn' + (muted ? ' muted' : ''), onclick: onMute, 'aria-label': muted ? 'Unmute microphone' : 'Mute microphone', 'aria-pressed': muted ? 'true' : 'false' }, Icon(muted ? 'mic-off' : 'mic')),
             h('button', { class: 'cm-user-btn' + (deafened ? ' deafened' : ''), onclick: onDeafen, 'aria-label': deafened ? 'Undeafen' : 'Deafen', 'aria-pressed': deafened ? 'true' : 'false' }, Icon(deafened ? 'speaker-off' : 'speaker')),
-            h('button', { class: 'cm-user-btn', onclick: handleSettings, 'aria-label': 'Audio settings', title: 'Open audio settings' }, Icon('settings'))
+            h('button', { class: 'cm-user-btn', onclick: handleSettings, 'aria-label': 'Audio settings', title: 'Open audio settings' }, Icon('settings')),
+            onMembers ? h('button', { class: 'cm-user-btn cm-user-members' + (membersOpen ? ' active' : ''), onclick: onMembers, 'aria-label': 'Toggle members', 'aria-pressed': membersOpen ? 'true' : 'false', title: 'Members' }, Icon('members')) : null
         )
     );
 }

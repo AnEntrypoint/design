@@ -62,6 +62,8 @@ function isConsecutive(messages, i) {
     if (prevWho === 'system' || prevWho === 'tool' || prevWho === 'thinking') return false;
     if (curWho === 'system' || curWho === 'tool' || curWho === 'thinking') return false;
     if (prevWho !== curWho) return false;
+    if (cur.authorId != null && prev.authorId != null && String(cur.authorId) !== String(prev.authorId)) return false;
+    if (cur.variant === 'community' && cur.ts != null && prev.ts != null && Math.abs(cur.ts - prev.ts) > 300000) return false;
     if (curWho === 'them' && (prev.name || '') !== (cur.name || '')) return false;
     return true;
 }

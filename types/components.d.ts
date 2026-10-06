@@ -917,6 +917,8 @@ export interface ChatMessageProps {
     stopped?: any;
     flat?: any;
     tail?: any;
+    variant?: any;
+    avatarColor?: any;
     error?: any;
     onRetry?: (...args: any[]) => any;
     onToggleReaction?: (...args: any[]) => any;
@@ -1967,6 +1969,8 @@ export interface UserPanelProps {
     onMute?: (...args: any[]) => any;
     onDeafen?: (...args: any[]) => any;
     onSettings?: (...args: any[]) => any;
+    onMembers?: (...args: any[]) => any;
+    membersOpen?: any;
 }
 export declare function UserPanel(props?: UserPanelProps): VNode;
 

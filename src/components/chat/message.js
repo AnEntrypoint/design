@@ -3,11 +3,12 @@ import { Icon } from '../shell.js';
 import { t } from '../../i18n.js';
 import { renderInline } from '../chat-message-parts.js';
 import { avatarInitial } from '../content.js';
+import { avatarStyle } from '../community/avatar-style.js';
 import { countMessage, renderPart } from './stats.js';
 
 const h = webjsx.createElement;
 
-export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typing, key, id, aicat, reactions, receipt, name, streaming, actions, incomplete, stopped, flat, tail, error, onRetry, onToggleReaction, onAddReaction }) {
+export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typing, key, id, aicat, reactions, receipt, name, streaming, actions, incomplete, stopped, flat, tail, variant, avatarColor, error, onRetry, onToggleReaction, onAddReaction }) {
     countMessage();
     const resolvedWho = role
         ? (role === 'user' ? 'you'
@@ -22,7 +23,7 @@ export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typ
     const fallbackAvatar = avatar != null
         ? avatar
         : (resolvedWho === 'you' ? 'u' : avatarInitial(name));
-    const av = h('span', { class: 'chat-avatar' }, fallbackAvatar);
+    const av = h('span', { class: 'chat-avatar', style: avatarStyle(avatarColor) }, fallbackAvatar);
     let bodyNodes;
     if (typing) bodyNodes = [h('div', { class: 'chat-bubble chat-bubble-typing', key: 'typb' }, h('span', { class: 'chat-typing' }, h('span'), h('span'), h('span')))];
     else if (parts && parts.length) bodyNodes = parts.map((p, i) => renderPart(p, i));
@@ -94,6 +95,16 @@ export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typ
     const roleLabel = isFlat && !isTail
         ? h('div', { class: 'chat-role', key: '_role' }, resolvedWho === 'you' ? t('chat.roleYou', 'You') : (name || t('chat.roleAssistant', 'Assistant')))
         : null;
+    if (variant === 'community' && !isCentered) {
+        const head = isTail ? null : h('div', { class: 'chat-community-head', key: '_head' },
+            h('span', { class: 'who' }, name || ''),
+            time ? h('span', { class: 't' }, time) : null);
+        const lead = isTail ? h('span', { class: 'chat-avatar-spacer', 'aria-hidden': 'true', key: '_spacer', title: time || null }) : av;
+        const communityActions = actionRow;
+        return h('div', { key, id, class: 'chat-msg ' + resolvedWho + ' chat-msg-community chat-msg-flat' + (isTail ? ' chat-msg-tail' : '') },
+            lead,
+            h('div', { class: 'chat-stack' }, head, ...bodyNodes, reactionRow, communityActions));
+    }
     const stack = resolvedWho === 'them'
         ? h('div', { class: 'chat-stack' }, roleLabel, meta, ...bodyNodes, reactionRow, actionRow)
         : h('div', { class: 'chat-stack' }, roleLabel, ...bodyNodes, reactionRow, actionRow, meta);
