@@ -3,12 +3,14 @@ import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
 
-export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd, onClick, label = 'Hold to talk' } = {}) {
+export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd, onClick, label = 'Hold to talk', disabled = false, disabledReason } = {}) {
     const active = state === 'live' || state === 'recording' || state === 'vad';
     const start = (e) => { onHoldStart && onHoldStart(e); };
     const end = (e) => { onHoldEnd && onHoldEnd(e); };
     return h('button', {
         type: 'button',
+        disabled: disabled ? 'disabled' : null,
+        title: disabled && disabledReason ? disabledReason : null,
         class: 'vx-ptt vx-ptt-' + state + ' vx-ptt-mode-' + mode,
         'data-state': state,
         'data-mode': mode,
@@ -24,7 +26,7 @@ export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd
     },
         h('span', { class: 'vx-ptt-glow', 'aria-hidden': 'true' }),
         h('span', { class: 'vx-ptt-icon', 'aria-hidden': 'true' }, state === 'idle' ? Icon('mic') : h('span', { class: 'ds-dot ds-dot-on', 'aria-hidden': 'true' })),
-        h('span', { class: 'vx-ptt-label' }, label)
+        h('span', { class: 'vx-ptt-label' }, disabled && disabledReason ? disabledReason : label)
     );
 }
 

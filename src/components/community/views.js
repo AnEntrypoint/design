@@ -133,13 +133,14 @@ export function PageView({ title = '', html = '', author = '', updatedAt = 0, is
             ),
             isAdmin && onEdit ? h('button', { type: 'button', class: 'cm-page-edit', onclick: onEdit }, 'Edit') : null
         ),
-        h('div', {
-            class: 'cm-page-body',
-            ref: (el) => {
-                if (!el) return;
-                if (!html) { el.innerHTML = '<p class="cm-page-empty">This page is empty.</p>'; return; }
-                sanitizeHtml(html).then((clean) => { el.innerHTML = clean; }).catch((e) => { console.error('sanitizeHtml failed:', e); el.innerHTML = '<p class="cm-page-empty">This page could not be rendered.</p>'; });
-            }
-        })
+        html
+            ? h('div', {
+                class: 'cm-page-body',
+                ref: (el) => {
+                    if (!el) return;
+                    sanitizeHtml(html).then((clean) => { el.innerHTML = clean; }).catch((e) => { console.error('sanitizeHtml failed:', e); el.innerHTML = '<p class="cm-page-empty">This page could not be rendered.</p>'; });
+                }
+            })
+            : h('div', { class: 'cm-page-body' }, h('p', { class: 'cm-page-empty' }, 'This page is empty.'))
     );
 }

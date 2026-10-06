@@ -1200,53 +1200,6 @@
 .ov-mention-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ov-mention-sub { flex-shrink: 0; color: var(--fg-3); font-size: var(--fs-tiny, 12px); }
 
-.ov-emoji-root {
-    position: fixed; left: 0; top: 0;
-    z-index: var(--z-dropdown);
-    width: 280px;
-    display: flex; flex-direction: column;
-    background: var(--bg-2); color: var(--fg);
-    border: 1px solid var(--rule);
-    border-radius: var(--r-3, 14px);
-    box-shadow: var(--shadow-3);
-    outline: none; overflow: hidden;
-}
-.ov-emoji-search {
-    flex-shrink: 0; margin: var(--space-2, 8px); margin-bottom: 0;
-    padding: var(--space-1-5, 6px) var(--space-2, 8px);
-    border: 1px solid var(--rule); border-radius: var(--r-1, 8px);
-    background: var(--bg-3); color: var(--fg);
-    font: inherit; font-size: var(--fs-sm, 13px);
-}
-.ov-emoji-search:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; }
-.ov-emoji-tabs {
-    display: flex; flex-shrink: 0;
-    border-bottom: 1px solid var(--rule);
-    background: var(--bg-3);
-}
-.ov-emoji-tab {
-    flex: 1; appearance: none; border: 0; background: transparent;
-    padding: var(--space-2, 8px); cursor: pointer; font-size: var(--fs-lg, 18px);
-    border-bottom: 2px solid transparent;
-}
-.ov-emoji-tab:hover { background: var(--bg-2); }
-.ov-emoji-tab[aria-selected="true"] { border-bottom-color: var(--accent); background: var(--bg-2); }
-.ov-emoji-tab:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: -2px; }
-.ov-emoji-grid { overflow: auto; max-height: 220px; padding: var(--space-2, 8px); }
-.ov-emoji-grid-inner { display: grid; grid-template-columns: repeat(9, 1fr); gap: var(--space-1, 4px); }
-.ov-emoji-cell {
-    appearance: none; border: 0; background: transparent;
-    aspect-ratio: 1; font-size: var(--fs-lg, 18px);
-    border-radius: var(--r-1, 8px); cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-}
-.ov-emoji-cell:hover {
-    background: color-mix(in oklab, var(--accent) 18%, transparent);
-}
-.ov-emoji-cell:focus-visible {
-    background: color-mix(in oklab, var(--accent) 18%, transparent);
-    outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px;
-}
 .ov-emoji-preview {
     flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
     gap: var(--space-2); min-height: 36px;
@@ -1254,6 +1207,7 @@
     border-top: 1px solid var(--rule);
     font-size: var(--fs-sm, 13px); color: var(--fg-3);
 }
+.ov-emoji-preview:empty { display: none; }
 .ov-emoji-preview-glyph { font-size: var(--fs-lg, 18px); flex-shrink: 0; }
 .ov-emoji-preview-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 

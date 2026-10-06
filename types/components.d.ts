@@ -2471,6 +2471,9 @@ export interface PttButtonProps {
     onClick?: (...args: any[]) => any;
     /** @default 'Hold to talk' */
     label?: string;
+    /** @default false */
+    disabled?: boolean;
+    disabledReason?: any;
 }
 export declare function PttButton(props?: PttButtonProps): VNode;
 

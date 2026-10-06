@@ -248,7 +248,7 @@ export function mountCommunityApp(root, adapter = {}) {
             h('div', { class: 'vx-dock' },
                 s.webcamEnabled ? WebcamPreview({ videoStream: s.webcamStream, resolution: s.webcamResolution, fps: s.webcamFps, enabled: true }) : null,
                 s.pttUiMode === 'vad' ? VadMeter({ level: s.micRawLevel || 0, threshold: s.vadThreshold, onThresholdChange: (t) => A.setVadThreshold && A.setVadThreshold(t) }) : null,
-                s.pttUiMode === 'ptt' || s.pttUiMode == null ? PttButton({ state: s.isSpeaking ? 'live' : 'idle', mode: 'ptt', onHoldStart: () => A.pttStart && A.pttStart(), onHoldEnd: () => A.pttStop && A.pttStop() }) : null,
+                s.pttUiMode === 'ptt' || s.pttUiMode == null ? PttButton({ state: s.isSpeaking ? 'live' : 'idle', mode: 'ptt', disabled: !!s.voiceListenOnly, disabledReason: 'No microphone: listening only', onHoldStart: () => A.pttStart && A.pttStart(), onHoldEnd: () => A.pttStop && A.pttStop() }) : null,
                 VoiceControls({
                     muted: !!s.micMuted, deafened: !!s.voiceDeafened,
                     onMic: () => A.toggleMic && A.toggleMic(),
