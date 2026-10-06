@@ -2412,3 +2412,12 @@
   border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
 }
 .chat-msg-community .chat-audio { display: block; width: min(100%, 360px); }
+
+@media (pointer: coarse) {
+  .chat-msg.chat-msg-flat.chat-msg-community .chat-msg-action,
+  .chat-msg-community .chat-reactions .rxn,
+  .chat-composer .composer-btn {
+    min-width: 40px; min-height: 40px;
+    justify-content: center;
+  }
+}

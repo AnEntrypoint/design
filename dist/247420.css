@@ -9573,6 +9573,15 @@
 }
 .ds-247420 .chat-msg-community .chat-audio { display: block; width: min(100%, 360px); }
 
+@media (pointer: coarse) {
+  .ds-247420 .chat-msg.chat-msg-flat.chat-msg-community .chat-msg-action,
+  .ds-247420 .chat-msg-community .chat-reactions .rxn,
+  .ds-247420 .chat-composer .composer-btn {
+    min-width: 40px; min-height: 40px;
+    justify-content: center;
+  }
+}
+
 /* chat.css */
 
 .ds-247420 .chat {
