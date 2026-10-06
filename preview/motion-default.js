@@ -63,11 +63,11 @@
       'spacing.html': ['body > div:nth-of-type(2) > div'],
       'stamps.html': ['.stamp'],
       'theme-ink.html': ['body > *'],
-      'type-display.html': ['.t-hero, .t-h1'],
+      'type-display.html': ['.td-line, .t-hero, .t-h1'],
       'type-mono.html': ['body > div:nth-of-type(2) > div'],
       'type-prose.html': ['.prose p'],
       'type-scale.html': ['body > div:nth-of-type(2) > div'],
-      'wordmarks.html': ['body > div:nth-of-type(2) > div']
+      'wordmarks.html': ['.wm-lead, .wm-cell']
     };
     return presets[file] || null;
   }

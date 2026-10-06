@@ -3,26 +3,41 @@
 <title>wordmarks / 247420 preview</title><link rel="stylesheet" href="../colors_and_type.css">
 <link rel="stylesheet" href="../app-shell.css">
 <style>body{padding:var(--space-3-5);background:var(--panel-0);color:var(--panel-text);}
-.preview-grid > *{min-width:0;overflow:hidden;}
-@media (max-width:640px){.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
-.wm-grid{margin-top:var(--space-3);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-3) var(--space-4)}
-.wm-cell{padding:var(--space-3);display:flex;align-items:center;justify-content:center;min-height:80px}
-.wm-cell span{font-family:var(--ff-mono);font-size:var(--fs-h4);font-weight:500}
-.wm-lead span{font-size:var(--fs-h3)}
-.wm-invert{background:var(--panel-text);color:var(--panel-0)}
-.wm-invert span{font-family:var(--ff-display);font-size:var(--fs-h3)}
-.wm-note{margin-top:var(--space-3)}</style><script defer src="./motion-default.js"></script>
+.wm-sheet{margin-top:var(--space-5);display:grid;gap:var(--space-5);}
+.wm-lead{--wm-fill:27cqi;--wm-bearing:-0.04em;container-type:inline-size;display:grid;gap:var(--space-3);align-content:start;padding:var(--space-5);background:var(--ink);color:var(--paper);border:1px solid var(--rule-strong);}
+[data-theme="ink"] .wm-lead{background:color-mix(in oklab,var(--dark-fg) 16%,var(--dark-bg));}
+@media (prefers-color-scheme:dark){[data-theme="auto"] .wm-lead{background:color-mix(in oklab,var(--dark-fg) 16%,var(--dark-bg));}}
+.wm-lead-caption{color:var(--paper-3-dark);}
+.wm-lead-mark{font-family:var(--ff-display);font-size:max(var(--fs-mega),var(--wm-fill));font-weight:var(--fw-bold);line-height:var(--lh-tight);letter-spacing:var(--tr-tighter);margin-inline-start:var(--wm-bearing);white-space:nowrap;}
+.wm-lead-reduced{display:flex;align-items:baseline;gap:var(--space-4);font-family:var(--ff-display);font-weight:var(--fw-bold);color:var(--paper-3-dark);}
+.wm-lead-h3{font-size:var(--fs-h3);}
+.wm-lead-body{font-size:var(--fs-body);}
+.wm-lead-micro{font-size:var(--fs-micro);}
+.wm-family{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--space-4) var(--space-6);padding-top:var(--space-3);}
+.wm-cell{display:grid;gap:var(--space-2);align-content:start;min-width:0;font-family:var(--ff-mono);}
+.wm-cell-mark{font-size:var(--fs-h3);font-weight:var(--fw-medium);line-height:var(--lh-snug);white-space:nowrap;justify-self:start;padding-bottom:var(--space-1);border-bottom:2px solid var(--rule-strong);}
+.wm-cell-reduced{display:flex;align-items:baseline;gap:var(--space-3);color:var(--fg-2);}
+.wm-reduced-body{font-size:var(--fs-body);}
+.wm-reduced-micro{font-size:var(--fs-micro);}
+.wm-legend{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-3);margin-top:var(--space-5);}
+.wm-legend span{white-space:nowrap;}</style><script defer src="./motion-default.js"></script>
 </head><body>
 <div class="dateline"><span>247420 · BRAND · WORDMARKS</span><span class="spread"></span><span>TYPOGRAPHIC ONLY</span></div>
 <div class="ds-demo-tokens-backlink tokens-backlink">token families: ff, fs, panel, space. <a href="../preview/theme-map.html">all tokens</a></div>
 <h1 class="sr-only">Wordmarks</h1>
-<main class="wm-grid preview-grid" aria-label="Wordmark specimens">
-  <div class="wm-cell wm-lead"><span>gm</span></div>
-  <div class="wm-cell"><span>flatspace</span></div>
-  <div class="wm-cell"><span>-> thebird</span></div>
-  <div class="wm-cell"><span>spoint</span></div>
-  <div class="wm-cell"><span>zellous</span></div>
-  <div class="wm-cell wm-invert"><span>247420</span></div>
+<main class="wm-sheet" aria-label="Wordmark specimens">
+  <div class="wm-lead">
+    <div class="t-micro wm-lead-caption">SYSTEM / DISPLAY SANS</div>
+    <div class="wm-lead-mark">247420</div>
+    <div class="wm-lead-reduced"><span class="wm-lead-h3">247420</span><span class="wm-lead-body">247420</span><span class="wm-lead-micro">247420</span></div>
+  </div>
+  <div class="wm-family">
+    <div class="wm-cell"><span class="wm-cell-mark">gm</span><span class="wm-cell-reduced"><span class="wm-reduced-body">gm</span><span class="wm-reduced-micro">gm</span></span></div>
+    <div class="wm-cell"><span class="wm-cell-mark">spoint</span><span class="wm-cell-reduced"><span class="wm-reduced-body">spoint</span><span class="wm-reduced-micro">spoint</span></span></div>
+    <div class="wm-cell"><span class="wm-cell-mark">zellous</span><span class="wm-cell-reduced"><span class="wm-reduced-body">zellous</span><span class="wm-reduced-micro">zellous</span></span></div>
+    <div class="wm-cell"><span class="wm-cell-mark">flatspace</span><span class="wm-cell-reduced"><span class="wm-reduced-body">flatspace</span><span class="wm-reduced-micro">flatspace</span></span></div>
+    <div class="wm-cell"><span class="wm-cell-mark">-> thebird</span><span class="wm-cell-reduced"><span class="wm-reduced-body">-> thebird</span><span class="wm-reduced-micro">-> thebird</span></span></div>
+  </div>
 </main>
-<div class="t-meta wm-note">no pictorial marks. one mono glyph allowed as prefix.</div>
+<div class="wm-legend t-micro"><span>MARK --fs-h3</span><span>BODY --fs-body</span><span>MICRO --fs-micro</span></div>
 </body></html>
