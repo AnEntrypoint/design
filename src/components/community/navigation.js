@@ -5,7 +5,7 @@ import { Avatar, avatarInitial, avatarContrastFg } from '../content.js';
 import { UserPanel } from './presence.js';
 const h = webjsx.createElement;
 
-export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash' };
+export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash', dm: 'forum' };
 
 export function ServerIcon({ id, name, abbr, icon, active, badge, onClick } = {}) {
     return h('div', {
