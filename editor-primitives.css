@@ -1344,11 +1344,16 @@ input.ov-set-control[type="range"] { padding: 0; accent-color: var(--accent); }
     .ov-set-toggle { width: 24px; height: 24px; }
 }
 .ov-set-btn {
-    width: 100%; appearance: none; cursor: pointer;
-    background: var(--accent); color: var(--accent-fg);
+    width: 100%; appearance: none; cursor: pointer; text-align: left;
+    background: transparent; color: var(--fg);
     border: 0; border-radius: var(--r-1, 8px);
     padding: var(--space-2, 8px); font: inherit;
+    transition: background var(--dur-snap, .12s) var(--ease, ease);
 }
+.ov-set-btn:hover { background: var(--bg-3); }
+.ov-set-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: -2px; }
+.ov-set-btn.danger { color: var(--danger-ink, var(--danger)); }
+.ov-set-btn.danger:hover { background: color-mix(in oklab, var(--danger) 14%, transparent); }
 
 .ov-stgs-root {
     position: fixed; inset: 0; z-index: var(--z-modal);

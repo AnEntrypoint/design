@@ -11926,11 +11926,16 @@
     .ds-247420 .ov-set-toggle { width: 24px; height: 24px; }
 }
 .ds-247420 .ov-set-btn {
-    width: 100%; appearance: none; cursor: pointer;
-    background: var(--accent); color: var(--accent-fg);
+    width: 100%; appearance: none; cursor: pointer; text-align: left;
+    background: transparent; color: var(--fg);
     border: 0; border-radius: var(--r-1, 8px);
     padding: var(--space-2, 8px); font: inherit;
+    transition: background var(--dur-snap, .12s) var(--ease, ease);
 }
+.ds-247420 .ov-set-btn:hover { background: var(--bg-3); }
+.ds-247420 .ov-set-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: -2px; }
+.ds-247420 .ov-set-btn.danger { color: var(--danger-ink, var(--danger)); }
+.ds-247420 .ov-set-btn.danger:hover { background: color-mix(in oklab, var(--danger) 14%, transparent); }
 
 .ds-247420 .ov-stgs-root {
     position: fixed; inset: 0; z-index: var(--z-modal);
@@ -12452,6 +12457,7 @@
   padding: var(--space-2);
   overflow-y: auto;
   overflow-x: hidden;
+
 }
 .ds-247420.ds-247420 .ca-rail-channels .group {
   font-size: var(--fs-nano);
@@ -12614,7 +12620,7 @@
     position: absolute;
     z-index: calc(var(--z-drawer) + 1);
     top: 0; left: 0; bottom: 0;
-    width: 240px; min-width: 240px;
+    width: min(320px, 88vw); min-width: min(320px, 88vw);
     transform: translateX(-110%);
     transition: transform var(--dur-base, 240ms) var(--ease, ease);
     box-shadow: var(--shadow-2);

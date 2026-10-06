@@ -163,7 +163,8 @@ html.ds-247420 .ca-rail-channels {
   min-width: var(--ca-channel-column-width);
   padding: var(--space-2);
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden;
+
 }
 html.ds-247420 .ca-rail-channels .group {
   font-size: var(--fs-nano);
@@ -326,7 +327,7 @@ html.ds-247420 .ca-app .chat-empty::before {
     position: absolute;
     z-index: calc(var(--z-drawer) + 1);
     top: 0; left: 0; bottom: 0;
-    width: 240px; min-width: 240px;
+    width: min(320px, 88vw); min-width: min(320px, 88vw);
     transform: translateX(-110%);
     transition: transform var(--dur-base, 240ms) var(--ease, ease);
     box-shadow: var(--shadow-2);

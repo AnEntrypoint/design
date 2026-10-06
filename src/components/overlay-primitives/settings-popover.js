@@ -44,7 +44,7 @@ export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY
                 oninput: (e) => row.onChange && row.onChange(Number(e.target.value)),
             });
         } else if (kind === 'button') {
-            control = h('button', { type: 'button', class: 'ov-set-btn',
+            control = h('button', { type: 'button', class: 'ov-set-btn' + (row.danger ? ' danger' : ''),
                 onclick: () => row.onClick && row.onClick() }, String(label || 'Action'));
             return h('div', { class: 'ov-set-row', key: i }, control);
         } else {
