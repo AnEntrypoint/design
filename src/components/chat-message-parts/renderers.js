@@ -34,6 +34,18 @@ export const PART_RENDERERS = {
             h('img', { src: imgSrc, alt: p.alt || `embedded image from ${imgSrc}`, loading: 'lazy' }),
             p.caption ? h('span', { class: 'cap' }, p.caption) : null);
     },
+    video: (p) => {
+        const src = safeUrl(p.src);
+        if (!src) return h('span', { class: 'chat-image-blocked' }, p.alt || 'video blocked (unsafe url)');
+        return h('div', { class: 'chat-video' },
+            h('video', { src, controls: 'controls', preload: 'metadata', playsinline: 'playsinline', 'aria-label': p.alt || p.name || 'embedded video' }),
+            p.caption ? h('span', { class: 'cap' }, p.caption) : null);
+    },
+    audio: (p) => {
+        const src = safeUrl(p.src);
+        if (!src) return h('span', { class: 'chat-image-blocked' }, p.alt || 'audio blocked (unsafe url)');
+        return h('audio', { class: 'chat-audio', src, controls: 'controls', preload: 'metadata', 'aria-label': p.alt || p.name || 'embedded audio' });
+    },
     pdf:   (p) => h('div', { class: 'chat-pdf' },
         h('div', { class: 'chat-pdf-head' },
             h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('file-pdf', { size: 18 })),

@@ -156,6 +156,21 @@ export function mountCommunityApp(root, adapter = {}) {
             sv.unreadCount ? h('span', { class: 'count' }, sv.unreadCount > 99 ? '99+' : String(sv.unreadCount)) : null);
     };
 
+    const IMAGE_EXT = /\.(png|jpe?g|gif|webp|avif|svg)(\?|#|$)/i;
+    const VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i;
+    const AUDIO_EXT = /\.(mp3|wav|ogg|oga|m4a|flac|opus)(\?|#|$)/i;
+    const mediaPartFor = (m) => {
+        const trimmed = String(m.content || '').trim();
+        const url = m.media && m.media.url ? m.media.url : (/^https?:\/\/\S+$/.test(trimmed) ? trimmed : null);
+        if (!url) return null;
+        const mime = (m.media && m.media.mime) || '';
+        const name = decodeURIComponent((url.split('?')[0].split('/').pop()) || 'attachment');
+        if (mime.startsWith('image/') || (!mime && IMAGE_EXT.test(url))) return { kind: 'image', src: url, alt: name };
+        if (mime.startsWith('video/') || (!mime && VIDEO_EXT.test(url))) return { kind: 'video', src: url, name };
+        if (mime.startsWith('audio/') || (!mime && AUDIO_EXT.test(url))) return { kind: 'audio', src: url, name };
+        if (m.media) return { kind: 'file', src: url, name, size: m.media.size, kindLabel: mime.split('/').pop().toUpperCase() };
+        return null;
+    };
     const CODE_FENCE_RE = /^```([a-zA-Z0-9_+-]*)\n([\s\S]*?)\n?```\s*$/;
     const partsFromMessage = (m) => {
         const parts = [];
@@ -165,6 +180,8 @@ export function mountCommunityApp(root, adapter = {}) {
             parts.push({ kind: 'md', text: '> **@' + who + ':** ' + quoted });
         }
         const content = m.content || '';
+        const mediaPart = mediaPartFor(m);
+        if (mediaPart) { parts.push(mediaPart); return parts; }
         const fence = content.match(CODE_FENCE_RE);
         if (m.type === 'code' || fence) parts.push({ kind: 'code', code: fence ? fence[2] : content, lang: fence ? fence[1] : (m.lang || '') });
         else if (m.type === 'image') { const src = m.url || m.imageUrl || m.src; if (src) parts.push({ kind: 'image', src, alt: m.alt || '', caption: m.caption }); else if (content) parts.push({ kind: 'md', text: content }); }

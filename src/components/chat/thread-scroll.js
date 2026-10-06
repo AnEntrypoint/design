@@ -22,9 +22,10 @@ export function makeThreadAutoScroll(getCount) {
         };
         el.addEventListener('scroll', onScroll, { passive: true });
         el.addEventListener('load', onMutate, true);
+        el.addEventListener('loadedmetadata', onMutate, true);
         const mo = new MutationObserver(onMutate);
         mo.observe(el, { childList: true, subtree: true });
         toBottom();
-        return () => { mo.disconnect(); el.removeEventListener('scroll', onScroll); el.removeEventListener('load', onMutate, true); el._dsAutoScroll = null; };
+        return () => { mo.disconnect(); el.removeEventListener('scroll', onScroll); el.removeEventListener('load', onMutate, true); el.removeEventListener('loadedmetadata', onMutate, true); el._dsAutoScroll = null; };
     };
 }
