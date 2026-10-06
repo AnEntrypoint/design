@@ -12287,9 +12287,7 @@
   .ds-247420 .ds-ep-tab-close, .ds-247420 .ds-ep-btngrp-btn { transition: none; }
 }
 
-@media (max-width: 480px) {
-    .ds-247420 .ov-set-root { max-height: calc(100dvh - 72px); }
-}
+.ds-247420 .ov-set-root { max-height: calc(100dvh - 72px); }
 
 /* community-app.css */
 
