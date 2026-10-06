@@ -47,6 +47,7 @@ h2{font-size:var(--fs-h4);margin:var(--space-5) 0 var(--space-2);color:var(--fg-
 .idx-kicker{font-family:var(--ff-mono);text-transform:uppercase;letter-spacing:var(--tr-label);color:var(--fg-3);font-size:var(--fs-tiny)}
 </style>
 </head><body>
+<main>
 <div class="ds-demo-label idx-kicker">247420 / preview index</div>
 <h1>component previews</h1>
 <p class="idx-lede">${files.length} specimen pages, each rendering one primitive or token set in isolation so you can see it, measure it and copy its markup.</p>
@@ -55,6 +56,7 @@ ${sections}
 <ul>
 ${extraRows}
 </ul>
+</main>
 </body></html>
 `
 

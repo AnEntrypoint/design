@@ -2,23 +2,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expandSheets, resolveSheet, stripComments, ratchetOrThrow } from './lint-tokens.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
+const BASELINE_FILE = path.join(root, 'scripts', 'lint-rtl.baseline.json');
 
-const SHEETS = [
-    'colors_and_type.css',
-    'app-shell.css',
-    'chat.css',
-    'community.css',
-    'editor-primitives.css',
-    'gm-prose.css',
-    'src/kits/os/app-panes.css',
-    'src/kits/os/theme.css',
-];
-
-const PHYSICAL_RE = /(^|[\s;{])(padding-left|padding-right|margin-left|margin-right|border-left|border-right|border-left-width|border-right-width|border-left-color|border-right-color|left|right)\s*:/gm;
-const TEXT_ALIGN_RE = /text-align\s*:\s*(left|right)\b/g;
+const PHYSICAL_RE = /(^|[\s;{])(padding-left|padding-right|margin-left|margin-right|border-left|border-right|border-left-width|border-right-width|border-left-color|border-right-color|left|right)\s*:/g;
+const TEXT_ALIGN_RE = /(^|[\s;{])text-align\s*:\s*(left|right)\b/g;
 
 const LOGICAL_MAP = {
     'padding-left': 'padding-inline-start', 'padding-right': 'padding-inline-end',
@@ -29,44 +20,41 @@ const LOGICAL_MAP = {
     left: 'inset-inline-start', right: 'inset-inline-end',
 };
 
-function lineNumberAt(src, index) {
-    return src.slice(0, index).split('\n').length;
+const lineNumberAt = (src, index) => src.slice(0, index).split('\n').length;
+
+function scanSheet(rel) {
+    const file = resolveSheet(rel);
+    if (!fs.existsSync(file)) return [];
+    const src = stripComments(fs.readFileSync(file, 'utf8'));
+    const rawLines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    const found = [];
+    for (const m of src.matchAll(PHYSICAL_RE)) {
+        const line = lineNumberAt(src, m.index);
+        found.push(`${rel}:${line}: ${m[2]} -> ${LOGICAL_MAP[m[2]]}  ${rawLines[line - 1].trim()}`);
+    }
+    for (const m of src.matchAll(TEXT_ALIGN_RE)) {
+        const line = lineNumberAt(src, m.index);
+        found.push(`${rel}:${line}: text-align: ${m[2]} -> ${m[2] === 'left' ? 'start' : 'end'}  ${rawLines[line - 1].trim()}`);
+    }
+    return found;
 }
 
-function scanFile(relPath) {
-    const abs = path.join(root, relPath);
-    if (!fs.existsSync(abs)) return [];
-    const src = fs.readFileSync(abs, 'utf8');
-    const findings = [];
-    let m;
-    PHYSICAL_RE.lastIndex = 0;
-    while ((m = PHYSICAL_RE.exec(src))) {
-        const prop = m[2];
-        findings.push({ file: relPath, line: lineNumberAt(src, m.index), property: prop, suggest: LOGICAL_MAP[prop] });
-    }
-    TEXT_ALIGN_RE.lastIndex = 0;
-    while ((m = TEXT_ALIGN_RE.exec(src))) {
-        const dir = m[1];
-        findings.push({ file: relPath, line: lineNumberAt(src, m.index), property: `text-align: ${dir}`, suggest: `text-align: ${dir === 'left' ? 'start' : 'end'}` });
-    }
-    return findings;
+export function findPhysicalPropertyViolations() {
+    return expandSheets().flatMap(scanSheet).sort();
 }
 
-function main() {
-    const all = SHEETS.flatMap(scanFile);
-    console.log(`lint-rtl-physical-properties: scanned ${SHEETS.length} sheets, found ${all.length} physical left/right declaration(s)`);
-    const byFile = {};
-    for (const f of all) (byFile[f.file] ||= []).push(f);
-    for (const [file, findings] of Object.entries(byFile)) {
-        console.log(`\n${file} (${findings.length}):`);
-        for (const f of findings) console.log(`  line ${f.line}: ${f.property}  ->  ${f.suggest}`);
-    }
-    if (all.length) {
-        console.log(`\n[FAIL] ${all.length} physical left/right declaration(s) found: these will not mirror correctly under RTL locales`);
-        process.exitCode = 1;
-    } else {
-        console.log('\n[ok] no physical left/right declarations found');
-    }
+export function lintRtlPhysicalPropertiesOrThrow() {
+    ratchetOrThrow({
+        label: 'lint-rtl',
+        flag: '--write-rtl-baseline',
+        baselineFile: BASELINE_FILE,
+        violations: findPhysicalPropertyViolations(),
+        noun: 'physical left/right declaration(s) that will not mirror under [dir="rtl"]',
+        fix: 'Use the logical property (padding-inline-start, margin-inline-end, inset-inline-start, border-inline-start, text-align: start/end).',
+    });
 }
 
-main();
+if (process.argv[1]?.endsWith('lint-rtl-physical-properties.mjs')) {
+    try { lintRtlPhysicalPropertiesOrThrow(); }
+    catch (e) { console.error(e.message); process.exit(1); }
+}

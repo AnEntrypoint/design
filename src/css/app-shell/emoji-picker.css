@@ -61,5 +61,4 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .ov-emoji-cell { transition: background var(--dur-snap, .15s) var(--ease, ease); }
-  .ov-emoji-cell:hover { transform: none; }
 }

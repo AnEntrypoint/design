@@ -3,13 +3,13 @@
   width: 32px; height: 32px; font-size: var(--fs-pico); line-height: 1;
   padding: 0;
   display: inline-flex; align-items: center; justify-content: center;
-  background: color-mix(in oklab, var(--mascot) 22%, var(--bg-2));
+  background: color-mix(in oklab, var(--alt) 22%, var(--bg-2));
   border-radius: 50%; flex-shrink: 0;
   overflow: hidden;
 }
 .aicat-meta { display: flex; flex-direction: column; font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--fg-3); }
 
-.aicat-meta .name { color: var(--mascot-deep, var(--mascot)); font-weight: var(--fw-medium, 500); }
+.aicat-meta .name { color: var(--alt-deep, var(--alt)); font-weight: var(--fw-medium, 500); }
 
 .aicat-portrait-head { gap: var(--space-2-5); }
 .aicat-face-inline { margin-right: var(--space-1); }

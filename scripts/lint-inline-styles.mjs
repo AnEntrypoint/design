@@ -13,7 +13,7 @@ const SCAN_EXT = new Set(['.js', '.mjs', '.html']);
 const SKIP_DIRS = new Set(['node_modules', 'vendor', 'dist']);
 const SELF_CONTAINED_CDN_COMPONENTS_RE = /^src\/components\/game-editor-kit\//;
 
-const LAYOUT_RE = /grid-template|display:\s*grid|display:\s*flex|width:|height:|padding:|margin:|font-size:/;
+const LAYOUT_RE = /grid-template|display:\s*(?:grid|flex)|(?:min-|max-)?(?:width|height):|(?:padding|margin)(?:-[a-z]+)*:|font-size:|letter-spacing:|text-transform:|font-family:/;
 
 const DYNAMIC_NON_LAYOUT_DECLARATIONS = [
     /^--[\w-]+:/,

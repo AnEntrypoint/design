@@ -4,7 +4,7 @@ import { ThemeToggle } from '../theme-toggle.js';
 import { applyAccent, getAccent, applyDensity, getDensity, onThemeChange } from '../../theme.js';
 import { section } from './shared.js';
 
-const ACCENTS = ['default', 'green', 'purple', 'mascot'];
+const ACCENTS = ['default', 'green', 'purple', 'alt'];
 const DENSITIES = ['compact', 'comfortable', 'spacious'];
 
 export const themePage = makePage((ctx) => {

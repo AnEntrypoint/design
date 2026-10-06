@@ -165,6 +165,7 @@
 .ds-ep-tree-row {
     display: flex; align-items: center; gap: var(--space-1-75);
     padding: var(--space-1) var(--space-2) var(--space-1) 0;
+    padding-inline-start: calc(var(--tree-depth, 0) * var(--tree-indent) + var(--tree-base-indent));
     border-radius: var(--r-1, 8px);
     cursor: pointer;
     color: var(--panel-text-2);
@@ -196,6 +197,7 @@
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
+.ds-ep-tree-item.selected > .ds-ep-tree-row .ds-ep-tree-tag { color: inherit; }
 .ds-ep-tree-children { display: flex; flex-direction: column; }
 
 .ds-ep-propgrid {
@@ -445,7 +447,7 @@
     text-align: center;
 }
 .ds-ep-json-k { color: var(--sky, var(--accent)); }
-.ds-ep-json-s { color: var(--green-2, var(--green)); }
+.ds-ep-json-s { color: var(--green); }
 .ds-ep-json-n { color: var(--flame, var(--warn)); }
 .ds-ep-json-b { color: var(--purple-2, var(--purple)); }
 .ds-ep-json-z { color: var(--panel-text-3, var(--fg-3)); font-style: italic; }

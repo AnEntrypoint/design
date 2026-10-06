@@ -275,9 +275,9 @@ textarea::placeholder {
 }
 
 .stamp.ink { background: var(--ink); border-color: var(--paper); color: var(--paper); }
-.stamp.acid { background: var(--accent); border-color: var(--accent-ink); color: var(--accent-fg); }
+.stamp.brand { background: var(--accent); border-color: var(--accent-ink); color: var(--accent-fg); }
 .stamp.purple { border-color: var(--purple-2); color: var(--purple-2); }
-.stamp.mascot { border-color: var(--mascot); color: var(--mascot-deep); }
+.stamp.alt { border-color: var(--alt); color: var(--alt-deep); }
 
 .btn-stamp {
   display: inline-block; cursor: pointer;
@@ -291,10 +291,10 @@ textarea::placeholder {
   transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
 }
 .btn-stamp:hover { background: var(--panel-hover); }
-.btn-stamp.acid { border-color: var(--accent-ink); color: var(--accent-ink); }
-.btn-stamp.acid:hover { background: var(--accent-tint); }
+.btn-stamp.brand { border-color: var(--accent-ink); color: var(--accent-ink); }
+.btn-stamp.brand:hover { background: var(--accent-tint); }
 .btn-stamp.purple { border-color: var(--purple-2); color: var(--purple-2); }
-.btn-stamp.mascot { border-color: var(--mascot); color: var(--mascot-deep); }
+.btn-stamp.alt { border-color: var(--alt); color: var(--alt-deep); }
 
 hr.rule, hr.rule-double, hr.rule-dotted {
   width: 100%; height: 0; border: 0;

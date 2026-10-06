@@ -22,7 +22,7 @@ while being invisible to both these gates and to any consumer that `<link>`s
 ## Token taxonomy (three layers)
 
 1. **Palette**: the raw brand colors. `--paper`, `--ink`, `--green`,
-   `--green-2`, `--purple`, `--mascot`, `--sun`, `--flame`, `--sky`, plus their
+   `--green-2`, `--purple`, `--alt`, `--sun`, `--flame`, `--sky`, plus their
    `-2`/`-deep`/`-tint` variants. These are the only place hex values live.
 2. **Semantic surfaces**: what the palette *means* in context. `--bg`,
    `--bg-2`, `--bg-3` (surfaces), `--fg`, `--fg-2`, `--fg-3` (text), `--accent`,
@@ -35,7 +35,7 @@ while being invisible to both these gates and to any consumer that `<link>`s
    fallback and no definition anywhere; now defined). A theme rebinds these;
    components read them. Also: `--on-accent` / `--on-color` (foreground on a
    saturated fill), `--scrim` / `--scrim-strong` / `--scrim-media` (overlay
-   backdrops), `--cat-green`...`--cat-sky` (category color-coding),
+   backdrops), `--category-green`...`--category-sky` (category color-coding),
    `--shadow-1..3` / `--shadow-overlay` (elevation, derived from `--fg` via
    `color-mix()` so it retints automatically per theme rather than needing
    separate per-theme shadow tokens).
@@ -69,7 +69,7 @@ attributes that select tokens. All are independent and composable:
 | Attribute        | Values                                              | Effect |
 |------------------|------------------------------------------------------|--------|
 | `data-theme`     | `auto` `paper` `ink` `dark` `thebird` `github-dark`   | Surface theme. `auto` follows OS `prefers-color-scheme`. `dark` is a full alias of `ink` (same CSS block, both names accepted for it). `light` is **not** a valid value: it has never existed and silently no-ops to the root default (which happens to look like `paper`); use `paper`. |
-| `data-accent`    | `acid` `green` `purple` `mascot`                      | Accent hue. Absent = the neutral default (`--accent` `#262626`); the four presets recolor it: `acid` is the brand green `#247420`, `green`, `purple` and `mascot` are neutral greys kept under their historical names. |
+| `data-accent`    | `brand` `green` `purple` `alt`                       | Accent hue. Absent = the neutral default (`--accent` `#262626`); the four presets recolor it: `brand` is the brand green `#247420`, `alt` a neutral grey. The former names `acid` and `mascot` are still accepted as aliases. |
 | `data-density`   | `compact` `comfortable` `spacious`                    | Scales `--density` -> padding/gutters/spacing, and switches control heights to a discrete per-tier px table. |
 | `data-typescale` | `sm` `lg`                                             | Bumps body/lg/xl reading sizes. |
 
@@ -111,7 +111,7 @@ attribute. The retune count genuinely depends on which kind of theme:
   `[data-theme="auto"]` under `prefers-color-scheme: dark`) retunes **~36**
   tokens: `--bg/-2/-3`, `--fg/-2/-3`, every `--panel-*`, `--accent/-fg/-ink/
   -bright/-tint`, `--danger`/`--flame`/`--amber`/`--warn`/`--warn-fg`/`--sky`,
-  `--mascot-deep`, `--purple-2`, `--green`, both `--cat-*-ink` pairs, and all
+  `--alt-deep`, `--purple-2`, `--green`, both `--category-*-ink` pairs, and all
   five `--code-*` syntax tokens. Every one of those needs its own AA-contrast
   check against the new dark surface, not just the four in the example below.
   `lint-dark-parity` (run by `npm run lint`) fails the build if the
@@ -124,7 +124,7 @@ attribute. The retune count genuinely depends on which kind of theme:
   color-scheme: dark;
   --bg: #1a1626; --bg-2: #241d33; --bg-3: #2e2630;
   --fg: #efe9f5; --fg-2: #c9c0d6; --fg-3: #8f86a0;
-  --accent: var(--mascot); --accent-fg: var(--ink);
+  --accent: var(--alt); --accent-fg: var(--ink);
   /* ...and the other ~31 dark-context tokens listed above, each hand-verified
      against this specific --bg/--bg-2/--bg-3, not copied from --ink's values. */
 }
@@ -145,7 +145,7 @@ list and its measured contrast ratios.
 
 One `[data-accent="X"]` block setting `--accent`, `--accent-bright`,
 `--accent-fg`, `--panel-accent`. Add the name to `VALID_ACCENT` in `theme.js`
-(`acid`/`green`/`purple`/`mascot` today; a name missing from that list is
+(`brand`/`green`/`purple`/`alt` today; a name missing from that list is
 silently cleared back to the default instead of applied).
 An accent preset that hardcodes a light-tuned fill needs its own
 `[data-theme="ink"][data-accent="X"]` (and `[data-theme="dark"][data-accent="X"]`)

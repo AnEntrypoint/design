@@ -7700,6 +7700,11 @@
           "name": "ariaLabel",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "getValue",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""

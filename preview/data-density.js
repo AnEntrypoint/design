@@ -16,7 +16,7 @@ function App() {
     return h('div', {},
         section('PhaseWalk',
             PhaseWalk({ reached: [true, true, true, false, false] }),
-            h('div', { style: 'margin-top:16px' },
+            h('div', { class: 'ds-mt-3' },
                 PhaseWalk({ reached: [true, true, false, false, false], gapKinds: ['EMIT'] }))),
 
         section('TreeNode',
@@ -40,7 +40,7 @@ function App() {
             h('div', { class: 'pv-tile-row' },
                 StatTile({ val: '98.4%', lbl: 'success rate', cls: 'rate-big' }),
                 StatTile({ val: '1.6%', lbl: 'error rate', cls: 'err-rate' })),
-            h('div', { style: 'margin-top:12px' }, StatsGrid({ items: [] }))),
+            h('div', { class: 'ds-mt-2-75' }, StatsGrid({ items: [] }))),
 
         section('SubGrid',
             SubGrid({ items: [
@@ -48,7 +48,7 @@ function App() {
                 { count: 4, label: 'rs-plugkit' },
                 { count: 31, label: 'gm-log' },
             ] }),
-            h('div', { style: 'margin-top:12px' }, SubGrid({ items: [] }))),
+            h('div', { class: 'ds-mt-2-75' }, SubGrid({ items: [] }))),
 
         section('SessionRow',
             SessionRow({
@@ -71,7 +71,7 @@ function App() {
                 { ts: '12:04:02', sub: 'plugkit', tone: 'var(--success)', event: 'dispatch', preview: '{"verb":"recall","ms":220}' },
                 { ts: '12:04:03', sub: 'gm-log', tone: 'var(--warn)', event: 'deviation', preview: '{"kind":"complete-chain-poll"}' },
             ] }, ),
-            h('div', { style: 'margin-top:12px' }, LiveLog({ entries: [] }))),
+            h('div', { class: 'ds-mt-2-75' }, LiveLog({ entries: [] }))),
 
         section('Badge / Chip tones',
             h('div', { class: 'pv-tag-row' },

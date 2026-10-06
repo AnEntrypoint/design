@@ -4,7 +4,7 @@ import { applyTheme, getTheme } from 'ds/theme.js';
 
 
 const THEME_ORDER = ['auto', 'paper', 'ink'];
-const CAT = ['var(--cat-green)', 'var(--cat-purple)', 'var(--cat-mascot)', 'var(--cat-sun)', 'var(--cat-flame)', 'var(--cat-sky)'];
+const CAT = ['var(--category-green)', 'var(--category-purple)', 'var(--category-alt)', 'var(--category-sun)', 'var(--category-flame)', 'var(--category-sky)'];
 const color = (id) => CAT[Math.abs([...String(id || '')].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)) % CAT.length];
 
 const channels = [

@@ -5,7 +5,8 @@ const ACCENT_KEY = '247420:accent';
 const DENSITY_KEY = '247420:density';
 const LOCALE_KEY = '247420:locale';
 const VALID = new Set(['auto', 'paper', 'ink', 'dark', 'thebird', 'github-dark']);
-const VALID_ACCENT = new Set(['green', 'purple', 'mascot', 'acid']);
+const LEGACY_ACCENT = { acid: 'brand', mascot: 'alt' };
+const VALID_ACCENT = new Set(['green', 'purple', 'alt', 'brand', ...Object.keys(LEGACY_ACCENT)]);
 const VALID_DENSITY = new Set(['compact', 'comfortable', 'spacious']);
 const listeners = new Set();
 let _mq = null;
@@ -88,7 +89,8 @@ function readStoredKey(key, valid) {
     try { const v = window.localStorage.getItem(key); return valid.has(v) ? v : null; } catch { return null; }
 }
 
-export function applyAccent(accent) {
+export function applyAccent(requested) {
+    const accent = LEGACY_ACCENT[requested] || requested;
     if (!isBrowser()) return accent;
     if (VALID_ACCENT.has(accent)) {
         document.documentElement.setAttribute('data-accent', accent);

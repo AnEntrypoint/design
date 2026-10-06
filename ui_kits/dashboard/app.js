@@ -109,7 +109,7 @@ function App() {
                 ] },
                 { group: 'env', items: [
                     { glyph: h('span', { class: 'ds-dot ds-dot-on' }), label: 'production', count: 'eu', key: 'p', color: 'var(--panel-accent)', href: '#p-environment' },
-                    { glyph: h('span', { class: 'ds-dot ds-dot-off' }), label: 'staging',   count: 'us', key: 's', color: 'var(--mascot)', href: '#p-environment' }
+                    { glyph: h('span', { class: 'ds-dot ds-dot-off' }), label: 'staging',   count: 'us', key: 's', color: 'var(--alt)', href: '#p-environment' }
                 ] }
             ]
         }),

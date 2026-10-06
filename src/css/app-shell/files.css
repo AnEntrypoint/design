@@ -96,7 +96,7 @@
   color: var(--fg-2);
 }
 .ds-file-row[data-file-type="dir"] .ds-file-icon { color: var(--accent-ink); }
-.ds-file-row[data-file-type="image"] .ds-file-icon { color: var(--mascot); }
+.ds-file-row[data-file-type="image"] .ds-file-icon { color: var(--alt); }
 .ds-file-row[data-file-type="video"] .ds-file-icon { color: var(--purple-2); }
 .ds-file-row[data-file-type="audio"] .ds-file-icon { color: var(--sky); }
 .ds-file-row[data-file-type="code"] .ds-file-icon { color: var(--green-2); }
@@ -239,7 +239,7 @@
 .ds-file-cell-thumb { width: 100%; height: 100%; object-fit: cover; }
 
 .ds-file-cell[data-file-type="dir"] .ds-file-icon { color: var(--accent-ink); }
-.ds-file-cell[data-file-type="image"] .ds-file-icon { color: var(--mascot); }
+.ds-file-cell[data-file-type="image"] .ds-file-icon { color: var(--alt); }
 .ds-file-cell[data-file-type="video"] .ds-file-icon { color: var(--purple-2); }
 .ds-file-cell[data-file-type="audio"] .ds-file-icon { color: var(--sky); }
 .ds-file-cell[data-file-type="code"] .ds-file-icon { color: var(--green-2); }

@@ -113,7 +113,7 @@ export function DevRow({ ts, event, sess, operation, residuals } = {}) {
 
 export function LiveLogEntry({ ts, sub, tone, event, preview } = {}) {
     const tagStyle = tone
-        ? `background:color-mix(in oklab, ${tone} 18%, transparent);color:${tone}`
+        ? `background:color-mix(in oklab, ${tone} 18%, transparent);color:color-mix(in oklab, ${tone} 70%, var(--fg))`
         : null;
     return h('div', { class: 'ds-live-log-entry' },
         h('span', { class: 'ds-live-log-ts' }, ts),

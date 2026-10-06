@@ -5,37 +5,32 @@
 <style>body{padding:var(--space-3-5);background:var(--panel-0);color:var(--panel-text);}
 .preview-grid > *{min-width:0;overflow:hidden;}
 .preview-grid > *>*{overflow-wrap:anywhere;}
-@media (max-width:640px){.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}:root:root .pv1{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:var(--space-3)}:root:root .pv2{background:var(--warn);color:var(--on-color);padding:var(--space-2-75);min-height:90px}:root:root .pv3{background:var(--green);color:var(--panel-0);padding:var(--space-2-75);min-height:90px}:root:root .pv4{background:var(--panel-text-2);color:var(--panel-0);padding:var(--space-2-75);min-height:90px}:root:root .pv5{background:var(--panel-text-3);color:var(--on-color);padding:var(--space-2-75);min-height:90px}</style><script defer src="./motion-default.js"></script>
+@media (max-width:640px){.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}:root:root .pv1{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:var(--space-3)}:root:root .pv-swatch{color:var(--panel-0);padding:var(--space-2-75);min-height:90px}:root:root .pv-swatch .t-label,:root:root .pv-swatch .t-micro{color:var(--panel-0)}:root:root .pv-swatch .t-micro{margin-top:var(--space-1)}:root:root .pv2{background:var(--sky)}:root:root .pv3{background:var(--warn)}:root:root .pv4{background:var(--green)}:root:root .pv5{background:var(--panel-text-2)}:root:root .pv6{background:var(--panel-text-3)}</style><script defer src="./motion-default.js"></script>
 </head><body>
 <div class="dateline"><span>247420 · COLORS · SEMANTIC</span><span class="spread"></span><span>05 TOKENS</span></div>
-<div class="ds-demo-tokens-backlink tokens-backlink">tokens used here: green, on-color, panel, sky, space, warn. <a href="../preview/theme-map.html">all tokens</a></div>
+<div class="ds-demo-tokens-backlink tokens-backlink">token families: green, panel, sky, space, warn. <a href="../preview/theme-map.html">all tokens</a></div>
 
 <h1 class="sr-only">Colors semantic</h1>
 <main aria-label="Colors semantic specimens"><div class="preview-grid pv1">
-  <div style="background:var(--sky);color:var(--paper);padding:12px;min-height:90px">
-    <div class="t-label" style="color:var(--paper)">LINK</div>
-    <div class="t-micro" style="margin-top:4px;color:var(--paper)">#404040</div>
-    <div class="t-micro" style="color:var(--paper)">--sky · prose only</div>
+  <div class="pv-swatch pv2">
+    <div class="t-label">LINK</div>
+    <div class="t-micro">--sky · prose only</div>
   </div>
-  <div class="pv2">
-    <div class="t-label" style="color:var(--on-color)">WARN</div>
-    <div class="t-micro" style="margin-top:4px;color:var(--on-color)">#C41C0C</div>
-    <div class="t-micro" style="color:var(--on-color)">--warn · destructive</div>
+  <div class="pv-swatch pv3">
+    <div class="t-label">WARN</div>
+    <div class="t-micro">--warn · destructive</div>
   </div>
-  <div class="pv3">
-    <div class="t-label" style="color:var(--panel-0)">ON</div>
-    <div class="t-micro" style="margin-top:4px;color:var(--panel-0)">#247420</div>
-    <div class="t-micro" style="color:var(--panel-0)">--live · success · up</div>
+  <div class="pv-swatch pv4">
+    <div class="t-label">ON</div>
+    <div class="t-micro">--green · success · up</div>
   </div>
-  <div class="pv4">
-    <div class="t-label" style="color:var(--panel-0)">INK-2</div>
-    <div class="t-micro" style="margin-top:4px;color:var(--panel-0)">var(--panel-text-2)</div>
-    <div class="t-micro" style="color:var(--panel-0)">--ink-2 · secondary fg</div>
+  <div class="pv-swatch pv5">
+    <div class="t-label">INK-2</div>
+    <div class="t-micro">--ink-2 · secondary fg</div>
   </div>
-  <div class="pv5">
-    <div class="t-label" style="color:var(--on-color)">INK-3</div>
-    <div class="t-micro" style="margin-top:4px;color:var(--on-color)">var(--panel-text-3)</div>
-    <div class="t-micro" style="color:var(--on-color)">--ink-3 · metadata</div>
+  <div class="pv-swatch pv6">
+    <div class="t-label">INK-3</div>
+    <div class="t-micro">--ink-3 · metadata</div>
   </div>
 </div>
 </main>

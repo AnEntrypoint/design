@@ -81,7 +81,7 @@
   background: color-mix(in oklab, var(--fg) 5%, var(--bg-2));
   border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
 }
-.chat-pdf-head .glyph { font-size: var(--fs-lg); color: var(--mascot); flex-shrink: 0; }
+.chat-pdf-head .glyph { font-size: var(--fs-lg); color: var(--alt); flex-shrink: 0; }
 .chat-pdf-head .name { flex: 1; font-weight: 600; font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chat-pdf-head .size { font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--fg-3); }
 .chat-pdf-head a { color: var(--accent-ink); font-family: var(--ff-mono); font-size: var(--fs-xs); text-decoration: none; }

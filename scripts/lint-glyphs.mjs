@@ -22,6 +22,10 @@ const DELIBERATE_GLYPH_CATALOGS = new Set([
 
 const GLYPH_RE = /[●○◆◉◈▸▾▴◀▶★☆✓✗✕✖✔⟶⇒•◦‣◔↓↑→←⏸⏭ℹ⚠⚒◈▷▭▰◎◐▢↗◌▤▦♪§◫⊞❖✷✢⟳↻↺⥁⟲⌛⏳♻\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
 
+const DASH_DIRS = [...SCAN_DIRS, 'docs'];
+const DASH_EXT = new Set([...SCAN_EXT, '.md', '.yaml', '.yml']);
+const DASH_RE = /[\u2013\u2014]|&(?:mdash|ndash);|&#(?:0*8211|0*8212);|&#x0*201[34];/i;
+
 const ALLOW = {};
 
 function isAllowed(rel, line) {
@@ -41,6 +45,20 @@ export function findGlyphViolations() {
             if (GLYPH_RE.test(line) && !isAllowed(rel, line)) {
                 violations.push(`${rel}:${i + 1}: ${line.trim().slice(0, 100)}`);
             }
+        });
+    }
+    return [...violations, ...findDashViolations()];
+}
+
+function findDashViolations() {
+    const rootMarkdown = fs.readdirSync(root).filter((n) => n.endsWith('.md')).map((n) => path.join(root, n));
+    const files = [...walkManyDirs(DASH_DIRS.map((d) => path.join(root, d)), DASH_EXT), ...rootMarkdown];
+    const violations = [];
+    for (const file of files) {
+        const rel = path.relative(root, file).split(path.sep).join('/');
+        if (DELIBERATE_GLYPH_CATALOGS.has(rel)) continue;
+        fs.readFileSync(file, 'utf8').split(/\r?\n/).forEach((line, i) => {
+            if (DASH_RE.test(line)) violations.push(`${rel}:${i + 1}: em/en dash (raw or entity): ${line.trim().slice(0, 100)}`);
         });
     }
     return violations;

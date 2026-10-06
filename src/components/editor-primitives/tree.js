@@ -49,7 +49,7 @@ export function TreeItem({ label, glyph, tag, depth = 0, selected = false, expan
     },
         h('div', {
             class: 'ds-ep-tree-row',
-            style: 'padding-left:calc(' + depth + ' * var(--tree-indent,12px) + var(--tree-base-indent,6px))',
+            style: '--tree-depth:' + depth,
             tabindex: selected ? '0' : '-1',
             onclick: () => onSelect && onSelect(),
             onkeydown: onRowKeyDown

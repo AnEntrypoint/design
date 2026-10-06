@@ -34,6 +34,21 @@
 .tokens-backlink { font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--fg-3); margin-top: var(--space-hair); }
 .tokens-backlink a { color: inherit; }
 
+.ds-mt-2 { margin-top: var(--space-2); }
+.ds-mt-2-75 { margin-top: var(--space-2-75); }
+.ds-mt-3 { margin-top: var(--space-3); }
+.ds-mt-3-5 { margin-top: var(--space-3-5); }
+.ds-mt-4 { margin-top: var(--space-4); }
+.ds-mb-1-75 { margin-bottom: var(--space-1-75); }
+.ds-mb-2-5 { margin-bottom: var(--space-2-5); }
+.ds-demo-eyebrow { font-family: var(--ff-mono); text-transform: uppercase; letter-spacing: var(--tr-label); color: var(--fg-3); }
+.ds-demo-desc-mono { font-family: var(--ff-mono); margin-top: var(--space-2); }
+.ds-demo-inverse { background: var(--panel-text); padding: var(--space-2-75) var(--space-3-5); }
+.ds-demo-inverse .dateline, .ds-demo-inverse .dateline span { color: var(--panel-0); }
+.ds-demo-max-wide { --demo-max: 880px; max-width: var(--demo-max); }
+.ds-demo-max-narrow { --demo-max: 680px; max-width: var(--demo-max); }
+.ds-demo-btn-icon { vertical-align: -3px; margin-inline-end: var(--space-1); }
+
 @media (max-width: 768px) {
   .ds-catalog { flex-direction: column; }
   .ds-catalog-side { width: 100%; height: auto; position: static; border-right: 0; border-bottom: var(--bw-hair) solid var(--rule); }

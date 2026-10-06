@@ -792,7 +792,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
 .chat-msg-flat.them:has(.chat-bubble.chat-code),
 .chat-msg-flat.them:has(.chat-tool):hover,
 .chat-msg-flat.them:has(.chat-bubble.chat-code):hover { background: none; }
-.chat-msg-flat:hover .chat-bubble { transform: none; box-shadow: none; background: none; }
+.chat-msg-flat:hover .chat-bubble { background: none; }
 .chat-msg-flat .chat-avatar { display: none; }
 
 .chat-msg .chat-tool {

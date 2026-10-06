@@ -1,7 +1,7 @@
 .ds-cli-cmt .cmd { color: var(--paper-3-dark); }
 .ds-cli-out .cmd { color: var(--paper-2); }
 .ds-cli-ok .prompt, .ds-cli-ok .cmd { color: var(--success-on-ink); }
-.ds-cli-warn .prompt, .ds-cli-warn .cmd { color: var(--mascot-on-ink); }
+.ds-cli-warn .prompt, .ds-cli-warn .cmd { color: var(--alt-on-ink); }
 .ds-cli-log .prompt { color: var(--paper-3-dark); }
 .ds-cli-log .cmd { color: var(--paper-2); font-family: var(--ff-mono); }
 

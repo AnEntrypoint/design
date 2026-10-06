@@ -3056,6 +3056,7 @@ export interface ResizeHandleProps {
     axis?: string;
     onResize?: (...args: any[]) => any;
     ariaLabel?: any;
+    getValue?: any;
 }
 export declare function ResizeHandle(props?: ResizeHandleProps): VNode;
 

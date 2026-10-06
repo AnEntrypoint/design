@@ -21,18 +21,18 @@ const MODES = [
     { name: 'dark', selectors: [ROOT_SELECTOR, DARK_SELECTORS] },
     { name: 'auto-dark', selectors: [ROOT_SELECTOR, DARK_AUTO_SELECTOR] },
     { name: 'herd-ink', selectors: [ROOT_SELECTOR, '[data-theme="herd-ink"]'] },
-    { name: 'dark+acid', selectors: [ROOT_SELECTOR, DARK_SELECTORS, '[data-theme="ink"][data-accent="acid"],[data-theme="dark"][data-accent="acid"]'] },
+    { name: 'dark+brand', selectors: [ROOT_SELECTOR, DARK_SELECTORS, '[data-theme="ink"][data-accent="brand"],[data-theme="dark"][data-accent="brand"]'] },
     { name: 'dark+purple', selectors: [ROOT_SELECTOR, DARK_SELECTORS, '[data-theme="ink"][data-accent="purple"],[data-theme="dark"][data-accent="purple"]'] },
     { name: 'dark+green', selectors: [ROOT_SELECTOR, DARK_SELECTORS, '[data-theme="ink"][data-accent="green"],[data-theme="dark"][data-accent="green"]'] },
-    { name: 'light+acid', selectors: [ROOT_SELECTOR, '[data-accent="acid"]'] },
+    { name: 'light+brand', selectors: [ROOT_SELECTOR, '[data-accent="brand"]'] },
     { name: 'light+green', selectors: [ROOT_SELECTOR, '[data-accent="green"]'] },
     { name: 'light+purple', selectors: [ROOT_SELECTOR, '[data-accent="purple"]'] },
-    { name: 'light+mascot', selectors: [ROOT_SELECTOR, '[data-accent="mascot"]'] },
+    { name: 'light+alt', selectors: [ROOT_SELECTOR, '[data-accent="alt"]'] },
 ];
 
 const TEXT_TOKENS_ON_PANEL_SURFACES = [
     '--fg', '--fg-2', '--fg-3', '--accent-ink', '--flame', '--warn', '--danger', '--success',
-    '--amber', '--green', '--sky', '--mascot-deep', '--cat-green-ink', '--cat-purple-ink', '--cat-mascot-ink',
+    '--amber', '--green', '--sky', '--alt-deep', '--category-green-ink', '--category-purple-ink', '--category-alt-ink',
     '--code-string', '--code-keyword', '--code-fn', '--code-str-alt', '--code-num',
 ];
 const PANEL_SURFACES = ['--bg', '--bg-2'];
@@ -47,7 +47,7 @@ const FILL_PAIRS = [
     ['--ink', '--sun'],
     ['--green-deep', '--green-tint'],
     ['--purple-deep', '--purple-tint'],
-    ['--mascot-chip-fg', '--mascot-tint'],
+    ['--alt-chip-fg', '--alt-tint'],
 ];
 
 const UI_PAIRS = [

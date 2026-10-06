@@ -16,13 +16,13 @@ export const THEME_MODES = [
     { name: 'thebird', theme: 'thebird', scheme: 'light' },
     { name: 'herd', theme: 'herd', scheme: 'light' },
     { name: 'herd-ink', theme: 'herd-ink', scheme: 'light' },
-    { name: 'dark+acid', theme: 'dark', scheme: 'light', accent: 'acid' },
+    { name: 'dark+brand', theme: 'dark', scheme: 'light', accent: 'brand' },
     { name: 'dark+purple', theme: 'dark', scheme: 'light', accent: 'purple' },
     { name: 'dark+green', theme: 'dark', scheme: 'light', accent: 'green' },
-    { name: 'light+acid', theme: 'paper', scheme: 'light', accent: 'acid' },
+    { name: 'light+brand', theme: 'paper', scheme: 'light', accent: 'brand' },
     { name: 'light+green', theme: 'paper', scheme: 'light', accent: 'green' },
     { name: 'light+purple', theme: 'paper', scheme: 'light', accent: 'purple' },
-    { name: 'light+mascot', theme: 'paper', scheme: 'light', accent: 'mascot' },
+    { name: 'light+alt', theme: 'paper', scheme: 'light', accent: 'alt' },
 ];
 
 const SURFACES = ['--bg', '--bg-2', '--bg-3'];
@@ -30,17 +30,17 @@ const SURFACE_AGNOSTIC_FILL = /--fg|badge|chip|pill|btn-primary|btn-ghost|ds-ico
 
 const BUTTON_CLASSES = [
     'btn', 'btn-primary', 'btn-ghost', 'btn-link', 'btn-primary danger', 'btn-primary is-armed', 'btn is-armed',
-    'btn-stamp', 'btn-stamp acid', 'btn-stamp purple', 'btn-stamp mascot', 'btn-sm btn-primary', 'btn-lg btn-primary',
+    'btn-stamp', 'btn-stamp brand', 'btn-stamp purple', 'btn-stamp alt', 'btn-sm btn-primary', 'btn-lg btn-primary',
     'ds-icon-btn ds-icon-btn-primary', 'ds-icon-btn ds-icon-btn-danger', 'ds-icon-btn ds-icon-btn-ghost',
 ];
-const STAMP_CLASSES = ['stamp', 'stamp ink', 'stamp acid', 'stamp purple', 'stamp mascot'];
-const BADGE_TONES = ['green', 'success', 'live', 'flame', 'error', 'wip', 'neutral', 'purple', 'mascot', 'sun', 'yellow', 'blue', 'orange'];
-const CHIP_TONES = ['green', 'success', 'ok', 'live', 'flame', 'error', 'miss', 'warn', 'wip', 'neutral', 'accent', 'dim', 'purple', 'mascot', 'sun', 'yellow', 'blue', 'orange', 'warning', 'info', 'fail', 'skip', 'unknown'];
+const STAMP_CLASSES = ['stamp', 'stamp ink', 'stamp brand', 'stamp purple', 'stamp alt'];
+const BADGE_TONES = ['green', 'success', 'live', 'flame', 'error', 'wip', 'neutral', 'purple', 'alt', 'sun', 'yellow', 'blue', 'orange'];
+const CHIP_TONES = ['green', 'success', 'ok', 'live', 'flame', 'error', 'miss', 'warn', 'wip', 'neutral', 'accent', 'dim', 'purple', 'alt', 'sun', 'yellow', 'blue', 'orange', 'warning', 'info', 'fail', 'skip', 'unknown'];
 const ALERT_KINDS = ['info', 'success', 'warn', 'error'];
 const TEXT_TOKENS = [
     '--fg', '--fg-2', '--fg-3', '--accent-ink', '--flame', '--warn', '--danger', '--success', '--amber', '--green', '--sky',
-    '--code-string', '--code-keyword', '--code-fn', '--code-str-alt', '--code-num', '--mascot-deep',
-    '--cat-green-ink', '--cat-purple-ink', '--cat-mascot-ink',
+    '--code-string', '--code-keyword', '--code-fn', '--code-str-alt', '--code-num', '--alt-deep',
+    '--category-green-ink', '--category-purple-ink', '--category-alt-ink',
 ];
 const TEXT_TOKENS_FIT_FOR_BG_3 = ['--fg', '--fg-2', '--fg-3'];
 

@@ -64,15 +64,10 @@
   .btn-lg, .btn-lg.btn-primary, .btn-lg.btn-ghost { min-height: 44px; }
 }
 
-[data-typescale="app"] .btn:hover,
-[data-typescale="app"] .btn-primary:hover,
-[data-typescale="app"] .btn-ghost:hover { transform: none; box-shadow: none; }
 [data-typescale="app"] .btn:active,
 [data-typescale="app"] .btn-primary:active,
 [data-typescale="app"] .btn-ghost:active { transform: none; }
 [data-typescale="app"] .panel { transition: box-shadow var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease); }
-[data-typescale="app"] a.row:hover .meta,
-[data-typescale="app"] .row[role="button"]:hover .meta { transform: none; }
 
 .ds-icon-btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -119,7 +114,7 @@
 .ds-badge.ds-badge--sm { min-width: var(--icon-sm); height: var(--icon-sm); padding: 0 var(--space-2); font-size: var(--fs-nano); }
 .ds-badge.ds-badge--lg { min-width: 22px; height: 22px; padding: 0 var(--space-2); font-size: var(--fs-tiny); }
 .ds-badge.tone-green, .ds-badge.tone-success {
-  background: color-mix(in oklab, var(--cat-green-ink) 16%, var(--bg)); color: var(--cat-green-ink);
+  background: color-mix(in oklab, var(--category-green-ink) 16%, var(--bg)); color: var(--category-green-ink);
 }
 
 .ds-badge.tone-live {
@@ -132,7 +127,7 @@
   background: var(--bg-3); color: var(--fg-2);
 }
 .ds-badge.tone-purple { background: var(--purple-tint); color: var(--purple-deep); }
-.ds-badge.tone-mascot { background: var(--mascot-tint); color: var(--mascot-chip-fg); }
+.ds-badge.tone-alt { background: var(--alt-tint); color: var(--alt-chip-fg); }
 .ds-badge.tone-sun, .ds-badge.tone-yellow {
   background: var(--sun); color: var(--ink);
 }
@@ -188,7 +183,7 @@
   background: var(--bg-3); color: var(--fg-3);
 }
 .chip.tone-purple { background: var(--purple-tint); color: var(--purple-deep); }
-.chip.tone-mascot { background: var(--mascot-tint); color: var(--mascot-chip-fg); }
+.chip.tone-alt { background: var(--alt-tint); color: var(--alt-chip-fg); }
 .chip.tone-sun, .chip.tone-yellow {
   background: var(--sun); color: var(--ink);
 }

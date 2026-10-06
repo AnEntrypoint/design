@@ -21,6 +21,7 @@ import { lintDeadControlsOrThrow } from './lint-dead-controls.mjs';
 import { lintYamlParseOrThrow } from './lint-yaml-parse.mjs';
 import { lintCssParseOrThrow } from './lint-css-parse.mjs';
 import { lintContrastOrThrow } from './lint-contrast.mjs';
+import { lintRtlPhysicalPropertiesOrThrow } from './lint-rtl-physical-properties.mjs';
 
 const CHECKS = [
     ['tokens', lintTokensOrThrow],
@@ -43,6 +44,7 @@ const CHECKS = [
     ['dead-controls', lintDeadControlsOrThrow],
     ['yaml-parse', lintYamlParseOrThrow],
     ['css-parse', lintCssParseOrThrow],
+    ['rtl-physical', lintRtlPhysicalPropertiesOrThrow],
 ];
 
 export function runLintCss() {

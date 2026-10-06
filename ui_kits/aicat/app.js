@@ -18,7 +18,7 @@ const HISTORY = [
 
 const WELCOME_MESSAGES = [
     { who: 'them', name: 'aicat', text: 'hi. I am **aicat**. I read fast and I knock things off shelves.', time: timeNow() },
-    { who: 'them', name: 'aicat', parts: [{ kind: 'md', text: 'try one of these:\n\n- ask for `code` (react or python)\n- ask for the **token pdf** or the **mascot image**\n- ask me to attach a *config file*\n- or send a message; replies are in markdown.' }], time: timeNow() }
+    { who: 'them', name: 'aicat', parts: [{ kind: 'md', text: 'try one of these:\n\n- ask for `code` (react or python)\n- ask for the **token pdf** or the **logo image**\n- ask me to attach a *config file*\n- or send a message; replies are in markdown.' }], time: timeNow() }
 ];
 
 const PRESETS = [
@@ -49,8 +49,8 @@ const REPLIES = {
         { kind: 'pdf', src: './sample.pdf', name: 'tokens-v0.0.27.pdf', size: 782 }
     ] }),
     image: () => ({ parts: [
-        { kind: 'text', text: 'mascot, fresh from the loom:' },
-        { kind: 'image', src: './sample-svg.svg', alt: '247420 mascot', caption: 'mascot · svg · favicon-derived' }
+        { kind: 'text', text: 'logo, fresh from the loom:' },
+        { kind: 'image', src: './sample-svg.svg', alt: '247420 logo', caption: 'logo · svg · favicon-derived' }
     ] }),
     link: () => ({ parts: [
         { kind: 'link', href: 'https://github.com/AnEntrypoint/design', host: 'github.com',
@@ -79,7 +79,7 @@ function classifyAndReply(text) {
         [/code|react|component|function|jsx/, 'code-react'],
         [/reduced.motion|animat|motion/, 'md-rm'],
         [/pdf|token sheet|spec/, 'pdf'],
-        [/image|mascot|picture|art/, 'image'],
+        [/image|logo|picture|art/, 'image'],
         [/link|repo|github/, 'link'],
         [/file|config|attach/, 'file']
     ];

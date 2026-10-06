@@ -26,8 +26,8 @@ const PALETTE = [
     { name: 'green-2',   v: 'var(--green-2)' },
     { name: 'preset a',   v: 'var(--purple)' },
     { name: 'preset a text', v: 'var(--purple-2)' },
-    { name: 'preset b',   v: 'var(--mascot)' },
-    { name: 'preset b bright', v: 'var(--mascot-2)' },
+    { name: 'preset b',   v: 'var(--alt)' },
+    { name: 'preset b bright', v: 'var(--alt-2)' },
     { name: 'sun',       v: 'var(--sun)' },
     { name: 'flame',     v: 'var(--flame)' },
     { name: 'category 6', v: 'var(--sky)' },
@@ -153,7 +153,7 @@ function observeSections() {
 const COLLAB_USERS = [
     { userId: 'u1', label: 'ana',    color: 'var(--purple)', status: 'active' },
     { userId: 'u2', label: 'blake',  color: 'var(--green)',  status: 'idle' },
-    { userId: 'u3', label: 'agent',  color: 'var(--mascot)', status: 'active' },
+    { userId: 'u3', label: 'agent',  color: 'var(--alt)', status: 'active' },
 ];
 
 const CONTEXT_SEGMENTS = [
@@ -298,7 +298,7 @@ function BackfillPanel() {
             ),
             h('div', { class: 'ds-prim-row' },
                 h('span', { class: 'ds-prim-label' }, 'collab overlays'),
-                h('div', { class: 'ds-prim-stage' }, LiveCursorOverlay({ cursors: [{ userId: 'u1', label: 'ana', color: 'var(--purple)', x: 40, y: 18 }, { userId: 'u3', label: 'agent', color: 'var(--mascot)', x: 120, y: 44 }] }),
+                h('div', { class: 'ds-prim-stage' }, LiveCursorOverlay({ cursors: [{ userId: 'u1', label: 'ana', color: 'var(--purple)', x: 40, y: 18 }, { userId: 'u3', label: 'agent', color: 'var(--alt)', x: 120, y: 44 }] }),
                 RemoteSelectionRings({ selections: [{ userId: 'u2', color: 'var(--green)', rect: { left: 20, top: 12, width: 90, height: 18 } }] }),
                 RecentEditHighlightFlash({ edits: [{ timestamp: 1, color: 'var(--purple)', rect: { left: 12, top: 60, width: 70, height: 16 } }] }))
             ),

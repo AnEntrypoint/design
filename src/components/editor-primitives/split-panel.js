@@ -4,11 +4,25 @@ import { kids } from './shared.js';
 import { attempt } from '../../best-effort.js';
 const h = webjsx.createElement;
 
-export function ResizeHandle({ axis = 'horizontal', onResize, ariaLabel } = {}) {
+const PERCENT = 100;
+
+export function ResizeHandle({ axis = 'horizontal', onResize, ariaLabel, getValue } = {}) {
     const isH = axis === 'horizontal';
     let dragOrigin = null;
+    let handleEl = null;
     const step = 8;
-    const emit = (dx, dy) => { if (onResize) onResize(isH ? dx : dy); };
+    const syncValue = () => {
+        if (!handleEl || !getValue) return;
+        const v = getValue();
+        if (!v) return;
+        handleEl.setAttribute('aria-valuenow', String(v.now));
+        handleEl.setAttribute('aria-valuemin', String(v.min));
+        handleEl.setAttribute('aria-valuemax', String(v.max));
+    };
+    const emit = (dx, dy) => {
+        if (onResize) onResize(isH ? dx : dy);
+        syncValue();
+    };
     const onPointerDown = (e) => {
         e.preventDefault();
         dragOrigin = { x: e.clientX, y: e.clientY };
@@ -45,6 +59,10 @@ export function ResizeHandle({ axis = 'horizontal', onResize, ariaLabel } = {}) 
         tabindex: '0',
         'aria-orientation': isH ? 'vertical' : 'horizontal',
         'aria-label': ariaLabel || 'Resize',
+        'aria-valuenow': String(PERCENT / 2),
+        'aria-valuemin': '0',
+        'aria-valuemax': String(PERCENT),
+        ref: (el) => { handleEl = el; if (el) requestAnimationFrame(syncValue); },
         onpointerdown: onPointerDown,
         onpointermove: onPointerMove,
         onpointerup: onPointerUp,
@@ -78,12 +96,22 @@ export function SplitPanel({ orientation = 'horizontal', initial = '50%', min = 
         a.style[sizeProp] = next + 'px';
         a.style.flex = '0 0 auto';
     };
+    const getValue = () => {
+        if (!rootEl || !rootEl.firstChild) return null;
+        const paneRect = rootEl.firstChild.getBoundingClientRect();
+        const rootRect = rootEl.getBoundingClientRect();
+        const total = isH ? rootRect.width : rootRect.height;
+        if (!total) return null;
+        const toPercent = (px) => Math.round(px / total * PERCENT);
+        const upper = max === Infinity ? total - min : max;
+        return { now: toPercent(isH ? paneRect.width : paneRect.height), min: toPercent(min), max: toPercent(upper) };
+    };
     return h('div', {
         class: 'ds-ep-split ' + (isH ? 'horiz' : 'vert'),
         ref: (el) => { rootEl = el; }
     },
         h('div', { class: 'ds-ep-split-pane', style: '--split-size:' + initStyle + ';flex:0 0 auto', ref: applySize }, first),
-        ResizeHandle({ axis: isH ? 'horizontal' : 'vertical', onResize }),
+        ResizeHandle({ axis: isH ? 'horizontal' : 'vertical', onResize, getValue }),
         h('div', { class: 'ds-ep-split-pane grow', style: 'flex:1 1 0;min-' + sizeProp + ':0' }, second)
     );
 }

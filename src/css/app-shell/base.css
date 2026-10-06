@@ -215,8 +215,12 @@ h3 + .lede, h3 + .t-lede,
   color: var(--fg-3);
 }
 
-.ds-prose-code { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); margin: 0 0 var(--space-4); }
-.ds-prose-code > pre { align-self: stretch; margin: 0; }
+.ds-prose-code { position: relative; margin: 0 0 var(--space-4); }
+.ds-prose-code > pre { margin: 0; padding-inline-end: var(--space-7); }
+.ds-prose-code > .btn { position: absolute; inset-block-start: var(--space-2); inset-inline-end: var(--space-2); }
+@media (pointer: coarse) {
+  .ds-prose-code > .btn::after { content: ''; position: absolute; inset-block-start: 50%; inset-inline-start: 50%; inline-size: max(100%, 44px); block-size: max(100%, 44px); transform: translate(-50%, -50%); }
+}
 
 .dim { color: var(--fg-3); }
 
@@ -257,7 +261,7 @@ pre {
   margin: 0;
   border-radius: var(--r-3);
 }
-pre .k { color: var(--code-str-alt, var(--mascot)); }
+pre .k { color: var(--code-str-alt, var(--alt)); }
 pre .s { color: var(--code-string, var(--green)); }
 pre .c { color: var(--fg-3); }
 pre .n { color: var(--code-num); }

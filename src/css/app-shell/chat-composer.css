@@ -67,6 +67,5 @@
   .chat-composer .send:active,
   .composer-btn:active,
   .chat-msg-action:active,
-  .chat-reactions .rxn:active,
-  .chat-reactions .rxn:hover { transform: none; }
+  .chat-reactions .rxn:active { transform: none; }
 }

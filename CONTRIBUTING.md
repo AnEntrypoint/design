@@ -109,9 +109,9 @@ and aggregates one pass/fail report:
 - **`lint-null-children.mjs`**: catches a bare `null` sitting among vnode
   siblings in a children array (a real webjsx `applyDiff` crash), enforcing
   the `.filter(Boolean)` discipline.
-- **`lint-rtl-physical-properties.mjs`**: no physical `left`/`right`
-  CSS property where a logical `inline-start`/`inline-end` equivalent would
-  auto-mirror under `[dir="rtl"]`.
+- **`lint-rtl-physical-properties.mjs`**: ratchet (`lint-rtl.baseline.json`,
+  drive down): physical `left`/`right` CSS where a logical
+  `inline-start`/`inline-end` equivalent would auto-mirror under `[dir="rtl"]`.
 - **`lint-empty-catch.mjs`**: hard zero: no empty `catch {}` block
   (nothing inside counts) and no empty `.catch(() => {})`. Best-effort calls go
   through `attempt()` / `attemptAsync()`, and `.catch(ignoreFailure)`, from

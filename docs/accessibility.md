@@ -7,7 +7,7 @@ claim (see "What this does and doesn't cover" below).
 
 ## Current status
 
-`node scripts/a11y-audit.mjs` runs the real axe-core engine against the live rendered DOM of every `ui_kits/*` surface with an `index.html` (a CDP session, not a static-HTML heuristic scan, since computed style and contrast only exist post-render). As of this writing: **22/22 kits, 0 blocking (serious/critical) violations**. The full generated report lives at [`a11y-report.md`](./a11y-report.md); the check is a local gate (`npm run a11y`, which needs a running Chrome), not a one-time audit, so a regression is caught before it ships.
+`node scripts/a11y-audit.mjs` runs the real axe-core engine against the live rendered DOM of every `ui_kits/*` surface with an `index.html` and every `preview/*.html` specimen, in light and dark (a CDP session, not a static-HTML heuristic scan, since computed style and contrast only exist post-render). As of this writing: **22/22 kits and 29/29 specimens, 0 blocking violations**. The full generated report lives at [`a11y-report.md`](./a11y-report.md); the check is a local gate (`npm run a11y`, which needs a running Chrome), not a one-time audit, so a regression is caught before it ships.
 
 The baseline is a ratchet: it can only go down. Raising it to pass a new violation is treated the same as disabling a lint.
 
@@ -17,13 +17,13 @@ axe-core's automated rules cover a real but partial slice of WCAG success
 criteria: industry estimates put automated coverage at roughly a third to
 half of all criteria; the rest (focus order making logical sense, whether
 alt text is actually meaningful, keyboard-operability of custom widgets,
-screen-reader announcement quality) needs a human. This scan also runs
-WCAG-tagged rules only, which explicitly excludes some best-practice checks
--- `bypass` (skip-link presence) and `page-has-heading-one` (a real `<h1>`)
-are not gated here, so a kit can pass this scan with no skip link and no
-`h1`. (`CHANGELOG.md` records a real instance: four kits shipped with no
-`main` landmark or skip link, invisible to this gate by design, caught only
-by a later manual pass.) "0 blocking violations" is accurate and means what
+screen-reader announcement quality) needs a human. This scan runs
+WCAG-tagged rules plus `landmark-one-main` and `page-has-heading-one`, so a
+kit or specimen with no `main` landmark or no `h1` fails. It still excludes
+the other best-practice checks: `bypass` (skip-link presence) is not gated
+here, so a kit can pass this scan with no skip link. (`CHANGELOG.md` records a
+real instance: four kits shipped with no `main` landmark or skip link,
+caught only by a later manual pass.) "0 blocking violations" is accurate and means what
 it says; it is not the same claim as "WCAG AA conformant," and this doc
 should never be read as making that stronger claim. A real conformance
 statement needs the manual passes in the next section, done and logged, not

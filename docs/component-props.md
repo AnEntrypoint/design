@@ -1584,7 +1584,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `axis` = `'horizontal'`, `onResize`, `ariaLabel`
+**Signature:** `axis` = `'horizontal'`, `onResize`, `ariaLabel`, `getValue`
 
 ### SplitPanel
 
