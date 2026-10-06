@@ -2413,7 +2413,7 @@
 }
 .chat-msg-community .chat-audio { display: block; width: min(100%, 360px); }
 
-@media (pointer: coarse) {
+@media (pointer: coarse), (hover: none) {
   .chat-msg.chat-msg-flat.chat-msg-community .chat-msg-action,
   .chat-msg-community .chat-reactions .rxn,
   .chat-composer .composer-btn {
@@ -2426,3 +2426,6 @@
   .vx-stg-row-label { white-space: normal; overflow: visible; text-overflow: clip; }
   .vx-stg-select { max-width: 140px; }
 }
+
+.cm-mh-title { display: inline-flex; align-items: center; gap: var(--space-1-75); min-width: 0; }
+.cm-mh-title svg { flex-shrink: 0; }
