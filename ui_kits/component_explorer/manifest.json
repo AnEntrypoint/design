@@ -2114,6 +2114,11 @@
           "alias": null
         },
         {
+          "name": "ts",
+          "default": null,
+          "alias": null
+        },
+        {
           "name": "typing",
           "default": null,
           "alias": null
@@ -2175,6 +2180,16 @@
         },
         {
           "name": "tail",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "variant",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "avatarColor",
           "default": null,
           "alias": null
         },
@@ -2306,6 +2321,16 @@
         },
         {
           "name": "sub",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "emptySub",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "locked",
           "default": null,
           "alias": null
         },
@@ -4757,6 +4782,11 @@
           "name": "onContext",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "onReorder",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -4911,6 +4941,16 @@
           "name": "onSettings",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "onMembers",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "membersOpen",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -5038,6 +5078,11 @@
         },
         {
           "name": "onSelectMember",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "userId",
           "default": null,
           "alias": null
         }
@@ -5250,6 +5295,16 @@
           "name": "onMembers",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "membersOpen",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "menuOpen",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -5397,6 +5452,11 @@
           "name": "loading",
           "default": "false",
           "alias": null
+        },
+        {
+          "name": "resolveAuthor",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -5471,6 +5531,11 @@
         },
         {
           "name": "onClick",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onMove",
           "default": null,
           "alias": null
         },
@@ -5723,6 +5788,11 @@
       "kind": "component",
       "props": [
         {
+          "name": "id",
+          "default": null,
+          "alias": null
+        },
+        {
           "name": "name",
           "default": null,
           "alias": null
@@ -5825,6 +5895,11 @@
         },
         {
           "name": "onSelect",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "panelId",
           "default": null,
           "alias": null
         }
@@ -6201,6 +6276,16 @@
         {
           "name": "label",
           "default": "'Hold to talk'",
+          "alias": null
+        },
+        {
+          "name": "disabled",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "disabledReason",
+          "default": null,
           "alias": null
         }
       ],
@@ -6614,7 +6699,7 @@
         {
           "name": "options",
           "default": "[]",
-          "alias": null
+          "alias": "given"
         },
         {
           "name": "onChange",
@@ -8828,6 +8913,16 @@
         },
         {
           "name": "open",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "isLoggedIn",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "switching",
           "default": "false",
           "alias": null
         },

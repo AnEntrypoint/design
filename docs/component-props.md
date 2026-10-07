@@ -513,7 +513,7 @@ Segmented one-time-code / PIN entry.
 
 **Kind:** component
 
-**Signature:** `role`, `who` = `'them'`, `avatar`, `text`, `parts`, `time`, `typing`, `key`, `id`, `aicat`, `reactions`, `receipt`, `name`, `streaming`, `actions`, `incomplete`, `stopped`, `flat`, `tail`, `error`, `onRetry`, `onToggleReaction`, `onAddReaction`
+**Signature:** `role`, `who` = `'them'`, `avatar`, `text`, `parts`, `time`, `ts`, `typing`, `key`, `id`, `aicat`, `reactions`, `receipt`, `name`, `streaming`, `actions`, `incomplete`, `stopped`, `flat`, `tail`, `variant`, `avatarColor`, `error`, `onRetry`, `onToggleReaction`, `onAddReaction`
 
 ### ChatComposer
 
@@ -525,7 +525,7 @@ Segmented one-time-code / PIN entry.
 
 **Kind:** component
 
-**Signature:** `title` = `'chat'`, `sub`, `messages` = `[]`, `composer`, `header`, `suggestions`, `onSuggestionClick`
+**Signature:** `title` = `'chat'`, `sub`, `emptySub`, `locked`, `messages` = `[]`, `composer`, `header`, `suggestions`, `onSuggestionClick`
 
 ### flashComposerNote
 
@@ -1022,7 +1022,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `id`, `name`, `type` = `'text'`, `active`, `voiceActive`, `voiceConnecting`, `badge`, `draggable`, `actions` = `[]`, `participants` = `[]`, `onClick`, `onContext`
+**Signature:** `id`, `name`, `type` = `'text'`, `active`, `voiceActive`, `voiceConnecting`, `badge`, `draggable`, `actions` = `[]`, `participants` = `[]`, `onClick`, `onContext`, `onReorder`
 
 ### ChannelCategory
 
@@ -1040,7 +1040,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `name`, `tag`, `color`, `muted`, `deafened`, `onMute`, `onDeafen`, `onSettings`
+**Signature:** `name`, `tag`, `color`, `muted`, `deafened`, `onMute`, `onDeafen`, `onSettings`, `onMembers`, `membersOpen`
 
 ### ChannelSidebar
 
@@ -1058,7 +1058,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `categories` = `[]`, `open`, `loading` = `false`, `onSelectMember`
+**Signature:** `categories` = `[]`, `open`, `loading` = `false`, `onSelectMember`, `userId`
 
 ### UserCard
 
@@ -1088,7 +1088,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `title`, `channelType`, `channelName`, `onMenu`, `onMembers`
+**Signature:** `title`, `channelType`, `channelName`, `onMenu`, `onMembers`, `membersOpen`, `menuOpen`
 
 ### ReplyBar
 
@@ -1112,7 +1112,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `posts` = `[]`, `onSearch`, `onSort`, `onSelect`, `onNewPost`, `loading` = `false`
+**Signature:** `posts` = `[]`, `onSearch`, `onSort`, `onSelect`, `onNewPost`, `loading` = `false`, `resolveAuthor`
 
 ### PageView
 
@@ -1124,7 +1124,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `id`, `name`, `color`, `memberCount`, `draggable` = `true`, `onClick`, `onDragStart`, `onDragOver`, `onDrop`
+**Signature:** `id`, `name`, `color`, `memberCount`, `draggable` = `true`, `onClick`, `onMove`, `onDragStart`, `onDragOver`, `onDrop`
 
 ### RoleList
 
@@ -1160,7 +1160,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `name`, `avatarUrl`, `color`, `description`, `onEdit`, `onDelete`
+**Signature:** `id`, `name`, `avatarUrl`, `color`, `description`, `onEdit`, `onDelete`
 
 ### WebhookEditor
 
@@ -1172,7 +1172,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `roles` = `[]`, `activeId`, `onSelect`
+**Signature:** `roles` = `[]`, `activeId`, `onSelect`, `panelId`
 
 ### PermissionRow
 
@@ -1234,7 +1234,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `state` = `'idle'`, `mode` = `'ptt'`, `onHoldStart`, `onHoldEnd`, `onClick`, `label` = `'Hold to talk'`
+**Signature:** `state` = `'idle'`, `mode` = `'ptt'`, `onHoldStart`, `onHoldEnd`, `onClick`, `label` = `'Hold to talk'`, `disabled` = `false`, `disabledReason`
 
 ### VadMeter
 
@@ -1300,7 +1300,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `icon` = `'blank'`, `label`, `description`, `value`, `options` = `[]`, `onChange`, `ariaLabel`
+**Signature:** `icon` = `'blank'`, `label`, `description`, `value`, `options` _(local: given)_ = `[]`, `onChange`, `ariaLabel`
 
 ## `src/components/collab.js`
 
@@ -1820,7 +1820,7 @@ A scroll-snap content carousel with prev/next controls.
 
 **Kind:** component
 
-**Signature:** `mode` = `'extension'`, `error` = `''`, `busy` = `false`, `open` = `false`, `onModeChange`, `onConnectExtension`, `onGenerate`, `onImport`, `onClose`
+**Signature:** `mode` = `'extension'`, `error` = `''`, `busy` = `false`, `open` = `false`, `isLoggedIn` = `false`, `switching` = `false`, `onModeChange`, `onConnectExtension`, `onGenerate`, `onImport`, `onClose`
 
 ### VideoLightbox
 
