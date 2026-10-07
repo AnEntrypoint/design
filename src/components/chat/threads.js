@@ -7,6 +7,39 @@ import { ensureCachesInit } from './stats.js';
 
 const h = webjsx.createElement;
 
+const dayStart = (ts) => {
+    const d = new Date(ts);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+};
+
+const dayLabel = (ts) => {
+    const start = dayStart(ts);
+    const today = dayStart(Date.now());
+    if (start === today) return 'Today';
+    if (start === today - 86400000) return 'Yesterday';
+    const d = new Date(ts);
+    const opts = { month: 'long', day: 'numeric' };
+    if (d.getFullYear() !== new Date().getFullYear()) opts.year = 'numeric';
+    return d.toLocaleDateString(undefined, opts);
+};
+
+const threadNodes = (messages) => {
+    const out = [];
+    let lastDay = null;
+    messages.forEach((m, i) => {
+        if (m && m.variant === 'community' && typeof m.ts === 'number' && isFinite(m.ts) && m.ts > 0) {
+            const day = dayStart(m.ts);
+            if (day !== lastDay) {
+                lastDay = day;
+                out.push(h('div', { key: 'day' + day, class: 'chat-day-sep' },
+                    h('span', { class: 'chat-day-sep-label' }, dayLabel(m.ts))));
+            }
+        }
+        out.push(ChatMessage({ ...m, tail: m.tail != null ? m.tail : isConsecutive(messages, i), key: m.key != null ? m.key : i }));
+    });
+    return out;
+};
+
 export function ChatSuggestions({ heading = 'What can I help with?', subtext = '', suggestions = [] } = {}) {
     let picked = false;
     return h('div', { class: 'chat-suggestions', role: 'group', 'aria-label': heading },
@@ -73,7 +106,7 @@ export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], com
                                     typeof s === 'string' ? s : (s.label || s.text || s.prompt))))
                             : null)
                     : null,
-                ...messages.map((m, i) => ChatMessage({ ...m, tail: m.tail != null ? m.tail : isConsecutive(messages, i), key: m.key != null ? m.key : i }))
+                ...threadNodes(messages)
             ),
             jumpBtn
         ),

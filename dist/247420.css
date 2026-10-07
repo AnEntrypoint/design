@@ -3545,7 +3545,7 @@
 .ds-247420 .chat-reactions .rxn.you .n { color: var(--accent-ink); }
 
 .ds-247420 .chat-msg-actions {
-  display: flex; align-items: center; gap: var(--space-hair);
+  display: flex; align-items: center; gap: var(--space-2);
   opacity: 0; pointer-events: none;
   transition: opacity var(--dur-snap, .12s) var(--ease, ease);
 }
@@ -7841,7 +7841,7 @@
 .ds-247420 .cm-user-controls {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1-75);
+  gap: var(--space-2);
 }
 
 .ds-247420 .cm-user-btn {
@@ -9691,6 +9691,26 @@
 }
 .ds-247420 .chat-empty-title { font-size: var(--fs-lg); font-weight: var(--fw-medium); color: var(--fg-2); margin: 0 0 var(--space-1); }
 .ds-247420 .chat-empty-sub { font-size: var(--fs-sm); margin: 0; }
+.ds-247420 .chat-day-sep {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  color: var(--fg-3);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-tiny);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-wide, 0.02em);
+  text-transform: uppercase;
+}
+.ds-247420 .chat-day-sep::before, .ds-247420 .chat-day-sep::after {
+  content: '';
+  flex: 1 1 auto;
+  height: var(--bw-hair);
+  background: var(--rule);
+}
+.ds-247420 .chat-day-sep:first-child::before { display: none; }
+.ds-247420 .chat-day-sep-label { flex: 0 0 auto; }
 .ds-247420 .chat-msg {
   display: flex;
   gap: var(--space-2);
@@ -9913,13 +9933,13 @@
 @keyframes chat-caret-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .ds-247420 .chat-stream-caret { animation: none; opacity: .8; } }
 
-.ds-247420 .chat-msg-actions { display: flex; gap: var(--space-hair); margin-top: var(--space-half); opacity: 0; transition: opacity var(--dur-snap, .12s) var(--ease, ease); }
+.ds-247420 .chat-msg-actions { display: flex; gap: var(--space-2); margin-top: var(--space-half); opacity: 0; transition: opacity var(--dur-snap, .12s) var(--ease, ease); }
 .ds-247420 .chat-msg:hover .chat-msg-actions, .ds-247420 .chat-msg:focus-within .chat-msg-actions { opacity: 1; }
 
 .ds-247420 .chat-msg.chat-msg-flat { position: relative; }
 .ds-247420 .chat-msg-actions.chat-msg-actions-float {
   position: absolute; top: calc(-1 * var(--space-3)); right: var(--space-2);
-  margin-top: 0; padding: var(--space-hair); gap: var(--space-1);
+  margin-top: 0; padding: var(--space-hair); gap: var(--space-2);
   background: var(--bg-2); border-radius: var(--r-1, 8px);
   box-shadow: var(--shadow-1); z-index: var(--z-raised);
 }
@@ -10188,7 +10208,7 @@
 .ds-247420 .chat-code-copy.is-copied { color: var(--accent-ink); border-color: var(--accent); }
 .ds-247420 .chat-code-copy:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 1px; opacity: 1; }
 .ds-247420 .chat-code-head .spread { flex: 1; }
-.ds-247420 .chat-code-copy-head { position: static; opacity: 1; }
+.ds-247420 .chat-code-copy-head { position: relative; z-index: var(--z-raised-1); opacity: 1; }
 
 .ds-247420 .chat-stream-pre pre { margin: 0; white-space: pre-wrap; word-break: break-word; font-family: var(--ff-mono); font-size: var(--fs-sm); }
 .ds-247420 .chat-stream-pre { position: relative; }
@@ -10210,7 +10230,7 @@
 .ds-247420 button.chat-composer-context:hover { color: var(--fg-2); }
 .ds-247420 button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-.ds-247420 .chat-composer-toolbar { display: flex; align-items: center; gap: var(--space-1-75); flex: 0 0 auto; margin-inline-start: auto; align-self: flex-end; }
+.ds-247420 .chat-composer-toolbar { display: flex; align-items: center; gap: var(--space-2); flex: 0 0 auto; margin-inline-start: auto; align-self: flex-end; }
 .ds-247420 .chat-composer-attach-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .ds-247420 .chat-composer-toolbar .composer-btn,
 .ds-247420 .chat-composer-toolbar .send { width: 32px; height: 32px; border-radius: var(--r-1); }
@@ -12563,8 +12583,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: none;
   border-radius: var(--r-1);
