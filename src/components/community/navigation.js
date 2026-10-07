@@ -7,6 +7,11 @@ const h = webjsx.createElement;
 
 export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash', dm: 'forum' };
 
+function _shortIdentity(id) {
+    const s = String(id || '');
+    return s.length > 16 ? s.slice(0, 8) + '…' + s.slice(-4) : s;
+}
+
 export function ServerIcon({ id, name, abbr, icon, active, badge, onClick } = {}) {
     return h('div', {
         class: 'cm-server-icon' + (active ? ' active' : ''),
@@ -39,7 +44,7 @@ export function ServerRail({ servers = [], activeId, onSelect, onAdd } = {}) {
     );
 }
 
-export function ChannelItem({ id, name, type = 'text', active, voiceActive, voiceConnecting, badge, draggable, actions = [], participants = [], onClick, onContext } = {}) {
+export function ChannelItem({ id, name, type = 'text', active, voiceActive, voiceConnecting, badge, draggable, actions = [], participants = [], onClick, onContext, onReorder } = {}) {
     const ICON_FOR = CHANNEL_ICON_FOR;
     const icon = Icon(ICON_FOR[type] || 'hash', { size: 15 });
     const handleActionClick = (a, e) => { e.stopPropagation(); a.onClick && a.onClick(id, e); };
@@ -58,13 +63,11 @@ export function ChannelItem({ id, name, type = 'text', active, voiceActive, voic
                     onContext && onContext(id, rect.left, rect.top + rect.height);
                 }
                 if (draggable) {
-                    if (e.ctrlKey && e.key === 'ArrowUp') {
+                    const dir = e.key === 'ArrowUp' ? 'up' : e.key === 'ArrowDown' ? 'down' : null;
+                    if (dir && (e.ctrlKey || e.altKey)) {
                         e.preventDefault();
-                        window.dispatchEvent(new CustomEvent('reorder', { detail: { id, direction: 'up' } }));
-                    }
-                    if (e.ctrlKey && e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        window.dispatchEvent(new CustomEvent('reorder', { detail: { id, direction: 'down' } }));
+                        if (onReorder) onReorder(id, dir);
+                        else window.dispatchEvent(new CustomEvent('reorder', { detail: { id, direction: dir } }));
                     }
                 }
             },
@@ -87,8 +90,8 @@ export function ChannelItem({ id, name, type = 'text', active, voiceActive, voic
         ),
         voiceActive && participants.length ? h('div', { class: 'cm-ch-voice-users' },
             ...participants.map(p => h('div', { class: 'cm-ch-voice-user' + (p.speaking ? ' speaking' : '') },
-                h('div', { class: 'cm-ch-voice-user-avatar', style: p.color ? (avatarContrastFg(p.color) ? `--avatar-bg:${p.color};--avatar-fg:${avatarContrastFg(p.color)}` : `--avatar-bg:${p.color}`) : null }, avatarInitial(p.identity)),
-                h('span', { class: 'cm-ch-voice-user-name' }, p.identity)
+                h('div', { class: 'cm-ch-voice-user-avatar', style: p.color ? (avatarContrastFg(p.color) ? `--avatar-bg:${p.color};--avatar-fg:${avatarContrastFg(p.color)}` : `--avatar-bg:${p.color}`) : null }, avatarInitial(p.name || p.identity)),
+                h('span', { class: 'cm-ch-voice-user-name', title: p.name ? null : p.identity }, p.name || _shortIdentity(p.identity))
             ))
         ) : null
     );

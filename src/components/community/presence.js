@@ -122,14 +122,14 @@ function MemberListSkeleton({ rows = 6 } = {}) {
             h('span', { class: 'ds-skel ds-skel-icon' }), h('span', { class: 'ds-skel ds-skel-title' }))));
 }
 
-export function MemberList({ categories = [], open, loading = false, onSelectMember } = {}) {
+export function MemberList({ categories = [], open, loading = false, onSelectMember, userId } = {}) {
     if (loading) return MemberListSkeleton();
     const total = categories.reduce((n, cat) => n + (cat.members ? cat.members.length : 0), 0);
-    return h('div', { class: 'cm-member-list' + (open ? ' open' : '') },
+    return h('div', { class: 'cm-member-list' + (open ? ' open' : ''), inert: open ? null : true },
         total === 0
             ? h('div', { key: '_empty', class: 'cm-member-empty', role: 'status' },
                 Icon('members', { size: 20 }),
-                h('span', { class: 'cm-member-empty-text' }, 'no members in this channel yet'))
+                h('span', { class: 'cm-member-empty-text' }, userId ? 'Only you for now.' : 'no members in this channel yet'))
             : null,
         ...categories.flatMap(cat => [
             h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label}: ${cat.members.length}`),

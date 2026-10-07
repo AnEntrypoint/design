@@ -95,7 +95,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const cur = s.currentChannel || {};
         const servers = s.servers || [];
         if (text.length || !servers.length) {
-            out.push(groupHeader('rooms', s));
+            out.push(groupHeader('rooms', s, 'text'));
         }
         if (text.length) {
             for (const c of text) out.push(railPill(c, cur, false, s));
@@ -103,7 +103,7 @@ export function mountCommunityApp(root, adapter = {}) {
             out.push(h('div', { class: 'rail-empty', role: 'status' }, 'no rooms yet'));
         }
         if (voice.length) {
-            out.push(h('div', { class: 'group' }, 'voice'));
+            out.push(groupHeader('voice', s, 'voice'));
             for (const c of voice) out.push(railPill(c, cur, true, s));
         }
         return h('div', { class: 'ca-rail-channels' }, ...out);
@@ -122,25 +122,47 @@ export function mountCommunityApp(root, adapter = {}) {
             ...(items.length ? items : [h('div', { class: 'rail-empty', role: 'status' }, 'no conversations yet')]));
     };
 
-    const groupHeader = (label, s) => h('div', { class: 'group group-header' },
+    const groupHeader = (label, s, createType) => h('div', { class: 'group group-header' },
         h('span', {}, label),
         (s.canManage && A.createChannel)
             ? h('button', {
-                type: 'button', class: 'group-add-btn', 'aria-label': 'create channel', title: 'Create channel',
-                onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(); },
+                type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label + ' channel', title: 'Create ' + label + ' channel',
+                onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType || null); },
             }, Icon('plus', { size: 13 }))
             : null);
 
+    let railDragId = null;
     const railPill = (c, cur, isVoice, s) => {
         const active = cur.id === c.id;
         const inVoice = isVoice && s.voiceConnected && s.voiceChannelName === c.name;
         const glyph = inVoice ? h('span', { class: 'glyph glyph-voice', 'aria-hidden': 'true' }, h('span', { class: 'ds-dot ds-dot-live' }))
             : (c.type === 'threaded' ? h('span', { class: 'glyph glyph-threaded', 'aria-hidden': 'true' }, Icon('circle-dot', { size: 15 }))
                 : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(CHANNEL_ICON[c.type] || 'hash', { size: 15 })));
+        const canReorder = !!s.canManage && !!A.reorderChannel;
+        const dropAllowed = () => !!railDragId && railDragId !== c.id;
         return h('a', {
             href: '#', class: active ? 'active' : '', 'aria-label': (c.name || c.id) + (inVoice ? ' (in voice)' : ''),
+            title: canReorder ? ((c.name || c.id) + ': drag, or hold Alt and press the arrow keys, to reorder') : (c.name || c.id),
+            'aria-keyshortcuts': canReorder ? 'Alt+ArrowUp Alt+ArrowDown' : null,
             onclick: (e) => { e.preventDefault(); A.switchChannel && A.switchChannel(c); },
             oncontextmenu: (e) => { e.preventDefault(); A.channelContext && A.channelContext(c.id, e.clientX, e.clientY); },
+            draggable: canReorder ? 'true' : null,
+            ondragstart: canReorder ? (e) => { railDragId = c.id; e.dataTransfer.effectAllowed = 'move'; e.currentTarget.classList.add('rail-dragging'); } : null,
+            ondragend: canReorder ? (e) => { railDragId = null; e.currentTarget.classList.remove('rail-dragging'); } : null,
+            ondragover: canReorder ? (e) => { if (!dropAllowed()) return; e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('rail-drop'); } : null,
+            ondragleave: canReorder ? (e) => { e.currentTarget.classList.remove('rail-drop'); } : null,
+            ondrop: canReorder ? (e) => {
+                e.preventDefault();
+                const src = railDragId;
+                railDragId = null;
+                e.currentTarget.classList.remove('rail-drop');
+                if (src && src !== c.id) A.reorderChannel(src, c.id);
+            } : null,
+            onkeydown: canReorder ? (e) => {
+                if (!e.altKey || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+                e.preventDefault();
+                A.reorderChannel(c.id, e.key === 'ArrowUp' ? -1 : 1);
+            } : null,
         }, glyph, h('span', {}, c.name || c.id),
             c.unreadCount ? h('span', { class: 'count' }, c.unreadCount > 99 ? '99+' : String(c.unreadCount)) : null);
     };
@@ -149,6 +171,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const active = sv._home ? s.homeMode : (!s.homeMode && s.currentServerId === sv.id);
         return h('a', {
             href: '#', class: active ? 'active' : '', 'aria-label': sv._home ? 'home' : (sv.name || sv.id),
+            title: sv._home ? 'home' : (sv.name || sv.id),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },
             oncontextmenu: sv._home ? null : (e) => { e.preventDefault(); A.serverContext && A.serverContext(sv.id, e.clientX, e.clientY); },
         }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 15 }) : serverAbbr(sv)),
@@ -238,15 +261,19 @@ export function mountCommunityApp(root, adapter = {}) {
             quotedAuthor: rt.username || 'User', quotedMessage: rt.content || '',
             onCancel: (e) => { e && e.preventDefault && e.preventDefault(); A.cancelReply && A.cancelReply(); },
         }) : null;
+        const locked = !!s.composerLockedReason;
+        const emptySub = s.homeMode
+            ? 'Pick a conversation on the left, or start one with +.'
+            : 'Be the first to post in #' + (ch.name || 'general') + '.';
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
-            title: ch.name || 'general', sub, messages: mapMessages(s), header: null,
+            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, replyPreview, typingBar, ChatComposer({
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
                 onInput: (v) => A.setInput && A.setInput(v),
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
-                onAttach: A.attachFiles ? (files) => A.attachFiles(files) : null,
+                onAttach: (!s.composerLockedReason && A.attachFiles) ? (files) => A.attachFiles(files) : null,
                 disabled: !!s.composerLockedReason, disabledReason: s.composerLockedReason || undefined,
             })),
         });
@@ -257,16 +284,27 @@ export function mountCommunityApp(root, adapter = {}) {
         h('p', { class: 'vx-grid-empty-title' }, 'quiet in here'),
         h('p', { class: 'vx-grid-empty-sub' }, 'no one else is connected to ' + (s.currentChannel && s.currentChannel.name || 'this channel') + ' right now.'));
 
+    const audioQueueView = (s) => (s.audioQueueItems && s.audioQueueItems.length)
+        ? AudioQueue({
+            segments: s.audioQueueItems, currentSegmentId: s.audioQueueCurrentId, paused: !!s.audioQueuePaused,
+            onReplay: (id) => A.replaySegment && A.replaySegment(id), onSkip: () => A.skipSegment && A.skipSegment(),
+            onResume: () => A.resumeQueue && A.resumeQueue(), onPause: () => A.pauseQueue && A.pauseQueue(),
+        })
+        : null;
+
     const voiceView = (s) => {
         const participants = s.voiceParticipants || [];
+        const transmitMode = s.pttUiMode === 'vad' ? 'vad' : 'ptt';
         return h('div', { class: 'vx-view' },
             participants.length
                 ? h('div', { class: 'vx-grid' }, ...participants.map((p, i) => VoiceUser({ ...p, key: p.identity || p.id || i })))
                 : voiceEmpty(s),
+            audioQueueView(s),
             h('div', { class: 'vx-dock' },
+                h('span', { class: 'vx-dock-mode', role: 'status', 'aria-label': 'transmit mode' }, transmitMode === 'vad' ? 'voice activity' : 'push to talk'),
                 s.webcamEnabled ? WebcamPreview({ videoStream: s.webcamStream, resolution: s.webcamResolution, fps: s.webcamFps, enabled: true }) : null,
-                s.pttUiMode === 'vad' ? VadMeter({ level: s.micRawLevel || 0, threshold: s.vadThreshold, onThresholdChange: (t) => A.setVadThreshold && A.setVadThreshold(t) }) : null,
-                s.pttUiMode === 'ptt' || s.pttUiMode == null ? PttButton({ state: s.isSpeaking ? 'live' : 'idle', mode: 'ptt', disabled: !!s.voiceListenOnly, disabledReason: 'No microphone: listening only', onHoldStart: () => A.pttStart && A.pttStart(), onHoldEnd: () => A.pttStop && A.pttStop() }) : null,
+                transmitMode === 'vad' ? VadMeter({ level: s.micRawLevel || 0, threshold: s.vadThreshold, onThresholdChange: (t) => A.setVadThreshold && A.setVadThreshold(t) }) : null,
+                transmitMode === 'ptt' ? PttButton({ state: s.isSpeaking ? 'live' : 'idle', mode: transmitMode, disabled: !!s.voiceListenOnly, disabledReason: 'No microphone: listening only', onHoldStart: () => A.pttStart && A.pttStart(), onHoldEnd: () => A.pttStop && A.pttStop() }) : null,
                 VoiceControls({
                     muted: !!s.micMuted, deafened: !!s.voiceDeafened,
                     onMic: () => A.toggleMic && A.toggleMic(),
@@ -283,7 +321,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const ch = s.currentChannel || {};
         const inVoiceChannel = ch.type === 'voice';
         const bodyMain = inVoiceChannel ? voiceView(s)
-            : ch.type === 'forum' ? ForumView({ posts: s.forumPosts || [], onSelect: (id) => A.openThread && A.openThread(id), onNewPost: () => A.newForumPost && A.newForumPost() })
+            : ch.type === 'forum' ? ForumView({ posts: s.forumPosts || [], onSelect: (id) => A.openThread && A.openThread(id), onNewPost: () => A.newForumPost && A.newForumPost(), resolveAuthor: A.resolveAuthor })
             : ch.type === 'page' ? PageView({ title: ch.name, html: s.pageHtml || '', author: s.pageAuthor || '', updatedAt: s.pageUpdatedAt || 0, isAdmin: !!s.canManage, onEdit: () => A.editPage && A.editPage() })
             : chatView(s);
         const showVoiceBanner = s.voiceConnected && s.voiceChannelName && !(inVoiceChannel && s.voiceChannelName === ch.name);
@@ -330,11 +368,11 @@ export function mountCommunityApp(root, adapter = {}) {
                     h('a', { href: 'https://github.com/AnEntrypoint/zellous', target: '_blank', rel: 'noopener' }, 'source ->'),
                 ),
             ),
-            MobileHeader({ channelType: s.homeMode ? 'dm' : (ch.type || 'text'), channelName: ch.name || '', onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
-            Banner({ tone: 'warning', message: 'No relay connected. Reconnecting…', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
+            MobileHeader({ channelType: s.homeMode ? 'dm' : (ch.type || 'text'), channelName: ch.name || '', membersOpen: !!s.memberListOpen, menuOpen: !!s.mobileMenuOpen, onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
+            Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : '') }, railServersView(s), railChannelsView(s)),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: narrow && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s)),
                 h('main', { class: 'app-main ds-app-surface', id: 'app-main', tabindex: '-1', onclick: () => { if (s.mobileMenuOpen && A.closeMobileMenu) A.closeMobileMenu(); } },
                     h('h1', { class: 'sr-only' }, ch.name || 'general'),
                     !inVoiceChannel && s.voiceConnected ? VoiceStrip({ channelName: s.voiceChannelName, status: s.voiceConnectionState || 'connected', muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onLeave: () => A.leaveVoice && A.leaveVoice(), open: true }) : null,
@@ -342,7 +380,7 @@ export function mountCommunityApp(root, adapter = {}) {
                     bodyMain,
                 ),
                 MemberList({
-                    categories: s.memberCategories || [], open: !!s.memberListOpen,
+                    categories: s.memberCategories || [], open: !!s.memberListOpen, userId: s.userId,
                     onSelectMember: (m) => { card = { open: true, member: m }; render(); },
                 }),
             ),
@@ -350,18 +388,30 @@ export function mountCommunityApp(root, adapter = {}) {
             card.open ? UserCardOverlay({ member: card.member, onClose: () => { card = { ...card, open: false }; render(); } }) : null,
             emoji.open ? EmojiPicker({ open: true, anchorX: emoji.x, anchorY: emoji.y, onSelect: (em) => { attempt(() => { emoji.onSelect && emoji.onSelect(em); }); emoji = { ...emoji, open: false }; render(); }, onClose: () => { emoji = { ...emoji, open: false }; render(); } }) : null,
             palette.open ? CommandPalette({ open: true, items: palette.items, onSelect: (it) => { attempt(() => { palette.onSelect && palette.onSelect(it); }); palette = { ...palette, open: false }; render(); }, onClose: () => { palette = { ...palette, open: false }; render(); } }) : null,
-            s.showAuthModal ? AuthModal({ open: true, mode: s.authMode || 'extension', error: s.authError || '', busy: !!s.authBusy, onModeChange: (m) => A.setAuthMode && A.setAuthMode(m), onConnectExtension: () => A.authExtension && A.authExtension(), onGenerate: () => A.authGenerate && A.authGenerate(), onImport: (k) => A.authImport && A.authImport(k), onClose: () => A.closeAuth && A.closeAuth() }) : null,
+            s.showAuthModal ? AuthModal({ open: true, isLoggedIn: !!s.userId, mode: s.authMode || 'extension', error: s.authError || '', busy: !!s.authBusy, onModeChange: (m) => A.setAuthMode && A.setAuthMode(m), onConnectExtension: () => A.authExtension && A.authExtension(), onGenerate: () => A.authGenerate && A.authGenerate(), onImport: (k) => A.authImport && A.authImport(k), onClose: () => A.closeAuth && A.closeAuth() }) : null,
             BootOverlay({ progress: s.bootProgress || 0, phase: s.bootPhase || '', errored: !!s.bootErrored, visible: !!s.bootVisible }),
             s.settingsOpen ? SettingsPopover({ open: true, anchorX: (s.settingsAnchor && s.settingsAnchor.x) || 0, anchorY: (s.settingsAnchor && s.settingsAnchor.y) || 0, sections: s.settingsSections || [], onClose: () => A.openSettings && A.openSettings() }) : null,
             s.voiceSettingsOpen ? VoiceSettingsModal({ open: true, mode: s.voiceMode || 'ptt', inputId: s.inputDeviceId, outputId: s.outputDeviceId, inputDevices: s.inputDevices || [], outputDevices: s.outputDevices || [], vadThreshold: s.vadThreshold, rnnoise: !!s.rnnoiseEnabled, autoGain: !!s.autoGainEnabled, forceTurn: !!s.forceTurnEnabled, bitrate: s.voiceBitrate, volume: s.masterVolume, onChange: (p) => A.voiceSettingsChange && A.voiceSettingsChange(p), onSave: () => A.voiceSettingsSave && A.voiceSettingsSave(), onCancel: () => A.voiceSettingsClose && A.voiceSettingsClose(), onClose: () => A.voiceSettingsClose && A.voiceSettingsClose() }) : null,
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
-            (s.audioQueueItems && s.audioQueueItems.length) ? AudioQueue({ segments: s.audioQueueItems, currentSegmentId: s.audioQueueCurrentId, paused: !!s.audioQueuePaused, onReplay: (id) => A.replaySegment && A.replaySegment(id), onSkip: () => A.skipSegment && A.skipSegment(), onResume: () => A.resumeQueue && A.resumeQueue(), onPause: () => A.pauseQueue && A.pauseQueue() }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
 
     const render = () => { webjsx.applyDiff(root, view()); };
+
+    // The rail is off-canvas below 900px, so a closed drawer is still in the
+    // tab order and still read out. `inert` (not CSS) is what removes it from
+    // both without killing the slide animation; the breakpoint has to be
+    // tracked in JS because crossing it changes no signal and so triggers no
+    // re-render on its own.
+    const narrowQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(max-width: 900px)') : null;
+    let narrow = !!(narrowQuery && narrowQuery.matches);
+    if (narrowQuery && narrowQuery.addEventListener) narrowQuery.addEventListener('change', (e) => {
+        if (e.matches === narrow) return;
+        narrow = e.matches;
+        render();
+    });
 
     const api = {
         contextMenu: { show: (items, x, y) => { ctx = { open: true, x: x | 0, y: y | 0, items: Array.isArray(items) ? items : [] }; render(); }, close: () => { ctx = { ...ctx, open: false }; render(); } },

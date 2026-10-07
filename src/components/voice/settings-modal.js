@@ -2,7 +2,11 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { SettingsSection, SettingsRow, SettingsRowToggle, SettingsRowSelect } from './settings-row.js';
+import { FOCUSABLE_SEL, trapTabKey } from '../editor-primitives/shared.js';
 const h = webjsx.createElement;
+
+let modalKeyHandler = null;
+let restoreFocusEl = null;
 
 function devOptions(devices) {
     return (devices || []).map(d => ({ value: d.value, label: d.label }));
@@ -26,17 +30,47 @@ function sliderRow({ icon, label, min, max, step, value, format, onInput, ariaLa
 export function VoiceSettingsModal({ open = false, mode = 'ptt', inputId, outputId, inputDevices = [], outputDevices = [], vadThreshold = 0.5, rnnoise = false, autoGain = false, forceTurn = false, bitrate = 64, volume, onChange, onSave, onCancel, onClose } = {}) {
     if (!open) return null;
     const patch = (p) => onChange && onChange(p);
-    const modes = ['ptt', 'vad', 'live'];
+    const modes = ['ptt', 'vad'];
     const vol = volume == null ? 1 : volume;
+    if (!restoreFocusEl && typeof document !== 'undefined') restoreFocusEl = document.activeElement;
+    const trigger = restoreFocusEl;
+    let detach = null;
+    const finish = (fn) => () => {
+        if (detach) { detach(); detach = null; }
+        restoreFocusEl = null;
+        if (trigger && trigger.focus && document.contains(trigger)) trigger.focus();
+        fn && fn();
+    };
+    const close = finish(onClose);
     return h('div', {
         class: 'vx-modal-backdrop',
-        onclick: (e) => { if (e.target === e.currentTarget) onClose && onClose(); },
-        onkeydown: (e) => { if (e.key === 'Escape') { e.preventDefault(); onClose && onClose(); } }
+        onclick: (e) => { if (e.target === e.currentTarget) close(); },
+        ref: (el) => {
+            if (!el) return;
+            const dialog = el.querySelector('.vx-modal');
+            const onKey = (e) => {
+                if (!document.contains(el)) { if (detach) { detach(); detach = null; } return; }
+                if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+                if (dialog) trapTabKey(dialog, e);
+            };
+            if (modalKeyHandler) document.removeEventListener('keydown', modalKeyHandler);
+            document.addEventListener('keydown', onKey);
+            modalKeyHandler = onKey;
+            detach = () => {
+                document.removeEventListener('keydown', onKey);
+                if (modalKeyHandler === onKey) modalKeyHandler = null;
+            };
+            setTimeout(() => {
+                const target = dialog && dialog.querySelector(FOCUSABLE_SEL);
+                if (target) target.focus();
+                else if (dialog) dialog.focus();
+            }, 0);
+        }
     },
-        h('div', { class: 'vx-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Voice settings' },
+        h('div', { class: 'vx-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Voice settings', tabindex: '-1' },
             h('div', { class: 'vx-modal-head' },
                 h('h2', { class: 'vx-modal-title' }, 'Voice settings'),
-                h('button', { type: 'button', class: 'vx-modal-x', 'aria-label': 'close', onclick: () => onClose && onClose() }, Icon('x'))
+                h('button', { type: 'button', class: 'vx-modal-x', 'aria-label': 'close', onclick: close }, Icon('x'))
             ),
             h('div', { class: 'vx-modal-body' },
                 SettingsSection({ title: 'Mode', children:
@@ -86,8 +120,8 @@ export function VoiceSettingsModal({ open = false, mode = 'ptt', inputId, output
                 ]})
             ),
             h('div', { class: 'vx-modal-foot' },
-                h('button', { type: 'button', class: 'vx-btn', onclick: () => onCancel && onCancel() }, 'Cancel'),
-                h('button', { type: 'button', class: 'vx-btn vx-btn-primary', onclick: () => onSave && onSave() }, 'Save')
+                h('button', { type: 'button', class: 'vx-btn', onclick: finish(onCancel) }, 'Cancel'),
+                h('button', { type: 'button', class: 'vx-btn vx-btn-primary', onclick: finish(onSave) }, 'Save')
             )
         )
     );

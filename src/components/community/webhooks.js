@@ -6,12 +6,42 @@ import { avatarStyle } from './avatar-style.js';
 import { SettingsRow, SettingsRowGroup, SettingsSection } from '../voice/settings-row.js';
 const h = webjsx.createElement;
 
+function _shortId(id) {
+    const s = String(id || '');
+    return s.length > 16 ? s.slice(0, 8) + '…' + s.slice(-4) : s;
+}
+
+const _pendingConfirm = new Set();
+function _confirmToggle(btn, key, normal, armed, fire, label) {
+    const disarm = () => {
+        webjsx.applyDiff(btn, normal);
+        if (label) { btn.setAttribute('aria-label', label); btn.title = label; }
+    };
+    if (_pendingConfirm.has(key)) {
+        _pendingConfirm.delete(key);
+        disarm();
+        fire();
+        return;
+    }
+    _pendingConfirm.add(key);
+    webjsx.applyDiff(btn, armed);
+    if (label) {
+        const armedLabel = 'Click again to confirm ' + label;
+        btn.setAttribute('aria-label', armedLabel);
+        btn.title = armedLabel;
+    }
+    setTimeout(() => {
+        if (!_pendingConfirm.delete(key)) return;
+        disarm();
+    }, 4000);
+}
+
 function WebhookAvatar({ name, avatarUrl, color }) {
     if (avatarUrl) return h('img', { class: 'cm-webhook-avatar', src: avatarUrl, alt: '' });
     return h('div', { class: 'cm-webhook-avatar cm-webhook-avatar-fallback', style: avatarStyle(color) }, avatarInitial(name));
 }
 
-export function WebhookListItem({ name, avatarUrl, color, description, onEdit, onDelete } = {}) {
+export function WebhookListItem({ id, name, avatarUrl, color, description, onEdit, onDelete } = {}) {
     return h('div', { class: 'cm-webhook-item' },
         WebhookAvatar({ name, avatarUrl, color }),
         h('div', { class: 'cm-webhook-item-body' },
@@ -20,7 +50,10 @@ export function WebhookListItem({ name, avatarUrl, color, description, onEdit, o
         ),
         h('div', { class: 'cm-webhook-item-actions' },
             h('button', { type: 'button', class: 'cm-webhook-action', 'aria-label': 'Edit webhook', title: 'Edit', onclick: onEdit }, Icon('edit')),
-            h('button', { type: 'button', class: 'cm-webhook-action cm-webhook-action-danger', 'aria-label': 'Delete webhook', title: 'Delete', onclick: onDelete }, Icon('trash'))
+            h('button', {
+                type: 'button', class: 'cm-webhook-action cm-webhook-action-danger', 'aria-label': 'Delete webhook', title: 'Delete',
+                onclick: (e) => _confirmToggle(e.currentTarget, 'wh:' + id, Icon('trash'), Icon('help', { size: 16 }), () => onDelete && onDelete(id), 'delete webhook'),
+            }, Icon('trash'))
         )
     );
 }
@@ -36,7 +69,8 @@ export function WebhookList({ webhooks = [], onCreate, onEdit, onDelete, busy = 
             : (webhooks.length
                 ? h('div', { class: 'cm-webhook-items' },
                     ...webhooks.map((w) => h('div', { key: w.id }, WebhookListItem({
-                        name: w.name, avatarUrl: w.avatarUrl, color: w.color, description: w.id,
+                        id: w.id, name: w.name, avatarUrl: w.avatarUrl, color: w.color,
+                        description: w.channelName ? '#' + w.channelName : _shortId(w.id),
                         onEdit: () => onEdit && onEdit(w.id),
                         onDelete: () => onDelete && onDelete(w.id),
                     }))))
@@ -82,7 +116,10 @@ export function WebhookEditor({ name = '', avatarUrl = '', url = '', onNameChang
         }),
         h('div', { class: 'cm-webhook-editor-actions' },
             h('button', { type: 'button', class: 'cm-webhook-save', disabled: saving, onclick: onSave }, saving ? 'Saving…' : 'Save Changes'),
-            h('button', { type: 'button', class: 'cm-webhook-delete', onclick: onDelete }, 'Delete Webhook')
+            h('button', {
+                type: 'button', class: 'cm-webhook-delete',
+                onclick: (e) => _confirmToggle(e.currentTarget, 'whe:' + (url || name), 'Delete Webhook', 'Click again to confirm', () => onDelete && onDelete()),
+            }, 'Delete Webhook')
         )
     );
 }

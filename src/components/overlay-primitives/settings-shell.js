@@ -10,12 +10,14 @@ export function SettingsShell({ title = 'Settings', open, groups = [], activeId,
     const close = () => onClose && onClose();
     const gs = Array.isArray(groups) ? groups : [];
 
+    const panelId = 'ov-stgs-panel';
     const itemFor = (item) => {
         const selected = item.id === activeId;
         return h('button', {
             type: 'button',
             class: 'ov-stgs-item' + (selected ? ' is-active' : ''),
-            'aria-selected': selected ? 'true' : 'false',
+            'aria-current': selected ? 'true' : null,
+            'aria-controls': panelId,
             onclick: () => onSelect && onSelect(item.id),
         },
             item.icon ? h('span', { class: 'ov-stgs-item-icon', 'aria-hidden': 'true' }, Icon(item.icon)) : null,
@@ -48,7 +50,8 @@ export function SettingsShell({ title = 'Settings', open, groups = [], activeId,
                 h('div', { class: 'ov-stgs-crumb' }, activeItem ? String(activeItem.label || activeItem.id) : ''),
                 h('button', { type: 'button', class: 'ov-stgs-close', 'aria-label': 'close', onclick: close }, Icon('x'))
             ),
-            h('div', { class: 'ov-stgs-content-body' }, children || null)
+            h('div', { class: 'ov-stgs-content-body', id: panelId, role: 'region',
+                'aria-label': activeItem ? String(activeItem.label || activeItem.id) : String(title) }, children || null)
         )
     );
 }

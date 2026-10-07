@@ -3,15 +3,39 @@ import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
 
+const _pendingDelete = new Set();
+function _confirmDelete(btn, key, fire) {
+    const disarm = () => {
+        webjsx.applyDiff(btn, Icon('trash', { size: 14 }));
+        btn.setAttribute('aria-label', key);
+        btn.title = 'Delete';
+    };
+    if (_pendingDelete.has(key)) {
+        _pendingDelete.delete(key);
+        disarm();
+        fire();
+        return;
+    }
+    _pendingDelete.add(key);
+    webjsx.applyDiff(btn, Icon('help', { size: 14 }));
+    btn.setAttribute('aria-label', 'Click again to confirm ' + key);
+    btn.title = 'Click again to confirm';
+    setTimeout(() => {
+        if (!_pendingDelete.delete(key)) return;
+        disarm();
+    }, 4000);
+}
+
 function EmojiCell({ id, name, imageUrl, onDelete }) {
+    const label = `Delete :${name || id}:`;
     return h('div', { class: 'cm-emoji-mgr-cell', key: id },
         imageUrl
             ? h('img', { class: 'cm-emoji-mgr-img', src: imageUrl, alt: name || id })
             : h('span', { class: 'cm-emoji-mgr-img cm-emoji-mgr-img-fallback' }, Icon('smile')),
         h('span', { class: 'cm-emoji-mgr-name' }, name ? `:${name}:` : id),
         h('button', {
-            type: 'button', class: 'cm-emoji-mgr-delete', 'aria-label': `Delete :${name || id}:`, title: 'Delete',
-            onclick: (e) => { e.stopPropagation(); onDelete && onDelete(id); },
+            type: 'button', class: 'cm-emoji-mgr-delete', 'aria-label': label, title: 'Delete',
+            onclick: (e) => { e.stopPropagation(); _confirmDelete(e.currentTarget, label, () => onDelete && onDelete(id)); },
         }, Icon('trash', { size: 14 }))
     );
 }

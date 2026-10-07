@@ -167,7 +167,7 @@ export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, 
                 if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229 && !isCoarsePointer()) { e.preventDefault(); send(); }
                 if (e.key === ';' && e.ctrlKey) { e.preventDefault(); onEmoji && onEmoji(e); }
             } }),
-        h('div', { class: 'chat-composer-hint' }, isCoarsePointer() ? 'Tap Send to send' : 'Enter to send · Shift+Enter for a new line'),
+        disabled ? null : h('div', { class: 'chat-composer-hint' }, isCoarsePointer() ? 'Tap Send to send' : 'Enter to send · Shift+Enter for a new line'),
         (busy && streamingSince) ? ChatComposerElapsed({ streamingSince }) : null,
         h('div', { class: 'chat-composer-toolbar' },
             onAttach ? h('input', { ref: attachRef, type: 'file', multiple: true, class: 'chat-composer-attach-input', tabindex: '-1', 'aria-hidden': 'true',

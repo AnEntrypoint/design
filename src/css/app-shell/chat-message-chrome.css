@@ -29,13 +29,16 @@
   transition: transform var(--dur-snap, .08s) var(--ease-spring);
 }
 .chat-reactions .rxn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+@media (pointer: coarse) {
+  .chat-reactions .rxn { min-height: 40px; padding-inline: var(--space-2-5); }
+}
 .chat-reactions .rxn.you {
   background: color-mix(in oklab, var(--accent) 18%, var(--bg-2));
   border-color: color-mix(in oklab, var(--accent) 55%, transparent);
   color: var(--accent-ink);
 }
 .chat-reactions .rxn .e { font-size: var(--fs-xs); line-height: 1; }
-.chat-reactions .rxn .n { font-family: var(--ff-mono); font-weight: var(--fw-medium, 500); font-size: var(--fs-nano); color: var(--fg-2); }
+.chat-reactions .rxn .n { font-family: var(--ff-mono); font-weight: var(--fw-medium, 500); font-size: var(--fs-micro); color: var(--fg-2); }
 .chat-reactions .rxn.you .n { color: var(--accent-ink); }
 
 .chat-msg-actions {
@@ -84,8 +87,21 @@
 .chat-msg-retry-btn:hover { background: var(--bg-3); }
 
 .chat-role {
-  font-family: var(--ff-mono); font-size: var(--fs-nano); color: var(--fg-3);
+  font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-3);
   text-transform: lowercase; letter-spacing: 0.02em;
+}
+
+.chat-msg-gutter-time {
+  display: inline-flex; align-items: flex-start; justify-content: flex-end;
+  font-family: var(--ff-mono); font-size: var(--fs-micro); line-height: 1.3;
+  color: var(--fg-3); font-variant-numeric: tabular-nums;
+  padding-top: var(--space-half, 2px);
+  white-space: nowrap; overflow: visible;
+}
+
+.chat-md a,
+.chat-bubble a {
+  color: var(--accent-ink);
 }
 
 .cm-composer-wrap { display: flex; flex-direction: column; width: 100%; gap: var(--space-1); padding: 0 var(--space-3) var(--space-3); }

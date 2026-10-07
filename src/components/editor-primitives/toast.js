@@ -16,6 +16,7 @@ export function Toast({ message, kind = 'info', duration = 3000, onClose } = {})
     }, message);
 }
 
+const TOAST_MAX = 4;
 let _toastHostEl = null;
 function ensureToastHost() {
     if (typeof document === 'undefined') return null;
@@ -44,7 +45,6 @@ export function toast({ message, kind = 'info', duration = 3000, actionLabel, on
         setTimeout(() => { el.parentNode && el.parentNode.removeChild(el); }, 200);
     };
     if (actionLabel && onAction) {
-        el.classList.add('has-action');
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'ds-ep-toast-action';
@@ -52,7 +52,15 @@ export function toast({ message, kind = 'info', duration = 3000, actionLabel, on
         btn.onclick = () => onAction(dismiss);
         el.appendChild(btn);
     }
+    const x = document.createElement('button');
+    x.type = 'button';
+    x.className = 'ds-ep-toast-x';
+    x.setAttribute('aria-label', 'Dismiss notification');
+    x.textContent = '\u00d7';
+    x.onclick = dismiss;
+    el.appendChild(x);
     host.appendChild(el);
+    while (host.children.length > TOAST_MAX) host.removeChild(host.firstElementChild);
     if (duration > 0) setTimeout(dismiss, duration);
     return dismiss;
 }

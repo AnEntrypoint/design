@@ -904,6 +904,7 @@ export interface ChatMessageProps {
     text?: any;
     parts?: any;
     time?: any;
+    ts?: any;
     typing?: any;
     key?: string | number;
     id?: any;
@@ -958,6 +959,8 @@ export interface ChatProps {
     /** @default 'chat' */
     title?: string;
     sub?: any;
+    emptySub?: any;
+    locked?: any;
     /** @default [] */
     messages?: any[];
     composer?: any;
@@ -1921,6 +1924,7 @@ export interface ChannelItemProps {
     participants?: any[];
     onClick?: (...args: any[]) => any;
     onContext?: (...args: any[]) => any;
+    onReorder?: (...args: any[]) => any;
 }
 export declare function ChannelItem(props?: ChannelItemProps): VNode;
 
@@ -2019,6 +2023,7 @@ export interface MemberListProps {
     /** @default false */
     loading?: boolean;
     onSelectMember?: (...args: any[]) => any;
+    userId?: any;
 }
 export declare function MemberList(props?: MemberListProps): VNode;
 
@@ -2093,6 +2098,8 @@ export interface MobileHeaderProps {
     channelName?: any;
     onMenu?: (...args: any[]) => any;
     onMembers?: (...args: any[]) => any;
+    membersOpen?: any;
+    menuOpen?: any;
 }
 export declare function MobileHeader(props?: MobileHeaderProps): VNode;
 
@@ -2151,6 +2158,7 @@ export interface ForumViewProps {
     onNewPost?: (...args: any[]) => any;
     /** @default false */
     loading?: boolean;
+    resolveAuthor?: any;
 }
 export declare function ForumView(props?: ForumViewProps): VNode;
 
@@ -2183,6 +2191,7 @@ export interface RoleRowProps {
     /** @default true */
     draggable?: boolean;
     onClick?: (...args: any[]) => any;
+    onMove?: (...args: any[]) => any;
     onDragStart?: (...args: any[]) => any;
     onDragOver?: (...args: any[]) => any;
     onDrop?: (...args: any[]) => any;
@@ -2280,6 +2289,7 @@ export declare function WebhookList(props?: WebhookListProps): VNode;
  * Props for {@link WebhookListItem} (src/components/community.js).
  */
 export interface WebhookListItemProps {
+    id?: any;
     name?: any;
     avatarUrl?: any;
     color?: any;
@@ -2317,6 +2327,7 @@ export interface RoleTabsProps {
     roles?: any[];
     activeId?: any;
     onSelect?: (...args: any[]) => any;
+    panelId?: any;
 }
 export declare function RoleTabs(props?: RoleTabsProps): VNode;
 
@@ -3502,6 +3513,10 @@ export interface AuthModalProps {
     busy?: boolean;
     /** @default false */
     open?: boolean;
+    /** @default false */
+    isLoggedIn?: boolean;
+    /** @default false */
+    switching?: boolean;
     onModeChange?: (...args: any[]) => any;
     onConnectExtension?: (...args: any[]) => any;
     onGenerate?: (...args: any[]) => any;

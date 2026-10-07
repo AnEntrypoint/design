@@ -1,11 +1,14 @@
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
+import { trapTab, FOCUSABLE_SEL } from './floating.js';
 const h = webjsx.createElement;
 
-export function AuthModal({ mode = 'extension', error = '', busy = false, open = false, onModeChange, onConnectExtension, onGenerate, onImport, onClose } = {}) {
+export function AuthModal({ mode = 'extension', error = '', busy = false, open = false, isLoggedIn = false, switching = false, onModeChange, onConnectExtension, onGenerate, onImport, onClose } = {}) {
     if (!open) return null;
     const close = () => onClose && onClose();
+    const isSwitching = !!(switching || isLoggedIn);
+    const title = isSwitching ? 'Switch identity' : 'Sign in';
     const modes = [
         { id: 'extension', label: 'Extension' },
         { id: 'generate', label: 'Generate' },
@@ -15,14 +18,14 @@ export function AuthModal({ mode = 'extension', error = '', busy = false, open =
     const body = () => {
         if (mode === 'generate') {
             return [
-                h('p', { class: 'ov-auth-hint' }, 'Create a fresh Nostr identity. Back up the key after.'),
+                h('p', { class: 'ov-auth-hint' }, isSwitching ? "Create a brand-new key. This replaces the one you're using now." : 'Create a fresh Nostr identity. Back up the key after.'),
                 h('button', { type: 'button', class: 'ov-auth-primary', disabled: busy ? true : null,
                     onclick: () => onGenerate && onGenerate() }, busy ? 'Working…' : 'Generate new key'),
             ];
         }
         if (mode === 'import') {
             return [
-                h('p', { class: 'ov-auth-hint' }, 'Paste an existing nsec / hex secret key.'),
+                h('p', { class: 'ov-auth-hint' }, 'Paste an existing secret key (it starts with nsec1).'),
                 h('input', {
                     type: 'password', class: 'ov-auth-input', placeholder: 'nsec1…',
                     'aria-label': 'secret key', disabled: busy ? true : null,
@@ -34,7 +37,7 @@ export function AuthModal({ mode = 'extension', error = '', busy = false, open =
             ];
         }
         return [
-            h('p', { class: 'ov-auth-hint' }, 'Connect a NIP-07 browser extension (Alby, nos2x…).'),
+            h('p', { class: 'ov-auth-hint' }, 'Use a browser extension (Alby, nos2x). It keeps your key, so nothing is stored here.'),
             h('button', { type: 'button', class: 'ov-auth-primary', disabled: busy ? true : null,
                 onclick: () => onConnectExtension && onConnectExtension() }, busy ? 'Connecting…' : 'Connect extension'),
         ];
@@ -50,12 +53,25 @@ export function AuthModal({ mode = 'extension', error = '', busy = false, open =
         },
     },
         h('div', {
-            class: 'ov-auth-panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Sign in',
-            onkeydown: (e) => { if (e.key === 'Escape') { e.preventDefault(); close(); } },
+            class: 'ov-auth-panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': title, tabindex: '-1',
+            onkeydown: (e) => {
+                if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+                const root = e.currentTarget;
+                if (root) trapTab(root, e, true);
+            },
+            ref: (el) => {
+                if (el._ovAuthFocus) return;
+                el._ovAuthFocus = true;
+                setTimeout(() => {
+                    const target = el.querySelector(FOCUSABLE_SEL);
+                    if (target) target.focus();
+                    else el.focus();
+                }, 0);
+            },
         },
             h('div', { class: 'ov-auth-head' },
-                h('h2', { class: 'ov-auth-title' }, 'Sign in'),
-                h('button', { type: 'button', class: 'ov-auth-x', 'aria-label': 'close', onclick: close }, Icon('x'))
+                h('h2', { class: 'ov-auth-title' }, title),
+                h('button', { type: 'button', class: 'ov-auth-x ov-stgs-close', 'aria-label': 'close', onclick: close }, Icon('x'))
             ),
             h('div', { class: 'ov-auth-tabs', role: 'tablist',
                 onkeydown: (e) => {

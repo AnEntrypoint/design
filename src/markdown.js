@@ -37,6 +37,14 @@ export async function ensureReady() {
             const purify = DOMPurifyMod.default || DOMPurifyMod;
             if (!marked || typeof marked.parse !== 'function') throw new Error('marked module missing parse()');
             if (!purify || typeof purify.sanitize !== 'function') throw new Error('DOMPurify module missing sanitize()');
+            if (!purify._ds247420LinkHook && typeof purify.addHook === 'function') {
+                purify._ds247420LinkHook = true;
+                purify.addHook('afterSanitizeAttributes', (node) => {
+                    if (node.tagName !== 'A' || !node.hasAttribute('href')) return;
+                    node.setAttribute('target', '_blank');
+                    node.setAttribute('rel', 'noopener noreferrer');
+                });
+            }
             marked.use({
                 extensions: [{
                     name: 'spoiler',

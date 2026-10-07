@@ -7,15 +7,16 @@ export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd
     const active = state === 'live' || state === 'recording' || state === 'vad';
     const start = (e) => { onHoldStart && onHoldStart(e); };
     const end = (e) => { onHoldEnd && onHoldEnd(e); };
+    const text = disabled && disabledReason ? disabledReason : (active ? 'Transmitting…' : label);
     return h('button', {
         type: 'button',
         disabled: disabled ? 'disabled' : null,
-        title: disabled && disabledReason ? disabledReason : null,
         class: 'vx-ptt vx-ptt-' + state + ' vx-ptt-mode-' + mode,
         'data-state': state,
         'data-mode': mode,
         'aria-pressed': active ? 'true' : 'false',
-        'aria-label': label,
+        'aria-label': text,
+        title: text,
         onclick: onClick ? (e) => onClick(e) : null,
         onpointerdown: (e) => { e.preventDefault(); start(e); },
         onpointerup: (e) => { e.preventDefault(); end(e); },
@@ -26,7 +27,7 @@ export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd
     },
         h('span', { class: 'vx-ptt-glow', 'aria-hidden': 'true' }),
         h('span', { class: 'vx-ptt-icon', 'aria-hidden': 'true' }, state === 'idle' ? Icon('mic') : h('span', { class: 'ds-dot ds-dot-on', 'aria-hidden': 'true' })),
-        h('span', { class: 'vx-ptt-label' }, disabled && disabledReason ? disabledReason : label)
+        h('span', { class: 'vx-ptt-label' }, text)
     );
 }
 
@@ -47,8 +48,9 @@ export function VadMeter({ level = 0, threshold = 0.5, onThresholdChange } = {})
             })
         ),
         h('div', { class: 'vx-vad-readout' },
-            h('span', {}, 'lvl ' + Math.round(lvl * 100)),
-            h('span', {}, 'thr ' + Math.round(thr * 100))
+            h('span', {}, 'level ' + Math.round(lvl * 100) + '%'),
+            h('span', { class: 'vx-vad-readout-sep', 'aria-hidden': 'true' }, '·'),
+            h('span', {}, 'threshold ' + Math.round(thr * 100) + '%')
         )
     );
 }

@@ -6,6 +6,17 @@ import { SettingsSection, SettingsRowToggle } from '../../voice/settings-row.js'
 
 const h = webjsx.createElement;
 
+const _pendingDelete = new Set();
+function _confirmDelete(btn, key, normalChildren, fire) {
+    if (_pendingDelete.has(key)) { _pendingDelete.delete(key); fire(); return; }
+    _pendingDelete.add(key);
+    webjsx.applyDiff(btn, [Icon('warn', { size: 16 }), ' Click again to confirm']);
+    setTimeout(() => {
+        if (!_pendingDelete.delete(key)) return;
+        webjsx.applyDiff(btn, normalChildren);
+    }, 5000);
+}
+
 const DEFAULT_ROLE_COLORS = [
     '#fca5a5', '#fdba74', '#fcd34d', '#86efac', '#6ee7b7', '#67e8f9', '#93c5fd', '#c4b5fd', '#f0abfc', '#f9a8d4', '#cbd5e1',
     '#ef4444', '#f97316', '#f59e0b', '#22c55e', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#d946ef', '#ec4899', '#64748b',
@@ -98,6 +109,8 @@ export function RoleEditor({
             h('input', {
                 id: 'cm-role-name', type: 'text', class: 'cm-role-editor-input',
                 value: name, maxlength: '32',
+                title: 'Role names are limited to 32 characters',
+                'aria-description': 'Role names are limited to 32 characters',
                 oninput: (e) => onChangeName && onChangeName(e.target.value),
             })
         ),
@@ -116,12 +129,15 @@ export function RoleEditor({
         PermissionGrid({ permissions, groups: permissionGroups, onChange: onChangePermission }),
         h('div', { class: 'cm-role-editor-actions' },
             h('button', { type: 'button', class: 'cm-role-editor-btn', onclick: () => onCopyId && onCopyId(role.id) }, Icon('copy', { size: 16 }), ' Copy role ID'),
-            h('button', { type: 'button', class: 'cm-role-editor-btn danger', onclick: () => onDelete && onDelete(role.id) }, Icon('trash', { size: 16 }), ' Delete role')
+            h('button', {
+                type: 'button', class: 'cm-role-editor-btn danger',
+                onclick: (e) => _confirmDelete(e.currentTarget, 'role:' + role.id, [Icon('trash', { size: 16 }), ' Delete role'], () => onDelete && onDelete(role.id)),
+            }, Icon('trash', { size: 16 }), ' Delete role')
         ),
         dirty ? h('div', { class: 'cm-role-editor-save-bar' },
             h('span', {}, saving ? 'saving…' : 'you have unsaved changes'),
             h('button', { type: 'button', class: 'cm-role-editor-btn', onclick: onReset }, 'Reset'),
-            h('button', { type: 'button', class: 'cm-role-editor-btn cm-role-editor-btn-primary', onclick: onSave }, 'Save changes')
+            h('button', { type: 'button', class: 'cm-role-editor-btn cm-role-editor-btn-primary', disabled: saving ? 'true' : null, onclick: onSave }, 'Save changes')
         ) : null
     );
 }

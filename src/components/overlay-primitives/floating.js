@@ -87,11 +87,16 @@ function _clampToViewport(x, y, w, h, margin = CLAMP_MARGIN) {
     };
 }
 
-export function trapTab(el, e) {
-    if (e.key !== 'Tab') return false;
+export function trapTab(el, e, pullInside = false) {
+    if (!el || e.key !== 'Tab') return false;
     const nodes = el.querySelectorAll(FOCUSABLE_SEL);
     if (!nodes.length) { e.preventDefault(); return true; }
     const first = nodes[0], last = nodes[nodes.length - 1], a = document.activeElement;
+    if (pullInside && (!a || (a !== el && !el.contains(a)))) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+        return true;
+    }
     if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); return true; }
     if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); return true; }
     return false;
@@ -104,7 +109,17 @@ export function _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW, fal
         el.style.left = left + 'px'; el.style.top = top + 'px';
     };
     setTimeout(() => { place(); el.focus(); }, 0);
-    const onDown = (e) => { if (!el.contains(e.target)) close(); };
-    queueMicrotask(() => document.addEventListener('mousedown', onDown, true));
-    return () => document.removeEventListener('mousedown', onDown, true);
+    let disposed = false;
+    const dispose = () => {
+        if (disposed) return;
+        disposed = true;
+        document.removeEventListener('mousedown', onDown, true);
+    };
+    const onDown = (e) => {
+        if (disposed) return;
+        if (!document.contains(el)) { dispose(); return; }
+        if (!el.contains(e.target)) close();
+    };
+    queueMicrotask(() => { if (!disposed) document.addEventListener('mousedown', onDown, true); });
+    return dispose;
 }

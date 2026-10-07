@@ -6,25 +6,31 @@ const h = webjsx.createElement;
 export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY = 0, sections = [], onClose } = {}) {
     if (!open) return null;
     let rootEl = null;
-    const close = () => onClose && onClose();
+    let prevFocus = null;
+    let dispose = null;
+    const close = () => {
+        if (dispose) { dispose(); dispose = null; }
+        if (prevFocus && prevFocus.focus && document.contains(prevFocus)) prevFocus.focus();
+        onClose && onClose();
+    };
     const secs = Array.isArray(sections) ? sections : [];
 
-    const renderRow = (row, i) => {
+    const renderRow = (row, i, si) => {
         const label = row.label != null ? row.label : (row.title != null ? row.title : '');
         const kind = row.kind;
-        const ctrlId = 'ov-set-' + i + '-' + kind;
+        const ctrlId = 'ov-set-' + si + '-' + i + '-' + kind;
         const labelNode = h('label', { class: 'ov-set-row-label', for: ctrlId }, String(label));
         let control = null;
         if (kind === 'select') {
             const opts = Array.isArray(row.options) ? row.options : [];
             control = h('select', {
                 id: ctrlId,
-                class: 'ov-set-control', value: row.value != null ? String(row.value) : undefined,
+                class: 'ov-set-control',
                 onchange: (e) => row.onChange && row.onChange(e.target.value),
             }, ...opts.map(o => {
                 const v = (o && typeof o === 'object') ? o.value : o;
                 const l = (o && typeof o === 'object') ? (o.label != null ? o.label : o.value) : o;
-                return h('option', { value: String(v) }, String(l));
+                return h('option', { value: String(v), selected: String(v) === String(row.value) }, String(l));
             }));
         } else if (kind === 'toggle') {
             control = h('input', {
@@ -33,16 +39,34 @@ export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY
                 checked: row.value ? 'checked' : undefined,
                 onchange: (e) => row.onChange && row.onChange(e.target.checked),
             });
+            return h('div', { class: 'ov-set-row ov-set-row-tap', key: i,
+                onclick: (e) => {
+                    if (e.target.closest && e.target.closest('label, input, select, button')) return;
+                    const box = e.currentTarget.querySelector('input.ov-set-toggle');
+                    if (!box) return;
+                    box.checked = !box.checked;
+                    if (row.onChange) row.onChange(box.checked);
+                } }, labelNode, control);
         } else if (kind === 'range') {
-            control = h('input', {
-                id: ctrlId,
-                type: 'range', class: 'ov-set-control',
-                min: String(row.min != null ? row.min : 0),
-                max: String(row.max != null ? row.max : 100),
-                step: String(row.step != null ? row.step : 1),
-                value: String(row.value != null ? row.value : 0),
-                oninput: (e) => row.onChange && row.onChange(Number(e.target.value)),
-            });
+            const valueId = ctrlId + '-value';
+            control = h('span', { class: 'ov-set-row-value', id: valueId }, String(row.value != null ? row.value : 0));
+            return h('div', { class: 'ov-set-row', key: i },
+                h('label', { class: 'ov-set-row-label', for: ctrlId }, String(label)),
+                h('input', {
+                    id: ctrlId,
+                    type: 'range', class: 'ov-set-control',
+                    min: String(row.min != null ? row.min : 0),
+                    max: String(row.max != null ? row.max : 100),
+                    step: String(row.step != null ? row.step : 1),
+                    value: String(row.value != null ? row.value : 0),
+                    'aria-describedby': valueId,
+                    oninput: (e) => {
+                        const out = document.getElementById(valueId);
+                        if (out) out.textContent = e.target.value;
+                        row.onChange && row.onChange(Number(e.target.value));
+                    },
+                }),
+                control);
         } else if (kind === 'button') {
             control = h('button', { type: 'button', class: 'ov-set-btn' + (row.danger ? ' danger' : ''),
                 onclick: () => row.onClick && row.onClick() }, String(label || 'Action'));
@@ -56,11 +80,20 @@ export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY
 
     return h('div', {
         class: 'ov-set-root', role: 'dialog', 'aria-modal': 'true', 'aria-label': String(title), tabindex: '-1',
-        onkeydown: (e) => { if (e.key === 'Escape') { e.preventDefault(); close(); return; } if (rootEl) trapTab(rootEl, e); },
+        onkeydown: (e) => {
+            if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+            const root = e.currentTarget || rootEl;
+            if (root) trapTab(root, e, true);
+        },
         ref: (el) => {
-            if (!el) { if (rootEl && rootEl._ovSetCleanup) rootEl._ovSetCleanup(); return; }
-            if (el._ovSet) return; el._ovSet = true; rootEl = el;
-            el._ovSetCleanup = _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW: 280, fallbackH: 200, close });
+            if (!el) { if (dispose) { dispose(); dispose = null; } return; }
+            rootEl = el;
+            if (el._ovSetPrevFocus === undefined) el._ovSetPrevFocus = document.activeElement;
+            prevFocus = el._ovSetPrevFocus;
+            dispose = el._ovSetCleanup || null;
+            if (el._ovSet) return;
+            el._ovSet = true;
+            dispose = el._ovSetCleanup = _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW: 280, fallbackH: 200, close });
         },
     },
         h('div', { class: 'ov-set-head' }, String(title)),
@@ -70,7 +103,7 @@ export function SettingsPopover({ title = 'Settings', open, anchorX = 0, anchorY
                 const rows = Array.isArray(sec.rows) ? sec.rows : (Array.isArray(sec.items) ? sec.items : []);
                 return h('div', { class: 'ov-set-section', key: si },
                     slabel ? h('div', { class: 'ov-set-section-head' }, String(slabel)) : null,
-                    ...rows.map((r, ri) => renderRow(r, ri)));
+                    ...rows.map((r, ri) => renderRow(r, ri, si)));
             }))
     );
 }

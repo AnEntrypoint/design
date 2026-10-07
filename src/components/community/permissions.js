@@ -4,11 +4,35 @@ import { Icon } from '../shell.js';
 import { SettingsRow, SettingsRowGroup, SettingsSection } from '../voice/settings-row.js';
 const h = webjsx.createElement;
 
-export function RoleTabs({ roles = [], activeId, onSelect } = {}) {
-    return h('div', { class: 'cm-perm-roletabs', role: 'tablist', 'aria-label': 'Roles' },
+export function RoleTabs({ roles = [], activeId, onSelect, panelId } = {}) {
+    let listEl = null;
+    const goTo = (i) => {
+        if (!listEl || !roles[i]) return;
+        const tab = listEl.querySelectorAll('[role="tab"]')[i];
+        if (tab) tab.focus();
+        onSelect && onSelect(roles[i].id);
+    };
+    return h('div', {
+        class: 'cm-perm-roletabs', role: 'tablist', 'aria-label': 'Roles',
+        ref: (el) => { listEl = el; },
+        onkeydown: (e) => {
+            const cur = roles.findIndex((r) => r.id === activeId);
+            if (cur === -1) return;
+            let next = -1;
+            if (e.key === 'ArrowRight') next = (cur + 1) % roles.length;
+            else if (e.key === 'ArrowLeft') next = (cur - 1 + roles.length) % roles.length;
+            else if (e.key === 'Home') next = 0;
+            else if (e.key === 'End') next = roles.length - 1;
+            if (next === -1 || next === cur) return;
+            e.preventDefault();
+            goTo(next);
+        },
+    },
         ...roles.map((r) => h('button', {
             type: 'button', class: 'cm-perm-roletab' + (r.id === activeId ? ' is-active' : ''),
             role: 'tab', 'aria-selected': r.id === activeId ? 'true' : 'false',
+            tabindex: r.id === activeId ? '0' : '-1',
+            'aria-controls': panelId || null,
             style: r.color ? `--perm-role-color:${r.color}` : null,
             onclick: () => onSelect && onSelect(r.id),
         },
@@ -48,9 +72,14 @@ export function PermissionSection({ heading, permissions = [], values = {}, onCh
 }
 
 export function PermissionsEditor({ roles = [], activeRoleId, onSelectRole, sections = [], values = {}, onChange, dirty = false, saving = false, onSave, onReset } = {}) {
+    const panelId = 'cm-perm-panel';
+    const activeRole = roles.find((r) => r.id === activeRoleId);
     return h('div', { class: 'cm-perm-editor' },
-        roles.length ? RoleTabs({ roles, activeId: activeRoleId, onSelect: onSelectRole }) : null,
-        h('div', { class: 'cm-perm-sections' },
+        roles.length ? RoleTabs({ roles, activeId: activeRoleId, onSelect: onSelectRole, panelId }) : null,
+        h('div', {
+            class: 'cm-perm-sections', id: panelId, role: 'tabpanel', tabindex: '0',
+            'aria-label': activeRole ? (activeRole.name || activeRole.id) + ' permissions' : 'Permissions',
+        },
             ...sections.map((s) => h('div', { key: s.heading || 'default' }, PermissionSection({
                 heading: s.heading, permissions: s.permissions, values, onChange,
             })))

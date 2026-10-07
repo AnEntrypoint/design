@@ -13,7 +13,7 @@ export function ChatHeader({ icon = '#', name, topic, toolbar = [] } = {}) {
     );
 }
 
-export function MobileHeader({ title, channelType, channelName, onMenu, onMembers } = {}) {
+export function MobileHeader({ title, channelType, channelName, onMenu, onMembers, membersOpen, menuOpen } = {}) {
     const ICON_FOR = CHANNEL_ICON_FOR;
     const titleNode = channelType
         ? [Icon(ICON_FOR[channelType] || 'hash', { size: 16 }), ' ' + (channelName || '')]
@@ -21,12 +21,12 @@ export function MobileHeader({ title, channelType, channelName, onMenu, onMember
     return h('div', { class: 'cm-mobile-header', role: 'banner' },
         h('button', {
             class: 'cm-mh-btn', type: 'button', onclick: onMenu,
-            title: 'Menu', 'aria-label': 'open navigation menu'
+            title: 'Menu', 'aria-label': 'open navigation menu', 'aria-expanded': menuOpen ? 'true' : 'false'
         }, Icon('menu')),
         h('span', { class: 'cm-mh-title' }, ...titleNode),
         h('button', {
             class: 'cm-mh-btn', type: 'button', onclick: onMembers,
-            title: 'Members', 'aria-label': 'show members'
+            title: 'Members', 'aria-label': 'show members', 'aria-expanded': membersOpen ? 'true' : 'false'
         }, Icon('members'))
     );
 }
@@ -49,7 +49,13 @@ export function Banner({ tone = 'info', message, visible, actionLabel, onAction,
     return h('div', {
         class: 'cm-banner tone-' + tone + (onClick ? ' clickable' : ''),
         role: tone === 'error' || tone === 'warning' ? 'alert' : 'status',
-        onclick: onClick || null
+        tabindex: onClick ? '0' : null,
+        onclick: onClick || null,
+        onkeydown: onClick ? (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            e.preventDefault();
+            onClick(e);
+        } : null,
     },
         h('span', { class: 'cm-banner-msg' }, message),
         actionLabel ? h('button', {

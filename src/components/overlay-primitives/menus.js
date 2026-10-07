@@ -40,7 +40,8 @@ export function Dropdown({ trigger, items = [], onSelect, placement = 'bottom-st
 
 export function PermissionMenu({ trigger, categories = [], approved = [], onToggle, onToggleAll, placement = 'bottom-start', ariaLabel = 'Permissions' } = {}) {
     const isApproved = (id) => approved.indexOf(id) !== -1;
-    const menu = useRovingMenu({ itemSelector: '[role="menuitemcheckbox"]', items: categories, getLabel: (cat) => cat.label || cat.id, typeahead: true, placement });
+    const menuItems = categories.concat([{ label: 'Approve all' }, { label: 'Revoke all' }]);
+    const menu = useRovingMenu({ itemSelector: '[role="menuitemcheckbox"],[role="menuitem"]', items: menuItems, getLabel: (cat) => cat.label || cat.id, typeahead: true, placement });
     const toggle = (cat) => { if (onToggle) onToggle(cat.id, !isApproved(cat.id)); };
     const buildMenuEl = () => {
         const el = document.createElement('div');
@@ -55,8 +56,8 @@ export function PermissionMenu({ trigger, categories = [], approved = [], onTogg
             onclick: () => toggle(cat),
         }, h('span', { class: 'ov-perm-label' }, cat.label || cat.id)));
         const actionsRow = h('div', { class: 'ov-perm-actions' },
-            h('button', { type: 'button', class: 'ov-perm-action', onclick: () => onToggleAll && onToggleAll(true) }, 'Approve all'),
-            h('button', { type: 'button', class: 'ov-perm-action', onclick: () => onToggleAll && onToggleAll(false) }, 'Revoke all'));
+            h('button', { type: 'button', class: 'ov-perm-action', role: 'menuitem', tabindex: '-1', onclick: () => onToggleAll && onToggleAll(true) }, 'Approve all'),
+            h('button', { type: 'button', class: 'ov-perm-action', role: 'menuitem', tabindex: '-1', onclick: () => onToggleAll && onToggleAll(false) }, 'Revoke all'));
         webjsx.applyDiff(el, h('div', { class: 'ov-perm-list' }, ...rows, actionsRow));
         return el;
     };
@@ -71,7 +72,8 @@ export function PermissionMenu({ trigger, categories = [], approved = [], onTogg
 }
 
 export function MenuButton({ trigger, items = [], selected, onSelect, onRetry, placement = 'bottom-start', ariaLabel = 'Menu', emptyText = 'No options available' } = {}) {
-    const menu = useRovingMenu({ itemSelector: '[role="menuitemradio"]:not([aria-disabled="true"])', items, typeahead: true, placement });
+    const menuItems = items.map((it) => it.unavailable ? { label: 'Retry ' + (it.label || '') } : it);
+    const menu = useRovingMenu({ itemSelector: '[role="menuitemradio"]:not([aria-disabled="true"]),[role="menuitem"]', items: menuItems, typeahead: true, placement });
     const select = (it) => { if (it.disabled || it.unavailable) return; if (onSelect) onSelect(it.id, it); menu.close(); };
     const buildMenuEl = () => {
         const el = document.createElement('div');
@@ -83,7 +85,7 @@ export function MenuButton({ trigger, items = [], selected, onSelect, onRetry, p
                 ...items.map((it, i) => it.unavailable
                     ? h('div', { key: it.id || i, class: 'ov-menubutton-item is-unavailable' },
                         h('span', { class: 'ov-menubutton-label' }, it.label || 'Unavailable'),
-                        h('button', { type: 'button', class: 'ov-menubutton-retry', onclick: () => onRetry && onRetry(it.id, it) }, 'Retry')
+                        h('button', { type: 'button', class: 'ov-menubutton-retry', role: 'menuitem', tabindex: '-1', onclick: () => onRetry && onRetry(it.id, it) }, 'Retry')
                     )
                     : h('button', {
                         key: it.id || i, type: 'button', role: 'menuitemradio',
@@ -95,7 +97,7 @@ export function MenuButton({ trigger, items = [], selected, onSelect, onRetry, p
                         h('span', { class: 'ov-menubutton-check', 'aria-hidden': 'true' }, it.id === selected ? Icon('check', { size: 14 }) : ''),
                         h('span', { class: 'ov-menubutton-label' }, it.label)
                     )))
-            : h('div', { class: 'ov-menubutton-empty' }, emptyText);
+            : h('div', { class: 'ov-menubutton-empty', role: 'status' }, emptyText);
         webjsx.applyDiff(el, tree);
         return el;
     };

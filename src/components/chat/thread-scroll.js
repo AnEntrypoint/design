@@ -5,18 +5,32 @@ export function hasSelectionInside(el) {
 
 const STICK_THRESHOLD_PX = 80;
 
-export function makeThreadAutoScroll(getCount) {
+export function makeThreadAutoScroll(getCount, onUpdate) {
     return (el) => {
         if (!el) return;
-        if (el._dsAutoScroll) { el._dsAutoScroll.getCount = getCount; return; }
-        const state = { getCount, stick: true, last: Number(getCount()) || 0 };
+        if (el._dsAutoScroll) {
+            el._dsAutoScroll.getCount = getCount;
+            el._dsAutoScroll.onUpdate = onUpdate || null;
+            return;
+        }
+        const state = { getCount, onUpdate: onUpdate || null, stick: true, pending: 0, last: Number(getCount()) || 0 };
         el._dsAutoScroll = state;
+        const notify = () => { if (state.onUpdate) state.onUpdate(state); };
         const toBottom = () => { el.scrollTop = el.scrollHeight; };
-        const onScroll = () => { state.stick = el.scrollHeight - el.scrollTop - el.clientHeight < STICK_THRESHOLD_PX; };
+        state.toBottom = toBottom;
+        const onScroll = () => {
+            const stick = el.scrollHeight - el.scrollTop - el.clientHeight < STICK_THRESHOLD_PX;
+            const changed = stick !== state.stick;
+            state.stick = stick;
+            if (stick) state.pending = 0;
+            if (changed || !stick) notify();
+        };
         const onMutate = () => {
             const count = Number(state.getCount()) || 0;
-            if (count < state.last) state.stick = true;
+            if (count < state.last) { state.stick = true; state.pending = 0; }
+            else if (count > state.last && !state.stick) state.pending += count - state.last;
             state.last = count;
+            notify();
             if (!state.stick || hasSelectionInside(el)) return;
             toBottom();
         };

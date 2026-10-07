@@ -37,7 +37,13 @@ export function EmojiPicker({ open, anchorX = 0, anchorY = 0, onSelect, onClose,
     let cat = EMOJI_CATEGORIES[0].id;
     let rootEl = null, gridEl = null, searchEl = null, previewEl = null;
     let search = query || '';
-    const close = () => onClose && onClose();
+    let prevFocus = null;
+    let dispose = null;
+    const close = () => {
+        if (dispose) { dispose(); dispose = null; }
+        if (prevFocus && prevFocus.focus && document.contains(prevFocus)) prevFocus.focus();
+        onClose && onClose();
+    };
 
     const showPreview = (ch, name) => {
         if (!previewEl) return;
@@ -76,11 +82,22 @@ export function EmojiPicker({ open, anchorX = 0, anchorY = 0, onSelect, onClose,
     return h('div', {
         class: 'ov-emoji-root', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Emoji picker',
         tabindex: '-1',
-        onkeydown: (e) => { if (e.key === 'Escape') { e.preventDefault(); close(); return; } tabNavKey(e); if (rootEl) trapTab(rootEl, e); },
+        onkeydown: (e) => {
+            if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+            tabNavKey(e);
+            const root = e.currentTarget || rootEl;
+            if (root) trapTab(root, e, true);
+        },
         ref: (el) => {
-            if (!el) { if (rootEl && rootEl._ovEmojiCleanup) rootEl._ovEmojiCleanup(); return; }
-            if (el._ovEmoji) return; el._ovEmoji = true; rootEl = el;
-            el._ovEmojiCleanup = _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW: 260, fallbackH: 240, close });
+            if (!el) { if (dispose) { dispose(); dispose = null; } return; }
+            rootEl = el;
+            if (el._ovEmojiPrevFocus === undefined) el._ovEmojiPrevFocus = document.activeElement;
+            prevFocus = el._ovEmojiPrevFocus;
+            dispose = el._ovEmojiCleanup || null;
+            if (el._ovEmoji) return;
+            el._ovEmoji = true;
+            dispose = el._ovEmojiCleanup = _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW: 260, fallbackH: 240, close });
+            setTimeout(() => { if (searchEl && document.contains(searchEl)) searchEl.focus(); }, 0);
         },
     },
         h('input', {

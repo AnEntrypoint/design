@@ -112,7 +112,7 @@
   height: 18px;
   padding: 0 var(--space-1-5);
   background: var(--warn);
-  color: var(--ink);
+  color: var(--warn-fg);
   font-family: var(--ff-mono);
   font-size: var(--fs-micro);
   font-weight: var(--fw-bold);
@@ -146,7 +146,7 @@
 .cm-server-back:hover,
 .cm-server-add:hover {
   border-radius: var(--r-2);
-  background: var(--green-2);
+  background: var(--green);
   color: var(--paper);
 }
 
@@ -382,7 +382,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--green-2);
+  background: var(--green);
   flex-shrink: 0;
   position: relative;
 }
@@ -402,7 +402,7 @@
   height: 16px;
   padding: 0 var(--space-1-5);
   background: var(--warn);
-  color: var(--ink);
+  color: var(--warn-fg);
   font-family: var(--ff-mono);
   font-size: var(--fs-micro);
   font-weight: var(--fw-bold);
@@ -474,7 +474,7 @@
   color: var(--green);
 }
 .cm-ch-voice-user.speaking .cm-ch-voice-user-avatar {
-  box-shadow: 0 0 0 2px var(--green-2);
+  box-shadow: 0 0 0 2px var(--green);
 }
 
 .cm-ch-voice-user-avatar {
@@ -532,7 +532,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--green-2);
+  background: var(--green);
 }
 
 .cm-vs-channel {
@@ -574,10 +574,10 @@
 }
 .cm-vs-btn.danger {
   background: var(--warn);
-  color: var(--ink);
+  color: var(--danger-fg);
 }
 .cm-vs-btn.danger:hover {
-  background: color-mix(in oklab, var(--warn) 80%, var(--ink));
+  background: color-mix(in oklab, var(--warn) 80%, var(--fg));
 }
 
 .cm-user-panel {
@@ -619,7 +619,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--green-2);
+  background: var(--green);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--fg) 5%, var(--bg-2));
 }
 
@@ -650,12 +650,12 @@
 .cm-user-controls {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-hair);
+  gap: var(--space-1-75);
 }
 
 .cm-user-btn {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -992,13 +992,14 @@
   aspect-ratio: 16 / 9;
   border-radius: var(--r-2);
   background: var(--bg-3);
+  border: 1px solid var(--rule-strong, color-mix(in oklab, var(--fg) 22%, transparent));
   overflow: hidden;
   outline: 3px solid transparent;
   outline-offset: -3px;
   transition: outline-color var(--dur-snap) var(--ease);
 }
 .cm-voice-tile.speaking {
-  outline-color: var(--green-2);
+  outline-color: var(--green);
 }
 
 .cm-voice-tile-avatar-wrap {
@@ -1029,7 +1030,7 @@
   gap: var(--space-2);
   min-width: 0;
   padding: var(--space-2) var(--space-2-5);
-  background: linear-gradient(to top, color-mix(in oklab, var(--ink, #000) 55%, transparent), transparent);
+  background: var(--scrim-strong);
 }
 
 .cm-voice-tile-icons {
@@ -1063,7 +1064,7 @@
 
 .cm-voice-user-name {
   font-size: var(--fs-xs);
-  color: var(--paper, #fff);
+  color: var(--paper);
   font-weight: var(--fw-medium);
   min-width: 0;
   overflow: hidden;
@@ -1114,7 +1115,7 @@
     position: absolute;
     inset: 0;
     z-index: var(--z-drawer);
-    background: color-mix(in oklab, var(--ink) 40%, transparent);
+    background: color-mix(in oklab, var(--fg) 40%, transparent);
     pointer-events: none;
   }
 }
@@ -1222,6 +1223,8 @@
 
 .cm-mobile-header {
   display: none;
+  position: relative;
+  z-index: calc(var(--z-drawer) + 2);
   align-items: center;
   gap: var(--space-2);
   height: calc(48px + env(safe-area-inset-top));
@@ -1254,7 +1257,7 @@
 .cm-mh-title {
   flex: 1 1 auto;
   min-width: 0;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--ff-mono, monospace);
   font-weight: var(--fw-medium);
   color: var(--fg);
   white-space: nowrap;
@@ -1403,7 +1406,7 @@
   box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent);
 }
 .vx-ptt-vad {
-  border-color: var(--green-2);
+  border-color: var(--green);
   background: color-mix(in oklab, var(--green) 16%, var(--bg-2));
 }
 
@@ -1442,6 +1445,7 @@
   font-size: var(--fs-micro);
   color: var(--fg-3);
 }
+.vx-vad-readout-sep { opacity: .7; }
 
 .vx-cam { display: flex; flex-direction: column; gap: var(--space-2); }
 .vx-cam-stage {
@@ -1496,7 +1500,7 @@
   z-index: var(--z-modal);
   display: flex; align-items: center; justify-content: center;
   padding: var(--space-3);
-  background: color-mix(in oklab, var(--ink) 55%, transparent);
+  background: color-mix(in oklab, var(--fg) 55%, transparent);
 }
 .vx-modal {
   width: 100%; max-width: 440px;
@@ -1517,7 +1521,9 @@
 .vx-modal-title { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-semibold); }
 .vx-modal-x {
   border: 0; background: transparent; color: var(--fg-3);
-  font-size: var(--fs-xl); line-height: 1; cursor: pointer; padding: 0 var(--space-1);
+  font-size: var(--fs-xl); line-height: 1; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; margin: calc(var(--space-2) * -1) 0; border-radius: var(--r-1);
 }
 .vx-modal-x:hover { color: var(--fg); }
 .vx-modal-body { padding: var(--space-3); overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-3); }
@@ -1530,6 +1536,7 @@
 .vx-segmented { display: flex; gap: var(--space-1); }
 .vx-seg {
   flex: 1;
+  min-height: 36px;
   padding: var(--space-1) var(--space-2);
   border: var(--bw-hair) solid var(--rule-strong);
   border-radius: var(--r-1);
@@ -1599,7 +1606,7 @@
 }
 .vx-stg-row-desc { font-size: var(--fs-tiny); color: var(--fg-3); }
 .vx-stg-row-action { flex-shrink: 0; display: flex; align-items: center; }
-.vx-stg-toggle { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; }
+.vx-stg-toggle { accent-color: var(--accent); width: 24px; height: 24px; cursor: pointer; }
 .vx-stg-select-wrap { position: relative; display: flex; align-items: center; gap: var(--space-1); }
 .vx-stg-select-wrap svg { pointer-events: none; color: var(--fg-3); width: 14px; height: 14px; }
 .vx-stg-select {
@@ -1621,9 +1628,13 @@
   display: flex; align-items: center; justify-content: space-between;
   font-size: var(--fs-sm);
 }
-.vx-toggle { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; }
+.vx-toggle { accent-color: var(--accent); width: 24px; height: 24px; cursor: pointer; }
 @media (pointer: coarse) {
-  .vx-toggle { width: 24px; height: 24px; }
+  .vx-toggle { width: 28px; height: 28px; }
+  .vx-vc-btn { width: 44px; height: 44px; }
+  .vx-queue-btn { width: 44px; height: 44px; }
+  .cm-user-btn { width: 44px; height: 44px; }
+  .vx-seg { min-height: 44px; }
 }
 
 .vx-queue {
@@ -1665,7 +1676,7 @@
 }
 .vx-chip:hover { background: var(--bg-4, var(--bg-2)); border-color: var(--rule-strong); }
 .vx-chip-current { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 16%, var(--bg-3)); }
-.vx-chip-live { border-color: var(--green-2); }
+.vx-chip-live { border-color: var(--green); }
 .vx-chip-dot { width: 8px; height: 8px; border-radius: var(--r-pill); background: var(--fg-3); flex-shrink: 0; }
 .vx-chip-name { font-weight: var(--fw-medium); }
 .vx-chip-dur { font-family: var(--ff-mono); color: var(--fg-3); }
@@ -1674,24 +1685,30 @@
 }
 
 .vx-vc {
-  display: flex; align-items: center; gap: var(--space-1);
+  display: flex; align-items: center; gap: var(--space-1-75);
   padding: var(--space-1) var(--space-2);
   background: var(--bg-2);
   border-top: var(--bw-hair) solid var(--rule);
 }
 .vx-vc-btn {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   display: inline-flex; align-items: center; justify-content: center;
   border: var(--bw-hair) solid var(--rule-strong);
   border-radius: var(--r-1);
   background: var(--bg-3); color: var(--fg);
-  cursor: pointer; font-size: var(--fs-body); line-height: 1;
+  cursor: pointer; font-size: var(--fs-lg); line-height: 1;
 }
 .vx-vc-btn:hover { background: var(--bg-4, var(--bg-3)); }
 .vx-vc-on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-.vx-vc-disabled, .vx-vc-btn:disabled { opacity: .4; cursor: not-allowed; }
+.vx-vc-disabled, .vx-vc-btn:disabled {
+  background: transparent;
+  border-color: transparent;
+  color: var(--fg-3);
+  opacity: 1;
+  cursor: not-allowed;
+}
 .vx-vc-leave { margin-left: auto; background: var(--danger); color: var(--danger-fg); border-color: var(--danger); }
-.vx-vc-return { width: 28px; height: 28px; }
+.vx-vc-return { width: 40px; height: 40px; }
 .vx-vc-glyph { pointer-events: none; }
 
 .cm-thread-panel {
@@ -1817,7 +1834,7 @@
 .fd-loading { display: flex; align-items: center; gap: var(--space-2, 10px); padding: var(--space-4, 24px); color: var(--fg-2, var(--fg)); }
 .fd-empty { padding: var(--space-5, 32px) var(--space-3, 16px); color: var(--fg-2, var(--fg)); }
 .fd-empty-glyph { font-size: var(--fs-2xl); opacity: .55; line-height: 1; }
-.fd-pre { margin: 0; padding: var(--space-2, 10px); background: var(--bg-3, var(--panel-bg-2)); border: var(--bw-hair, 1px) solid var(--rule, var(--panel-accent)); border-radius: var(--r-1, 8px); overflow: auto; max-height: 460px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; font-family: var(--font-mono, ui-monospace, monospace); font-size: var(--fs-micro); line-height: 1.5; }
+.fd-pre { margin: 0; padding: var(--space-2, 10px); background: var(--bg-3, var(--panel-bg-2)); border: var(--bw-hair, 1px) solid var(--rule, var(--panel-accent)); border-radius: var(--r-1, 8px); overflow: auto; max-height: 460px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; font-family: var(--ff-mono, ui-monospace, monospace); font-size: var(--fs-micro); line-height: 1.5; }
 .fd-skill-body { max-height: 320px; }
 .fd-row-actions { display: inline-flex; gap: var(--space-1, 6px); align-items: center; }
 .fd-chat { display: flex; flex-direction: column; gap: var(--space-2, 10px); height: 100%; min-height: 0; }
@@ -2221,7 +2238,7 @@
 .cm-perm-roletabs { display: flex; flex-wrap: wrap; gap: var(--space-1); padding-bottom: var(--space-2); border-bottom: var(--bw-hair) solid var(--rule); }
 .cm-perm-roletab {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  padding: var(--space-1) var(--space-2); border-radius: var(--r-pill, 999px);
+  padding: var(--space-1) var(--space-2); border-radius: var(--r-1);
   border: var(--bw-hair) solid var(--rule-strong); background: var(--bg-3); color: var(--fg-2);
   cursor: pointer; font-size: var(--fs-tiny); font-weight: var(--fw-medium);
   transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
@@ -2283,7 +2300,7 @@
 .cm-emoji-mgr-cell:hover { background: color-mix(in oklab, var(--accent) 8%, var(--bg-3)); }
 .cm-emoji-mgr-img { width: 32px; height: 32px; object-fit: contain; }
 .cm-emoji-mgr-img-fallback { display: flex; align-items: center; justify-content: center; color: var(--fg-3); }
-.cm-emoji-mgr-name { font-size: var(--fs-pico); color: var(--fg-3); font-family: var(--ff-mono); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-emoji-mgr-name { font-size: var(--fs-micro); color: var(--fg-3); font-family: var(--ff-mono); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cm-emoji-mgr-delete {
   position: absolute; top: 4px; right: 4px; display: none; align-items: center; justify-content: center;
   width: 20px; height: 20px; border: none; border-radius: 50%;
@@ -2296,7 +2313,7 @@
   transition: background var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
 }
 .cm-emoji-mgr-upload:hover, .cm-emoji-mgr-upload.is-dragover { border-color: var(--accent); color: var(--accent-ink); background: color-mix(in oklab, var(--accent) 8%, var(--bg-3)); }
-.cm-emoji-mgr-upload-label { font-size: var(--fs-pico); text-align: center; }
+.cm-emoji-mgr-upload-label { font-size: var(--fs-micro); text-align: center; }
 .cm-emoji-mgr-upload-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .cm-emoji-mgr-empty { padding: var(--space-4); text-align: center; color: var(--fg-3); font-size: var(--fs-sm); }
 
@@ -2334,12 +2351,13 @@
   display: flex; align-items: center; justify-content: center;
   background: var(--avatar-bg, var(--bg-3)); color: var(--avatar-fg, var(--fg-2));
   font-weight: var(--fw-semibold); font-size: var(--fs-tiny);
+  box-shadow: var(--ring-line);
 }
 .cm-search-result-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: var(--space-hair); }
 .cm-search-result-head { display: flex; align-items: baseline; gap: var(--space-1); flex-wrap: wrap; }
 .cm-search-result-author { font-weight: var(--fw-medium); font-size: var(--fs-sm); }
 .cm-search-result-channel { font-size: var(--fs-tiny); color: var(--accent-ink); }
-.cm-search-result-time { font-size: var(--fs-pico); color: var(--fg-3); font-family: var(--ff-mono); margin-left: auto; }
+.cm-search-result-time { font-size: var(--fs-micro); color: var(--fg-3); font-family: var(--ff-mono); margin-left: auto; }
 .cm-search-result-snippet { font-size: var(--fs-tiny); color: var(--fg-2); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .cm-search-hit-mark { background: var(--accent-tint, color-mix(in oklab, var(--accent) 30%, transparent)); color: var(--accent-ink); border-radius: var(--r-1); padding: 0 1px; }
 .cm-search-empty { padding: var(--space-5) var(--space-3); text-align: center; color: var(--fg-3); font-size: var(--fs-sm); }
@@ -2363,7 +2381,7 @@
 .chat-msg.chat-msg-flat.chat-msg-community:hover,
 .chat-msg.chat-msg-flat.chat-msg-community.them:hover,
 .chat-msg.chat-msg-flat.chat-msg-community.you:hover { background: color-mix(in oklab, var(--fg) 4%, transparent); }
-.chat-msg.chat-msg-flat.chat-msg-community:not(.chat-msg-tail) { margin-top: var(--space-2); }
+.chat-msg.chat-msg-flat.chat-msg-community:not(.chat-msg-tail) { margin-top: var(--space-4); }
 .chat-msg.chat-msg-flat.chat-msg-community .chat-avatar {
   width: 40px; height: 40px; margin-top: var(--space-half, 2px);
   background: var(--avatar-bg, var(--bg-3)); color: var(--avatar-fg, var(--fg));
@@ -2371,11 +2389,11 @@
 }
 .chat-msg.chat-msg-flat.chat-msg-community .chat-avatar-spacer { width: 40px; flex-shrink: 0; }
 .chat-msg.chat-msg-flat.chat-msg-community .chat-stack { max-width: var(--measure, 72ch); width: 100%; min-width: 0; align-items: stretch; gap: 0; }
-.chat-msg.chat-msg-flat.chat-msg-community .chat-community-head { display: flex; align-items: baseline; gap: var(--space-2); }
-.chat-msg.chat-msg-flat.chat-msg-community .chat-community-head .who { font-weight: var(--fw-semibold, 600); color: var(--fg); font-size: var(--fs-sm); }
-.chat-msg.chat-msg-flat.chat-msg-community .chat-community-head .t { color: var(--fg-3); font-size: var(--fs-xs); }
+.chat-msg.chat-msg-flat.chat-msg-community .chat-community-head { display: flex; align-items: baseline; gap: var(--space-2); min-width: 0; }
+.chat-msg.chat-msg-flat.chat-msg-community .chat-community-head .who { font-weight: var(--fw-semibold, 600); color: var(--fg); font-size: var(--fs-sm); min-width: 0; overflow-wrap: anywhere; }
+.chat-msg.chat-msg-flat.chat-msg-community .chat-community-head .t { color: var(--fg-3); font-size: var(--fs-xs); flex: 0 0 auto; white-space: nowrap; }
 .chat-msg.chat-msg-flat.chat-msg-community .chat-bubble { background: none; border: 0; border-radius: 0; padding: 0; max-width: 100%; box-shadow: none; line-height: 1.5; }
-.chat-msg.chat-msg-flat.chat-msg-community .chat-msg-actions { position: absolute; top: calc(-1 * var(--space-3)); right: var(--space-4); background: var(--bg-2); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); box-shadow: var(--shadow-1); padding: var(--space-hair); }
+.chat-msg.chat-msg-flat.chat-msg-community .chat-msg-actions { position: absolute; top: calc(-1 * var(--space-3)); right: var(--space-4); left: auto; background: var(--bg-2); border: var(--bw-hair) solid var(--rule); border-radius: var(--r-1); box-shadow: var(--shadow-1); padding: var(--space-hair); }
 .chat-msg.chat-msg-flat.chat-msg-community .chat-msg-action-label { display: none; }
 @media (max-width: 900px) {
   .chat-msg.chat-msg-flat.chat-msg-community { padding-inline: var(--space-3); gap: var(--space-2-5); }

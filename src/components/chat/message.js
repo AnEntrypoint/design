@@ -8,7 +8,11 @@ import { countMessage, renderPart } from './stats.js';
 
 const h = webjsx.createElement;
 
-export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typing, key, id, aicat, reactions, receipt, name, streaming, actions, incomplete, stopped, flat, tail, variant, avatarColor, error, onRetry, onToggleReaction, onAddReaction }) {
+function gutterTime(v) {
+    return String(v).replace(/^(today|yesterday|on)\s+(at\s+)?/i, '');
+}
+
+export function ChatMessage({ role, who = 'them', avatar, text, parts, time, ts, typing, key, id, aicat, reactions, receipt, name, streaming, actions, incomplete, stopped, flat, tail, variant, avatarColor, error, onRetry, onToggleReaction, onAddReaction }) {
     countMessage();
     const resolvedWho = role
         ? (role === 'user' ? 'you'
@@ -99,7 +103,11 @@ export function ChatMessage({ role, who = 'them', avatar, text, parts, time, typ
         const head = isTail ? null : h('div', { class: 'chat-community-head', key: '_head' },
             h('span', { class: 'who' }, name || ''),
             time ? h('span', { class: 't' }, time) : null);
-        const lead = isTail ? h('span', { class: 'chat-avatar-spacer', 'aria-hidden': 'true', key: '_spacer', title: time || null }) : av;
+        const lead = isTail
+            ? (time
+                ? h('time', { class: 'chat-avatar-spacer chat-msg-gutter-time', key: '_spacer', title: time, datetime: ts != null ? new Date(ts).toISOString() : null }, gutterTime(time))
+                : h('span', { class: 'chat-avatar-spacer', 'aria-hidden': 'true', key: '_spacer' }))
+            : av;
         const communityActions = actionRow;
         return h('div', { key, id, class: 'chat-msg ' + resolvedWho + ' chat-msg-community chat-msg-flat' + (isTail ? ' chat-msg-tail' : '') },
             lead,

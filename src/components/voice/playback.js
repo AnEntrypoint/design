@@ -12,10 +12,10 @@ function fmtDur(s) {
 }
 
 export function VoiceControls({ muted = false, deafened = false, cameraOn = false, screenShareOn = false, collapsed = false, onMic, onDeafen, onCamera, onScreenShare, onSettings, onLeave, onReturn } = {}) {
-    const btn = (cls, on, label, glyph, handler) => h('button', {
+    const btn = (cls, on, label, glyph, handler, pressed) => h('button', {
         type: 'button',
         class: 'vx-vc-btn ' + cls + (on ? ' vx-vc-on' : '') + (handler ? '' : ' vx-vc-disabled'),
-        'aria-pressed': on ? 'true' : 'false',
+        'aria-pressed': (pressed === undefined ? !!on : !!pressed) ? 'true' : 'false',
         'aria-label': label,
         title: label,
         disabled: handler ? null : true,
@@ -26,10 +26,10 @@ export function VoiceControls({ muted = false, deafened = false, cameraOn = fals
     return h('div', { class: 'vx-vc', role: 'toolbar', 'aria-label': 'voice controls' },
         ...[
             collapsed ? btn('vx-vc-return', false, 'Return to voice channel', Icon('arrow-top-left'), onReturn) : null,
-            btn('vx-vc-mic', !muted, muted ? 'Unmute' : 'Mute', Icon(muted ? 'mic-off' : 'mic'), onMic),
-            btn('vx-vc-deafen', !deafened, deafened ? 'Undeafen' : 'Deafen', Icon(deafened ? 'speaker-off' : 'speaker'), onDeafen),
-            btn('vx-vc-camera', cameraOn, cameraOn ? 'Stop camera' : 'Start camera', Icon('camera'), onCamera),
-            btn('vx-vc-screen', screenShareOn, screenShareOn ? 'Stop sharing' : 'Share screen', Icon('screen'), onScreenShare),
+            btn('vx-vc-mic', !muted, muted ? 'Unmute' : 'Mute', Icon(muted ? 'mic-off' : 'mic'), onMic, muted),
+            btn('vx-vc-deafen', !deafened, deafened ? 'Undeafen' : 'Deafen', Icon(deafened ? 'speaker-off' : 'speaker'), onDeafen, deafened),
+            onCamera ? btn('vx-vc-camera', cameraOn, cameraOn ? 'Stop camera' : 'Start camera', Icon('camera'), onCamera) : null,
+            onScreenShare ? btn('vx-vc-screen', screenShareOn, screenShareOn ? 'Stop sharing' : 'Share screen', Icon('screen'), onScreenShare) : null,
             btn('vx-vc-settings', false, 'Voice settings', Icon('settings'), onSettings),
             h('button', {
                 type: 'button', class: 'vx-vc-btn vx-vc-leave', 'aria-label': 'Leave voice', title: 'Leave voice',

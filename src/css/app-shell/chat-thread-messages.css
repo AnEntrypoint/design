@@ -20,6 +20,27 @@
 .chat-head .sub { color: var(--fg-3); }
 .chat-head .spread { flex: 1; }
 
+.chat-thread-wrap {
+  position: relative; display: flex; flex: 1; min-height: 0;
+}
+
+.chat-jump-latest {
+  position: absolute; right: var(--space-4); bottom: var(--space-3);
+  z-index: var(--z-raised);
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  padding: var(--space-1) var(--space-2-5);
+  background: var(--accent); color: var(--accent-fg);
+  border: 0; border-radius: var(--r-pill);
+  font-family: var(--ff-body); font-size: var(--fs-xs);
+  font-weight: var(--fw-medium, 500);
+  cursor: pointer; box-shadow: var(--shadow-1);
+  transition: background var(--dur-snap, .15s) var(--ease, ease);
+}
+.chat-jump-latest[hidden] { display: none; }
+.chat-jump-latest:hover { background: color-mix(in oklab, var(--accent) 85%, var(--bg)); }
+.chat-jump-latest:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
+.chat-jump-arrow { display: inline-flex; }
+
 .chat-thread {
   display: flex; flex-direction: column; gap: var(--space-3);
   flex: 1; min-height: 0; overflow-y: auto;

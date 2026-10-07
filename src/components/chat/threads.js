@@ -1,4 +1,5 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
+import { Icon } from '../shell.js';
 import { t } from '../../i18n.js';
 import { ChatMessage } from './message.js';
 import { makeThreadAutoScroll } from './thread-scroll.js';
@@ -20,10 +21,36 @@ export function ChatSuggestions({ heading = 'What can I help with?', subtext = '
     );
 }
 
-export function Chat({ title = 'chat', sub, messages = [], composer, header, suggestions, onSuggestionClick } = {}) {
+export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], composer, header, suggestions, onSuggestionClick } = {}) {
     ensureCachesInit();
-    const threadRef = makeThreadAutoScroll(() => messages.length);
     const msgCount = messages.length;
+    let threadEl = null;
+    let jumpEl = null;
+    const syncJump = () => {
+        if (!jumpEl) return;
+        const st = threadEl ? threadEl._dsAutoScroll : null;
+        const pending = (st && st.pending) || 0;
+        const show = !!st && (!st.stick || pending > 0);
+        jumpEl.hidden = !show;
+        if (!show) return;
+        const label = jumpEl.querySelector('.chat-jump-label');
+        const text = pending > 0 ? (pending === 1 ? '1 new message' : pending + ' new messages') : 'jump to latest';
+        if (label) label.textContent = text;
+        jumpEl.setAttribute('aria-label', text);
+    };
+    const threadRef = makeThreadAutoScroll(() => messages.length, syncJump);
+    const jumpBtn = h('button', {
+        type: 'button', class: 'chat-jump-latest', key: '_jump',
+        ref: (el) => { jumpEl = el; if (el) el.hidden = true; syncJump(); },
+        onclick: () => {
+            const st = threadEl ? threadEl._dsAutoScroll : null;
+            if (st) { st.pending = 0; st.stick = true; st.toBottom(); }
+            else if (threadEl) threadEl.scrollTop = threadEl.scrollHeight;
+            syncJump();
+        },
+    },
+        h('span', { class: 'chat-jump-label', key: 'jl' }, 'jump to latest'),
+        h('span', { class: 'chat-jump-arrow', key: 'ja', 'aria-hidden': 'true' }, Icon('arrow-down', { size: 14 })));
     return h('div', { class: 'chat' },
         header || h('div', { class: 'chat-head', role: 'banner' },
             h('h2', { class: 'ds-chat-title' }, title),
@@ -33,19 +60,22 @@ export function Chat({ title = 'chat', sub, messages = [], composer, header, sug
                 ? h('span', { class: 'sub', 'aria-live': 'polite' }, msgCount + (msgCount === 1 ? ' message' : ' messages'))
                 : null
         ),
-        h('div', { class: 'chat-thread', ref: threadRef, role: 'log', 'aria-label': 'chat messages', 'aria-live': 'polite', 'aria-relevant': 'additions' },
-            messages.length === 0
-                ? h('div', { key: '_empty', class: 'chat-empty', role: 'status' },
-                    h('p', { class: 'chat-empty-title' }, t('chat.startConversation', 'start a conversation')),
-                    h('p', { class: 'chat-empty-sub' }, sub || t('chat.emptySub', 'Send a message to start the conversation')),
-                    (suggestions && suggestions.length)
-                        ? h('div', { class: 'chat-empty-suggestions' },
-                            ...suggestions.map((s, i) => h('button', { key: 'sug' + i, type: 'button', class: 'chat-empty-suggestion',
-                                onclick: () => { if (onSuggestionClick) onSuggestionClick(typeof s === 'string' ? s : (s.prompt || s.text || '')); } },
-                                typeof s === 'string' ? s : (s.label || s.text || s.prompt))))
-                        : null)
-                : null,
-            ...messages.map((m, i) => ChatMessage({ ...m, tail: m.tail != null ? m.tail : isConsecutive(messages, i), key: m.key != null ? m.key : i }))
+        h('div', { class: 'chat-thread-wrap' },
+            h('div', { class: 'chat-thread', role: 'log', 'aria-label': 'chat messages', 'aria-live': 'polite', 'aria-relevant': 'additions', ref: (el) => { threadRef(el); threadEl = el; syncJump(); } },
+                messages.length === 0
+                    ? h('div', { key: '_empty', class: 'chat-empty', role: 'status' },
+                        locked ? null : h('p', { class: 'chat-empty-title' }, t('chat.startConversation', 'start a conversation')),
+                        h('p', { class: 'chat-empty-sub' }, emptySub || sub || t('chat.emptySub', 'Send a message to start the conversation')),
+                        (suggestions && suggestions.length)
+                            ? h('div', { class: 'chat-empty-suggestions' },
+                                ...suggestions.map((s, i) => h('button', { key: 'sug' + i, type: 'button', class: 'chat-empty-suggestion',
+                                    onclick: () => { if (onSuggestionClick) onSuggestionClick(typeof s === 'string' ? s : (s.prompt || s.text || '')); } },
+                                    typeof s === 'string' ? s : (s.label || s.text || s.prompt))))
+                            : null)
+                    : null,
+                ...messages.map((m, i) => ChatMessage({ ...m, tail: m.tail != null ? m.tail : isConsecutive(messages, i), key: m.key != null ? m.key : i }))
+            ),
+            jumpBtn
         ),
         composer || null
     );

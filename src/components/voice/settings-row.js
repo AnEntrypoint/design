@@ -41,6 +41,7 @@ export function SettingsRowToggle({ icon = 'blank', label, description, checked 
         onClick: () => onToggle && onToggle(!checked),
         action: h('input', {
             type: 'checkbox', class: 'vx-stg-toggle',
+            'aria-label': label != null ? String(label) : (description != null ? String(description) : 'Toggle setting'),
             checked: checked ? true : null,
             onclick: (e) => e.stopPropagation(),
             onchange: (e) => onToggle && onToggle(e.target.checked)
