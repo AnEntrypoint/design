@@ -1088,7 +1088,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `title`, `channelType`, `channelName`, `onMenu`, `onMembers`, `membersOpen`, `menuOpen`
+**Signature:** `title`, `channelType`, `channelName`, `serverName`, `onMenu`, `onMembers`, `membersOpen`, `menuOpen`
 
 ### ReplyBar
 

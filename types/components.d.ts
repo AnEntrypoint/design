@@ -2096,6 +2096,7 @@ export interface MobileHeaderProps {
     title?: any;
     channelType?: any;
     channelName?: any;
+    serverName?: any;
     onMenu?: (...args: any[]) => any;
     onMembers?: (...args: any[]) => any;
     membersOpen?: any;

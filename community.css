@@ -1254,6 +1254,20 @@
 }
 .cm-mh-btn:hover { background: var(--panel-3); }
 .cm-mh-btn:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: 2px; }
+.cm-mh-server {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-tiny);
+  font-weight: var(--fw-medium);
+  color: var(--fg-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cm-mh-server .cm-mh-sep { color: var(--fg-3); opacity: 0.6; }
 .cm-mh-title {
   flex: 1 1 auto;
   min-width: 0;

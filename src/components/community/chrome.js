@@ -13,7 +13,7 @@ export function ChatHeader({ icon = '#', name, topic, toolbar = [] } = {}) {
     );
 }
 
-export function MobileHeader({ title, channelType, channelName, onMenu, onMembers, membersOpen, menuOpen } = {}) {
+export function MobileHeader({ title, channelType, channelName, serverName, onMenu, onMembers, membersOpen, menuOpen } = {}) {
     const ICON_FOR = CHANNEL_ICON_FOR;
     const titleNode = channelType
         ? [Icon(ICON_FOR[channelType] || 'hash', { size: 16 }), ' ' + (channelName || '')]
@@ -23,6 +23,7 @@ export function MobileHeader({ title, channelType, channelName, onMenu, onMember
             class: 'cm-mh-btn', type: 'button', onclick: onMenu,
             title: 'Menu', 'aria-label': 'open navigation menu', 'aria-expanded': menuOpen ? 'true' : 'false'
         }, Icon('menu')),
+        serverName ? h('span', { class: 'cm-mh-server' }, serverName, h('span', { class: 'cm-mh-sep', 'aria-hidden': 'true' }, '/')) : null,
         h('span', { class: 'cm-mh-title' }, ...titleNode),
         h('button', {
             class: 'cm-mh-btn', type: 'button', onclick: onMembers,

@@ -5287,6 +5287,11 @@
           "alias": null
         },
         {
+          "name": "serverName",
+          "default": null,
+          "alias": null
+        },
+        {
           "name": "onMenu",
           "default": null,
           "alias": null
