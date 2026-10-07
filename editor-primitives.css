@@ -696,7 +696,7 @@
 .ds-ep-toast-host {
     position: fixed;
     bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-    left: max(16px, env(safe-area-inset-left));
+    inset-inline-start: max(16px, env(safe-area-inset-left));
     z-index: var(--z-toast);
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2);
     pointer-events: none;
@@ -757,7 +757,7 @@
 }
 @media (max-width: 480px) {
     .ds-ep-toast-host {
-        left: var(--space-3); right: var(--space-3);
+        inset-inline: var(--space-3);
         align-items: stretch;
     }
     .ds-ep-toast { width: 100%; max-width: 100%; min-width: 0; }
@@ -1075,7 +1075,7 @@
 .ds-ep-infosection-loading { padding: var(--space-2) 0; color: var(--fg-muted); font-size: var(--fs-sm); }
 .ds-ep-inforow { display: flex; align-items: baseline; gap: var(--space-2); justify-content: space-between; }
 .ds-ep-inforow-label { color: var(--fg-muted); font-size: var(--fs-sm); flex-shrink: 0; }
-.ds-ep-inforow-value { font-family: var(--ff-mono, monospace); font-size: var(--fs-sm); text-align: right; word-break: break-word; }
+.ds-ep-inforow-value { font-family: var(--ff-mono, monospace); font-size: var(--fs-sm); text-align: end; word-break: break-word; }
 
 .ds-ep-batchprogress { font-variant-numeric: tabular-nums; }
 

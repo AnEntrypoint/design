@@ -555,7 +555,7 @@ button.chat-composer-context { cursor: pointer; }
 button.chat-composer-context:hover { color: var(--fg-2); }
 button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-.chat-composer-toolbar { display: flex; align-items: center; gap: var(--space-1-75); flex: 0 0 auto; margin-left: auto; align-self: flex-end; }
+.chat-composer-toolbar { display: flex; align-items: center; gap: var(--space-1-75); flex: 0 0 auto; margin-inline-start: auto; align-self: flex-end; }
 .chat-composer-attach-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .chat-composer-toolbar .composer-btn,
 .chat-composer-toolbar .send { width: 32px; height: 32px; border-radius: var(--r-1); }
@@ -602,7 +602,7 @@ button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(-
   .chat-msg .chat-msg-actions.chat-msg-actions-float,
   .chat-msg.chat-msg-flat.chat-msg-community .chat-msg-actions.chat-msg-actions-float {
     position: static; align-self: flex-start; padding: 0; inset: auto;
-    left: auto; right: auto; top: auto;
+    inset-inline: auto; top: auto;
     background: none; box-shadow: none; border: 0;
   }
   .chat-msg.chat-msg-flat.chat-msg-community .chat-msg-actions { position: static; }
