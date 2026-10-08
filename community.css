@@ -1635,7 +1635,7 @@
   cursor: pointer;
 }
 .vx-stg-range-row { display: flex; align-items: center; gap: var(--space-2); min-width: 160px; }
-.vx-stg-range { flex: 1; accent-color: var(--accent); cursor: pointer; }
+.vx-stg-range { flex: 1; min-block-size: 24px; accent-color: var(--accent); cursor: pointer; }
 .vx-stg-range-val { font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-2); min-width: 48px; text-align: right; }
 
 .vx-toggle-row {
