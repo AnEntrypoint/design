@@ -2,7 +2,9 @@
   --chat-msg-gutter: 40px;
   --chat-msg-inset: var(--space-4);
   --chat-msg-gap: var(--space-3);
-  padding-inline-start: calc(var(--chat-msg-inset) + var(--chat-msg-gutter) + var(--chat-msg-gap) - var(--space-3) - var(--space-1));
+  --cm-composer-indent: calc(var(--chat-msg-inset) + var(--chat-msg-gutter) + var(--chat-msg-gap) - var(--space-3) - var(--space-1));
+  padding-inline-start: var(--cm-composer-indent);
+  padding-inline-end: var(--cm-composer-indent);
 }
 @media (max-width: 900px) {
   .cm-composer-wrap {
@@ -12,7 +14,9 @@
   }
 }
 @media (max-width: 768px) {
-  .cm-composer-wrap { padding-inline-start: calc(var(--chat-msg-inset) + var(--chat-msg-gutter) + var(--chat-msg-gap) - var(--space-2) - var(--space-2-75)); }
+  .cm-composer-wrap {
+    --cm-composer-indent: calc(var(--chat-msg-inset) + var(--chat-msg-gutter) + var(--chat-msg-gap) - var(--space-2) - var(--space-2-75));
+  }
 }
 
 .chat-composer .chat-composer-hint { display: none; }
