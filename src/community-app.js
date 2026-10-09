@@ -372,7 +372,7 @@ export function mountCommunityApp(root, adapter = {}) {
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: narrow && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s)),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s)),
                 h('main', { class: 'app-main ds-app-surface', id: 'app-main', tabindex: '-1', onclick: () => { if (s.mobileMenuOpen && A.closeMobileMenu) A.closeMobileMenu(); } },
                     h('h1', { class: 'sr-only' }, ch.name || 'general'),
                     !inVoiceChannel && s.voiceConnected ? VoiceStrip({ channelName: s.voiceChannelName, status: s.voiceConnectionState || 'connected', muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onLeave: () => A.leaveVoice && A.leaveVoice(), open: true }) : null,
@@ -400,16 +400,12 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const render = () => { webjsx.applyDiff(root, view()); };
 
-    // The rail is off-canvas below 900px, so a closed drawer is still in the
-    // tab order and still read out. `inert` (not CSS) is what removes it from
-    // both without killing the slide animation; the breakpoint has to be
-    // tracked in JS because crossing it changes no signal and so triggers no
-    // re-render on its own.
-    const narrowQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(max-width: 900px)') : null;
-    let narrow = !!(narrowQuery && narrowQuery.matches);
-    if (narrowQuery && narrowQuery.addEventListener) narrowQuery.addEventListener('change', (e) => {
-        if (e.matches === narrow) return;
-        narrow = e.matches;
+    const NARROW_VIEWPORT_QUERY = '(max-width: 900px)';
+    const narrowViewportQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(NARROW_VIEWPORT_QUERY) : null;
+    let isNarrowViewport = !!(narrowViewportQuery && narrowViewportQuery.matches);
+    if (narrowViewportQuery && narrowViewportQuery.addEventListener) narrowViewportQuery.addEventListener('change', (e) => {
+        if (e.matches === isNarrowViewport) return;
+        isNarrowViewport = e.matches;
         render();
     });
 
