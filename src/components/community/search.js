@@ -1,14 +1,9 @@
-// SearchBar / SearchResults — a genuine SDK-completeness surface (neither
-// for-web nor design had one). Matches the Material-3-influenced shape
-// language established across the community/overlay ports: rounded input,
-// subtle dividers, hover highlight rows, --accent-tint highlighted matches.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { avatarInitial } from '../content.js';
 import { avatarStyle } from './avatar-style.js';
 const h = webjsx.createElement;
-
 
 export function SearchBar({ value = '', placeholder = 'Search…', onChange, onClear, onSubmit, autofocus = false } = {}) {
     return h('form', {

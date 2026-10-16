@@ -41,6 +41,7 @@ export function SettingsRowToggle({ icon = 'blank', label, description, checked 
         onClick: () => onToggle && onToggle(!checked),
         action: h('input', {
             type: 'checkbox', class: 'vx-stg-toggle',
+            'aria-label': label != null ? String(label) : (description != null ? String(description) : 'Toggle setting'),
             checked: checked ? true : null,
             onclick: (e) => e.stopPropagation(),
             onchange: (e) => onToggle && onToggle(e.target.checked)
@@ -48,9 +49,6 @@ export function SettingsRowToggle({ icon = 'blank', label, description, checked 
     });
 }
 
-// SettingsRowTriState — cycles allow -> deny -> neutral (null) -> allow,
-// same row shell as SettingsRow/SettingsRowToggle, with a distinct
-// icon+color per state instead of a checkbox.
 export function SettingsRowTriState({ icon = 'blank', label, description, value = null, onChange } = {}) {
     const next = value === 'allow' ? 'deny' : value === 'deny' ? null : 'allow';
     const stateLabel = value === 'allow' ? 'Allow' : value === 'deny' ? 'Deny' : 'Neutral';
@@ -65,7 +63,8 @@ export function SettingsRowTriState({ icon = 'blank', label, description, value 
     });
 }
 
-export function SettingsRowSelect({ icon = 'blank', label, description, value, options = [], onChange, ariaLabel } = {}) {
+export function SettingsRowSelect({ icon = 'blank', label, description, value, options: given = [], onChange, ariaLabel } = {}) {
+    const options = given.length ? given : [{ value: '', label: 'System default' }];
     const active = options.find(o => o.value === value);
     return SettingsRow({
         icon, label,

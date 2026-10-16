@@ -1,7 +1,7 @@
 {
   "name": "anentrypoint-design",
   "version": "1.0.34",
-  "description": "247420 design system SDK — webjsx + modified ripple-ui, single-file ESM bundle for reproducible use of the AnEntrypoint design.",
+  "description": "247420 design system SDK: webjsx + modified ripple-ui, single-file ESM bundle for reproducible use of the AnEntrypoint design.",
   "type": "module",
   "main": "./dist/247420.js",
   "module": "./dist/247420.js",
@@ -130,7 +130,9 @@
     "a11y:baseline": "node scripts/a11y-audit.mjs --write-baseline",
     "visual": "node scripts/visual-baseline.mjs check",
     "visual:update": "node scripts/visual-baseline.mjs update",
-    "lint:dead-controls": "node scripts/lint-dead-controls.mjs"
+    "lint:dead-controls": "node scripts/lint-dead-controls.mjs",
+    "lint:yaml-parse": "node scripts/lint-yaml-parse.mjs",
+    "lint:css-parse": "node scripts/lint-css-parse.mjs"
   },
   "repository": {
     "type": "git",

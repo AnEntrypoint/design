@@ -71,7 +71,7 @@ export function LivePreviewControls(opts = {}) {
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: ${isEnabled ? '#22aa22' : '#888'};
+          background: ${isEnabled ? 'var(--success,#22aa22)' : 'var(--fg-3,#888)'};
         `
       })
     )

@@ -3,9 +3,6 @@ export { createDesktopShell } from './shell.js';
 export { renderWindow } from './wm.js';
 export { renderDock } from './launcher.js';
 
-// App modules — surfaced through the kit entry point so consumers can use a
-// single import site. Each module also remains importable from its own path
-// for tree-shaking and back-compat.
 export { renderAboutApp } from './about-app.js';
 export { renderBrowserPane } from './browser-app.js';
 export { renderFilesApp } from './files-app.js';

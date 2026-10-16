@@ -1,17 +1,8 @@
-// ContextXRayPanel — per-segment expandable/collapsible breakdown list.
-// Reuses editor-primitives/collapse.js's CollapseGroup for the actual
-// expand/collapse behavior (single-open-at-a-time accordion) rather than
-// reimplementing that state machine; this module only supplies the
-// segment-row content (label, value, sub-items) that goes inside each
-// Collapse body.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { CollapseGroup } from '../editor-primitives/collapse.js';
 const h = webjsx.createElement;
 
-// ContextXRayPanel({ segments, openId, onOpenIdChange })
-//   segments: [{ id, label, value, tone, items: [{ label, value }] }]
-//   openId/onOpenIdChange: accordion state, forwarded straight to CollapseGroup.
 export function ContextXRayPanel({ segments = [], openId, onOpenIdChange } = {}) {
     if (!segments.length) return h('div', { class: 'ds-context-xray-empty' }, 'no segments yet');
     const items = segments.map((seg) => ({

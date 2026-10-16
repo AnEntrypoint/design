@@ -1,11 +1,3 @@
-// Content blocks: Panel, Row, RowLink, Section, Hero, Install, Receipt,
-// Changelog, WorksList, WritingList, Manifesto, Kpi, Table, HomeView,
-// ProjectView, Form. Pure factories.
-//
-// This module is a barrel: every component lives in a single-responsibility
-// submodule under ./content/, and the public export surface here is unchanged
-// — no consumer import needs to move.
-
 import { avatarInitial, avatarContrastFg, Avatar } from './content/avatar.js';
 import { Row, RowLink, DetailRow, LogRow } from './content/row.js';
 import { Panel, Card, PanelFromItems, Section, Receipt, Changelog } from './content/panel.js';

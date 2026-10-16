@@ -1,10 +1,3 @@
-// InputOTP — segmented PIN/code-entry input. `length` real <input> boxes
-// (not a single overlaid input) so each box gets a real accessible name and
-// native text-cursor behavior; auto-advance-on-type, backspace-retreat, and
-// paste-splits-across-boxes are wired by hand since no browser gives this
-// pattern for free. First box carries autocomplete="one-time-code" so mobile
-// SMS/keychain autofill still targets the group.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 

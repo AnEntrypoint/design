@@ -1,22 +1,22 @@
-// Capture-side voice surfaces — what the local user speaks and shows through:
-// the push-to-talk button, the voice-activity level meter with its threshold
-// handle, and the webcam preview with resolution/fps pickers.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
 
-export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd, onClick, label = 'Hold to talk' } = {}) {
+export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd, onClick, label = 'Hold to talk', disabled = false, disabledReason } = {}) {
     const active = state === 'live' || state === 'recording' || state === 'vad';
     const start = (e) => { onHoldStart && onHoldStart(e); };
     const end = (e) => { onHoldEnd && onHoldEnd(e); };
+    const text = disabled && disabledReason ? disabledReason : (active ? 'Transmitting…' : label);
     return h('button', {
         type: 'button',
+        disabled: disabled ? 'disabled' : null,
         class: 'vx-ptt vx-ptt-' + state + ' vx-ptt-mode-' + mode,
         'data-state': state,
         'data-mode': mode,
         'aria-pressed': active ? 'true' : 'false',
-        'aria-label': label,
+        'aria-label': text,
+        title: text,
         onclick: onClick ? (e) => onClick(e) : null,
         onpointerdown: (e) => { e.preventDefault(); start(e); },
         onpointerup: (e) => { e.preventDefault(); end(e); },
@@ -27,7 +27,7 @@ export function PttButton({ state = 'idle', mode = 'ptt', onHoldStart, onHoldEnd
     },
         h('span', { class: 'vx-ptt-glow', 'aria-hidden': 'true' }),
         h('span', { class: 'vx-ptt-icon', 'aria-hidden': 'true' }, state === 'idle' ? Icon('mic') : h('span', { class: 'ds-dot ds-dot-on', 'aria-hidden': 'true' })),
-        h('span', { class: 'vx-ptt-label' }, label)
+        h('span', { class: 'vx-ptt-label' }, text)
     );
 }
 
@@ -37,9 +37,6 @@ export function VadMeter({ level = 0, threshold = 0.5, onThresholdChange } = {})
     const over = lvl >= thr;
     return h('div', { class: 'vx-vad', role: 'group', 'aria-label': 'voice activity meter' },
         h('div', { class: 'vx-vad-track' },
-            // Custom-property write, not an inline `width:` — the live level is
-            // per-render data; the property it drives lives in community.css
-            // with the rest of the meter's layout.
             h('div', { class: 'vx-vad-fill' + (over ? ' vx-vad-fill-over' : ''), style: '--vx-vad-level:' + (lvl * 100).toFixed(1) + '%' }),
             h('div', { class: 'vx-vad-marker', style: 'left:' + (thr * 100).toFixed(1) + '%', 'aria-hidden': 'true' }),
             h('input', {
@@ -51,8 +48,9 @@ export function VadMeter({ level = 0, threshold = 0.5, onThresholdChange } = {})
             })
         ),
         h('div', { class: 'vx-vad-readout' },
-            h('span', {}, 'lvl ' + Math.round(lvl * 100)),
-            h('span', {}, 'thr ' + Math.round(thr * 100))
+            h('span', {}, 'level ' + Math.round(lvl * 100) + '%'),
+            h('span', { class: 'vx-vad-readout-sep', 'aria-hidden': 'true' }, '·'),
+            h('span', {}, 'threshold ' + Math.round(thr * 100) + '%')
         )
     );
 }

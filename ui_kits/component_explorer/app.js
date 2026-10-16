@@ -7,11 +7,13 @@ const h = webjsx.createElement;
 const root = document.getElementById('root');
 
 const manifest = await (await fetch('./manifest.json')).json();
-const components = manifest.components;
+const components = manifest.components.filter((c) => /^[A-Z][A-Za-z0-9]*[a-z]/.test(c.name));
+const helperCount = manifest.components.length - components.length;
 
-// Group by source file so the sidebar reads as a real module map, matching
-// how the generated docs/component-props.md is already organized -- one
-// explorer, one grouping convention, instead of a second taxonomy.
+function inlineCode(text) {
+    return text.split('`').map((part, i) => (i % 2 ? h('code', { key: 'c' + i }, part) : h('span', { key: 't' + i }, part)));
+}
+
 const byFile = new Map();
 for (const c of components) {
     if (!byFile.has(c.file)) byFile.set(c.file, []);
@@ -19,7 +21,7 @@ for (const c of components) {
 }
 const files = [...byFile.keys()].sort();
 
-const state = { q: '', selected: components[0].name };
+const state = { q: '', selected: (components.find((c) => c.name === 'Btn') || components[0]).name };
 
 function matches(c, q) {
     if (!q) return true;
@@ -27,30 +29,25 @@ function matches(c, q) {
     return hay.includes(q);
 }
 
-// Live specimens for the components this session's homepage showcase already
-// mounts real instances of (Btn/Chip/Badge/Table) -- proving the props table
-// against an actually-rendered component, not just prose. Every other symbol
-// still gets its full generated prop table; only the live-render panel is
-// conditional on having a known-safe, side-effect-free specimen to mount.
 const SPECIMENS = {
     Btn: () => h('div', { class: 'ds-explorer-specimen-row' },
-        Btn({ variant: 'primary', children: 'Primary' }),
-        Btn({ variant: 'default', children: 'Default' }),
-        Btn({ variant: 'ghost', children: 'Ghost' }),
-        Btn({ variant: 'danger', children: 'Danger' }),
+        Btn({ variant: 'primary', children: 'primary' }),
+        Btn({ variant: 'default', children: 'default' }),
+        Btn({ variant: 'ghost', children: 'ghost' }),
+        Btn({ variant: 'danger', children: 'danger' }),
     ),
     Chip: () => h('div', { class: 'ds-explorer-specimen-row' },
-        Chip({ tone: 'green', children: 'Live' }),
-        Chip({ tone: 'blue', children: 'Beta' }),
-        Chip({ tone: 'purple', children: 'New' }),
+        Chip({ tone: 'green', children: 'live' }),
+        Chip({ tone: 'blue', children: 'beta' }),
+        Chip({ tone: 'purple', children: 'new' }),
     ),
     Badge: () => h('div', { class: 'ds-explorer-specimen-row' },
         Badge({ tone: 'success', children: '0 violations' }),
         Badge({ tone: 'neutral', children: 'draft' }),
     ),
     Table: () => Table({
-        headers: ['Kit', 'Status'],
-        rows: [['chat', 'shipped'], ['os', 'shipped']],
+        headers: ['kit', 'status'],
+        rows: [['community-app', 'shipped'], ['os', 'shipped']],
         compact: true,
     }),
 };
@@ -58,7 +55,7 @@ const SPECIMENS = {
 function propRow(p) {
     return h('tr', { key: p.name },
         h('td', {}, h('code', {}, p.name + (p.alias ? ' (local: ' + p.alias + ')' : ''))),
-        h('td', {}, p.default ? h('code', {}, p.default) : h('span', { class: 'dim' }, '—')),
+        h('td', {}, p.default ? h('code', {}, p.default) : h('span', { class: 'dim' }, 'none')),
     );
 }
 
@@ -69,13 +66,13 @@ function detailPane(c) {
             h('h2', {}, c.name),
             h('span', { class: 'ds-explorer-detail-file' }, c.file),
         ),
-        c.description ? h('p', { class: 'ds-lede' }, c.description) : null,
+        c.description ? h('p', { class: 'ds-lede' }, ...inlineCode(c.description)) : null,
         specimen ? h('div', { class: 'ds-explorer-live' },
-            h('span', { class: 'ds-showcase-label' }, 'Live specimen'),
+            h('span', { class: 'ds-showcase-label' }, 'live specimen'),
             specimen(),
         ) : null,
         h('table', { class: 'ds-explorer-props-table' },
-            h('thead', {}, h('tr', {}, h('th', {}, 'Prop'), h('th', {}, 'Default'))),
+            h('thead', {}, h('tr', {}, h('th', {}, 'prop'), h('th', {}, 'default'))),
             h('tbody', {}, ...(c.props.length ? c.props.map(propRow) : [
                 h('tr', {}, h('td', { colspan: '2', class: 'dim' }, 'no props')),
             ])),
@@ -109,13 +106,13 @@ function view(rerender) {
             brand: '247420', leaf: 'component explorer',
             items: [['back to design', '../../']],
         }),
-        crumb: Crumb({ leaf: selected.name, right: h('span', { class: 'dim' }, filteredCount + ' / ' + components.length + ' components') }),
+        crumb: Crumb({ leaf: selected.name, right: h('span', { class: 'dim' }, filteredCount + ' / ' + components.length + ' components, ' + helperCount + ' helpers') }),
         side: sideNode(rerender),
         main: h('div', { class: 'ds-explorer-main ds-app-surface' },
-            h('h1', { class: 'sr-only' }, 'Component explorer'),
+            h('h1', { class: 'sr-only' }, 'component explorer'),
             h('input', {
                 type: 'search', class: 'input ds-explorer-search',
-                placeholder: 'search ' + components.length + ' components…',
+                placeholder: 'search ' + components.length + ' components',
                 value: state.q,
                 'aria-label': 'search components',
                 oninput: (e) => { state.q = e.target.value.toLowerCase(); rerender(); },
@@ -124,7 +121,7 @@ function view(rerender) {
         ),
         status: Status({
             left: ['component explorer', 'buildless'],
-            right: [components.length + ' components', 'no bundler'],
+            right: [components.length + ' components', helperCount + ' helpers', 'no bundler'],
         }),
     });
 }

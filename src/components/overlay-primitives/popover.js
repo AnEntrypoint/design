@@ -1,7 +1,3 @@
-// Popover — controlled, portaled to <body>. Unlike the other overlays in
-// this group it renders no VElement of its own: it imperatively creates,
-// positions and tears down a body-level element keyed off the anchor, and
-// always returns null.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { useFloating, FLOAT_OFFSET_POPOVER, FOCUSABLE_SEL, kids } from './floating.js';
@@ -26,9 +22,6 @@ export function Popover({ open, anchorEl, onClose, placement = 'bottom-start', c
     document.body.appendChild(el);
     webjsx.applyDiff(el, h('div', { class: 'ds-popover-inner' }, ...kids(children)));
     const floating = useFloating(anchorEl, el, { placement, offset: FLOAT_OFFSET_POPOVER });
-    // Real entrance transform: start offset pre-paint, settle to place on the
-    // next frame — .ds-popover's transition already declares `transform`,
-    // but with no differing start/end value nothing actually animated.
     el.classList.add('is-entering');
     requestAnimationFrame(() => { requestAnimationFrame(() => el.classList.remove('is-entering')); });
     const close = () => onClose && onClose();
@@ -43,9 +36,6 @@ export function Popover({ open, anchorEl, onClose, placement = 'bottom-start', c
     };
     el.addEventListener('keydown', onKey);
     document.addEventListener('mousedown', onDown, true);
-    // setTimeout(0), not queueMicrotask — see _anchoredOverlayLifecycle's
-    // comment: the opening click's own default focus-on-click can otherwise
-    // win the race and leave focus outside el, breaking Escape/Tab-trap.
     setTimeout(() => { const f = el.querySelector(FOCUSABLE_SEL); (f || el).focus(); }, 0);
     _popovers.set(anchorEl, { dispose() {
         document.removeEventListener('mousedown', onDown, true);

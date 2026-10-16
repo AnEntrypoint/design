@@ -1,14 +1,3 @@
-// copy-code.js -- vanilla-JS "copy" button injector for <pre><code> blocks.
-//
-// Standalone module, no dependencies, no framework assumptions: include it
-// with a plain <script src="…/copy-code.js"></script> (or type="module") on
-// any page rendering doc/code blocks and it wires itself up on
-// DOMContentLoaded, finding every `pre > code` element and injecting a small
-// button that copies the block's text to the clipboard.
-//
-// Self-invoking so a page can include it more than once without double-
-// registering handlers or double-injecting buttons (guarded per-element via
-// a data attribute).
 (function () {
   'use strict';
 
@@ -22,7 +11,6 @@
     if (navigator.clipboard && navigator.clipboard.writeText) {
       return navigator.clipboard.writeText(text);
     }
-    // Fallback for non-secure contexts / browsers without navigator.clipboard.
     return new Promise((resolve, reject) => {
       try {
         const ta = document.createElement('textarea');
@@ -70,8 +58,6 @@
     if (!pre || pre.tagName !== 'PRE') return;
     if (pre.hasAttribute(MARK_ATTR)) return;
     pre.setAttribute(MARK_ATTR, '1');
-    // Position context for an absolutely-positioned button; harmless no-op
-    // if the page's own CSS already sets a position on <pre>.
     if (!pre.style.position) pre.style.position = 'relative';
     pre.appendChild(makeButton(codeEl));
   }
@@ -86,17 +72,13 @@
     wireAll(document);
   }
 
-  // Minimal default styling, injected once, so the button is usable even on
-  // pages with no bespoke .copy-code-btn rule of their own. A page that wants
-  // its own look can simply define .copy-code-btn in its own stylesheet --
-  // this only runs if that class isn't already styled to be visible.
   if (!document.getElementById('copy-code-btn-style')) {
     const style = document.createElement('style');
     style.id = 'copy-code-btn-style';
     style.textContent =
       '.copy-code-btn{position:absolute;top:.5em;right:.5em;font:inherit;' +
       'font-size:.75em;line-height:1;padding:.35em .6em;border:1px solid currentColor;' +
-      'border-radius:4px;background:transparent;color:inherit;cursor:pointer;opacity:.6}' +
+      'border-radius:var(--r-0,4px);background:transparent;color:inherit;cursor:pointer;opacity:.6}' +
       '.copy-code-btn:hover{opacity:1}';
     document.head.appendChild(style);
   }

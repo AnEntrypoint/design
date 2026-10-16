@@ -1,11 +1,3 @@
-// Browser-pane paint surface — URL bar + iframe slot + status row. Consumer owns iframe.
-// renderBrowserPane({initialUrl, callbacks: {onNavigate, onReload, onBack, onForward}})
-//   -> {node, slot, setUrl, setStatus, setNav, setLoading, setError, dispose}.
-// slot is the container the consumer should append its iframe to.
-// setNav({canBack,canForward}) disables the back/forward buttons when history
-// has no entry in that direction; setLoading(bool) toggles a loading state on
-// the bar; setError(msg|null) surfaces a load failure in the status row.
-
 export function renderBrowserPane(opts = {}) {
     const { initialUrl = 'about:blank', callbacks = {} } = opts;
     const node = document.createElement('div');
@@ -29,7 +21,6 @@ export function renderBrowserPane(opts = {}) {
     fwdBtn.setAttribute('aria-label', 'Forward');
     const reloadBtn = mkBtn('reload', 'reload');
     reloadBtn.setAttribute('aria-label', 'Reload');
-    // Start with no history in either direction until the consumer says otherwise.
     backBtn.disabled = true;
     fwdBtn.disabled = true;
 
@@ -64,17 +55,14 @@ export function renderBrowserPane(opts = {}) {
         get slot() { return slot; },
         setUrl(u) { urlInput.value = u; },
         setStatus(s) { status.textContent = s; },
-        // Reflect history availability so disabled buttons read as inert.
         setNav({ canBack = false, canForward = false } = {}) {
             backBtn.disabled = !canBack;
             fwdBtn.disabled = !canForward;
         },
-        // Loading: tint the bar + announce; the consumer flips it off on load/error.
         setLoading(on) {
             node.classList.toggle('browser-app-loading', !!on);
             if (on) { node.removeAttribute('data-error'); status.textContent = 'loading...'; }
         },
-        // Error: persistent failure surfaced in the live status row.
         setError(msg) {
             node.classList.remove('browser-app-loading');
             if (msg) { node.setAttribute('data-error', '1'); status.textContent = msg; }

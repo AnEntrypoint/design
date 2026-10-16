@@ -1,10 +1,12 @@
-// Tools-ish freddie pages: analytics, models, cron, skills, config, env, tools, batch, gateway.
 import * as webjsx from '../../../../vendor/webjsx/index.js';
-import * as components from '../../../components.js';
-import { pre, form, skillLabel } from '../../../components/freddie/helpers.js';
+import { Chip, Icon } from '../../../components/shell.js';
+import { Panel, Row, Receipt, Kpi, Table, Section } from '../../../components/content.js';
+import { EmptyState } from '../../../components/files/chrome.js';
+import { pre, form } from '../../../components/freddie/page-blocks.js';
+import { skillLabel } from '../../../components/freddie/skill-label.js';
+import { attempt } from '../../../best-effort.js';
 
 const h = webjsx.createElement;
-const { Panel, Row, Receipt, Kpi, Table, Section, EmptyState, Chip, Icon } = components;
 
 export function makeToolsPages(ctx) {
     const { rerender } = ctx;
@@ -32,13 +34,13 @@ export function makeToolsPages(ctx) {
             const agent = cfg.agent || {};
             const providers = await fetch('/api/providers').then(r => r.json()).catch(() => []);
             return [
-                Kpi({ items: [[agent.provider || '—', 'provider'], [agent.model || '—', 'model']] }),
+                Kpi({ items: [[agent.provider || '-', 'provider'], [agent.model || '-', 'model']] }),
                 Panel({ title: 'active model', children: Receipt({ rows: [
                     ['provider', agent.provider || '(unset)'],
                     ['model', agent.model || '(unset)'],
-                    ['max_iterations', String(agent.max_iterations || '—')],
-                    ['max_tokens', String(agent.max_tokens || '—')],
-                    ['temperature', String(agent.temperature ?? '—')],
+                    ['max_iterations', String(agent.max_iterations || '-')],
+                    ['max_tokens', String(agent.max_tokens || '-')],
+                    ['temperature', String(agent.temperature ?? '-')],
                 ] }) }),
                 Panel({ title: 'change model', children: form({
                     fields: [{ name: 'provider', placeholder: 'provider', value: agent.provider || '' }, { name: 'model', placeholder: 'model id', value: agent.model || '' }],
@@ -64,7 +66,7 @@ export function makeToolsPages(ctx) {
                     onSubmit: async (ev) => { try { await h0.pi.cron.create({ cron: ev.target.elements.cron.value, prompt: ev.target.elements.prompt.value }); rerender(); } catch (e) { alert(e.message); } },
                 }) }),
                 Panel({ title: 'scheduled jobs', count: list.length, children: list.length === 0
-                    ? EmptyState({ text: 'no cron jobs — add one above', glyph: Icon('circle') })
+                    ? EmptyState({ text: 'no cron jobs: add one above', glyph: Icon('circle') })
                     : Table({ headers: ['id', 'cron', 'prompt', 'enabled'], striped: true,
                         rows: list.map(j => [j.id, j.cron, (j.prompt || '').slice(0, 40), j.enabled ? 'yes' : 'no']) }) }),
             ];
@@ -74,7 +76,7 @@ export function makeToolsPages(ctx) {
             const byCat = list.reduce((a, s) => { (a[s.category || 'other'] = a[s.category || 'other'] || []).push(s); return a; }, {});
             return [
                 Kpi({ items: [[list.length, 'skills'], [Object.keys(byCat).length, 'categories']] }),
-                list.length === 0 ? EmptyState({ text: 'no skills loaded — add SKILL.md files to ~/.freddie/skills/', glyph: Icon('square') }) : null,
+                list.length === 0 ? EmptyState({ text: 'no skills loaded: add SKILL.md files to ~/.freddie/skills/', glyph: Icon('square') }) : null,
                 ...Object.entries(byCat).map(([cat, ss]) => Panel({ title: cat, count: ss.length,
                     children: ss.length === 0 ? EmptyState({ text: 'none', glyph: Icon('square') })
                         : Table({ headers: ['name', 'description'], striped: true, rows: ss.map(s => [skillLabel(s), (s.description || '').slice(0, 120)]) }) })),
@@ -91,7 +93,7 @@ export function makeToolsPages(ctx) {
                     submit: 'save',
                     onSubmit: async (ev) => {
                         let v = ev.target.elements.value.value;
-                        try { v = JSON.parse(v); } catch { /* swallow: value may be a plain string, not JSON — keep it as-is */ }
+                        attempt(() => { v = JSON.parse(v); });
                         await h0.pi.config.saveValue(ev.target.elements.key.value, v);
                         rerender();
                     },

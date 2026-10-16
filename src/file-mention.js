@@ -1,17 +1,4 @@
-// Pure helpers for a chat input's "@" file-mention autocomplete: detecting an
-// in-progress @token before the caret, ranking a flat file/dir index against
-// the typed query, and building the replacement text on completion.
-// Framework-independent — no DOM, no webjsx — wire into any composer's
-// oninput/onkeydown handlers.
 
-/**
- * Detect an "@" file token immediately before the cursor. The "@" must sit at
- * the start of the text or be preceded by whitespace, so emails like
- * foo@bar never trigger. Supports the quoted form @"my dir/fi so
- * space-containing paths can be typed into.
- * @param {string} textBeforeCursor
- * @returns {{start:number, query:string, quoted:boolean}|null}
- */
 export function extractAtQuery(textBeforeCursor) {
     const quoted = /(?:^|\s)@"([^"\n]*)$/.exec(textBeforeCursor)
     if (quoted) {
@@ -30,13 +17,6 @@ function pathDepth(p) {
     return depth
 }
 
-/**
- * Build a { path, isDir } entry list from a flat file-path list, deriving
- * directory entries by walking each path's "/" segments. Base order is
- * shallow-first then alphabetical (what an empty "@" query should show).
- * @param {string[]} files
- * @returns {{path:string, isDir:boolean}[]}
- */
 export function buildEntriesFromFiles(files) {
     const dirs = new Set()
     for (const f of files) {
@@ -65,12 +45,6 @@ function isSubsequence(needle, haystack) {
     return i === needle.length
 }
 
-/**
- * Score ladder: exact 100 / prefix 80 / substring 50 / path-substring 30,
- * directories get +10, plus a low-weight subsequence fallback (10) so a
- * loose query like "chinp" still finds components/ChatInput.tsx. Queries
- * containing "/" rank against the full relative path (drill-down support).
- */
 function scoreEntry(entry, lowerQuery) {
     const lowerPath = entry.path.toLowerCase()
     let score = 0
@@ -94,12 +68,6 @@ function scoreEntry(entry, lowerQuery) {
 
 export const AT_RESULT_LIMIT = 20
 
-/**
- * Rank+filter a file index against a typed query, capped at `limit`.
- * @param {{path:string, isDir:boolean}[]} entries
- * @param {string} query
- * @param {number} [limit]
- */
 export function filterFileEntries(entries, query, limit = AT_RESULT_LIMIT) {
     const lowerQuery = query.toLowerCase()
     if (!lowerQuery) return entries.slice(0, limit)
@@ -112,14 +80,6 @@ export function filterFileEntries(entries, query, limit = AT_RESULT_LIMIT) {
     return scored.slice(0, limit).map(s => s.entry)
 }
 
-/**
- * Replacement text for the @token when a suggestion is confirmed. Files
- * close the token ("@path ", quoted if it has spaces), caret after the
- * trailing space. Directories stay open for drill-down ("@dir/"), no
- * trailing space — quoted directories close instead (@"my dir/") with the
- * caret placed before the closing quote.
- * @returns {{text:string, cursorOffset:number}}
- */
 export function buildAtInsertText(entryPath, isDir, forceQuotes = false) {
     const p = isDir ? `${entryPath}/` : entryPath
     const needsQuotes = forceQuotes || p.includes(' ')
@@ -131,7 +91,6 @@ export function buildAtInsertText(entryPath, isDir, forceQuotes = false) {
     return { text, cursorOffset: text.length }
 }
 
-/** Closed one-shot @mention (e.g. an explorer's "@" button) — directories close too. */
 export function buildAtMentionText(entryPath, isDir) {
     const p = isDir ? `${entryPath}/` : entryPath
     return p.includes(' ') ? `@"${p}" ` : `@${p} `

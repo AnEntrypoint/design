@@ -1,6 +1,3 @@
-// Community navigation: the server rail and the channel sidebar it selects
-// into — ServerIcon / ServerRail, ChannelItem (with its voice state and
-// participant strip), ChannelCategory, and the composed ChannelSidebar.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -8,15 +5,20 @@ import { Avatar, avatarInitial, avatarContrastFg } from '../content.js';
 import { UserPanel } from './presence.js';
 const h = webjsx.createElement;
 
-// Channel-type -> line-icon name, shared by ChannelItem and MobileHeader.
-export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash' };
+export const CHANNEL_ICON_FOR = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'megaphone', page: 'page', thread: 'thread', text: 'hash', dm: 'forum' };
 
-export function ServerIcon({ id, name, icon, active, badge, onClick } = {}) {
+function _shortIdentity(id) {
+    const s = String(id || '');
+    return s.length > 16 ? s.slice(0, 8) + '…' + s.slice(-4) : s;
+}
+
+export function ServerIcon({ id, name, abbr, icon, active, badge, onClick } = {}) {
     return h('div', {
         class: 'cm-server-icon' + (active ? ' active' : ''),
         onclick: onClick,
         role: 'button',
         'aria-label': name,
+        title: name,
         'aria-pressed': active ? 'true' : 'false',
         tabindex: '0',
         'data-id': id,
@@ -28,21 +30,21 @@ export function ServerIcon({ id, name, icon, active, badge, onClick } = {}) {
         }
     },
         h('span', { class: 'cm-server-pill' }),
-        icon ? h('img', { src: icon, alt: name }) : Avatar({ name, shape: 'square', initialsCount: 2 }),
+        icon ? h('img', { src: icon, alt: name }) : Avatar({ name: abbr || name, shape: 'square', initialsCount: 2 }),
         badge ? h('span', { class: 'cm-server-badge' }, badge > 99 ? '99+' : String(badge)) : null
     );
 }
 
 export function ServerRail({ servers = [], activeId, onSelect, onAdd } = {}) {
     return h('div', { class: 'cm-server-rail', role: 'navigation', 'aria-label': 'servers' },
-        h('a', { class: 'cm-server-back', href: '../', title: 'Back', 'aria-label': 'back' }, Icon('chevron-left')),
+        h('a', { class: 'cm-server-back', href: '../', title: 'back', 'aria-label': 'back' }, Icon('chevron-left')),
         h('div', { class: 'cm-server-sep', 'aria-hidden': 'true' }),
         ...servers.map(s => ServerIcon({ ...s, active: s.id === activeId, onClick: () => onSelect && onSelect(s.id) })),
-        onAdd ? h('button', { class: 'cm-server-add', type: 'button', onclick: onAdd, title: 'Add server', 'aria-label': 'add server' }, '+') : null
+        onAdd ? h('button', { class: 'cm-server-add', type: 'button', onclick: onAdd, title: 'add server', 'aria-label': 'add server' }, '+') : null
     );
 }
 
-export function ChannelItem({ id, name, type = 'text', active, voiceActive, voiceConnecting, badge, draggable, actions = [], participants = [], onClick, onContext } = {}) {
+export function ChannelItem({ id, name, type = 'text', active, voiceActive, voiceConnecting, badge, draggable, actions = [], participants = [], onClick, onContext, onReorder } = {}) {
     const ICON_FOR = CHANNEL_ICON_FOR;
     const icon = Icon(ICON_FOR[type] || 'hash', { size: 15 });
     const handleActionClick = (a, e) => { e.stopPropagation(); a.onClick && a.onClick(id, e); };
@@ -61,24 +63,15 @@ export function ChannelItem({ id, name, type = 'text', active, voiceActive, voic
                     onContext && onContext(id, rect.left, rect.top + rect.height);
                 }
                 if (draggable) {
-                    if (e.ctrlKey && e.key === 'ArrowUp') {
+                    const dir = e.key === 'ArrowUp' ? 'up' : e.key === 'ArrowDown' ? 'down' : null;
+                    if (dir && (e.ctrlKey || e.altKey)) {
                         e.preventDefault();
-                        window.dispatchEvent(new CustomEvent('reorder', { detail: { id, direction: 'up' } }));
-                    }
-                    if (e.ctrlKey && e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        window.dispatchEvent(new CustomEvent('reorder', { detail: { id, direction: 'down' } }));
+                        if (onReorder) onReorder(id, dir);
+                        else window.dispatchEvent(new CustomEvent('reorder', { detail: { id, direction: dir } }));
                     }
                 }
             },
             tabindex: '0',
-            // NOT role="option": this is channel NAVIGATION, not a select-one
-            // listbox — activating a row changes the view, and each row also
-            // contains its own action buttons, which `option` forbids (its
-            // children must be presentational). A link inside a list is the
-            // structure a screen reader should announce, and the current
-            // channel is conveyed by aria-current="page", the navigation
-            // idiom, rather than aria-selected.
             role: 'link',
             'aria-current': active ? 'page' : null
         },
@@ -97,8 +90,8 @@ export function ChannelItem({ id, name, type = 'text', active, voiceActive, voic
         ),
         voiceActive && participants.length ? h('div', { class: 'cm-ch-voice-users' },
             ...participants.map(p => h('div', { class: 'cm-ch-voice-user' + (p.speaking ? ' speaking' : '') },
-                h('div', { class: 'cm-ch-voice-user-avatar', style: p.color ? (avatarContrastFg(p.color) ? `--avatar-bg:${p.color};--avatar-fg:${avatarContrastFg(p.color)}` : `--avatar-bg:${p.color}`) : null }, avatarInitial(p.identity)),
-                h('span', { class: 'cm-ch-voice-user-name' }, p.identity)
+                h('div', { class: 'cm-ch-voice-user-avatar', style: p.color ? (avatarContrastFg(p.color) ? `--avatar-bg:${p.color};--avatar-fg:${avatarContrastFg(p.color)}` : `--avatar-bg:${p.color}`) : null }, avatarInitial(p.name || p.identity)),
+                h('span', { class: 'cm-ch-voice-user-name', title: p.name ? null : p.identity }, p.name || _shortIdentity(p.identity))
             ))
         ) : null
     );
@@ -116,9 +109,6 @@ export function ChannelCategory({ id, name, channels = [], collapsed, activeId, 
             extraButton ? h('button', { class: 'cm-cat-extra', onclick: (e) => { e.stopPropagation(); extraButton.onClick && extraButton.onClick(id, e); }, 'aria-label': extraButton.title || 'Category action' }, extraButton.icon || extraButton.label || '+') : null,
             onAddChannel ? h('button', { class: 'cm-cat-add', onclick: (e) => { e.stopPropagation(); onAddChannel(id); }, 'aria-label': 'Add channel to ' + name }, '+') : null
         ),
-        // role=list + role=listitem on each wrap: the channel rows are a real
-        // list of navigation targets, so a screen reader announces position
-        // and count ("3 of 7") instead of a flat run of links.
         collapsed ? null : h('div', { class: 'cm-cat-channels', role: 'list', 'aria-label': name + ' channels' },
             ...channels.map(c => ChannelItem({
                 ...c,
@@ -131,8 +121,6 @@ export function ChannelCategory({ id, name, channels = [], collapsed, activeId, 
     );
 }
 
-// Skeleton rows for a cold channel-list load — reuses the kit-wide .ds-skel
-// shimmer primitive (sessions.js / files.js) rather than a bare spinner.
 function ChannelListSkeleton({ rows = 6 } = {}) {
     return h('div', { class: 'cm-channel-list cm-channel-skeleton', 'aria-hidden': 'true' },
         ...Array.from({ length: rows }, (_, i) => h('div', { key: 'csk' + i, class: 'cm-channel-item-skeleton' },
@@ -151,7 +139,7 @@ export function ChannelSidebar({ serverName, channels = [], categories = [], act
             (sorted.length === 0 && uncategorized.length === 0)
                 ? h('div', { class: 'cm-channel-empty', role: 'status' },
                     Icon('hash', { size: 20 }),
-                    h('span', { class: 'cm-channel-empty-text' }, 'no channels yet — add one to get this server started'))
+                    h('span', { class: 'cm-channel-empty-text' }, 'no channels yet: add one to get this server started'))
                 : null,
             ...sorted.map(cat => ChannelCategory({
                 id: cat.id,

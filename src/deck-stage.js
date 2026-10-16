@@ -1,8 +1,3 @@
-// deck-stage — compat re-export shim. registerDeckStage() lazily side-effect
-// imports the real implementation, now living at src/kits/slides/deck-stage.js
-// (moved from the top-level slides/ dir so the deck kit follows the same
-// src/kits/<name>/ convention every other kit uses; this shim keeps the old
-// src/deck-stage.js import path working for any existing consumer).
 
 let _registered = false;
 export async function registerDeckStage() {

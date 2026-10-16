@@ -6,7 +6,7 @@
 
 ## Summary
 
-This document guides developers through migrating their codebase to use standardized component prop names. All changes are **backward compatible** — old props continue to work but trigger deprecation notices in development mode.
+This document guides developers through migrating their codebase to use standardized component prop names. All changes are **backward compatible**, old props continue to work but trigger deprecation notices in development mode.
 
 ## Key Changes
 
@@ -163,7 +163,7 @@ ChatMessage({ role: 'assistant', text: 'hi' })
 **Solution**: Support explicit `hasChildren` prop (for future API clarity).
 
 #### Note
-This is primarily an internal refactor. No action needed for users — the component still infers `hasChildren` from the `children` prop.
+This is primarily an internal refactor. No action needed for users; the component still infers `hasChildren` from the `children` prop.
 
 #### For Future Use
 ```js
@@ -232,7 +232,7 @@ ChannelItem({ voiceActive: false | true })
 ### Phase 3: ChatMessage Component (Moderate Impact)
 - [ ] Search codebase: `grep -r "who:" src/components/ --include="*.js"`
 - [ ] Update message objects in: `src/components/chat.js`
-- [ ] Update message objects in: `src/components/freddie/helpers.js`
+- [ ] Update message objects in: `src/components/freddie/chat-message-list.js`
 - [ ] Update message data in: `ui_kits/*/app.js`
 - [ ] Handle spread patterns: `{ ...message }`
 
@@ -243,7 +243,7 @@ ChannelItem({ voiceActive: false | true })
 - [ ] Add deprecation notices to old prop documentation
 
 ### Phase 5: Validation
-- [ ] Run tests: `npm test` (or equivalent)
+- [ ] Run the lint gates: `npm run lint`
 - [ ] Build project: `npm run build:ci` or `node scripts/build.mjs`
 - [ ] Manual smoke test in browser
 - [ ] Check no console warnings for old props

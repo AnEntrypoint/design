@@ -1,14 +1,3 @@
-// ---------------------------------------------------------------------------
-// InfoRow / InfoSection / DiagnosticsPanel — static debug/system-info
-// readouts: a bordered section of label + monospace-value rows. Ported from
-// docstudio's diagnostics page (auth/streaming/service-worker state, recent
-// client errors, environment facts). Distinct from PropertyGrid, which is
-// for EDITABLE properties — these rows are read-only display, never inputs.
-// `data == null` (not yet loaded) renders a loading placeholder row instead
-// of an empty section, so a panel never flashes an empty bordered box before
-// its first data arrives; `onRefresh` renders a trailing refresh button that
-// reuses the section's own header row rather than shifting layout beneath it.
-// ---------------------------------------------------------------------------
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
@@ -16,7 +5,7 @@ const h = webjsx.createElement;
 export function InfoRow({ label, value, key } = {}) {
     return h('div', { key, class: 'ds-ep-inforow' },
         h('span', { class: 'ds-ep-inforow-label' }, label),
-        h('span', { class: 'ds-ep-inforow-value' }, value == null || value === '' ? '—' : String(value)));
+        h('span', { class: 'ds-ep-inforow-value' }, value == null || value === '' ? '-' : String(value)));
 }
 
 export function InfoSection({ title, rows, key } = {}) {

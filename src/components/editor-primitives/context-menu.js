@@ -1,14 +1,7 @@
-// Context menu — the right-click/long-press menu surface: ContextMenu (the
-// viewport-clamped, keyboard-navigable menu itself) plus useContextMenu, the
-// helper that wires right-click + long-press on a target element and hands
-// the caller an {x, y, items} payload to render it from.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
-// ---------------------------------------------------------------------------
-// ContextMenu — items, anchor {x,y}, onClose. Viewport-clamped. Keyboard nav.
-// ---------------------------------------------------------------------------
 export function ContextMenu({ items = [], anchor = { x: 0, y: 0 }, onClose } = {}) {
     let rootEl = null;
     const close = () => { if (onClose) onClose(); };
@@ -38,15 +31,11 @@ export function ContextMenu({ items = [], anchor = { x: 0, y: 0 }, onClose } = {
             onkeydown: onKey,
             ref: (el) => {
                 if (!el) {
-                    // Unmount: unhook the resize re-clamp bound on mount.
                     if (rootEl && rootEl._dsCtxClampOff) { rootEl._dsCtxClampOff(); }
                     rootEl = null;
                     return;
                 }
                 rootEl = el;
-                // Position at the anchor immediately, then clamp once layout has
-                // settled — measuring synchronously in ref reads a zero-size box
-                // (children not yet painted), so the clamp must run post-layout.
                 const ax = anchor.x || 0, ay = anchor.y || 0;
                 el.style.left = ax + 'px';
                 el.style.top = ay + 'px';
@@ -55,10 +44,6 @@ export function ContextMenu({ items = [], anchor = { x: 0, y: 0 }, onClose } = {
                     const vw = window.innerWidth, vh = window.innerHeight;
                     const r = el.getBoundingClientRect();
                     let x = ax, y = ay;
-                    // Touch: keep the menu clear of the lifting finger — nudge
-                    // below the touch point, or open above when it fits and the
-                    // anchor sits in the lower half (lift-off would otherwise
-                    // activate the first item).
                     if (coarse) {
                         y = ay + 10;
                         if (ay > vh / 2 && ay - r.height >= 4) y = ay - r.height;
@@ -69,12 +54,8 @@ export function ContextMenu({ items = [], anchor = { x: 0, y: 0 }, onClose } = {
                     el.style.top = y + 'px';
                 };
                 requestAnimationFrame(clamp);
-                // Re-clamp on resize/orientation change for the menu's lifetime.
                 window.addEventListener('resize', clamp);
                 el._dsCtxClampOff = () => { window.removeEventListener('resize', clamp); el._dsCtxClampOff = null; };
-                // setTimeout(0), not queueMicrotask: the triggering contextmenu/click
-                // event's own default focus can otherwise win the race and leave focus
-                // outside the menu, breaking keyboard arrow-nav/Escape.
                 setTimeout(() => { el.querySelector('button[data-ix]')?.focus(); }, 0);
             }
         },
@@ -94,12 +75,9 @@ export function ContextMenu({ items = [], anchor = { x: 0, y: 0 }, onClose } = {
     );
 }
 
-// Helper: wires right-click + long-press to a target ref. Caller manages state.
 export function useContextMenu(targetEl, items, openCb) {
     if (!targetEl) return () => {};
     let touchTimer = null, lastOpen = 0;
-    // Android fires the native contextmenu event on long-press AND our 500ms
-    // touch timer — dedupe so the menu opens once, not twice (open/flicker).
     const open = (x, y) => {
         if (Date.now() - lastOpen < 700) return;
         lastOpen = Date.now();

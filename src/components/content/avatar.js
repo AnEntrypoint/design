@@ -1,38 +1,13 @@
-// Avatar — generic identity disc: an image when `src` resolves, else a
-// letter fallback derived from `name`/`fallback`. Kit previously only had
-// scoped one-offs (chat.js `.chat-avatar`, community.js `.cm-user-avatar`)
-// duplicating this same letter-fallback logic; this is the reusable version.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
-// avatarInitial — the single shared letter-fallback computation behind
-// Avatar and every custom-colored avatar wrapper (community.js's voice/user/
-// member rows use their own `--avatar-bg` CSS-variable styling and can't
-// drop in the Avatar element directly, but still want the SAME fallback
-// text, not their own independently-drifting .slice(0,n).toUpperCase()).
-// Empty-guards to '?' identically everywhere it's used.
 export function avatarInitial(name, count = 1) {
     return name ? String(name).trim().slice(0, count).toUpperCase() || '?' : '?';
 }
 
-// avatarContrastFg — picks black or white text against an arbitrary
-// per-user hashed --avatar-bg color, via WCAG relative luminance, so
-// initials clear 4.5:1 regardless of which hue the hash lands on (a
-// single fixed --fg-2 token can't: some hashed hues are light enough
-// that dark-on-dark or light-on-light both existed in the wild).
-// Returns null for an unparsable color so callers can omit the
-// inline style entirely and fall back to the CSS default.
 export function avatarContrastFg(color) {
     if (!color) return null;
     let resolved = String(color).trim();
-    // A caller may hand us an unresolved custom-property reference (e.g. a
-    // hashed palette built from `var(--cat-green)` tokens whose actual value
-    // depends on the active theme) rather than a literal color -- the hex/rgb
-    // parse below can never match that string, so the whole contrast pick was
-    // silently defeated (returned null, --avatar-fg omitted, only the CSS
-    // default color survived). Resolve it against the live document the same
-    // way the cascade would, before falling through to the literal parsers.
     const varRef = /^var\(\s*(--[\w-]+)\s*(?:,.*)?\)$/i.exec(resolved);
     if (varRef && typeof document !== 'undefined' && document.documentElement) {
         const cssValue = getComputedStyle(document.documentElement).getPropertyValue(varRef[1]).trim();
@@ -51,21 +26,11 @@ export function avatarContrastFg(color) {
     }
     const lin = (c) => { const v = c / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
     const L = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-    // Contrast against pure black/white; pick whichever side clears more
-    // headroom (both landing >=4.5:1 is common, but some hues only clear
-    // one side, so max-headroom is the right tiebreak, not a 0.5 cutoff).
     const contrastWhite = 1.05 / (L + 0.05);
     const contrastBlack = (L + 0.05) / 0.05;
     return contrastWhite >= contrastBlack ? '#fff' : '#000';
 }
 
-// Avatar — the single letter-fallback/image avatar primitive. `initialsCount`
-// (default 1) controls how many leading characters of `name` become the
-// fallback letters when no `src`/`fallback` is given (community.js's
-// pill-shaped ServerIcon wants 2); `shape` ('circle' default, or 'square')
-// covers non-circular consumers without each hand-rolling its own
-// .slice(0,n).toUpperCase() (previously duplicated across 5+ call sites in
-// community.js and chat.js with drifting char-counts/empty-guards).
 export function Avatar({ name, src, fallback, size = 'md', shape = 'circle', initialsCount = 1, key } = {}) {
     const letter = fallback != null ? fallback : avatarInitial(name, initialsCount);
     const cls = 'ds-avatar ds-avatar-' + size + (shape === 'square' ? ' ds-avatar-square' : '');

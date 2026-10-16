@@ -1,0 +1,13 @@
+.ds-root-viewport { height: 100vh; height: 100dvh; }
+
+.ds-avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--bg-3); color: var(--fg);
+  font-family: var(--ff-body); font-weight: 600; text-transform: lowercase;
+  letter-spacing: 0.02em; user-select: none; flex-shrink: 0; object-fit: cover;
+  box-shadow: var(--ring-line);
+}
+.ds-avatar-sm { width: 24px; height: 24px; font-size: var(--fs-pico); }
+.ds-avatar-md { width: 36px; height: 36px; font-size: var(--fs-micro); }
+.ds-avatar-lg { width: 48px; height: 48px; font-size: var(--fs-sm); }
+.ds-avatar-square { border-radius: var(--r-2, 6px); }

@@ -1,10 +1,3 @@
-// Freddie dashboard shell — the AppShell/Topbar/Side/Status composition, the
-// Ctrl+K command-palette action list, and the nav-side builder that used to
-// live inline in freddie's src/web/app.js. Per this repo's own contract (all
-// GUI for freddie lives in anentrypoint-design; app.js is bootstrap-only),
-// app.js now calls renderDashboardShell()/buildNavPaletteActions() instead of
-// composing these components itself.
-
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { AppShell, Topbar, Side, Status, Chip, Icon } from '../shell.js';
 import { ThemeToggle } from '../theme-toggle.js';
@@ -12,35 +5,30 @@ import * as theme from '../../theme.js';
 
 const h = webjsx.createElement;
 
-// buildNavPaletteActions(routes, { onNavigate }) — the Ctrl+K command
-// palette's action list: one "jump to route" entry per sidebar route, plus a
-// handful of built-in actions (new chat, open terminal, toggle theme, reload).
 export function buildNavPaletteActions(routes, { onNavigate } = {}) {
     const actions = (routes || []).map(r => ({
         id: 'nav-' + r.path,
         label: r.label || r.path,
         icon: r.icon || 'circle',
-        group: 'Navigate',
+        group: 'navigate',
         hint: null,
         action: () => onNavigate(r.path),
     }));
     actions.push(
-        { id: 'cmd-new-chat', label: 'New Chat Session', icon: 'forum', group: 'Actions', hint: null, action: () => onNavigate('chat') },
-        { id: 'cmd-terminal', label: 'Open Terminal', icon: 'more-horizontal', group: 'Actions', hint: null, action: () => onNavigate('terminal') },
+        { id: 'cmd-new-chat', label: 'new chat session', icon: 'forum', group: 'actions', hint: null, action: () => onNavigate('chat') },
+        { id: 'cmd-terminal', label: 'open terminal', icon: 'more-horizontal', group: 'actions', hint: null, action: () => onNavigate('terminal') },
         {
-            id: 'cmd-toggle-theme', label: 'Toggle Theme', icon: 'contrast', group: 'Actions', hint: null, action: () => {
+            id: 'cmd-toggle-theme', label: 'toggle theme', icon: 'contrast', group: 'actions', hint: null, action: () => {
                 const cur = theme.getTheme();
                 const next = cur === 'github-dark' ? 'paper' : (cur === 'paper' ? 'ink' : (cur === 'ink' ? 'auto' : 'github-dark'));
                 theme.applyTheme(next);
             },
         },
-        { id: 'cmd-refresh', label: 'Refresh Data', icon: 'refresh', group: 'Actions', hint: null, action: () => location.reload() },
+        { id: 'cmd-refresh', label: 'refresh data', icon: 'refresh', group: 'actions', hint: null, action: () => location.reload() },
     );
     return actions;
 }
 
-// renderDashboardSide({ routeGroups, active, onNavigate }) — the sidebar
-// nav, grouped per ROUTE_GROUPS, with the current route highlighted.
 export function renderDashboardSide({ routeGroups, active, onNavigate }) {
     return Side({
         sections: (routeGroups || []).map(g => ({
@@ -56,17 +44,11 @@ export function renderDashboardSide({ routeGroups, active, onNavigate }) {
     });
 }
 
-// renderDashboardShell(opts) — the full page frame: topbar (brand, sampler
-// pill, theme toggle, Ctrl+K hint), sidebar, status bar (agent health,
-// project, tool/skill counts), wrapping `body`. The chat page composes its
-// own WorkspaceShell (rail+sessions+main) for kimi-cli-parity layout —
-// wrapping it in another AppShell would nest two app frames, so pass
-// `fullBleed: true` there and this returns `body` standalone instead.
 export function renderDashboardShell({
     active, body, routeGroups, onNavigate,
     sampler = { ok: 0, bad: 0, total: 0, error: false },
     degraded = false, error = null, project = 'default',
-    toolsCount = '—', skillsCount = '—', ts = '', brand = 'freddie',
+    toolsCount = '-', skillsCount = '-', ts = '', brand = 'freddie',
     fullBleed = false,
 }) {
     if (fullBleed) return body;
@@ -75,8 +57,7 @@ export function renderDashboardShell({
         ? Chip({ tone: 'miss', children: 'sampler err' })
         : sampler.total > 0
             ? Chip({ tone: sampler.bad > 0 ? 'miss' : 'ok', children: 'sampler ' + sampler.ok + '/' + sampler.total })
-            : Chip({ tone: 'neutral', children: 'sampler —' });
-    // Layout lives in .fd-topbar-leaf (freddie's index.html reset block) — zero inline CSS.
+            : Chip({ tone: 'neutral', children: 'sampler' });
     const leaf = h('span', { class: 'fd-topbar-leaf' }, samplerPill, ThemeToggle ? ThemeToggle({}) : null);
     const topbarItems = [['New Chat', '#fd-chat']];
     const searchHint = h('span', { class: 'fd-search-hint', 'aria-hidden': 'true' }, 'Ctrl+K');

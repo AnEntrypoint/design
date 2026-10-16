@@ -1,29 +1,27 @@
 import * as webjsx from 'webjsx';
-import {
-    Topbar, Crumb, AppShell, Status, Btn, Icon,
-    FileGrid, FileToolbar, DropZone, UploadProgress, BreadcrumbPath,
-    ConfirmDialog, PromptDialog, FileViewer,
-    FilePreviewMedia, FilePreviewCode, FilePreviewText
-} from '../../src/components.js';
+import { Topbar, Crumb, AppShell, Status, Btn, Icon } from '../../src/components/shell.js';
+import { FileGrid, FileToolbar, DropZone, UploadProgress, BreadcrumbPath } from '../../src/components/files.js';
+import { ConfirmDialog, PromptDialog, FileViewer, FilePreviewMedia, FilePreviewCode, FilePreviewText } from '../../src/components/files-modals.js';
 const h = webjsx.createElement;
 
 const SAMPLE = [
-    { name: 'src',           type: 'dir',      size: null,    modified: '2026.04.21' },
-    { name: 'design',        type: 'dir',      size: null,    modified: '2026.04.20' },
-    { name: 'cover.png',     type: 'image',    size: 184320,  modified: '2026.04.18' },
-    { name: 'reel.mp4',      type: 'video',    size: 2411724, modified: '2026.04.17' },
-    { name: 'theme.mp3',     type: 'audio',    size: 4823100, modified: '2026.04.16' },
-    { name: 'main.js',       type: 'code',     size: 4321,    modified: '2026.04.21' },
-    { name: 'README.md',     type: 'text',     size: 2410,    modified: '2026.04.21' },
-    { name: 'archive.zip',   type: 'archive',  size: 18234100,modified: '2026.04.10' },
-    { name: 'spec.pdf',      type: 'document', size: 412300,  modified: '2026.04.04' },
-    { name: 'link-out',      type: 'symlink',  size: null,    modified: '2026.04.02' },
-    { name: '.config',       type: 'other',    size: 220,     modified: '2026.04.01' }
+    { name: 'src', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'ui_kits', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'docs', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'scripts', type: 'dir', size: null, modified: '2026.10.05' },
+    { name: 'vendor', type: 'dir', size: null, modified: '2026.09.16' },
+    { name: 'favicon.svg', type: 'image', size: 270, modified: '2026.09.03' },
+    { name: 'robots.txt', type: 'text', size: 172, modified: '2026.09.03' },
+    { name: 'sitemap.xml', type: 'code', size: 6630, modified: '2026.09.28' },
+    { name: 'package.json', type: 'code', size: 6322, modified: '2026.10.05' },
+    { name: 'README.md', type: 'text', size: 24954, modified: '2026.10.05' },
+    { name: 'CHANGELOG.md', type: 'text', size: 78876, modified: '2026.10.05' },
+    { name: 'LICENSE', type: 'text', size: 1069, modified: '2026.09.03' }
 ];
 
 const PREVIEW_TEXT = `# 247420 file browser
 this is a static demo wired to the design system.
-no backend, no real files — just primitives in arrangement.`;
+the listing is a fixed snapshot of this repo's root at one commit: components only, no real file access.`;
 
 const PREVIEW_CODE = `export function FileRow({ name, type, size, modified, onOpen }) {
     return h('div', { class: 'ds-file-row', 'data-file-type': type, onclick: onOpen },
@@ -35,59 +33,14 @@ const PREVIEW_CODE = `export function FileRow({ name, type, size, modified, onOp
 
 const state = {
     files: SAMPLE,
-    crumbs: ['demo', 'tigers'],
+    crumbs: ['design'],
     dragover: false,
     uploads: [],
     viewer: null,
     confirm: null,
     prompt: null,
-    promptValue: '',
-    // Which state the listing renders in. FileGrid already owns `loading`
-    // (cold-load shimmer) and the empty copy; `error` is a directory-level
-    // failure that has to sit above the grid because there is no listing at
-    // all to decorate. Driven by the KitControls buttons below so every state
-    // is reachable rather than only reproducible against a real broken mount.
-    phase: 'ready'
+    promptValue: ''
 };
-
-const PHASES = ['ready', 'loading', 'empty', 'error'];
-
-// Dev/demo state toggles for the listing — reachable reference surface for
-// loading/empty/error, but not part of the toolbar a real FileBrowser would
-// render. Collapsed by default behind a <details> disclosure (see
-// .ds-kit-controls, kits-appended.css) — the same pattern the aicat and
-// dashboard kits use for their reference-state toggles — so this reads as
-// scaffolding around the component, not product chrome inside it.
-function KitControls() {
-    return h('details', { class: 'ds-kit-controls' },
-        h('summary', {}, 'kit controls — listing reference state'),
-        h('div', { class: 'ds-kit-controls-body' },
-            h('div', { class: 'ds-btn-row', 'aria-label': 'listing demo state' },
-                h('span', { class: 'eyebrow' }, 'demo:'),
-                ...PHASES.map((p) => h('button', {
-                    key: 'ph-' + p,
-                    class: state.phase === p ? 'btn btn-primary' : 'btn',
-                    onclick: () => { state.phase = p; render(); }
-                }, p))
-            )
-        )
-    );
-}
-
-// Directory-level failure. Names the problem AND the recovery: a bare "could
-// not load" tells the user nothing they can act on.
-function DirError() {
-    return h('div', { class: 'ds-alert ds-alert-error' },
-        h('span', { class: 'ds-alert-icon' }, '!'),
-        h('div', { class: 'ds-alert-content' },
-            h('div', { class: 'ds-alert-title' }, 'cannot read demo/tigers'),
-            h('div', { class: 'ds-alert-message' }, 'the mount answered but refused the listing -- your account has write access to this path and not read. ask an owner for read, or open a folder you created.'),
-            h('div', { class: 'ds-alert-retry' },
-                h('button', { class: 'btn', onclick: () => { state.phase = 'ready'; render(); } }, 'retry listing')
-            )
-        )
-    );
-}
 
 const root = document.getElementById('root');
 
@@ -98,7 +51,7 @@ function previewBody(file) {
             name: file.name,
             src: file.type === 'image'
                 ? 'data:image/svg+xml;utf8,' + encodeURIComponent(
-                    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360"><rect width="600" height="360" fill="#3F8A4A"/><text x="300" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="48" fill="#F5F0E4">${file.name}</text></svg>`
+                    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360"><rect width="600" height="360" fill="#737373"/><text x="300" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="48" fill="#F5F5F5">${file.name}</text></svg>`
                 )
                 : ''
         });
@@ -126,7 +79,7 @@ function rowAction(act, file) {
     if (act === 'delete') {
         state.confirm = {
             title: 'delete ' + file.name + '?',
-            message: 'this is a demo — nothing actually deletes.',
+            message: 'demo only: nothing is deleted.',
             destructive: true,
             onConfirm: () => {
                 state.files = state.files.filter(f => f !== file);
@@ -180,9 +133,6 @@ function pickFiles() {
 }
 
 function App() {
-    // ds-files-stack owns the full-height scroll geometry; ds-app-surface adds
-    // the Operate typescale so the page title sits at the app ceiling instead
-    // of the 64px display size, which outweighs the file list it labels.
     const main = h('div', { class: 'ds-files-stack ds-app-surface' },
         h('h1', {}, 'file browser'),
         BreadcrumbPath({
@@ -212,7 +162,7 @@ function App() {
             ],
             right: [
                 h('span', { class: 'meta ds-meta-mono' },
-                    String(state.phase === 'ready' ? state.files.length : 0).padStart(2, '0') + ' items'
+                    String(state.files.length).padStart(2, '0') + ' items'
                 )
             ]
         }),
@@ -225,15 +175,13 @@ function App() {
             onPick: pickFiles
         }),
         UploadProgress({ items: state.uploads }),
-        state.phase === 'error' ? DirError() : FileGrid({
-            files: state.phase === 'ready' ? state.files : [],
-            loading: state.phase === 'loading',
+        FileGrid({
+            files: state.files,
             onOpen: openViewer,
             onAction: rowAction,
-            emptyText: 'this folder is empty — drop files on the zone above, or use + folder to start a tree here.',
+            emptyText: 'this folder is empty. drop files above or use + folder.',
             emptyAction: Btn({ onClick: pickFiles, children: 'upload a file' })
-        }),
-        KitControls()
+        })
     );
 
     return h('div', {},
@@ -250,7 +198,7 @@ function App() {
             }),
             crumb: Crumb({ trail: ['247420', 'ui kits'], leaf: 'file browser' }),
             main,
-            status: Status({ left: ['main', '- ' + (state.phase === 'ready' ? state.files.length : 0) + ' items', '- ' + state.phase], right: ['live', 'demo only'] })
+            status: Status({ left: ['main', state.files.length + ' items'], right: ['sample files'] })
         }),
         state.viewer ? FileViewer({
             file: state.viewer,

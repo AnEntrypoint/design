@@ -1,10 +1,3 @@
-// Launcher dock paint surface — pure DOM rendering, no lifecycle.
-// Consumer (thebird) owns instance creation, fs/worker/shell wiring, teardown.
-// renderDock returns a handle whose setInstances/setActive are called from
-// lifecycle code. Visuals are bible-aligned: panel-select bg + accent inset
-// rail for active, tonal hover, lowercase mono labels. Add/close controls
-// render through ./icons.js's SVG contract, not raw ASCII glyphs.
-
 import { icons } from './icons.js';
 
 export function renderDock(opts = {}) {
@@ -59,10 +52,6 @@ export function renderDock(opts = {}) {
             closeBtn.setAttribute('aria-label', 'close ' + inst.id);
             closeBtn.dataset.role = 'close';
             closeBtn.dataset.instanceId = inst.id;
-            // Destructive one-click close gets a second-click-to-confirm: the
-            // first click arms the button (visual + aria-label change) instead
-            // of firing immediately; a second click within the window commits.
-            // Clicking elsewhere, or the arm window elapsing, disarms silently.
             let armed = false;
             let armTimer = null;
             function disarm() {

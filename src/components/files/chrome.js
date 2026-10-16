@@ -1,18 +1,10 @@
-// Surrounding file-browser chrome: the bulk-action strip, the drop zone, the
-// per-file upload progress list, the empty state, the breadcrumb path, the
-// toolbar band, and the multi-root segmented picker.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Btn, Icon } from '../shell.js';
 const h = webjsx.createElement;
 
-// BulkBar — the act-on-selection strip shown while a multi-select is active.
-// Host renders it above the grid; `actions` are [{ label, onClick, danger,
-// disabled }]; `busy` disables everything while a bulk operation is in flight.
 export function BulkBar({ count = 0, noun = 'file', nounPlural, actions = [], onClear, busy = false } = {}) {
     if (!count) return null;
-    // 'entry' pluralizes to 'entries', not 'entrys' - handle the -y noun class
-    // unless the host passes an explicit plural.
     const plural = nounPlural || (/[^aeiou]y$/.test(noun) ? noun.slice(0, -1) + 'ies' : noun + 's');
     const kids = [
         h('span', { key: 'count', class: 'ds-bulkbar-count', role: 'status', 'aria-live': 'polite' },
@@ -33,9 +25,6 @@ export function FileToolbar({ left = [], right = [] } = {}) {
     );
 }
 
-// RootsPicker — a segmented control for choosing among multiple allowed FS roots
-// (so the app stops borrowing the history-tab .pill markup). Each root is
-// { id, label }; `selected` is the active id. role=tablist for AT navigation.
 export function RootsPicker({ roots = [], selected, onSelect, label = 'roots' } = {}) {
     if (!roots.length) return null;
     return h('div', { class: 'ds-roots-picker', role: 'tablist', 'aria-label': label },
@@ -49,12 +38,6 @@ export function RootsPicker({ roots = [], selected, onSelect, label = 'roots' } 
 }
 
 export function DropZone({ children, dragover, rejected, onDrop, onDragOver, onDragLeave, label = 'drop files here', onPick } = {}) {
-    // With children the zone is a passive WRAPPER: content renders normally and
-    // the dashed affordance appears only while a drag is over it (real file
-    // managers never burn a permanent band on a maybe-drop). Without children
-    // it keeps the explicit picker-block look. `rejected` lets the host flag a
-    // drag whose payload fails a type/size guard with a distinct treatment
-    // (.rejected) instead of the normal accept-toned .dragover.
     const kids = Array.isArray(children) ? children : children ? [children] : [];
     return h('div', {
         class: 'ds-dropzone' + (kids.length ? ' ds-dropzone--wrap' : '') + (dragover ? ' dragover' : '') + (rejected ? ' rejected' : ''),
@@ -71,10 +54,6 @@ export function DropZone({ children, dragover, rejected, onDrop, onDragOver, onD
     );
 }
 
-// UploadProgress — per-file upload rows. Error rows are recoverable, not dead
-// ends: each item may carry `actions` ([{ label, onClick }], e.g. 'replace' on
-// a 409 collision) and the host may wire `onDismiss(item, index)` so error rows
-// can be cleared without waiting for the next successful batch.
 export function UploadProgress({ items = [], onDismiss } = {}) {
     if (!items.length) return null;
     return h('div', { class: 'ds-upload-progress' },
@@ -112,11 +91,6 @@ export function UploadProgress({ items = [], onDismiss } = {}) {
 }
 
 export function EmptyState({ text = 'nothing here', glyph = Icon('circle'), action } = {}) {
-    // action: { onClick, label } - an optional CTA (e.g. 'go up' / 'upload a
-    // file'), mirroring the SessionDashboard emptyAction contract so an empty
-    // directory is not a dead end. Children are built as an array + filtered so
-    // the keyed Btn never sits beside an unkeyed span (webjsx applyDiff 'key'
-    // crash on mixed keyed/unkeyed siblings).
     return h('div', { class: 'ds-file-empty', role: 'status' },
         ...[
             h('span', { key: 'glyph', class: 'ds-file-empty-glyph', 'aria-hidden': 'true' }, glyph),

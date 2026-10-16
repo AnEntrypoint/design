@@ -1,6 +1,3 @@
-/* ============================================================
-   InputOTP — segmented PIN / one-time-code entry
-   ============================================================ */
 .ds-otp { display: inline-flex; gap: var(--space-2); }
 .ds-otp-box {
   width: var(--ctl-md); height: var(--ctl-md);
@@ -23,6 +20,9 @@
 .ds-otp-box-error { border-color: var(--red); }
 .ds-otp-box-error:focus-visible { box-shadow: var(--focus-ring-inset); }
 .ds-otp-box:disabled { opacity: 0.5; cursor: default; }
+@media (pointer: coarse) {
+  .ds-otp-box { width: 44px; height: 44px; min-height: 44px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ds-otp-box {

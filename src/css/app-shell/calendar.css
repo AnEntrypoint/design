@@ -1,9 +1,3 @@
-/* ============================================================
-   Calendar / DatePicker / DateRangePicker — month date-grid
-   primitive plus its trigger+popover shells. Tokens only: no raw
-   color/radius/z-index literal anywhere below (lint-tokens /
-   lint-radius / lint-zindex hard gates).
-   ============================================================ */
 .ds-cal {
   display: flex;
   flex-direction: column;
@@ -80,7 +74,7 @@
 .ds-cal-day:hover { background: var(--bg-2); }
 .ds-cal-day:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-cal-day-outside { color: var(--fg-3); opacity: 0.55; }
-.ds-cal-day-today { font-weight: 700; box-shadow: inset 0 0 0 var(--bw-hair) var(--rule-strong); }
+.ds-cal-day-today { font-weight: 700; box-shadow: var(--ring-line-strong); }
 .ds-cal-day-selected {
   background: var(--accent);
   color: var(--accent-fg);
@@ -104,7 +98,6 @@
   .ds-cal-nav, .ds-cal-day { transition: none; }
 }
 
-/* -- DatePicker / DateRangePicker trigger -------------------------------- */
 .ds-dp { display: inline-flex; position: relative; }
 .ds-dp-trigger {
   display: inline-flex;
@@ -124,6 +117,9 @@
 .ds-dp-trigger:hover { background: var(--bg-3); }
 .ds-dp-trigger:focus-visible { box-shadow: var(--focus-ring-inset); outline: none; }
 .ds-dp-trigger-label { white-space: nowrap; }
+@media (pointer: coarse) {
+  .ds-dp-trigger { min-height: 44px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ds-dp-trigger { transition: none; }

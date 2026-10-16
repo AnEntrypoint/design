@@ -1,12 +1,13 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
-import * as components from '../../components.js';
+import { AppShell, Topbar, Side, Crumb, Status, Chip, Icon } from '../../components/shell.js';
+import { Panel } from '../../components/content.js';
+import { EmptyState } from '../../components/files/chrome.js';
 import { ROUTES, OS_ROUTE_DEFS } from './freddie/routes.js';
 import { makeCorePages } from './freddie/pages-core.js';
 import { makeChatPage } from './freddie/pages-chat.js';
 import { makeToolsPages } from './freddie/pages-tools.js';
 import { makeOsPages } from './freddie/pages-os.js';
 
-const { AppShell, Topbar, Side, Crumb, Status, Panel, Chip, EmptyState, Icon } = components;
 
 function pre(obj) {
     return webjsx.createElement('pre', { class: 'fd-pre' }, typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2));
@@ -19,12 +20,6 @@ export function createFreddieDashboard({ instance, bootHost, osSurfaces, loading
     const state = { active: 'home', ts: new Date().toLocaleTimeString(), body: null, error: null };
     let host = instance.host || null;
     const allRoutes = osSurfaces ? [...ROUTES, ...OS_ROUTE_DEFS] : ROUTES;
-    // Bumped on every setActive() and captured by loadActive() before its
-    // first await; a resolving page whose generation no longer matches the
-    // live one is a stale in-flight nav (user clicked a second page before
-    // the first's async page() resolved) and must not overwrite state.body —
-    // otherwise the crumb/side (synchronous) shows the new page while the
-    // main content silently keeps whichever page happened to resolve last.
     let navGeneration = 0;
 
     async function ensureHost() {
@@ -89,7 +84,7 @@ export function createFreddieDashboard({ instance, bootHost, osSurfaces, loading
             error = String(e && e.stack || e);
             body = Panel({ title: 'error', children: pre(error) });
         }
-        if (myGeneration !== navGeneration) return; // superseded by a later nav click
+        if (myGeneration !== navGeneration) return;
         state.body = body;
         state.error = error;
         state.ts = new Date().toLocaleTimeString();

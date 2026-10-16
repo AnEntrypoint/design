@@ -1,22 +1,5 @@
-// Window manager paint surface — pure DOM rendering, no state machine.
-// Consumer (thebird) owns z-order, focus stack, alt-tab, drag/resize math.
-// renderWindow returns a handle whose setBounds is called from pointermove.
-//
-// Visuals are bible-aligned: mac-less chip buttons (SVG minimize/maximize/
-// close icons via ./icons.js, not raw ASCII glyphs — matches every other
-// icon surface in this kit), inset 4px rail for focus, CSS-gradient resize
-// affordance (no glyph), pointer-events:none on .wm-bar with auto on
-// title+close so phone @media auto-maximize can suppress drag without a JS
-// branch.
-
 import { icons } from './icons.js';
 
-// Shared aria-live announcer for window open/close/focus-change events.
-// Visually hidden, one instance per document, lazily created so importing
-// this module has no side effect until a window actually renders. Screen
-// readers get no other signal that a floating, non-modal window opened,
-// closed, or changed focus -- there is no page navigation or route change
-// to announce it implicitly, unlike a normal document flow.
 let _announcer = null;
 function getAnnouncer() {
     if (_announcer && _announcer.isConnected) return _announcer;
@@ -27,18 +10,12 @@ function getAnnouncer() {
     _announcer.setAttribute('aria-live', 'polite');
     _announcer.setAttribute('aria-atomic', 'true');
     _announcer.className = 'sr-only';
-    // Inline fallback in case the consuming page's stylesheet doesn't define
-    // .sr-only (this module has no guaranteed CSS import of its own) --
-    // standard clip-based visually-hidden-but-AT-visible technique.
     _announcer.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
     document.body.appendChild(_announcer);
     return _announcer;
 }
 function announce(text) {
     const a = getAnnouncer();
-    // Clear-then-set on a microtask forces a re-announcement even if the
-    // text is identical to what's already there (e.g. focusing the same
-    // window twice in a row) -- aria-live only fires on a DOM mutation.
     a.textContent = '';
     requestAnimationFrame(() => { a.textContent = text; });
 }
@@ -56,9 +33,6 @@ export function renderWindow(opts = {}) {
         callbacks = {},
     } = opts;
 
-    // Keep at least MIN px of the window horizontally inside the container and
-    // the titlebar (BAR px) vertically reachable, so a window can always be
-    // grabbed by pointer (persisted bounds from a larger viewport included).
     const MIN_VISIBLE = 60;
     const BAR_H = 36;
     function clampBounds(b, p) {
@@ -79,10 +53,6 @@ export function renderWindow(opts = {}) {
     el.className = 'wm-win';
     el.dataset.kind = kind;
     if (instanceId) el.dataset.instanceId = instanceId;
-    // Floating window chrome is a dialog surface: role="dialog" (not
-    // aria-modal, since sibling windows stay operable — this is a
-    // non-modal multi-window desktop, not a blocking modal) + aria-label
-    // from the titlebar text so AT announces which window has focus.
     el.setAttribute('role', 'dialog');
     el.setAttribute('aria-label', title);
     const b0 = clampBounds(bounds, null);
@@ -108,17 +78,6 @@ export function renderWindow(opts = {}) {
     bodyEl.className = 'wm-body';
     setBodyContent(bodyEl, body);
 
-    // Resize affordances: one grip per edge + corner. `data-dir` carries the
-    // direction (n/s/e/w/ne/nw/se/sw) to the consumer's resize math. The SE
-    // corner keeps the visible diagonal grip glyph (.wm-resize); the other
-    // seven are invisible hit-zones (.wm-edge) styled in wm.css.
-    // NOT KEYBOARD ACCESSIBLE: these grips only wire pointerdown (see below);
-    // resize math is owned entirely by the consumer's pointermove handler
-    // (module comment at top of file), so there is no keydown-driven delta to
-    // wire without reaching into consumer-owned drag state. role="separator"
-    // + aria-orientation give a screen reader a name for the affordance even
-    // though it cannot be operated without a pointer -- an honest partial
-    // label, not a claim of full keyboard support.
     const ORIENT = { n: 'horizontal', s: 'horizontal', ne: 'horizontal', nw: 'horizontal', se: 'horizontal', sw: 'horizontal', e: 'vertical', w: 'vertical' };
     const DIRS = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
     const grips = DIRS.map(dir => {
@@ -136,11 +95,6 @@ export function renderWindow(opts = {}) {
     minBtn.addEventListener('click', e => { e.stopPropagation(); callbacks.onMinimize && callbacks.onMinimize(); });
     maxBtn.addEventListener('click', e => { e.stopPropagation(); callbacks.onMaximize && callbacks.onMaximize(); });
 
-    // Closing a window is destructive and unrecoverable (no undo), so it goes
-    // through the same second-click-to-confirm arm/commit idiom as the
-    // launcher dock's instance-close button: first click arms (visual +
-    // aria-label cue), a second click within the window commits; losing
-    // focus or the timeout elapsing disarms silently.
     let closeArmed = false;
     let closeArmTimer = null;
     function disarmClose() {
@@ -171,12 +125,6 @@ export function renderWindow(opts = {}) {
 
     el.addEventListener('pointerdown', () => focus());
 
-    // Basic focus trap: while this window carries .wm-focused, Tab/Shift+Tab
-    // cycles only within its own focusable set instead of escaping to a
-    // sibling window or the page behind it. Scoped to keydown on `el` itself
-    // (additive listener, no DOM structure change) and gated on the class the
-    // consumer already toggles via setFocused/applyFocused below, so an
-    // unfocused window is completely untouched by this handler.
     el.addEventListener('keydown', e => {
         if (e.key !== 'Tab' || !el.classList.contains('wm-focused')) return;
         const focusable = el.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -257,14 +205,6 @@ function reducedMotion() {
     return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-// wm.css's `.wm-win.wm-min{display:none}` cannot be CSS-transitioned (display
-// has no interpolable intermediate value), so a real minimize animation needs
-// the display swap deferred until a scale+fade transition actually finishes.
-// `.wm-minimizing`/`.wm-restoring` (theme.css) carry the transform+opacity
-// keyframes; this only sequences when `wm-min` itself flips. 220ms fallback
-// timer guards against a transitionend that never fires (element removed
-// mid-transition, browser tab backgrounded and rAF/transitions paused, etc.)
-// so a window can never get stuck invisible-but-not-display:none.
 function animateMinimize(el, v) {
     if (reducedMotion()) { applyMinimized(el, v); return; }
     if (v) {
@@ -279,10 +219,6 @@ function animateMinimize(el, v) {
     }
 }
 
-// Same display-can't-transition problem as minimize, but for the terminal
-// close path: el.remove() used to happen synchronously, so a window vanished
-// instantly with no close animation at all (the literal gap named in the
-// "no animation on open/close" request). Fade+scale out, then remove.
 function animateClose(el) {
     if (!el.isConnected) return;
     if (reducedMotion()) { el.remove(); return; }

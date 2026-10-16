@@ -1,9 +1,3 @@
-// <ds-chat> custom element — auto-registers when SDK loads in a browser.
-// Attributes / properties:
-//   el.messages = [{who,text,time,name,...}, ...]
-//   el.placeholder, el.title, el.sub, el.disabled
-// Emits a bubbling, composed 'send' event with { detail: { text } } when the
-// user submits via the built-in composer.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Chat, ChatComposer } from '../components/chat.js';
@@ -48,12 +42,6 @@ class DsChat extends HTMLElement {
     get disabled() { return this._disabled; }
     connectedCallback() {
         this.classList.add('ds-247420');
-        // Accessible name for the custom element itself: <ds-chat> has no
-        // implicit ARIA role/name, so a screen reader landmark/element list
-        // shows an unlabeled item without this. role="region" + aria-label
-        // (falling back to the chat title) makes it identifiable on its own,
-        // separate from the inner .chat-thread's role="log"/aria-live, which
-        // announces individual streamed messages rather than naming the widget.
         if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
         if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', this._title || 'chat');
         this._render();
@@ -65,16 +53,13 @@ class DsChat extends HTMLElement {
     }
     _render() {
         if (!this.isConnected) return;
-        // The factory captures `value` at construction time, so the click handler
-        // it builds sees a stale empty string. Pass a no-op and own send wiring
-        // ourselves by reading the live textarea below.
         const self = this;
         const composer = ChatComposer({
             value: this._composerValue,
             placeholder: this._placeholder,
             disabled: this._disabled,
             onInput: (v) => { self._composerValue = v; self._syncSendButton(); },
-            onSend: () => { /* superseded by live read below */ },
+            onSend: () => { },
         });
         const node = Chat({
             title: this._title,
@@ -83,8 +68,6 @@ class DsChat extends HTMLElement {
             composer,
         });
         webjsx.applyDiff(this, node);
-        // Wire send button + Enter-key to read the LIVE textarea value rather than
-        // the closure's stale prop. Idempotent — only attach once per composer DOM node.
         const composerEl = this.querySelector('.chat-composer');
         if (composerEl && !composerEl._dsBound) {
             composerEl._dsBound = true;

@@ -1,10 +1,3 @@
-// Command palette: fuzzy keyboard-first palette for editor commands (spawn entity, toggle panels,
-// run validators, switch modes). Uses the host's existing window-manager shell (wm.open/close/getWindow).
-// Migrated from spoint's client/editor/CommandPalette.js per the GUI-lives-in-design-kit architecture
-// rule -- the command registry (labels/keywords/action ids) is passed in by the host via `commands`
-// rather than hardcoded here, since it names spoint-specific editor actions this generic component has
-// no reason to know about.
-
 export function createCommandPalette({ wm, commands = [], onExecute }) {
   let _inputEl = null, _resultsEl = null, _highlight = -1, _results = [], _query = ''
   const winId = 'command-palette'
@@ -14,7 +7,7 @@ export function createCommandPalette({ wm, commands = [], onExecute }) {
   const input = document.createElement('input')
   input.type = 'text'
   input.placeholder = 'Type a command...'
-  input.style.cssText = 'width:100%;box-sizing:border-box;padding:6px 8px;background:var(--panel-2,#1a1a1a);color:var(--panel-text,#eee);border:1px solid var(--rule,#444);border-radius:4px;font:inherit;outline:none'
+  input.style.cssText = 'width:100%;box-sizing:border-box;padding:6px 8px;background:var(--panel-2,#1a1a1a);color:var(--panel-text,#eee);border:1px solid var(--rule,#444);border-radius:var(--r-0,4px);font:inherit;outline:none'
   input.addEventListener('input', () => { _query = input.value; _filter(); _render() })
   input.addEventListener('keydown', _onKey)
   _inputEl = input
@@ -32,7 +25,6 @@ export function createCommandPalette({ wm, commands = [], onExecute }) {
     let qi = 0, score = 0
     for (let ti = 0; ti < t.length && qi < q.length; ti++) {
       if (t[ti] === q[qi]) {
-        // Bonus for consecutive matches and word-start matches
         score += 1 + (ti === 0 || t[ti - 1] === ' ' ? 2 : 0) + (qi > 0 && ti > 0 && t[ti - 1] === q[qi - 1] ? 3 : 0)
         qi++
       }
@@ -56,7 +48,7 @@ export function createCommandPalette({ wm, commands = [], onExecute }) {
     _resultsEl.innerHTML = ''
     _results.forEach((r, i) => {
       const row = document.createElement('div')
-      row.style.cssText = `padding:6px 8px;cursor:pointer;border-radius:4px;display:flex;align-items:center;gap:8px;${i === _highlight ? 'background:var(--accent-2,rgba(100,120,255,0.25))' : ''}`
+      row.style.cssText = `padding:6px 8px;cursor:pointer;border-radius:var(--r-0,4px);display:flex;align-items:center;gap:8px;${i === _highlight ? 'background:var(--accent-2,rgba(100,120,255,0.25))' : ''}`
       row.setAttribute('data-cmd-id', r.cmd.id)
       const label = document.createElement('span')
       label.textContent = r.cmd.label
@@ -98,7 +90,6 @@ export function createCommandPalette({ wm, commands = [], onExecute }) {
     _render()
     const bounds = { x: (window.innerWidth - 420) / 2, y: (window.innerHeight - 320) / 2, w: 420, h: 320 }
     const handle = wm.open({ id: winId, title: 'Command Palette', ...bounds, body: container })
-    // Focus input after a tick so the window has rendered
     setTimeout(() => { if (_inputEl && _inputEl.isConnected) _inputEl.focus() }, 50)
     return handle
   }

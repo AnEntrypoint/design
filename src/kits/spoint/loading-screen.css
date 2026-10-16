@@ -1,5 +1,3 @@
-/* Loading-screen kit styles. Scoped under .ds-247420 at build time.
-   All colors reference design tokens (no raw literals) per the token-lint gate. */
 .sp-loading {
   position: fixed;
   inset: 0;

@@ -1,12 +1,3 @@
-// ApprovalPrompt — an inline, in-thread tool-permission card (as opposed to
-// PermissionMenu's settings-style dropdown): shows the tool name + an
-// optional args preview, an optional free-text note the user can attach to
-// their decision (auto-focused, since the note is usually the primary
-// reason to open this card at all), and up to four resolution actions
-// (once/session/all/deny). Mirrors docstudio's chat-approval-prompts.js
-// buildApprovalPrompt shape. The note textarea is entirely optional -
-// omitting `onDecision`'s use of the note arg keeps existing simpler
-// once/deny-only call sites unaffected.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';

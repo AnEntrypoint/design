@@ -1,7 +1,3 @@
-// os ui kit demo — mounts createDesktopShell() from src/kits/os against a
-// minimal self-contained window manager + app registry. Real hosts (thebird)
-// own the full wm/registry state machine (per-instance fs/worker/shell); this
-// demo only proves the visual kit renders and opens/focuses/closes windows.
 import { createDesktopShell, renderWindow, renderAboutApp, renderMonitorApp, themeUrl } from 'ds/kits/os/index.js';
 
 function createDemoWm(root) {
@@ -48,23 +44,17 @@ function createDemoRegistry(apps) {
 }
 
 const canvas = document.getElementById('root');
-canvas.classList.add('wm-root', 'ds-app-surface');
+canvas.classList.add('wm-root');
 
 const wm = createDemoWm(canvas);
 
-// renderAboutApp() defaults to a sibling project's ("thebird") own brand,
-// tagline, bullets, and source link -- this kit's two call sites used to
-// pass no overrides at all, so the "about" window showed thebird's content
-// under a menubar reading "247420 / os", two different products described
-// in one screen. Real content for this kit's own demo, not a leftover
-// generic default.
 const ABOUT_CONTENT = {
     brand: '247420 / os',
-    tagline: 'browser-native desktop-shell demo for the 247420 design system. window manager, taskbar, and menubar -- no server.',
+    tagline: 'browser-native desktop-shell demo for the 247420 design system. window manager, taskbar and menubar, with no server behind it.',
     bullets: [
-        '302 components across 23 working kits',
-        'One token file drives every surface',
-        'axe-core WCAG-tagged scan gated in CI',
+        'every component is rendered in a working kit',
+        'one token file drives every surface',
+        'axe-core scan of WCAG-tagged rules, run locally',
         'webjsx + custom elements, no framework',
         'buildless: plain HTML + an import map',
     ],
@@ -74,7 +64,7 @@ const ABOUT_CONTENT = {
 
 const registry = createDemoRegistry([
     {
-        id: 'about', name: 'about', icon: 'info', defaultSize: { w: 420, h: 320 },
+        id: 'about', name: 'about', icon: 'info', defaultSize: { w: 440, h: 400 },
         factory() {
             return { node: renderAboutApp(ABOUT_CONTENT).node };
         },
@@ -85,8 +75,9 @@ const registry = createDemoRegistry([
             return {
                 node: renderMonitorApp({
                     getStats: () => ({
-                        instanceId: 'demo', frames: 0, shells: 0,
+                        instanceId: 'demo',
                         windows: wm.count, appsRegistered: registry.list().length,
+                        ...(performance.memory ? { jsHeapMb: performance.memory.usedJSHeapSize / 1048576, jsHeapLimitMb: performance.memory.jsHeapSizeLimit / 1048576 } : {}),
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
                     }),
                 }).node,
@@ -97,5 +88,7 @@ const registry = createDemoRegistry([
 
 createDesktopShell({ root: document.body, wm, registry, brand: '247420 / os', themeUrl });
 
-// Open one window on load so the demo isn't a blank desktop.
-wm.open({ title: 'about', body: renderAboutApp(ABOUT_CONTENT).node, width: 420, height: 320, x: 80, y: 80 });
+wm.open({ title: 'about', body: renderAboutApp(ABOUT_CONTENT).node, width: 460, height: 450, x: 80, y: 80 });
+
+const monitorApp = registry.get('monitor');
+wm.open({ title: monitorApp.name, body: monitorApp.factory().node, width: monitorApp.defaultSize.w, height: monitorApp.defaultSize.h, x: 600, y: 120 });

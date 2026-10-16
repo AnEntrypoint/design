@@ -1,16 +1,8 @@
-// ---------------------------------------------------------------------------
-// Toast — Toast({message,kind,duration}) component + imperative toast(opts).
-// ---------------------------------------------------------------------------
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
 export function Toast({ message, kind = 'info', duration = 3000, onClose } = {}) {
-    // An error toast is assertive so a screen reader interrupts and announces
-    // it immediately, matching every other error surface in this SDK
-    // (TextField's own error span uses role=alert too) -- 'status'/'polite'
-    // (still correct for info/success) queues behind whatever the user is
-    // already doing, which is wrong for a failure that just happened.
     const isError = kind === 'error';
     return h('div', {
         class: 'ds-ep-toast kind-' + kind,
@@ -24,6 +16,7 @@ export function Toast({ message, kind = 'info', duration = 3000, onClose } = {})
     }, message);
 }
 
+const TOAST_MAX = 4;
 let _toastHostEl = null;
 function ensureToastHost() {
     if (typeof document === 'undefined') return null;
@@ -52,7 +45,6 @@ export function toast({ message, kind = 'info', duration = 3000, actionLabel, on
         setTimeout(() => { el.parentNode && el.parentNode.removeChild(el); }, 200);
     };
     if (actionLabel && onAction) {
-        el.classList.add('has-action');
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'ds-ep-toast-action';
@@ -60,7 +52,15 @@ export function toast({ message, kind = 'info', duration = 3000, actionLabel, on
         btn.onclick = () => onAction(dismiss);
         el.appendChild(btn);
     }
+    const x = document.createElement('button');
+    x.type = 'button';
+    x.className = 'ds-ep-toast-x';
+    x.setAttribute('aria-label', 'Dismiss notification');
+    x.textContent = '\u00d7';
+    x.onclick = dismiss;
+    el.appendChild(x);
     host.appendChild(el);
+    while (host.children.length > TOAST_MAX) host.removeChild(host.firstElementChild);
     if (duration > 0) setTimeout(dismiss, duration);
     return dismiss;
 }

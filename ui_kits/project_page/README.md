@@ -1,3 +1,3 @@
 # Project Page UI Kit
 
-Generic landing page template for any 247420 project (gm, flatspace, spoint, etc.). Hero wordmark + receipt-style stats + install block + changelog.
+Landing page template for a project. A plain heading, an install block with copy, a receipt of facts and a changelog, with a sidebar linking to each section. Built from `Section`, `Install`, `Receipt` and `Changelog`.

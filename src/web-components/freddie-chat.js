@@ -1,5 +1,3 @@
-// <freddie-chat> — thin subclass of <ds-chat> with freddie-flavored defaults
-// (title, sub, composer placeholder). Auto-registers in browsers.
 
 import { DsChat, registerChatElement } from './ds-chat.js';
 import { register } from '../debug.js';

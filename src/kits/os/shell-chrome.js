@@ -1,8 +1,3 @@
-// Pure DOM builders for the desktop shell: theme-stylesheet injection, the
-// icon span and button factories, and the four static chrome structures
-// (menubar, apps menu, side rail, apps drawer) the shell wires behaviour onto.
-// Nothing here closes over shell state — every function returns fresh nodes.
-
 import { icons } from './icons.js';
 
 const THEME_CSS_URL = new URL('./theme.css', import.meta.url).href;
@@ -30,24 +25,13 @@ export function makeBtn(svg, label, role) {
     if (role) b.dataset.role = role;
     if (svg) b.append(ic(svg));
     if (label) b.append(Object.assign(document.createElement('span'), { textContent: label }));
-    // Icon-only buttons (no visible label text) need an accessible name from
-    // somewhere; `role` ('home'/'add'/etc) is already a short human-readable
-    // word, so reuse it as aria-label rather than leaving the button unnamed.
     if (!label && role) b.setAttribute('aria-label', role);
     return b;
 }
 
-// The top menubar: home/brand/apps, an optional new-instance button, the
-// instance switcher, and the tray clock. Returns every node the shell needs
-// to bind listeners to or update later.
 export function buildMenubar({ brand, withNewInstance }) {
     const menubar = document.createElement('div');
     menubar.className = 'os-menubar';
-    // toolbar, not menubar: role="menubar" requires every direct child to be
-    // role="menuitem"/menuitemcheckbox/menuitemradio, but this bar mixes plain
-    // buttons (home, add-instance), a brand label, an instance switcher, and a
-    // clock -- only appsBtn actually opens a dropdown menu. toolbar has no such
-    // children constraint and correctly describes "a row of controls".
     menubar.setAttribute('role', 'toolbar');
     menubar.setAttribute('aria-label', 'Desktop menu bar');
 
@@ -98,10 +82,6 @@ export function buildSideRail() {
     return sideRail;
 }
 
-// The full-screen apps drawer. Full-screen overlay that traps the user's
-// attention while open — the dialog role + aria-modal + aria-labelledby give
-// a screen reader the same "you are now in a dialog named X" announcement a
-// sighted user gets from the visual takeover.
 export function buildDrawer() {
     const drawer = document.createElement('div');
     drawer.className = 'os-drawer';
@@ -127,10 +107,6 @@ export function buildDrawer() {
     return { drawer, drawerClose, drawerGrid };
 }
 
-// Taskbar contents are rebuilt on a 500ms poll whenever windows open/
-// close/gain focus (refreshTaskbar in the shell); aria-live announces those
-// additions/removals to a screen reader, which otherwise gets no signal
-// that the running-window list changed. "polite" so it never interrupts.
 export function buildTaskbar() {
     const taskbar = document.createElement('div');
     taskbar.className = 'os-taskbar';
@@ -141,8 +117,6 @@ export function buildTaskbar() {
     return taskbar;
 }
 
-// Per-app launcher entries: a menu item, a rail button, and a drawer tile,
-// each wired to the caller's own open/close handlers.
 export function buildAppEntries(app, { onMenuClick, onRailClick, onTileClick }) {
     const iconSvg = app.icon || icons[app.id] || '';
 

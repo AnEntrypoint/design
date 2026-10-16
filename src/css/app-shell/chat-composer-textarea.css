@@ -1,0 +1,31 @@
+.chat-composer textarea {
+    transition: height var(--dur-snap) var(--ease);
+}
+.chat-composer textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .chat-stack { max-width: 100%; }
+    .chat-msg { padding: var(--space-1) 0; }
+    .chat-msg:hover { padding: var(--space-1) 0; margin: 0; border-radius: 0; background: transparent; }
+    .chat-bubble { font-size: var(--fs-sm); padding: var(--space-2-5) 14px; }
+    .chat-avatar { width: 28px; height: 28px; font-size: var(--fs-micro); }
+    .chat-composer { padding: var(--space-2); }
+    .chat-composer textarea { padding: var(--space-2-5) var(--space-2-75); }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .chat-composer { padding: var(--space-1-75) var(--space-2); }
+    .chat-composer textarea { min-height: 36px; max-height: 96px; }
+    .chat-composer .chat-composer-hint,
+    .chat-composer .chat-composer-context { display: none; }
+
+    :root { --app-topbar-h: 40px; --app-crumb-h: 24px; }
+    .app-chrome { padding: var(--space-1) var(--pad-x); }
+    .app-status { display: none; }
+    .ws-crumb { min-height: 32px; }
+    .ds-hero { padding: var(--space-4) 0 var(--space-3); }
+    .ds-hero-title { font-size: clamp(28px, 6cqi, 56px); }
+}

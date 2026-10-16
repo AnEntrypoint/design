@@ -1,32 +1,10 @@
-// ---------------------------------------------------------------------------
-// JsonViewer — monospace data preview (max-height + scroll), generalizing
-// gmsniff's gm-json. Accepts a pre-stringified string OR any value
-// (objects/arrays get JSON.stringify(v, null, 2); null/undefined render the
-// empty-state text rather than the literal string "undefined"/"null").
-//
-// mode selects rendering; 'plain' is the historical contract (children[0] is
-// the raw text string, verbatim for string input) and stays the default so
-// every existing consumer is untouched:
-//   'plain'     — flat <pre>, raw text.
-//   'highlight' — flat <pre>, text tokenized into ds-ep-json-* spans
-//                 (key/string/number/boolean/null). A string that does not
-//                 parse as JSON falls back to plain text — arbitrary prose is
-//                 never falsely tokenized.
-//   'tree'      — collapsible <details> tree per nested object/array, open
-//                 above treeDepth (default 2), each summary carrying a
-//                 child-count tag. Scalars/unparseable input fall back to
-//                 'highlight'/plain respectively.
-// copyable=true wraps the viewer with a copy-to-clipboard button (transient
-// copied/failed feedback, no dependencies).
-// ---------------------------------------------------------------------------
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
+import { attempt } from '../../best-effort.js';
 const h = webjsx.createElement;
 
 const JSON_NUM_CHARS = '0123456789eE+.-';
 
-// Linear single-pass scan — no regex, no backtracking, safe on truncated
-// input (an unterminated string just consumes to end-of-text).
 function tokenizeJson(text) {
     const toks = [];
     let i = 0, plain = '';
@@ -108,23 +86,9 @@ export function JsonViewer({ value, emptyText = 'no data', maxHeight, mode = 'pl
     else { try { text = JSON.stringify(value, null, 2); knownJson = text != null; parsed = value; } catch { text = String(value); } }
     if (!text) return h('div', { class: 'ds-ep-json ds-ep-json-empty' }, emptyText);
     const style = maxHeight ? ('max-height:' + maxHeight) : null;
-    // Every viewer is a scroll container, so these are UNCONDITIONAL. The
-    // `maxHeight` prop only overrides a height the stylesheet already sets:
-    // `.ds-ep-json` carries `max-height: 300px; overflow-y: auto` in
-    // editor-primitives.css, so a viewer rendered with no prop at all still
-    // clips and still scrolls. Gating the attributes on the prop therefore
-    // missed the common case — measured live: a prop-less viewer reported
-    // scrollHeight 1265 against clientHeight 300 while sitting at tabindex -1.
-    //
-    // Clipped content reachable by wheel but not by keyboard is WCAG 2.1.1
-    // Keyboard, axe's `scrollable-region-focusable`. tabindex puts the box in
-    // the tab order and arrow keys then scroll it natively; a bare focusable
-    // region with no name is its own violation, so it is labelled. `group`
-    // rather than `region` so a page rendering several viewers does not gain a
-    // landmark each.
     const scrollable = { tabindex: '0', role: 'group', 'aria-label': 'JSON, scrollable' };
     if (!knownJson && (mode === 'highlight' || mode === 'tree')) {
-        try { parsed = JSON.parse(text); knownJson = true; } catch { /* swallow: not JSON — render plain */ }
+        attempt(() => { parsed = JSON.parse(text); knownJson = true; });
     }
     let body;
     if (mode === 'tree' && knownJson && parsed !== null && typeof parsed === 'object') {

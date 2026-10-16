@@ -1,14 +1,8 @@
-// EmojiPicker — fixed popover near (anchorX, anchorY) with category tabs +
-// grid, plus the emoji dataset it presents.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { trapTab, _anchoredOverlayLifecycle } from './floating.js';
 const h = webjsx.createElement;
 
-// Sanctioned literal-emoji exception: an emoji picker's whole purpose is to
-// present emoji, so the glyph ban does not apply to this data table or the
-// per-emoji <button> labels below. This is intentional product content, not
-// decorative chrome.
 const EMOJI_CATEGORIES = [
     { id: 'smileys', label: '😀', emoji: [
         ['😀', 'grinning smile'], ['😁', 'grinning smile happy'], ['😂', 'joy tears laugh'], ['🤣', 'rofl laugh'],
@@ -38,20 +32,18 @@ const EMOJI_CATEGORIES = [
 ];
 const ALL_EMOJI = EMOJI_CATEGORIES.flatMap((c) => c.emoji);
 
-// EmojiPicker — fixed popover near (anchorX, anchorY) with category tabs + grid.
-// `query`, when non-empty, filters across all categories by name/keyword
-// substring match (case-insensitive) instead of showing the active tab.
 export function EmojiPicker({ open, anchorX = 0, anchorY = 0, onSelect, onClose, query = '' } = {}) {
     if (!open) return null;
     let cat = EMOJI_CATEGORIES[0].id;
     let rootEl = null, gridEl = null, searchEl = null, previewEl = null;
-    // Internal search state, seeded from the `query` prop so a consumer that
-    // already knows the typed ':smile' trigger text (e.g. a composer keydown
-    // handler) can still pre-fill it — but typing in the picker's own input
-    // (added here since no consumer previously had anywhere to route text
-    // into `query`) is the primary path now.
     let search = query || '';
-    const close = () => onClose && onClose();
+    let prevFocus = null;
+    let dispose = null;
+    const close = () => {
+        if (dispose) { dispose(); dispose = null; }
+        if (prevFocus && prevFocus.focus && document.contains(prevFocus)) prevFocus.focus();
+        onClose && onClose();
+    };
 
     const showPreview = (ch, name) => {
         if (!previewEl) return;
@@ -90,11 +82,22 @@ export function EmojiPicker({ open, anchorX = 0, anchorY = 0, onSelect, onClose,
     return h('div', {
         class: 'ov-emoji-root', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Emoji picker',
         tabindex: '-1',
-        onkeydown: (e) => { if (e.key === 'Escape') { e.preventDefault(); close(); return; } tabNavKey(e); if (rootEl) trapTab(rootEl, e); },
+        onkeydown: (e) => {
+            if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+            tabNavKey(e);
+            const root = e.currentTarget || rootEl;
+            if (root) trapTab(root, e, true);
+        },
         ref: (el) => {
-            if (!el) { if (rootEl && rootEl._ovEmojiCleanup) rootEl._ovEmojiCleanup(); return; }
-            if (el._ovEmoji) return; el._ovEmoji = true; rootEl = el;
-            el._ovEmojiCleanup = _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW: 260, fallbackH: 240, close });
+            if (!el) { if (dispose) { dispose(); dispose = null; } return; }
+            rootEl = el;
+            if (el._ovEmojiPrevFocus === undefined) el._ovEmojiPrevFocus = document.activeElement;
+            prevFocus = el._ovEmojiPrevFocus;
+            dispose = el._ovEmojiCleanup || null;
+            if (el._ovEmoji) return;
+            el._ovEmoji = true;
+            dispose = el._ovEmojiCleanup = _anchoredOverlayLifecycle(el, { anchorX, anchorY, fallbackW: 260, fallbackH: 240, close });
+            setTimeout(() => { if (searchEl && document.contains(searchEl)) searchEl.focus(); }, 0);
         },
     },
         h('input', {

@@ -1,7 +1,3 @@
-// Tree — TreeView container + TreeItem row, implementing the WAI-ARIA tree
-// keyboard model (Up/Down between visible rows, Right expands/enters, Left
-// collapses, Enter/Space activate, Home/End jump). Visuals via
-// editor-primitives.css; no hex/rgba literals here.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -13,10 +9,7 @@ export function TreeView({ children } = {}) {
 }
 
 export function TreeItem({ label, glyph, tag, depth = 0, selected = false, expanded = false, onSelect, onToggle, children, hasChildren } = {}) {
-    // Support legacy 'hasChildren' prop for future; infer from children param
     const hasKids = hasChildren != null ? hasChildren : (children != null);
-    // Tree keyboard model (WAI-ARIA): Up/Down move between visible rows, Right expands/enters,
-    // Left collapses/moves to parent, Enter/Space activate, Home/End jump to first/last visible.
     const onRowKeyDown = (e) => {
         const row = e.currentTarget;
         const tree = row.closest('[role="tree"]');
@@ -56,7 +49,7 @@ export function TreeItem({ label, glyph, tag, depth = 0, selected = false, expan
     },
         h('div', {
             class: 'ds-ep-tree-row',
-            style: 'padding-left:calc(' + depth + ' * var(--tree-indent,12px) + var(--tree-base-indent,6px))',
+            style: '--tree-depth:' + depth,
             tabindex: selected ? '0' : '-1',
             onclick: () => onSelect && onSelect(),
             onkeydown: onRowKeyDown

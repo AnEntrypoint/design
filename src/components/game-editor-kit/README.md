@@ -1,6 +1,6 @@
 # Game Editor Kit
 
-UI components for game editors and interactive tools. Pure UI layer with no backend dependencies — all components are consumer-facing and ready for CDN delivery via importmap.
+UI components for game editors and interactive tools. Pure UI layer with no backend dependencies; all components are consumer-facing and ready for CDN delivery via importmap.
 
 ## DamageNumbers
 

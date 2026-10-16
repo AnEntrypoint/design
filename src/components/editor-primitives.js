@@ -1,12 +1,3 @@
-// Editor primitives — generic chrome for in-engine editors, inspectors,
-// IDEs, debug HUDs. Pure factories, h-based, theme-token driven. All
-// visuals route through CSS classes defined in editor-primitives.css;
-// no hex/rgba literals appear in this file. Theme switching happens
-// via the kit's data-theme attribute on the .ds-247420 scope root.
-//
-// This module is a barrel: every component lives in a single-responsibility
-// submodule under ./editor-primitives/, and the public export surface here is
-// unchanged — no consumer import needs to move.
 
 import { Toolbar, ToolbarRow, Tabs, IconButtonGroup } from './editor-primitives/chrome.js';
 import { TreeView, TreeItem } from './editor-primitives/tree.js';

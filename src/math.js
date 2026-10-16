@@ -1,7 +1,3 @@
-// Inline/display math (KaTeX) rendering — lazy-loads KaTeX CSS+JS from CDN on
-// first call. No-op safe: absent/failed load leaves $...$ / $$...$$ as plain
-// literal text (already escaped by the markdown sanitizer), never broken markup.
-// Mirrors highlight.js/mermaid.js's lazy-CDN-module pattern.
 
 let _katex = null;
 let _ready = null;
@@ -56,9 +52,6 @@ export async function ensureKatex() {
     return _ready;
 }
 
-// Render one math source to sanitized-by-construction KaTeX HTML (katex
-// escapes its own output; throwOnError:false degrades a malformed expression
-// to KaTeX's own inline error span rather than throwing).
 async function renderOne(src, displayMode) {
     const katex = await ensureKatex();
     if (!katex) return null;
@@ -70,13 +63,6 @@ async function renderOne(src, displayMode) {
     }
 }
 
-// Replace $$...$$ (display) and $...$ (inline) math spans inside already-
-// rendered markdown HTML text nodes under `root`. Runs AFTER markdown/
-// DOMPurify have produced the DOM (never operates on raw markdown source, so
-// it cannot introduce unsanitized HTML — katex's own output is inserted via
-// innerHTML on a fresh span, same trust boundary as DOMPurify's own output).
-// Skips code/pre content so math delimiters inside fenced or inline code are
-// left alone. Idempotent (data-math-wired guard on root).
 export async function renderMathBlocksUnder(root) {
     if (!root || root.dataset?.mathWired === '1') return;
     if (!root || !root.querySelectorAll) return;
@@ -107,8 +93,6 @@ export async function renderMathBlocksUnder(root) {
         INLINE_RE.lastIndex = 0;
         const frag = document.createDocumentFragment();
         let cursor = 0;
-        // Two-pass: first split out display ($$..$$), each remaining plain
-        // segment is then split for inline ($..$).
         const pieces = [];
         let m;
         while ((m = DISPLAY_RE.exec(src)) !== null) {

@@ -1,42 +1,45 @@
-// Thread auto-scroll: keep a scroll container pinned to the bottom as new
-// messages arrive, but never while the user is mid-selection. Shared by Chat,
-// AICat, and AgentChat.
-
-// True when the user has a non-collapsed text selection anchored inside `el`.
-// Used to pause auto-scroll (and by hosts to pause streaming re-renders) so
-// select-and-copy from a still-streaming message is not wiped every frame.
 export function hasSelectionInside(el) {
     const sel = typeof document !== 'undefined' && document.getSelection ? document.getSelection() : null;
     return !!(sel && !sel.isCollapsed && sel.anchorNode && el && el.contains(sel.anchorNode));
 }
 
-// Build a ref callback that keeps a scroll container pinned to the bottom when
-// new messages arrive AND the user is already at the bottom (sentinel visible).
-// `getCount` returns the current message count so the observer compares against
-// live state. Shared by Chat, AICat, and AgentChat.
-// CONTRACT: auto-scroll pauses while the user holds a non-collapsed selection
-// inside the thread (hasSelectionInside) — the same guard hosts apply to their
-// streaming re-render pass — and resumes once the selection collapses.
-export function makeThreadAutoScroll(getCount) {
+const STICK_THRESHOLD_PX = 80;
+
+export function makeThreadAutoScroll(getCount, onUpdate) {
     return (el) => {
         if (!el) return;
-        let sentinel = el.querySelector('[data-scroll-sentinel]');
-        if (!sentinel) {
-            sentinel = document.createElement('div');
-            sentinel.setAttribute('data-scroll-sentinel', '');
-            sentinel.style.height = '1px';
-            el.appendChild(sentinel);
+        if (el._dsAutoScroll) {
+            el._dsAutoScroll.getCount = getCount;
+            el._dsAutoScroll.onUpdate = onUpdate || null;
+            return;
         }
-        const obs = new IntersectionObserver((entries) => {
-            if (hasSelectionInside(el)) return; // don't fight an active selection
-            const count = String(getCount());
-            if (entries[0]?.isIntersecting && el.dataset.msgCount !== count) {
-                el.scrollTop = el.scrollHeight - el.clientHeight;
-                el.dataset.msgCount = count;
-            }
-        }, { root: el, threshold: 0 });
-        obs.observe(sentinel);
-        el.dataset.msgCount = String(getCount());
-        return () => obs.disconnect();
+        const state = { getCount, onUpdate: onUpdate || null, stick: true, pending: 0, last: Number(getCount()) || 0 };
+        el._dsAutoScroll = state;
+        const notify = () => { if (state.onUpdate) state.onUpdate(state); };
+        const toBottom = () => { el.scrollTop = el.scrollHeight; };
+        state.toBottom = toBottom;
+        const onScroll = () => {
+            const stick = el.scrollHeight - el.scrollTop - el.clientHeight < STICK_THRESHOLD_PX;
+            const changed = stick !== state.stick;
+            state.stick = stick;
+            if (stick) state.pending = 0;
+            if (changed || !stick) notify();
+        };
+        const onMutate = () => {
+            const count = Number(state.getCount()) || 0;
+            if (count < state.last) { state.stick = true; state.pending = 0; }
+            else if (count > state.last && !state.stick) state.pending += count - state.last;
+            state.last = count;
+            notify();
+            if (!state.stick || hasSelectionInside(el)) return;
+            toBottom();
+        };
+        el.addEventListener('scroll', onScroll, { passive: true });
+        el.addEventListener('load', onMutate, true);
+        el.addEventListener('loadedmetadata', onMutate, true);
+        const mo = new MutationObserver(onMutate);
+        mo.observe(el, { childList: true, subtree: true });
+        toBottom();
+        return () => { mo.disconnect(); el.removeEventListener('scroll', onScroll); el.removeEventListener('load', onMutate, true); el.removeEventListener('loadedmetadata', onMutate, true); el._dsAutoScroll = null; };
     };
 }

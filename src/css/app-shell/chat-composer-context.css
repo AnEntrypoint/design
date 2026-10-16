@@ -1,0 +1,81 @@
+.chat-composer-context {
+  display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-1);
+  width: 100%; order: -1;
+  padding: var(--space-1) var(--space-1) 0;
+  font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3);
+  letter-spacing: 0.01em;
+}
+button.chat-composer-context {
+  background: transparent; border: 0; cursor: pointer; text-align: left;
+  border-radius: var(--r-0);
+}
+button.chat-composer-context:hover { color: var(--fg-2); }
+button.chat-composer-context:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
+.chat-composer-context-sep { color: var(--fg-3); opacity: 0.6; }
+.chat-composer-context-bit {
+  background: transparent; border: 0; padding: 0; margin: 0; cursor: pointer;
+  font: inherit; color: var(--fg-3); border-radius: var(--r-0);
+  transition: color var(--dur-snap, .15s) var(--ease, ease);
+}
+.chat-composer-context-bit:hover { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.chat-composer-context-bit:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
+.chat-composer-context-text { color: var(--fg-3); }
+
+.chat-composer-detected-badge {
+  display: flex; align-items: center; gap: var(--space-2, 8px);
+  width: 100%; order: -1;
+  padding: var(--space-1) var(--space-3);
+  margin: 0 0 var(--space-1);
+  background: var(--bg-2);
+  border: var(--bw-hair) solid var(--rule);
+  border-radius: var(--r-1);
+  font-size: var(--fs-tiny); color: var(--fg-2);
+}
+.chat-composer-detected-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-composer-detected-dismiss {
+  flex-shrink: 0; width: 20px; height: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 0; cursor: pointer; border-radius: 50%;
+  color: var(--fg-3); font-family: var(--ff-mono); font-size: var(--fs-tiny); line-height: 1;
+  transition: background var(--dur-snap, .15s) var(--ease, ease), color var(--dur-snap, .15s) var(--ease, ease);
+}
+.chat-composer-detected-dismiss:hover { background: color-mix(in oklab, var(--fg) 10%, transparent); color: var(--fg); }
+.chat-composer-detected-dismiss:focus-visible { outline: var(--focus-w) solid var(--focus-color); outline-offset: var(--focus-offset); }
+
+.chat-composer-hint {
+  width: 100%; order: 5;
+  font-family: var(--ff-mono); font-size: var(--fs-micro); color: var(--fg-3);
+  padding: var(--space-hair) var(--space-1) 0;
+}
+
+.chat-composer-toolbar {
+  display: flex; align-items: center; gap: var(--space-1);
+  flex-shrink: 0;
+}
+.chat-composer-toolbar .composer-btn {
+  width: 32px; height: 32px; border-radius: var(--r-1);
+}
+@media (pointer: coarse) {
+  .chat-composer-toolbar .composer-btn { width: 44px; height: 44px; }
+  .chat-composer textarea { min-height: 44px; }
+  .chat-msg-action, .chat-reactions .rxn, .chat-reactions .chat-rxn-add { min-width: 44px; min-height: 44px; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .chat-composer textarea { min-height: 44px; }
+}
+
+.chat-composer-note {
+  width: 100%; order: 3;
+  font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3);
+  padding: var(--space-1) var(--space-1) 0;
+}
+
+.chat-composer-elapsed {
+  font-family: var(--ff-mono); font-size: var(--fs-tiny); color: var(--fg-3);
+  flex-shrink: 0; padding: 0 var(--space-1);
+}
+
+.chat-composer.dragover {
+  border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 4%, var(--bg));
+}

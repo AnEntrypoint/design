@@ -1,19 +1,5 @@
-// Window spawn/placement geometry for the desktop shell: how big a new window
-// should be for the current desktop area, where it cascades to, and how open
-// windows are pulled back into range when the viewport shrinks.
-
-// Small-viewport threshold: below this, a floating window (with drag/resize
-// chrome meant for a pointer+large-canvas paradigm) is awkward — spawn apps
-// maximized instead of as a small floating rect. Matches the coarse-pointer
-// tablet/phone class, not just narrow desktop windows.
 export const SMALL_VIEWPORT_W = 768;
 
-// Scale a fixed-px default spawn size against the actual desktop area so a
-// 4K/ultrawide viewport doesn't cage every window at the same handful of
-// pixels: the requested size is nudged toward a fraction of the available
-// area, clamped between the app's own default (floor) and a generous
-// multiple of it (ceiling) so windows still cascade/overlap sensibly instead
-// of each spawning full-bleed.
 export function scaleSpawnSize(sz, vw, vh) {
     const targetW = Math.round(vw * 0.42);
     const targetH = Math.round(vh * 0.52);
@@ -22,13 +8,6 @@ export function scaleSpawnSize(sz, vw, vh) {
     return { w, h };
 }
 
-// Resolve the full spawn rect for a new window. Clamp spawn bounds to the
-// desktop area so cascaded windows never open with their chrome (titlebar/
-// resize grip) off-screen. Below the tablet breakpoint a floating window is
-// awkward (no room to drag/resize around it) — spawn maximized instead of a
-// small floating rect. Above it, scale the default size toward the available
-// desktop area so 4K/ultrawide viewports don't cage every window at the same
-// fixed handful of pixels.
 export function computeSpawnRect(sz, openCount) {
     const host = document.querySelector('.wm-root');
     const vw = host ? host.clientWidth : window.innerWidth;
@@ -42,8 +21,6 @@ export function computeSpawnRect(sz, openCount) {
     return { w, h, x, y, maximized: small };
 }
 
-// Keep open windows reachable when the viewport shrinks (rotation, browser
-// resize): pull any window whose titlebar left the desktop back in range.
 export function reflowWindows(wm) {
     for (const w of wm.list()) {
         const el = document.querySelector('.wm-win[data-id="' + w.id + '"]');

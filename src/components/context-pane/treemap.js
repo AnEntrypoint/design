@@ -1,17 +1,7 @@
-// ContextTreemap — squarified-treemap SVG layout for a token/cost breakdown,
-// nested rectangles sized by value. Raw SVG, no charting library — the only
-// reusable precedent in this kit is charts.js's Sparkline, which maps values
-// to a single polyline (no area-layout code to build on), so the squarified
-// algorithm here is self-contained. Token-stroke/fill only, same convention
-// as Sparkline/BarChart in content/charts.js.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
-// squarify(items, x, y, w, h) -> [{ item, x, y, w, h }]
-// Classic squarified treemap (Bruls/Huizing/Wijk): lays out `items` (each
-// with a numeric `.value`) into the x/y/w/h rect, recursively slicing off
-// rows that keep aspect ratios closest to 1.
 function worstRatio(row, len, totalArea) {
     const sum = row.reduce((s, v) => s + v, 0);
     if (sum === 0) return Infinity;
@@ -60,9 +50,6 @@ export function squarify(items, x, y, w, h) {
     return out;
 }
 
-// ContextTreemap({ items, width=280, height=160 })
-//   items: [{ id, label, value, tone }] — tone is a semantic class suffix,
-//   same vocabulary as ContextMeter's segment tone.
 export function ContextTreemap({ items = [], width = 280, height = 160 } = {}) {
     const rects = squarify(items, 0, 0, width, height);
     if (!rects.length) return h('div', { class: 'ds-context-treemap-empty' }, 'no breakdown yet');

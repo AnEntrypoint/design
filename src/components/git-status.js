@@ -1,17 +1,11 @@
-// Git status + diff primitives — changed-file list and unified-diff renderer.
-// Ported from pi-web's BranchNavigator concept into this design system's
-// pure-webjsx idiom (see files.js for the sibling file-list pattern this
-// mirrors: FileIcon-style type glyph, ds-file-row-style clickable row).
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
 import { fileGlyph } from './files.js';
 import { highlightAllUnder } from '../highlight.js';
+import { attempt } from '../best-effort.js';
 const h = webjsx.createElement;
 
-// git status letter -> { label, tone, icon } used for both the row's status
-// chip and its left-edge tone. Mirrors the porcelain status codes pi-web's
-// git API returns (A/M/D/R/? ...), collapsed to the ones a status list needs.
 const STATUS_META = {
     A: { label: 'added', tone: 'add', glyph: 'A' },
     M: { label: 'modified', tone: 'modify', glyph: 'M' },
@@ -27,9 +21,6 @@ function statusMeta(status) {
     return STATUS_META[status] || { label: status || 'changed', tone: 'neutral', glyph: (status || '?').slice(0, 1) };
 }
 
-// Guess a file "type" (for FileIcon-style glyph reuse) from its extension —
-// git-status entries are paths, not the richer {type} shape files.js rows get
-// from a directory listing.
 const EXT_TYPE = {
     js: 'code', mjs: 'code', cjs: 'code', ts: 'code', tsx: 'code', jsx: 'code',
     py: 'code', rs: 'code', go: 'code', java: 'code', c: 'code', cpp: 'code', h: 'code',
@@ -43,9 +34,6 @@ const EXT_TYPE = {
     zip: 'archive', tar: 'archive', gz: 'archive', '7z': 'archive', rar: 'archive', bz2: 'archive',
 };
 
-// Filenames (not extensions) that need a specific bucket regardless of any
-// trailing dot-segment — lockfiles have no meaningful "extension" split and
-// dotfiles like .gitignore/.env would otherwise fall through to 'other'.
 const NAME_TYPE = {
     'package-lock.json': 'code', 'yarn.lock': 'code', 'bun.lock': 'code',
     'pnpm-lock.yaml': 'code', 'cargo.lock': 'code', 'composer.lock': 'code',
@@ -64,9 +52,6 @@ function fileTypeFromPath(pathname = '') {
     return EXT_TYPE[base.slice(dot + 1).toLowerCase()] || 'other';
 }
 
-// GitStatusPanel — a list of changed files with add/modify/delete indicators.
-// files: [{ path, status, staged?, insertions?, deletions? }]
-// onFileClick(file) opens the diff for a row.
 export function GitStatusPanel({ files = [], onFileClick, emptyText = 'no changes', active } = {}) {
     if (!files.length) {
         return h('div', { class: 'ds-git-empty', role: 'status' },
@@ -100,9 +85,6 @@ function GitStatusRow({ key, file, onClick, active } = {}) {
     );
 }
 
-// Parse a unified diff into hunks of typed lines so we can color +/- context
-// independently of the raw text (avoids relying on Prism's diff grammar for
-// the leading marker column, which we style ourselves).
 function parseUnifiedDiff(diff = '') {
     const lines = diff.split('\n');
     const hunks = [];
@@ -115,7 +97,7 @@ function parseUnifiedDiff(diff = '') {
         }
         if (line.startsWith('diff --git') || line.startsWith('index ') ||
             line.startsWith('--- ') || line.startsWith('+++ ')) {
-            continue; // file-header noise; the host already knows the filename
+            continue;
         }
         if (!current) continue;
         let kind = 'context';
@@ -140,27 +122,15 @@ function langFromFilename(filename = '') {
     return EXT_LANG[base.slice(dot + 1).toLowerCase()] || null;
 }
 
-// GitDiffView — unified-diff renderer with +/- line coloring. Uses
-// highlight.js's Prism loader for language detection by file extension; the
-// +/- marker column is drawn by CSS (tone classes), Prism only tokenizes the
-// code content inside each line.
 export function GitDiffView({ diff = '', filename, binary = false } = {}) {
     const hunks = parseUnifiedDiff(diff);
     const lang = langFromFilename(filename);
     const highlightRef = (el) => {
         if (!el) return;
-        try { highlightAllUnder(el); } catch { /* swallow: progressive enhancement only */ }
+        attempt(() => { highlightAllUnder(el); });
     };
-    // A caller with no backend binary-detection (freddie's gui-git plugin
-    // does not report one) still lands here with raw git output -- git's own
-    // porcelain marks a binary-diffed file as a single "Binary files a/x and
-    // b/x differ" line with no hunks, so detect that shape here rather than
-    // requiring every caller to wire an explicit `binary` prop through.
     const looksBinary = binary || /^Binary files .+ differ/m.test(diff);
     if (!hunks.length) {
-        // A binary changed file produces no unified diff at all - saying
-        // "no diff to show" reads as "nothing changed", which is wrong and
-        // misleading; name the real reason instead.
         return h('div', { class: 'ds-git-diff-empty', role: 'status' },
             looksBinary ? 'binary file, diff not shown' : 'no diff to show');
     }

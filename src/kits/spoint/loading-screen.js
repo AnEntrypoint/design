@@ -1,9 +1,3 @@
-// Loading-screen paint surface for the spoint game client.
-// renderLoadingScreen({brand, label}) -> { node, setLabel, setDownload,
-// setProcessing, setDetail, hide, dispose }. The consumer (spoint
-// LoadingManager) owns progress events; this module owns layout + classes.
-// Two progress bars (download, processing), a label, and a detail line.
-
 export function renderLoadingScreen(opts = {}) {
   const { brand = 'spoint', label = 'Connecting...' } = opts;
 

@@ -1,7 +1,3 @@
-// ConversationList — the persistent left-rail "Chats" column: grouped, flat,
-// or parentSid-nested fork-tree rows, with inline rename, arm-then-confirm
-// delete, search, and a load-more tail. Host-driven throughout (the kit stays
-// stateless); styling lives in chat.css (.ds-session*).
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -51,23 +47,12 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
                                    onSelect, onNew, newLabel = 'New chat',
                                    emptyText = 'No conversations yet', loading = false, error = null,
                                    loadingText = 'Loading conversations…',
-                                   // hasMore/onLoadMore: the rail's host truncates the underlying
-                                   // session list at some limit (a 200+ conversation user would
-                                   // otherwise never reach older sessions) - mirrors the History
-                                   // tab's existing "load N older" EventList pattern.
                                    hasMore = false, onLoadMore, loadMoreLabel = 'load more conversations',
-                                   // resultCount: forwarded straight through to the inner SearchInput's
-                                   // aria-live region, so a real "N results" string (computed by the
-                                   // host from its filtered session list) reaches AT users instead of
-                                   // the region sitting permanently empty.
                                    resultCount,
-                                   // Fork/branch tree nesting (parentSid-driven), inline rename,
-                                   // inline delete — all host-driven, kit stays stateless.
                                    tree = false, expanded, onToggleExpand,
                                    onRename, renaming, onStartRename, onCancelRename,
                                    onDelete, confirmingDelete, onArmDelete, onCancelDelete } = {}) {
   const expSet = expanded instanceof Set ? expanded : new Set(expanded || []);
-  // childrenBySid: only consulted when `tree` is on - a flat caller pays nothing.
   const childrenBySid = new Map();
   if (tree) {
     for (const s of sessions) {
@@ -86,9 +71,6 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
     const confirmingThis = onDelete && isConfirmingDelete(s);
     let content;
     if (confirmingThis) {
-      // Inline confirm: same row height, no modal - mirrors SessionDashboard's
-      // arm-then-confirm bulk-stop control so delete has one consistent shape
-      // across the kit.
       content = [
         h('span', { key: 'cd-msg', class: 'ds-session-confirm-msg' }, 'Delete "' + (s.title || s.project || s.sid || '') + '"?'),
         h('span', { key: 'cd-acts', class: 'ds-session-confirm-actions' }, [
@@ -120,19 +102,12 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
         }, Icon('chevron-right', { size: 10 })) : null,
         depth > 0 ? h('span', { key: 'fork', class: 'ds-session-fork-icon', 'aria-hidden': 'true' }, Icon('corner-up-left', { size: 10 })) : null,
         h('span', { key: 'main', class: 'ds-session-main' }, [
-          // Two-sided truncation: the CSS ellipsis is paired with a title= carrying
-          // the full string, so a long title/project is recoverable on hover.
           h('span', { class: 'ds-session-title', title: s.title || s.project || s.sid || null }, s.title || s.project || s.sid || ''),
           (s.project || s.time) ? h('span', { class: 'ds-session-sub', title: s.project || null },
             [s.project, s.time].filter(Boolean).join(' · ')) : null,
         ].filter(Boolean)),
         h('span', { key: 'meta', class: 'ds-session-meta' }, [
           s.agent ? h('span', { class: 'ds-session-agent' }, s.agent) : null,
-          // Optional richer status ('error'|'stale'|'running'|'stopping') mirrors the
-          // SessionCard STATUS_DISC mapping used on the Live dashboard, so a session
-          // pinned to a "Running" rail group reads the same stuck-vs-busy signal it
-          // does there rather than only a boolean live dot. Falls back to the plain
-          // running dot when no status is supplied (existing callers unaffected).
           s.status
             ? h('span', { class: 'status-dot-disc ' + (STATUS_DISC[s.status] || 'status-dot-live'), 'aria-label': STATUS_WORD[s.status] || s.status, role: 'img' })
             : s.running
@@ -148,8 +123,6 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
       ].filter(Boolean);
     }
     const row = h('div', {
-      // Stable key: prefer sid, else position - a missing/duplicate sid would make
-      // key undefined and crash webjsx applyDiff ("reading 'key'" of undefined).
       key: 'cs-' + (s.sid != null ? s.sid : 'i' + i),
       role: 'option',
       tabindex: s.sid === selected ? '0' : '-1',
@@ -161,23 +134,14 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
       onkeydown: (renamingThis || confirmingThis) ? null : (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect && onSelect(s); } },
     }, ...content);
     if (!hasKids || !kidsOpen) return [row];
-    // Depth-first flatten of open children keeps the caller-facing return shape
-    // (an array of rows) identical whether tree nesting is on or off.
     const kidRows = childrenBySid.get(s.sid)
       .slice().sort((a, b) => (b.time || '').localeCompare(a.time || ''))
       .flatMap((k, ki) => rowFor(k, ki, depth + 1));
     return [row, ...kidRows];
   };
 
-  // The body is ALWAYS a single keyed wrapper element of the same tag, so webjsx
-  // diffs its children across state transitions (loading -> empty -> populated)
-  // instead of swapping the container type - the swap is what triggered the
-  // applyDiff "reading 'key'" crash on the first populated mount. Row children
-  // are uniformly keyed; non-row states render a single unkeyed status line.
   let inner;
   if (loading && !sessions.length) {
-    // Shape-matched skeleton rows during the cold ccsniff index walk (the rail
-    // showed a bare line before) - Claude-Desktop skeletons its sidebar on load.
     inner = [
       h('div', { key: 'st', class: 'ds-session-state', role: 'status', 'aria-live': 'polite' }, loadingText),
       ...Array.from({ length: 5 }, (_, i) => h('div', { key: 'sk' + i, class: 'ds-session-row-skeleton', 'aria-hidden': 'true' },
@@ -193,18 +157,12 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
       h('div', { key: 'gl', class: 'ds-session-group-label' }, g.label),
       h('div', { key: 'gr', class: 'ds-session-group-rows', role: 'listbox', 'aria-label': g.label }, ...g.sids.map((sid) => bySid.get(sid)).filter(Boolean).flatMap((s, i) => rowFor(s, i)))));
   } else if (tree) {
-    // Roots = rows with no parentSid, or whose parentSid isn't present in this
-    // list (an orphaned fork - the ancestor was deleted/filtered out) - each
-    // root's flatMap already walks its open descendants via rowFor's recursion.
     const sidSet = new Set(sessions.map((s) => s.sid));
     const roots = sessions.filter((s) => s.parentSid == null || !sidSet.has(s.parentSid));
     inner = roots.flatMap((s, i) => rowFor(s, i, 0));
   } else {
     inner = sessions.flatMap((s, i) => rowFor(s, i));
   }
-  // The load-more row sits INSIDE the scrollable list body (not the outer
-  // .ds-sessions shell) so it scrolls with the rows it extends, matching
-  // where a user's eye already is after scrolling to the bottom of the rail.
   const loadMoreRow = (hasMore && onLoadMore && sessions.length)
     ? h('button', { key: 'loadmore', type: 'button', class: 'ds-session-loadmore', onclick: onLoadMore }, loadMoreLabel)
     : null;
@@ -222,9 +180,6 @@ export function ConversationList({ sessions = [], selected, groups, search, capt
         onInput: (v) => search.onInput && search.onInput(v),
         resultCount,
       }) : null),
-    // Per-tab caption telling the user what selecting a row does on this surface
-    // (chat = resume the conversation, history = browse its events) so visually
-    // identical rows are disambiguated.
     caption ? h('div', { key: 'cap', class: 'ds-session-caption' }, caption) : null,
     body);
 }

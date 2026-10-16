@@ -1,9 +1,3 @@
-// Slider — generic single-value range-input wrapper. Styling approach is
-// extracted from voice/capture.js's VadMeter (the original purpose-built
-// range-input precedent): a real <input type="range"> is layered invisible
-// (opacity:0, position:absolute, inset:0) directly over a custom track/fill
-// so the notoriously inconsistent native thumb/track chrome never renders,
-// while keyboard/pointer/a11y semantics stay on the real input.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
@@ -48,10 +42,6 @@ export function Slider({ value = 0, min = 0, max = 100, step = 1, onChange, labe
         'aria-describedby': hintId,
         oninput: onChange ? (e) => onChange(parseFloat(e.target.value), e) : null
     });
-    // Position is written as a custom-property (--ds-slider-pct), not a raw
-    // width:/left: layout string, so this stays a whitelisted dynamic
-    // non-layout style per lint-inline-styles.mjs — the % math itself lives
-    // in slider.css via calc(var(--ds-slider-pct) * 1%).
     const pctVar = '--ds-slider-pct:' + pct.toFixed(2);
     const track = h('div', { key: 't', class: 'ds-slider-track', style: pctVar },
         h('div', { key: 'f', class: 'ds-slider-fill' }),

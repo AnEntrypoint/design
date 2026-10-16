@@ -1,10 +1,4 @@
-// Offline outbox: queues a POST body to IndexedDB when the network is down,
-// auto-flushes on the real 'online' event. Generic over the sender fn so any
-// consumer page (chat send, etc) can reuse the same queue-and-retry shape
-// rather than hand-rolling it per page. True offline response generation is
-// impossible by definition for anything that calls out to a server -- this
-// only bridges the gap between "user hit send while offline" and "message
-// actually reaches the server once reconnected."
+import { ignoreFailure } from './best-effort.js';
 const DB_NAME = '247420-outbox';
 const STORE = 'pending';
 
@@ -63,7 +57,7 @@ export async function flushQueue(topic, sender) {
             await removeQueued(item.id);
             flushed++;
         } catch {
-            break; // still offline (or the endpoint is genuinely down) -- leave the rest queued
+            break;
         }
     }
     return flushed;
@@ -71,7 +65,7 @@ export async function flushQueue(topic, sender) {
 
 export function watchReconnect(topic, sender) {
     if (typeof window === 'undefined') return () => {};
-    const handler = () => { flushQueue(topic, sender).catch(() => {}); };
+    const handler = () => { flushQueue(topic, sender).catch(ignoreFailure); };
     window.addEventListener('online', handler);
     return () => window.removeEventListener('online', handler);
 }

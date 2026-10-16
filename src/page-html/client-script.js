@@ -1,13 +1,3 @@
-// The client-side mount script the SSR document embeds, as a string. It is
-// NOT module code in this file's own scope: it ships verbatim inside the
-// emitted <script type="module"> and runs in the browser against the SDK's
-// `mount`/`components`/`h` exports plus the `__site__` JSON payload.
-//
-// It stays a template literal (not a real module compiled and inlined) because
-// it must reach the browser as source with its own escaping intact — every
-// backslash/backtick sequence below is written for the emitted output, not for
-// this file. `clientScriptExtra` is appended raw after the mount() call.
-
 export const CLIENT_SCRIPT = `import { mount, components as C, h } from 'anentrypoint-design';
 let data;
 try {
@@ -37,7 +27,7 @@ function heroNode(hero) {
     ) : null,
     Array.isArray(hero.ctas) && hero.ctas.length
       ? h('div', { class: 'ds-hero-actions' }, ...hero.ctas.map((c, i) =>
-          h('a', { key: i, class: i === 0 ? 'btn btn-accent' : 'btn btn-ghost', href: c.href || '#' }, c.label || c.cta || 'go')))
+          h('a', { key: i, class: c.primary ? 'btn btn-primary' : 'btn btn-ghost', href: c.href || '#' }, c.label || c.cta || 'go')))
       : null,
     badgeRow,
   );
@@ -45,46 +35,23 @@ function heroNode(hero) {
 
 function __esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-// A live, interactive strip of the actual SDK components (not a screenshot,
-// not a description) rendered directly below the hero -- "show, don't just
-// tell" concretely: real Btn/Chip/Badge/Table specimens, mounted from the
-// same C.* namespace every kit page uses, so what a visitor sees IS what a
-// consumer gets by importing the SDK.
 function showcaseNode(showcase) {
   if (!showcase) return null;
   const btnRow = h('div', { class: 'ds-showcase-row' },
-    C.Btn({ key: 'b1', variant: 'primary', children: 'Primary' }),
-    C.Btn({ key: 'b2', variant: 'default', children: 'Default' }),
-    C.Btn({ key: 'b3', variant: 'ghost', children: 'Ghost' }),
-    // .ds-showcase-btn-danger-group gives Danger its own visually separated
-    // cluster (extra leading gap + a hairline divider) instead of sitting in
-    // the same uniform-gap row as Primary -- two similarly-weighted filled
-    // buttons side by side otherwise compete for "the one action to take"
-    // with nothing marking Danger as the deliberately-set-apart one.
-    h('span', { key: 'b4-group', class: 'ds-showcase-btn-danger-group' },
-      C.Btn({ key: 'b4', variant: 'danger', children: 'Danger' })),
+    C.Btn({ key: 'b1', variant: 'primary', children: 'primary' }),
+    C.Btn({ key: 'b2', variant: 'default', children: 'default' }),
+    C.Btn({ key: 'b3', variant: 'ghost', children: 'ghost' }),
+    C.Btn({ key: 'b4', variant: 'danger', children: 'danger' }),
   );
-  // Hue documents STATUS, not decoration: green = shipping/live, blue = pre-
-  // release/in-flux, purple = newly added. Badge (not a bespoke pill) carries
-  // the '0 violations' count so every status indicator in this row is one of
-  // the two real chip-family components, never a one-off styled span.
   const chipRow = h('div', { class: 'ds-showcase-row' },
-    C.Chip({ key: 'c1', tone: 'green', children: 'Live' }),
-    C.Chip({ key: 'c2', tone: 'blue', children: 'Beta' }),
-    C.Chip({ key: 'c3', tone: 'purple', children: 'New' }),
-    C.Badge({ key: 'c4', tone: 'success', children: '0 violations' }),
+    C.Chip({ key: 'c1', tone: 'accent', children: 'accent' }),
+    C.Chip({ key: 'c2', tone: 'dim', children: 'dim' }),
+    showcase.a11yTotal == null ? null : C.Badge({ key: 'c4', tone: showcase.a11yTotal ? 'danger' : 'success', children: showcase.a11yTotal + ' a11y violations' }),
   );
-  // Real, varied status per kit -- three identical "shipped / pass" rows
-  // demonstrated neither the table's sort/status-variance behavior nor
-  // gave a visitor any real information (every row read the same).
   const table = C.Table({
-    caption: 'Ship status for three representative kits, from the same manifest the kits panel below reads.',
-    headers: ['Kit', 'Status', 'A11y'],
-    rows: [
-      ['chat', 'shipped', 'pass'],
-      ['dashboard', 'shipped', 'pass'],
-      ['os', 'beta', 'pass'],
-    ],
+    caption: 'counts read at build time from the kit folders, the component manifest and the accessibility baseline.',
+    headers: ['measure', 'value'],
+    rows: Array.isArray(showcase.stats) ? showcase.stats.map((s) => [s.label, String(s.value)]) : [],
     compact: true,
   });
   return C.Section({
@@ -94,11 +61,11 @@ function showcaseNode(showcase) {
       showcase.lede ? h('p', { class: 'ds-lede' }, showcase.lede) : null,
       h('div', { class: 'ds-showcase-grid' },
         h('div', { key: 'btns', class: 'ds-showcase-card' },
-          h('span', { class: 'ds-showcase-label' }, 'Buttons'), btnRow),
+          h('span', { class: 'ds-showcase-label' }, 'buttons'), btnRow),
         h('div', { key: 'chips', class: 'ds-showcase-card' },
-          h('span', { class: 'ds-showcase-label' }, 'Chips & badges'), chipRow),
+          h('span', { class: 'ds-showcase-label' }, 'chips & badges'), chipRow),
         h('div', { key: 'table', class: 'ds-showcase-card ds-showcase-card--wide' },
-          h('span', { class: 'ds-showcase-label' }, 'Table'), table),
+          h('span', { class: 'ds-showcase-label' }, 'table'), table),
       ),
     ].filter(Boolean),
   });
@@ -128,44 +95,29 @@ function examplesNode(examples) {
   return C.Section({
     title: 'explore',
     children: examples.map((e, i) => {
-      const code = e.code == null ? '' : String(e.code).trim();
       const kids = [];
-      if (code) kids.push(h('span', { key: 'c', class: 'code' }, code));
       kids.push(h('span', { key: 't', class: 'title' }, String(e.label || e.name || e.href || '')));
-      if (e.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, ' — ' + e.desc));
+      if (e.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, e.desc));
       kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, 'open'));
       return h('a', { key: i, class: 'row', href: e.href || '#' }, ...kids);
     }),
   });
 }
 
-// Category glyph per homepage panel id — the same line-icon vocabulary
-// icons.js already provides, so kits/previews/decks/docs read as distinct
-// categories at a glance instead of by text label alone. Falls back to no
-// icon for panel ids outside this table (e.g. one-off feature panels).
 const PANEL_ICON = {
   kits: 'grid',
   file_browser: 'folder',
-  desktop_os: 'square',
+  desktop_os: 'screen',
   web_components: 'page',
   api_exports: 'link',
-  decks: 'screen',
+  decks: 'play',
   docs: 'file-text',
   previews: 'eye',
   features: 'info',
 };
 
-// Filter state for the kits search box above the "ui kits" panel. Reuses
-// ui_kits/search's own query-bar pattern (plain module-level state object,
-// mutated on input, driving a re-render) rather than inventing a second
-// filtering mechanism -- this homepage already ships that kit, so the
-// homepage's own kit listing gets the same affordance instead of being the
-// one surface on the site without a way to search kits by name.
 const kitsFilterState = { q: '', category: 'all' };
 
-// Category pill row: filters by home.yaml's per-kit category field,
-// composing with (ANDed against) the free-text search above -- a user can
-// narrow by category AND type a name, not one or the other.
 function categoryPillsNode(categories, items, rerender) {
   if (!Array.isArray(categories) || !categories.length) return null;
   const counts = new Map();
@@ -177,8 +129,22 @@ function categoryPillsNode(categories, items, rerender) {
     onclick: () => { kitsFilterState.category = key; rerender(); },
   }, label, h('span', { class: 'ds-cat-pill-count' }, String(count)));
   return h('div', { class: 'ds-cat-pills', role: 'group', 'aria-label': 'filter kits by category' },
-    pill('all', 'All', items.length),
+    pill('all', 'all', items.length),
     ...categories.map((c) => pill(c.key, c.label, counts.get(c.key) || 0)));
+}
+
+function groupedPreviewRows(items) {
+  const groups = new Map();
+  for (const it of items) {
+    const g = String(it.meta || 'other').toLowerCase();
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push(it);
+  }
+  return [...groups].map(([name, list]) => h('div', { key: name, class: 'ds-group' },
+    h('h3', { class: 'ds-group-head' }, name, h('span', { class: 'ds-group-count' }, String(list.length))),
+    ...list.map((it, i) => h('a', { key: i, class: 'row', href: it.href || '#' },
+      h('span', { key: 't', class: 'title' }, String(it.title || '')),
+      it.sub ? h('span', { key: 'm', class: 'meta dim' }, it.sub) : null))));
 }
 
 function panelNode(panel, idx, rerender) {
@@ -186,12 +152,6 @@ function panelNode(panel, idx, rerender) {
   const isKits = panel.id === 'kits';
   const q = isKits ? kitsFilterState.q.trim().toLowerCase() : '';
   const matchesText = (it) => !q || (String(it.title || it.name || '') + ' ' + String(it.sub || it.desc || '')).toLowerCase().includes(q);
-  // Pill counts reflect the TEXT filter (so a pill's number tells you what
-  // picking that category would give you right now) but never the CATEGORY
-  // filter itself -- a pill showing its own filtered-to-zero count the
-  // moment you select it would be useless. Previously this was the full
-  // unfiltered item list, so every pill count stayed frozen at the total
-  // regardless of what the search box did to the visible grid.
   const textFilteredKitsItems = isKits ? items.filter(matchesText) : items;
   if (isKits && kitsFilterState.category !== 'all') {
     items = items.filter((it) => it.category === kitsFilterState.category);
@@ -232,32 +192,22 @@ function panelNode(panel, idx, rerender) {
     }
     return (filterInput || pillsNode) ? h('div', { class: 'ds-kits-panel-wrap' }, pillsNode, filterInput) : null;
   }
-  // Card-grid layout (panel.layout === 'cards'): each item gets its own
-  // visual tile with a code badge and a two-line title/sub stack, instead of
-  // a single-line text row -- the "show, don't just tell" request for a
-  // browsable gallery feel on the kits panel specifically, opt-in per panel
-  // so every other panel (docs, api_exports, etc) keeps its dense row list,
-  // which suits reference material better than a card grid would.
   const rows = panel.layout === 'cards'
     ? items.map((it, i) => {
-        const code = it.code == null ? '' : String(it.code).trim();
         return h('a', { key: i, class: 'ds-kit-card', href: it.href || '#' },
-          code ? h('span', { key: 'c', class: 'ds-kit-card-code' }, code) : null,
           h('span', { key: 't', class: 'ds-kit-card-title' }, String(it.title || it.name || '')),
           (it.sub || it.desc) ? h('span', { key: 'm', class: 'ds-kit-card-sub' }, it.sub || it.desc) : null,
-          h('span', { key: 'a', class: 'ds-kit-card-arrow' }, it.meta || 'open'),
+          h('span', { key: 'a', class: 'ds-kit-card-arrow' }, String(it.meta || 'open').toLowerCase()),
         );
       })
     : items.map((it, i) => {
-        const code = it.code == null ? '' : String(it.code).trim();
         const kids = [];
-        if (code) kids.push(h('span', { key: 'c', class: 'code' }, code));
         kids.push(h('span', { key: 't', class: 'title' }, String(it.title || it.name || '')));
-        if (it.sub || it.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, ' — ' + (it.sub || it.desc)));
-        kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, it.meta || 'open'));
+        if (it.sub || it.desc) kids.push(h('span', { key: 'm', class: 'meta dim' }, it.sub || it.desc));
+        kids.push(h('span', { key: 'a', class: 'ds-row-arrow' }, String(it.meta || 'open').toLowerCase()));
         return h('a', { key: i, class: 'row', href: it.href || '#' }, ...kids);
       });
-  const rowsWrapped = panel.layout === 'cards' ? h('div', { class: 'ds-kit-card-grid' }, ...rows) : rows;
+  const rowsWrapped = panel.layout === 'cards' ? h('div', { class: 'ds-kit-card-grid' }, ...rows) : (panel.id === 'previews' ? groupedPreviewRows(items) : rows);
   const panelEl = C.Panel({ id: panel.id || null, title: titleNode, count: items.length, children: rowsWrapped });
   return (filterInput || pillsNode) ? h('div', { class: 'ds-kits-panel-wrap' }, pillsNode, filterInput, panelEl) : panelEl;
 }
@@ -281,8 +231,6 @@ function copyQuickstart(text, btnEl) {
     copyViaTextarea(text, done);
   }
 }
-// Fallback for non-secure contexts / browsers without navigator.clipboard:
-// a hidden textarea + document.execCommand('copy'), the standard shim.
 function copyViaTextarea(text, done) {
   try {
     const ta = document.createElement('textarea');
@@ -302,20 +250,11 @@ function copyViaTextarea(text, done) {
 
 function quickstartNode(quickstart) {
   if (!quickstart || !Array.isArray(quickstart.lines) || !quickstart.lines.length) return null;
-  // A single .cli wrapper holding .ds-cli-row/.ds-cli-comment children, not
-  // one .cli per line -- hero-content.css's multi-line wrap rule
-  // (.cli:has(.ds-cli-row) { white-space: pre-wrap }) only fires when the
-  // rows live inside one shared .cli. One-.cli-per-line instead hit the
-  // single-line .cli .cmd { white-space: nowrap } rule, forcing horizontal
-  // scroll on any long line (e.g. the importmap script tag).
   const lineNodes = quickstart.lines.map((l, i) => l.kind === 'cmt'
     ? h('div', { key: 'q' + i, class: 'ds-cli-comment' }, l.text)
     : h('div', { key: 'q' + i, class: 'ds-cli-row' },
         h('span', { class: 'prompt' }, '$'),
         h('span', { class: 'cmd' }, l.text)));
-  // Copy the whole snippet (comment lines included) as one paste-ready block,
-  // not just the command lines -- a reader copying "the quick start" expects
-  // what they see, not a silently filtered subset.
   const fullText = quickstart.lines.map((l) => l.text).join('\\n');
   const copyBtn = h('button', {
     type: 'button', class: 'copy ds-quickstart-copy',
@@ -328,12 +267,20 @@ function quickstartNode(quickstart) {
   });
 }
 
+const SIDE_ICON = {
+  everything: 'rows', 'ui kits': 'grid', decks: 'play', previews: 'eye', docs: 'file-text',
+  readme: 'file-text', skill: 'file-code', tokens: 'contrast', source: 'github', 'mit license': 'shield',
+};
+
 function sideNode(sidebar) {
   if (!sidebar || !Array.isArray(sidebar.sections) || !sidebar.sections.length || !C.Side) return null;
-  return C.Side({ sections: sidebar.sections });
+  const sections = sidebar.sections.map((sec) => ({
+    ...sec,
+    items: sec.items.map((it) => (SIDE_ICON[it.label] ? { ...it, glyph: C.Icon(SIDE_ICON[it.label], { size: 16 }) } : it)),
+  }));
+  return C.Side({ sections });
 }
 
-// minimal client-side markdown renderer matching server-side renderer (idempotent for already-html bodies)
 function __slug(s) { return String(s || '').trim().toLowerCase().replace(/[^\\w\\s-]/g, '').replace(/\\s+/g, '-'); }
 function __md(md) {
   const lines = String(md || '').split('\\n');
@@ -373,20 +320,12 @@ const TIERS = [
   { key: 'read', label: 'read', lede: 'understand the rules behind it.', ids: ['docs', 'features'], extra: () => [quickstartNode(data.quickstart)] },
 ];
 
-// Builds the whole main-content tree fresh each render so the kits filter
-// (module-level kitsFilterState) can drive a real re-render via mount()'s
-// own returned render callback -- same reactive shape mountKit() gives every
-// other kit on the site, applied here to the static-page renderer.
 function buildMainChildren(rerender) {
   const panelsById = new Map((data.panels || []).map((p) => [p.id || p.title || p.name || '', p]));
   const takePanel = (id) => { const p = panelsById.get(id); if (p) panelsById.delete(id); return p ? panelNode(p, 0, rerender) : null; };
 
   const tierNodes = TIERS.map((t) => {
     const kids = [...t.ids.map(takePanel), ...t.extra()].filter(Boolean);
-    if (t.key === 'open' && kids.length) {
-      const lead = kids[0];
-      if (lead.props) lead.props.class = (lead.props.class || '') + ' ds-tier-lead';
-    }
     return tierNode(t, kids);
   });
   const leftoverPanels = [...panelsById.values()].map((p) => panelNode(p, 0, rerender));
@@ -402,25 +341,8 @@ function buildMainChildren(rerender) {
   ].filter(Boolean);
 }
 
-// AppShell folds topbar+crumb into one merged .app-chrome band whenever BOTH
-// are passed, and hides the topbar's own .brand there (app-shell.js/
-// topbar.css) so the crumb becomes the sole source of left-side identity.
-// A single-page site (this generic renderer's own homepage, slug 'index')
-// has nowhere to have navigated from, so a crumb reading "sitename / Home"
-// is meaningless breadcrumb chrome, not real hierarchy -- and a bare
-// leaf-only Crumb (no trail) drops the site name entirely, which is worse.
-// Only render the crumb for actual sub-pages, where trail/leaf communicate
-// real position; the homepage instead keeps its topbar unmerged, brand and
-// nav visible on their own.
 const crumbNode = data.slug !== 'index' ? C.Crumb({ trail: [data.siteName], leaf: data.title }) : null;
 
-// Global Cmd+K / Ctrl+K / '/' command palette. Flattens every panel already
-// built for the page (kits, previews, docs, decks, etc. -- data.panels
-// already carries them all uniformly, see buildMainChildren's panelsById
-// map above) into one searchable list, grouped by panel title. Reuses the
-// existing C.CommandPalette (src/components/overlay-primitives/
-// command-palette.js) as-is -- same component the chat composer's @-mention
-// picker already uses -- never a second search implementation.
 const paletteState = { open: false };
 function paletteItems() {
   const out = [];
@@ -443,10 +365,6 @@ function paletteNode(rerender) {
     onClose: () => { paletteState.open = false; rerender(); },
   });
 }
-// '/' opens the palette only when no input/textarea/contenteditable already
-// has focus (so the '/' character can still be typed into the kits filter
-// box, a form field, etc.) -- Cmd+K/Ctrl+K always opens regardless of focus,
-// matching every other app that reserves that chord globally.
 function onGlobalKeydown(e, rerender) {
   const meta = e.metaKey || e.ctrlKey;
   if (meta && (e.key === 'k' || e.key === 'K')) {

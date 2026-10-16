@@ -1,7 +1,3 @@
-// Editor-primitives internal shared helpers — NOT part of the public export
-// surface (src/components.js re-exports none of these). `kids` normalizes a
-// children prop to an array; FOCUSABLE_SEL/trapTabKey are the focus-trap
-// mechanics shared by FocusTrap, Drawer and Dialog.
 
 export function kids(c) { return c == null ? [] : (Array.isArray(c) ? c : [c]); }
 

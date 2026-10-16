@@ -1,8 +1,8 @@
-// OS-overlay freddie pages, only mounted when osSurfaces is provided.
-import * as components from '../../../components.js';
-import { pre } from '../../../components/freddie/helpers.js';
+import { Icon } from '../../../components/shell.js';
+import { Panel, Kpi, Table } from '../../../components/content.js';
+import { EmptyState } from '../../../components/files/chrome.js';
+import { pre } from '../../../components/freddie/page-blocks.js';
 
-const { Panel, Kpi, Table, EmptyState, Icon } = components;
 
 export function makeOsPages(ctx) {
     const { osSurfaces, instance } = ctx;
@@ -11,7 +11,7 @@ export function makeOsPages(ctx) {
             const list = (osSurfaces && osSurfaces.instances && osSurfaces.instances()) || [];
             const activeId = osSurfaces && osSurfaces.activeInstanceId && osSurfaces.activeInstanceId();
             return [
-                Kpi({ items: [[list.length, 'instances'], [activeId || '—', 'active']] }),
+                Kpi({ items: [[list.length, 'instances'], [activeId || '-', 'active']] }),
                 Panel({ title: 'instances', count: list.length, children: list.length === 0
                     ? EmptyState({ text: 'no instances', glyph: Icon('square') })
                     : Table({ headers: ['id', 'active', 'shells', 'windows'], striped: true,
@@ -22,7 +22,7 @@ export function makeOsPages(ctx) {
             const wins = (osSurfaces && osSurfaces.wm && osSurfaces.wm.list && osSurfaces.wm.list()) || [];
             const focused = osSurfaces && osSurfaces.wm && osSurfaces.wm.focused;
             return [
-                Kpi({ items: [[wins.length, 'windows'], [focused ? (focused.id || focused.title || '?') : '—', 'focused']] }),
+                Kpi({ items: [[wins.length, 'windows'], [focused ? (focused.id || focused.title || '?') : '-', 'focused']] }),
                 Panel({ title: 'windows', count: wins.length, children: wins.length === 0
                     ? EmptyState({ text: 'no windows open', glyph: Icon('square') })
                     : Table({ headers: ['id', 'title', 'min', 'max', 'pos'], striped: true,

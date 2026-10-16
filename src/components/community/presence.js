@@ -1,6 +1,3 @@
-// Who-is-here surfaces: the speaking-state voice user chip, the local user's
-// own mic/deafen/settings panel, the member roster, and the connected-voice
-// control strip.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
@@ -8,13 +5,6 @@ import { avatarInitial } from '../content.js';
 import { avatarStyle } from './avatar-style.js';
 const h = webjsx.createElement;
 
-
-// 16:9 participant tile (stoat for-web's ParticipantTile shape): video fills
-// the tile when a camera track is present, otherwise a centered avatar; a
-// bottom overlay carries the name plus mic/camera status glyphs, and an
-// outline glow marks the currently-speaking participant. `videoEl` is an
-// already-attached <video>/<canvas> element the consumer owns (this
-// component never touches media APIs) — omit it to fall back to avatar-only.
 export function VoiceUser({ identity, speaking, color, muted, camera, videoEl } = {}) {
     const initial = avatarInitial(identity);
     const hasVideo = !!(camera && videoEl);
@@ -32,14 +22,13 @@ export function VoiceUser({ identity, speaking, color, muted, camera, videoEl } 
     );
 }
 
-export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen, onSettings } = {}) {
+export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen, onSettings, onMembers, membersOpen } = {}) {
     const initial = avatarInitial(name);
     const handleSettings = (e) => {
         e.preventDefault();
         if (onSettings) {
-            // onSettings callback should open a drawer/modal with quick toggles
             onSettings({
-                audioDevice: null, // controlled by consumer
+                audioDevice: null,
                 micOn: !muted,
                 speakerOn: !deafened,
             });
@@ -57,7 +46,8 @@ export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen,
         h('div', { class: 'cm-user-controls' },
             h('button', { class: 'cm-user-btn' + (muted ? ' muted' : ''), onclick: onMute, 'aria-label': muted ? 'Unmute microphone' : 'Mute microphone', 'aria-pressed': muted ? 'true' : 'false' }, Icon(muted ? 'mic-off' : 'mic')),
             h('button', { class: 'cm-user-btn' + (deafened ? ' deafened' : ''), onclick: onDeafen, 'aria-label': deafened ? 'Undeafen' : 'Deafen', 'aria-pressed': deafened ? 'true' : 'false' }, Icon(deafened ? 'speaker-off' : 'speaker')),
-            h('button', { class: 'cm-user-btn', onclick: handleSettings, 'aria-label': 'Audio settings', title: 'Open audio settings' }, Icon('settings'))
+            h('button', { class: 'cm-user-btn', onclick: handleSettings, 'aria-label': 'Settings', title: 'Settings' }, Icon('settings')),
+            onMembers ? h('button', { class: 'cm-user-btn cm-user-members' + (membersOpen ? ' active' : ''), onclick: onMembers, 'aria-label': 'Toggle members', 'aria-pressed': membersOpen ? 'true' : 'false', title: 'Members' }, Icon('members')) : null
         )
     );
 }
@@ -79,10 +69,6 @@ export function MemberItem({ identity, name, color, nameColor, status = 'online'
     );
 }
 
-// UserCard — stoat for-web's profile popout shape: a banner strip (color or
-// image) with the avatar overlapping its bottom edge, then name/status,
-// then optional bio/roles/joined-date sections stacked below. Sized for a
-// popover/hovercard body, not a full modal.
 export function UserCard({ identity, name, color, bannerUrl, status = 'online', statusLabel, bio, roles = [], joinedAt, joinedServerAt, serverName, actions = [] } = {}) {
     const initial = avatarInitial(name || identity);
     const statusClass = MEMBER_STATUS_CLASS[status];
@@ -120,8 +106,8 @@ export function UserCard({ identity, name, color, bannerUrl, status = 'online', 
                         r.name)))) : null,
             (joined || joinedServer) ? h('div', { class: 'cm-uc-section' },
                 h('div', { class: 'cm-uc-section-title' }, 'joined'),
-                joined ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, 'stoat — ' + joined)) : null,
-                joinedServer ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, (serverName || 'server') + ' — ' + joinedServer)) : null) : null,
+                joined ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, 'Community member since ' + joined)) : null,
+                joinedServer ? h('div', { class: 'cm-uc-joined-row' }, Icon('calendar', { size: 14 }), h('span', {}, (serverName || 'server') + ': ' + joinedServer)) : null) : null,
             actions.length ? h('div', { class: 'cm-uc-actions' },
                 ...actions.map((a, i) => h('button', {
                     type: 'button', class: 'cm-uc-action-btn' + (a.danger ? ' danger' : ''), key: a.id || i, onclick: a.onClick,
@@ -130,25 +116,23 @@ export function UserCard({ identity, name, color, bannerUrl, status = 'online', 
     );
 }
 
-// Skeleton rows for a cold member-list load, matching FileSkeleton/session
-// skeleton shape (icon + title placeholder), never a bare spinner.
 function MemberListSkeleton({ rows = 6 } = {}) {
     return h('div', { class: 'cm-member-list cm-member-skeleton open', 'aria-hidden': 'true' },
         ...Array.from({ length: rows }, (_, i) => h('div', { key: 'msk' + i, class: 'cm-member-item-skeleton' },
             h('span', { class: 'ds-skel ds-skel-icon' }), h('span', { class: 'ds-skel ds-skel-title' }))));
 }
 
-export function MemberList({ categories = [], open, loading = false, onSelectMember } = {}) {
+export function MemberList({ categories = [], open, loading = false, onSelectMember, userId } = {}) {
     if (loading) return MemberListSkeleton();
     const total = categories.reduce((n, cat) => n + (cat.members ? cat.members.length : 0), 0);
-    return h('div', { class: 'cm-member-list' + (open ? ' open' : '') },
+    return h('div', { class: 'cm-member-list' + (open ? ' open' : ''), inert: open ? null : true },
         total === 0
             ? h('div', { key: '_empty', class: 'cm-member-empty', role: 'status' },
                 Icon('members', { size: 20 }),
-                h('span', { class: 'cm-member-empty-text' }, 'no members in this channel yet'))
+                h('span', { class: 'cm-member-empty-text' }, userId ? 'Only you for now.' : 'no members in this channel yet'))
             : null,
         ...categories.flatMap(cat => [
-            h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label} — ${cat.members.length}`),
+            h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label}: ${cat.members.length}`),
             ...cat.members.map((m, i) => MemberItem({
                 ...m, key: m.identity || i,
                 onClick: onSelectMember ? (e) => onSelectMember(m, e) : undefined,

@@ -1,0 +1,13 @@
+.ds-preview-media-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+@media (hover: none), (pointer: coarse) {
+  .ds-preview-media-controls .chat-code-copy,
+  .chat-code-copy-head {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

@@ -1,8 +1,3 @@
-// Files-app paint surface — bible classes, pure DOM. Consumer provides callbacks.
-// renderFilesApp({list, readFile}) -> {node, refresh, dispose}.
-// list() -> Promise<string[]>; readFile(path) -> Promise<string|Uint8Array>.
-// Header text comes from {label} (consumer assembles "<id> — N files").
-
 export function renderFilesApp(opts = {}) {
     const { list, readFile, label = '', pollMs = 2000 } = opts;
     const node = document.createElement('div');
@@ -25,7 +20,7 @@ export function renderFilesApp(opts = {}) {
         node.innerHTML = '';
         const head = document.createElement('div');
         head.className = 'head';
-        head.textContent = (label ? label + ' — ' : '') + items.length + ' files';
+        head.textContent = (label ? label + ': ' : '') + items.length + ' files';
         node.appendChild(head);
         for (const p of items) {
             const row = document.createElement('div');

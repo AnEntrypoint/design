@@ -1,12 +1,8 @@
-// Full-screen overlays — BootOverlay (brand/progress splash with an error
-// state) and VideoLightbox (fullscreen video player with backdrop dismiss).
-// Both cover the whole viewport rather than anchoring to a trigger.
 
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 const h = webjsx.createElement;
 
-// BootOverlay — full-screen brand/progress overlay with error state.
 export function BootOverlay({ progress = 0, phase = '', errored = false, visible = false } = {}) {
     if (!visible) return null;
     let pct = Number(progress) || 0;
@@ -19,16 +15,12 @@ export function BootOverlay({ progress = 0, phase = '', errored = false, visible
                 : h('div', { class: 'ov-boot-spinner', 'aria-hidden': 'true' }),
             !errored ? h('div', { class: 'ov-boot-bar', role: 'progressbar',
                 'aria-valuenow': String(Math.round(pct)), 'aria-valuemin': '0', 'aria-valuemax': '100' },
-                // Custom-property write, not an inline `width:` — the fill's
-                // width is per-render data, the property it drives lives in
-                // editor-primitives.css with the rest of the bar's layout.
                 h('div', { class: 'ov-boot-bar-fill', style: '--ov-boot-progress:' + pct + '%' })) : null,
             h('div', { class: 'ov-boot-phase' }, String(phase || (errored ? 'Error' : 'Loading…')))
         )
     );
 }
 
-// VideoLightbox — fullscreen video player overlay with backdrop dismiss.
 export function VideoLightbox({ src, label = '', open = false, onClose } = {}) {
     if (!open || !src) return null;
     const close = () => onClose && onClose();
@@ -47,10 +39,6 @@ export function VideoLightbox({ src, label = '', open = false, onClose } = {}) {
     );
 }
 
-// ImageLightbox — fullscreen image viewer, same backdrop-dismiss/Escape
-// contract as VideoLightbox (shares .ov-lightbox-backdrop/-x/-stage/-label),
-// with an .ov-lightbox-scale-in mount transition so a click on a chat image
-// embed expands rather than cutting straight to the full-screen view.
 export function ImageLightbox({ src, alt = '', label = '', open = false, onClose } = {}) {
     if (!open || !src) return null;
     const close = () => onClose && onClose();

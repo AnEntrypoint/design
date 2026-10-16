@@ -1,12 +1,5 @@
-// Document <head> fragments for the static-site renderer: the full
-// SEO/OG/twitter/schema.org meta block, the favicon link (static href or an
-// inline data: SVG from a single glyph), and the stylesheet link.
-
 import { escape } from './markdown.js';
 
-// Full SEO/OG/twitter/schema.org meta block, extracted so renderPageHtml
-// consumers (design's own marketing site, thebird's landing) can opt in
-// instead of hand-rolling ~40 lines of <meta> tags per theme.mjs.
 export function renderSeoTags({ title, siteName, seo }) {
     const desc = escape(seo.description || '');
     const url = escape(seo.url || '');
@@ -53,7 +46,6 @@ export function renderFaviconTags({ faviconHref, faviconGlyph }) {
 }
 
 export function renderCssLink({ cssHref }) {
-    // jsDelivr, not raw.githack — see src/kits/flatspace-theme/index.js.
     return cssHref
         ? `<link rel="stylesheet" href="${cssHref}">`
         : `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AnEntrypoint/design@main/dist/247420.css">`;

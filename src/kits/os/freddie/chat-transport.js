@@ -1,19 +1,11 @@
-// The three send strategies the dashboard chat falls through, and the
-// provider discovery that decides which are viable. All return (or synthesize)
-// the same `{event, data}` list the server SSE path produces, so the render
-// loop that consumes them is identical regardless of which path ran.
-
 import { parseSseEvents } from './chat-protocol.js';
+import { attempt, attemptAsync } from '../../../best-effort.js';
 
-// Static deploy (no freddie-server, so /api/providers 404s): probe the
-// acptoapi gateway directly and, when it answers, surface it as a real
-// configured provider with its model list. Without this the dashboard
-// tells the user to "run a gateway" even though one is live and chat works.
 export async function loadProviders() {
     let providers = await fetch('/api/providers').then(r => r.json()).catch(() => []);
     if (!Array.isArray(providers)) providers = [];
     if (!providers.some(p => p.configured)) {
-        try {
+        await attemptAsync(async () => {
             const cfg = (window.__debug?.instances?.i1?.host?.fs?.readJson?.('/etc/freddie/freddie.json', null)) || {};
             const baseUrl = (cfg?.providers?.openai?.baseUrl || 'http://localhost:4800').replace(/\/+$/, '');
             const ac = new AbortController();
@@ -25,34 +17,17 @@ export async function loadProviders() {
                 const models = Array.isArray(j?.data) ? j.data.map(m => m.id) : [];
                 providers = [{ id: 'acptoapi', name: 'acptoapi gateway (' + baseUrl + ')', configured: true, models: ['auto', ...models] }, ...providers];
             }
-        } catch { /* swallow: probing the local acptoapi gateway is opt-in best-effort, absence just means no providers shown */ }
+        });
     }
     return providers;
 }
 
-// Static deploy with an in-page agent runtime (e.g. thebird): drive
-// the REAL multi-step agent loop (host tools + acptoapi gateway +
-// tool execution) instead of a single bare completion, so the model
-// emits tool_calls, the loop executes them, feeds results back, and
-// iterates. We synthesize the same {event:'message'} stream the
-// server path produces so the render loop is unchanged. The
-// window global is the opt-in: hosts without it keep single-shot.
 async function runInPageAgent(trimmed, chatState, renderPage) {
     const events = [];
     try {
         let stepN = 0;
         const onUpdate = (snap) => {
-            try {
-                const msgs = (snap && snap.context && snap.context.messages) || [];
-                const toolMsgs = msgs.filter(m => m.role === 'tool');
-                const lastAssist = [...msgs].reverse().find(m => m.role === 'assistant' && Array.isArray(m.tool_calls) && m.tool_calls.length);
-                const running = lastAssist && lastAssist.tool_calls[0] && (lastAssist.tool_calls[0].function?.name || lastAssist.tool_calls[0].name);
-                stepN = toolMsgs.length;
-                chatState.progress = running
-                    ? ('agent: ' + running + ' (step ' + (stepN + 1) + ')…')
-                    : ('agent thinking' + (stepN ? ' (step ' + stepN + ')' : '') + '…');
-                renderPage();
-            } catch { /* swallow: progress-indicator update failing must not abort the agent run */ }
+            attempt(() => { const msgs = (snap && snap.context && snap.context.messages) || []; const toolMsgs = msgs.filter(m => m.role === 'tool'); const lastAssist = [...msgs].reverse().find(m => m.role === 'assistant' && Array.isArray(m.tool_calls) && m.tool_calls.length); const running = lastAssist && lastAssist.tool_calls[0] && (lastAssist.tool_calls[0].function?.name || lastAssist.tool_calls[0].name); stepN = toolMsgs.length; chatState.progress = running ? ('agent: ' + running + ' (step ' + (stepN + 1) + ')…') : ('agent thinking' + (stepN ? ' (step ' + stepN + ')' : '') + '…'); renderPage(); });
         };
         const out = await window.__thebirdRunAgent({ prompt: trimmed, onUpdate });
         const turnMsgs = (out && Array.isArray(out.messages)) ? out.messages : [];
@@ -81,8 +56,6 @@ async function runInPageAgent(trimmed, chatState, renderPage) {
     }
 }
 
-// Static deploy without an in-page agent runtime: single direct
-// acptoapi /v1/chat/completions call (no tool loop — one shot).
 async function runDirectCompletion(trimmed, chatState) {
     const cfg = (window.__debug?.instances?.i1?.host?.fs?.readJson?.('/etc/freddie/freddie.json', null)) || {};
     const baseUrl = cfg?.providers?.openai?.baseUrl || 'http://localhost:4800';
@@ -108,8 +81,6 @@ async function runDirectCompletion(trimmed, chatState) {
     }
 }
 
-// Try the real server SSE endpoint first; fall back to the in-page agent
-// runtime, then to a single direct gateway completion.
 export async function fetchChatEvents(trimmed, chatState, renderPage) {
     const body = { prompt: trimmed, cwd: chatState.cwd || undefined, skill: chatState.skill || undefined, provider: chatState.provider || undefined, model: chatState.model || undefined, sessionId: chatState.sessionId || undefined };
     let resp;
@@ -128,9 +99,6 @@ export async function fetchChatEvents(trimmed, chatState, renderPage) {
     return runDirectCompletion(trimmed, chatState);
 }
 
-// Fold the event list into chatState.messages, resolving running tool calls to
-// done/error and accumulating assistant prose. Returns the trailing assistant
-// text the caller appends once the stream is fully drained.
 export function applyChatEvents(events, chatState, syncMessages) {
     let assistantContent = '';
     for (const { event, data } of events) {
@@ -151,7 +119,6 @@ export function applyChatEvents(events, chatState, syncMessages) {
                 }
             } else if (role === 'tool') {
                 const tc = Array.isArray(data.content) ? data.content[0] : data;
-                // Resolve the last running tool call to done with this result.
                 for (let i = chatState.messages.length - 1; i >= 0; i--) {
                     const m = chatState.messages[i];
                     if (m.role === 'tool' && m.status === 'running') {
@@ -166,7 +133,6 @@ export function applyChatEvents(events, chatState, syncMessages) {
         if (event === 'done' && data.result) { if (!assistantContent) assistantContent = data.result; }
         if (event === 'error') {
             const msg = 'error: ' + (data.error || 'unknown');
-            // Mark any running tool as errored; record assistant error.
             for (let i = chatState.messages.length - 1; i >= 0; i--) {
                 const m = chatState.messages[i];
                 if (m.role === 'tool' && m.status === 'running') { m.status = 'error'; m.error = true; m.content = msg; break; }

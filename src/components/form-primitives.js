@@ -1,7 +1,3 @@
-// Form primitives — Checkbox, Radio, RadioGroup, Toggle, Field,
-// useFormValidation. Native inputs styled via CSS classes. No inline
-// styles. All visuals route through form-primitives rules appended to
-// editor-primitives.css. Theme-token driven; respects prefers-reduced-motion.
 
 import * as webjsx from '../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
@@ -116,9 +112,6 @@ export function Field({ label, hint, error, required, requiredMarker = '*', html
     const errorId = error != null ? autoId + '-err' : null;
     const describedBy = [hintId, errorId].filter(Boolean).join(' ') || null;
     const list = Array.isArray(children) ? children : [children];
-    // Apply the generated id to the FIRST control that lacks one so the label's
-    // `for=autoId` and the hint/error aria-describedby actually reference it.
-    // Controls that already carry an id keep theirs (and still get describedby).
     let idApplied = false;
     const decorated = list.map((c) => {
         if (!c || typeof c !== 'object') return c;
@@ -130,12 +123,6 @@ export function Field({ label, hint, error, required, requiredMarker = '*', html
     });
     return h('div', { key, class: 'ds-field-wrap' },
         label != null ? h('label', { key: 'l', class: 'ds-field-label', for: autoId },
-            // The label text must be a keyed VElement, not a bare string: its
-            // sibling below (h('span',{key:'r'}...)) is keyed, and webjsx's
-            // applyDiff crashes (vendor/webjsx/applyDiff.js, "Cannot read
-            // properties of undefined (reading 'key')") the moment ANY sibling
-            // in a children array is keyed while another is a raw primitive —
-            // see AGENTS.md's "Mixed Keyed/Primitive Children Crash".
             h('span', { key: 'lt' }, label),
             required ? h('span', { key: 'r', class: 'ds-field-required', 'aria-hidden': 'true' }, ' ' + requiredMarker) : null
         ) : null,
@@ -159,14 +146,10 @@ const RULES = {
 export function useFormValidation(schema = {}) {
     const errors = {};
     const isPromise = (x) => x != null && typeof x.then === 'function';
-    // Runs rules for one field. Returns the error string/null synchronously when
-    // no rule yields a Promise; returns a Promise resolving to that value when
-    // any rule (e.g. an async custom validator) does.
     const validateField = (name, value) => {
         const rules = schema[name] || [];
         const settle = (out, idx) => {
             if (out) { errors[name] = rules[idx].message || out; return errors[name]; }
-            // No error from this rule — continue with the rest.
             return run(idx + 1);
         };
         const run = (i) => {
@@ -189,15 +172,6 @@ export function useFormValidation(schema = {}) {
     return { errors, validate, validateField };
 }
 
-// focusFirstInvalidField — after a `useFormValidation().validate()` call
-// reports errors, moves keyboard focus to the first invalid field in
-// `order` (schema key order, matching docstudio's requireFields, which
-// validates fields in a fixed order and focuses only the first failure
-// rather than dumping all errors on screen with no navigational aid).
-// `getEl(name)` resolves a field name to its live DOM node (host owns the
-// lookup — a ref map, `querySelector`, etc.); a name with no resolvable
-// element is skipped rather than throwing. No-op if no name in `order` has
-// an error.
 export function focusFirstInvalidField(errors, order, getEl) {
     for (const name of order) {
         if (!errors[name]) continue;

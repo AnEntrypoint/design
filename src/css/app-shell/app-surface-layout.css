@@ -1,0 +1,62 @@
+.ds-app-surface { margin: 0; display: flow-root; }
+
+.ds-app-surface h1, .ds-app-surface .t-h1 { font-size: var(--fs-h1-app); line-height: 1.15; }
+.ds-app-surface h2, .ds-app-surface .t-h2 { font-size: var(--fs-h2-app); }
+.ds-app-surface h3, .ds-app-surface .t-h3 { font-size: var(--fs-h3-app); }
+
+.ds-app-surface > .lede, .ds-app-surface > .t-lede { font-size: var(--fs-body); max-width: 60ch; }
+.ds-app-surface > h1 { margin-bottom: var(--space-3); }
+.ds-app-surface > h2 { margin-bottom: var(--space-2); }
+
+.ds-app-surface > .lede,
+.ds-app-surface > .t-lede { margin-bottom: calc(var(--space-6) * var(--density)); }
+
+.ds-app-surface .ds-section { margin: calc(var(--space-5) * var(--density)) 0; }
+.ds-app-surface .ds-section > h2 { margin: 0 0 var(--space-3); }
+.ds-app-surface > .ds-btn-row { margin-bottom: calc(var(--space-4) * var(--density)); }
+
+.ds-app-surface > :first-child { margin-top: 0; }
+.ds-app-surface > :last-child { margin-bottom: 0; }
+
+.ds-section-pad { padding: 0; }
+
+.ds-panel-gap { margin: calc(var(--space-5) * var(--density)) 0; }
+
+.ds-panel-gap + .ds-panel-gap { margin-top: calc(var(--space-5) * var(--density)); }
+
+.ds-panel-flush { margin-bottom: 0; }
+
+.ds-panel-duo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--space-5) * var(--density));
+  margin: calc(var(--space-5) * var(--density)) 0;
+  align-items: start;
+}
+@container (max-width: 900px) {
+  .ds-panel-duo { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .ds-panel-duo { grid-template-columns: minmax(0, 1fr); }
+}
+
+.ds-panel-trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--space-5) * var(--density));
+  margin: calc(var(--space-5) * var(--density)) 0;
+  align-items: stretch;
+}
+.ds-panel-trio > .panel { height: 100%; }
+@container (max-width: 1100px) {
+  .ds-panel-trio { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 720px) {
+  .ds-panel-trio { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .ds-panel-trio { grid-template-columns: minmax(0, 1fr); }
+}
+
+.ds-scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }

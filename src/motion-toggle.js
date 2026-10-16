@@ -1,13 +1,4 @@
-// 247420 design system — motion preference controller. Mirrors theme.js's
-// applyX/getX + localStorage-persistence + browser-guard pattern.
-//
-// src/motion.js already gates every entry animation behind the OS-level
-// @media (prefers-reduced-motion: no-preference) query -- a user whose OS
-// default is "no preference" (the common default) has no way to opt OUT of
-// motion without changing a system-wide OS setting. This adds a real
-// in-app override: [data-motion="reduced"] on <html> disables/shortens
-// transitions identically to the OS media query, independent of the OS
-// setting.
+import { attempt } from './best-effort.js';
 
 const KEY = '247420:motion';
 const VALID = new Set(['auto', 'reduced']);
@@ -26,7 +17,7 @@ function readStored() {
 }
 
 function writeStored(mode) {
-    try { window.localStorage.setItem(KEY, mode); } catch { /* swallow: persistence is best-effort, motion preference still applies in-memory */ }
+    attempt(() => { window.localStorage.setItem(KEY, mode); });
 }
 
 function writeAttr(mode) {
@@ -41,7 +32,7 @@ export function applyMotion(mode) {
     writeAttr(mode);
     writeStored(mode);
     for (const cb of listeners) {
-        try { cb({ mode }); } catch { /* swallow: a listener's error must not block notifying the rest */ }
+        attempt(() => { cb({ mode }); });
     }
     return mode;
 }
@@ -50,11 +41,6 @@ export function getMotion() {
     return _current;
 }
 
-// True when motion is actually suppressed right now -- either the user's
-// explicit override is 'reduced', OR (mode is 'auto' AND the OS itself
-// prefers reduced motion). Consumers that gate a JS-driven animation (not
-// just CSS transitions, which the [data-motion=reduced] selector already
-// handles) should check this before running anything non-essential.
 export function isMotionReduced() {
     if (_current === 'reduced') return true;
     if (_current !== 'auto') return false;
@@ -67,7 +53,6 @@ export function onMotionChange(cb) {
     return () => listeners.delete(cb);
 }
 
-// Auto-init on browser import. Picks stored value, else 'auto' (OS-driven).
 export function initMotion() {
     if (!isBrowser()) return 'auto';
     const stored = readStored();

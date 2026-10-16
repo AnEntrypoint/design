@@ -1,0 +1,34 @@
+export const PREVIEW_GROUPS = ['color', 'type and spacing', 'components', 'file browser', 'brand', 'reference'];
+
+export const PREVIEWS = [
+  { name: 'colors-core', group: 'color', title: 'core colors', description: 'the four base swatches: paper, a raised paper tone, ink and the accent fill.' },
+  { name: 'colors-semantic', group: 'color', title: 'semantic colors', description: 'role tokens (link, warn, on-color) that components use instead of raw hex.' },
+  { name: 'theme-ink', group: 'color', title: 'ink theme', description: 'the dark theme: how paper and ink invert and the neutral accent retunes.' },
+  { name: 'type-display', group: 'type and spacing', title: 'display type', description: 'hero and section headlines in the system sans, with size and tracking.' },
+  { name: 'type-mono', group: 'type and spacing', title: 'mono type', description: 'labels, meta text and body in the platform monospace.' },
+  { name: 'type-prose', group: 'type and spacing', title: 'prose type', description: 'long-form paragraph styling: measure, leading and emphasis.' },
+  { name: 'type-scale', group: 'type and spacing', title: 'type scale', description: 'every font-size step from mega down to micro, rendered at size.' },
+  { name: 'spacing', group: 'type and spacing', title: 'spacing scale', description: 'the 8pt spacing steps with their pixel values.' },
+  { name: 'rules', group: 'type and spacing', title: 'rules', description: 'single, double and dotted hairlines and when to use each.' },
+  { name: 'buttons', group: 'components', title: 'buttons', description: 'every button variant, size and state, with the tokens each uses.' },
+  { name: 'inputs', group: 'components', title: 'inputs', description: 'hairline text fields: label, placeholder, focus and error states.' },
+  { name: 'index-row', group: 'components', title: 'index row', description: 'the numbered list row used for works, posts and projects.' },
+  { name: 'panel-rows', group: 'components', title: 'panel rows', description: 'trio, duo and flush panel rows that step down on container width.' },
+  { name: 'data-density', group: 'components', title: 'data density', description: 'dense table, meter and list components for operational screens.' },
+  { name: 'editor-primitives', group: 'components', title: 'editor primitives', description: 'building blocks for editors: toolbars, toasts, aspect ratios and more.' },
+  { name: 'content', group: 'components', title: 'content primitives', description: 'hero, panel, list and manifesto blocks used on content pages.' },
+  { name: 'header', group: 'components', title: 'header', description: 'the sticky top bar and breadcrumb with nav hover states.' },
+  { name: 'stamps', group: 'components', title: 'stamps', description: 'four rotated status stamp variants.' },
+  { name: 'dateline', group: 'components', title: 'dateline', description: 'the brand dateline strip shown at the top of a page.' },
+  { name: 'file-row', group: 'file browser', title: 'file row', description: 'one file: type rail, icon, name, meta and actions.' },
+  { name: 'file-grid', group: 'file browser', title: 'file grid', description: 'a stack of file rows with directories first and a selected state.' },
+  { name: 'file-toolbar', group: 'file browser', title: 'file toolbar', description: 'breadcrumb, upload actions and item count.' },
+  { name: 'file-viewer', group: 'file browser', title: 'file viewer', description: 'full-bleed modal preview with syntax highlighting and actions.' },
+  { name: 'dropzone', group: 'file browser', title: 'drop zone', description: 'upload target with idle and drag-over states and no dashed border.' },
+  { name: 'wordmarks', group: 'brand', title: 'wordmarks', description: 'typographic project wordmarks; there are no pictorial marks.' },
+  { name: 'manifesto', group: 'brand', title: 'manifesto block', description: 'numbered statement paragraphs as used on the homepage.' },
+  { name: 'icons-unicode', group: 'reference', title: 'unicode glyph set', description: 'the small set of plain unicode symbols allowed in copy.' },
+  { name: 'theme-map', group: 'reference', title: 'theme token map', description: 'every root token, its default value and which sheets consume it.' },
+];
+
+export const previewByName = new Map(PREVIEWS.map((p) => [p.name, p]));
