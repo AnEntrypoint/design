@@ -403,7 +403,13 @@ export function mountCommunityApp(root, adapter = {}) {
 
     let gamePrefWasOpen = false;
     const render = () => {
+        const active = document.activeElement;
+        const focusedSwitch = active && active.getAttribute && active.getAttribute('role') === 'switch' && root.contains(active) ? active.getAttribute('aria-label') : null;
         webjsx.applyDiff(root, view());
+        if (focusedSwitch) {
+            const again = root.querySelector('.ds-g3-prefs [role=switch][aria-label="' + focusedSwitch + '"]');
+            if (again && again !== document.activeElement) again.focus();
+        }
         const open = !!get().gamePrefOpen;
         if (open && !gamePrefWasOpen) setTimeout(() => { const sw = root.querySelector('.ds-g3-prefs [role=switch]'); if (sw) sw.focus(); }, 0);
         gamePrefWasOpen = open;
