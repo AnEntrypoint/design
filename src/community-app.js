@@ -396,12 +396,18 @@ export function mountCommunityApp(root, adapter = {}) {
             s.voiceSettingsOpen ? VoiceSettingsModal({ open: true, mode: s.voiceMode || 'ptt', inputId: s.inputDeviceId, outputId: s.outputDeviceId, inputDevices: s.inputDevices || [], outputDevices: s.outputDevices || [], vadThreshold: s.vadThreshold, rnnoise: !!s.rnnoiseEnabled, autoGain: !!s.autoGainEnabled, forceTurn: !!s.forceTurnEnabled, bitrate: s.voiceBitrate, volume: s.masterVolume, onChange: (p) => A.voiceSettingsChange && A.voiceSettingsChange(p), onSave: () => A.voiceSettingsSave && A.voiceSettingsSave(), onCancel: () => A.voiceSettingsClose && A.voiceSettingsClose(), onClose: () => A.voiceSettingsClose && A.voiceSettingsClose() }) : null,
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
-            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }) }) : null,
+            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
 
-    const render = () => { webjsx.applyDiff(root, view()); };
+    let gamePrefWasOpen = false;
+    const render = () => {
+        webjsx.applyDiff(root, view());
+        const open = !!get().gamePrefOpen;
+        if (open && !gamePrefWasOpen) setTimeout(() => { const sw = root.querySelector('.ds-g3-prefs [role=switch]'); if (sw) sw.focus(); }, 0);
+        gamePrefWasOpen = open;
+    };
 
     const NARROW_VIEWPORT_QUERY = '(max-width: 900px)';
     const narrowViewportQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(NARROW_VIEWPORT_QUERY) : null;
