@@ -180,6 +180,14 @@ export function AnnouncementList({ items = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function RoleList({ roles = [], emptyText = '', key } = {}) {
+    if (!roles.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-roles' }, ...roles.map((r) => h('li', { key: r.id, class: 'ds-g3-role' },
+        h('span', { key: 'l', class: 'ds-g3-role-label' }, r.label),
+        h('span', { key: 'c', class: 'ds-g3-role-count' }, String(r.count))
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
