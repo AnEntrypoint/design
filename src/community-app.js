@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
+import { ServerDiscover, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -462,7 +462,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'polls') return PollList({ polls: s.polls || [], emptyText: 'No polls in this channel yet. Votes are not counted by this client yet.' });
         if (name === 'leaderboard') return LeaderboardList({ rows: s.leaderboard || [], emptyText: 'No messages in this channel yet, so nobody has earned xp.' });
         if (name === 'events') { const now = Date.now(); return EventsList({ events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3), now, emptyText: 'No events in this channel yet.' }); }
-        if (name === 'discover') return ServerDiscover({ servers: [], emptyText: 'This client has no public server directory yet, so there is nothing to discover. Join a server by its invite instead.' });
+        if (name === 'discover') return DiscoverList({ servers: s.discoverServers || [], emptyText: 'This client has no public server directory yet, so it lists only the servers you have joined. Join by invite.' });
         if (name === 'roles') return h('p', { class: 'ds-g3-empty' }, 'This client does not show or assign roles yet.');
         if (name === 'split') return h('p', { class: 'ds-g3-empty' }, 'Split view needs a second channel feed. This client loads one channel at a time, so there is only one view.');
         return null;

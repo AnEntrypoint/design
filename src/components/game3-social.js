@@ -188,6 +188,14 @@ export function RoleList({ roles = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function DiscoverList({ servers = [], emptyText = '', key } = {}) {
+    if (!servers.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-discover' }, ...servers.map((sv) => h('li', { key: sv.id, class: 'ds-g3-discover-row' },
+        h('span', { key: 'n', class: 'ds-g3-discover-name' }, sv.name),
+        h('span', { key: 'j', class: 'ds-g3-discover-state' }, sv.current ? 'open' : 'joined')
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
