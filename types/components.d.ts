@@ -4063,6 +4063,8 @@ export interface ServerDiscoverProps {
     /** @default [] */
     joinedIds?: any[];
     onJoin?: (...args: any[]) => any;
+    /** @default '' */
+    emptyText?: string;
     key?: string | number;
 }
 export declare function ServerDiscover(props?: ServerDiscoverProps): VNode;
