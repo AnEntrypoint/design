@@ -89,27 +89,25 @@ export function mountCommunityApp(root, adapter = {}) {
             railServerAdd(s), railServerExplore(s));
     };
 
+    const railGroup = (label, s, list, cur, isVoice, createType) => {
+        const head = h('div', { class: 'group group-header' },
+            h('span', {}, label),
+            (s.canManage && A.createChannel && createType)
+                ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label, title: 'Create ' + label, onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType); } }, Icon('plus', { size: 13 }))
+                : null);
+        return [head, ...(list.length ? list.map(c => railPill(c, cur, isVoice, s)) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
+    };
     const railChannelsView = (s) => {
         if (s.homeMode) return dmRailView(s);
-        const out = [];
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
-        const text = channels.filter(c => c.type !== 'voice' && c.type !== 'threaded');
-        const voice = channels.filter(c => c.type === 'voice' || c.type === 'threaded');
         const cur = s.currentChannel || {};
-        const servers = s.servers || [];
-        if (text.length || !servers.length) {
-            out.push(groupHeader('rooms', s, 'text'));
-        }
-        if (text.length) {
-            for (const c of text) out.push(railPill(c, cur, false, s));
-        } else if (!servers.length) {
-            out.push(h('div', { class: 'rail-empty', role: 'status' }, 'no rooms yet'));
-        }
-        if (voice.length) {
-            out.push(groupHeader('voice', s, 'voice'));
-            for (const c of voice) out.push(railPill(c, cur, true, s));
-        }
-        return h('div', { class: 'ca-rail-channels' }, ...out);
+        const info = channels.filter(c => c.type === 'announcement' || c.type === 'page');
+        const voice = channels.filter(c => c.type === 'voice' || c.type === 'threaded');
+        const text = channels.filter(c => !info.includes(c) && !voice.includes(c));
+        return h('div', { class: 'ca-rail-channels' },
+            ...railGroup('information', s, info, cur, false, null),
+            ...railGroup('text channels', s, text, cur, false, 'text'),
+            ...railGroup('voice channels', s, voice, cur, true, 'voice'));
     };
 
     const dmRailView = (s) => {
