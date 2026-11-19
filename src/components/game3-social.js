@@ -159,6 +159,14 @@ export function ReminderList({ items = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function PinList({ pins = [], emptyText = '', key } = {}) {
+    if (!pins.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-pins' }, ...pins.map((p) => h('li', { key: p.id, class: 'ds-g3-pin' },
+        h('span', { key: 'n', class: 'ds-g3-pin-name' }, p.name),
+        h('span', { key: 'c', class: 'ds-g3-pin-text' }, p.content)
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
