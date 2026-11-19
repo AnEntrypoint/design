@@ -167,6 +167,19 @@ export function PinList({ pins = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function RulesList({ rules = [], emptyText = '', key } = {}) {
+    if (!rules.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-rules' }, ...rules.map((r) => h('li', { key: r.id, class: 'ds-g3-rule' }, r.name)));
+}
+
+export function AnnouncementList({ items = [], emptyText = '', key } = {}) {
+    if (!items.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-announcements' }, ...items.map((a) => h('li', { key: a.id, class: 'ds-g3-announcement' },
+        h('span', { key: 'n', class: 'ds-g3-announcement-name' }, a.name),
+        h('span', { key: 'c', class: 'ds-g3-announcement-text' }, a.content)
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length

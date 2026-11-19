@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList } from './components/game3-social.js';
+import { ServerDiscover, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -405,6 +405,8 @@ export function mountCommunityApp(root, adapter = {}) {
                     A.openServers ? h('button', { key: 'servers', type: 'button', class: 'ds-g3-btn', onclick: () => A.openServers() }, 'servers') : null,
                     A.openGamePrefs ? h('button', { key: 'prefs', type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
                     A.openSurface ? h('button', { key: 'discover', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
+                    A.openSurface ? h('button', { key: 'rules', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('rules') }, 'rules') : null,
+                    A.openSurface ? h('button', { key: 'announcements', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('announcements') }, 'announcements') : null,
                     A.openSurface ? h('button', { key: 'pins', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('pins') }, 'pins') : null,
                     A.openSurface ? h('button', { key: 'reminders', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('reminders') }, 'reminders') : null,
                     A.openSurface ? h('button', { key: 'recap', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('recap') }, 'recap') : null,
@@ -449,6 +451,8 @@ export function mountCommunityApp(root, adapter = {}) {
     };
 
     const surfaceBody = (name, s) => {
+        if (name === 'rules') return RulesList({ rules: s.rules || [], emptyText: 'This server has no rules page yet.' });
+        if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: 'No pinned messages in this channel. Pinning is not available yet: it would publish a pin to the relays.' });
         if (name === 'reminders') return ReminderList({ items: s.reminders || [], emptyText: 'No reminders set. Reminders are kept in this browser only.' });
         if (name === 'recap') return RecapList({ items: s.recap || [], emptyText: 'Nothing new in this channel since you last read it.' });
