@@ -14,11 +14,11 @@ export function VoiceRoom({ name = '', participants = [], selfId = '', muted = f
                 p.muted ? h('span', { key: 'm', class: 'ds-g3-voice-flag' }, 'muted') : null
             ))
         ),
-        h('div', { key: 'k', class: 'ds-g3-voice-controls' },
+        (onToggleMute || onToggleDeafen || onLeave) ? h('div', { key: 'k', class: 'ds-g3-voice-controls' },
             h('button', { key: 'mu', type: 'button', class: 'ds-g3-btn' + (muted ? ' is-on' : ''), 'aria-pressed': muted ? 'true' : 'false', onclick: onToggleMute || null }, muted ? 'Unmute' : 'Mute'),
             h('button', { key: 'de', type: 'button', class: 'ds-g3-btn' + (deafened ? ' is-on' : ''), 'aria-pressed': deafened ? 'true' : 'false', onclick: onToggleDeafen || null }, deafened ? 'Undeafen' : 'Deafen'),
             h('button', { key: 'lv', type: 'button', class: 'ds-g3-btn ds-g3-btn--danger', onclick: onLeave || null }, 'Leave')
-        )
+        ) : null
     );
 }
 

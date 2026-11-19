@@ -4,8 +4,9 @@ import { register } from './debug.js';
 import { Chat, ChatComposer, TypingIndicator } from './components/chat.js';
 import {
     ServerRail, ChannelItem, MemberList, MobileHeader,
-    UserPanel, VoiceStrip, VoiceUser, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
+    UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
+import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection } from './components/game3-room.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
@@ -297,7 +298,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const transmitMode = s.pttUiMode === 'vad' ? 'vad' : 'ptt';
         return h('div', { class: 'vx-view' },
             participants.length
-                ? h('div', { class: 'vx-grid' }, ...participants.map((p, i) => VoiceUser({ ...p, key: p.identity || p.id || i })))
+                ? VoiceRoom({ name: (s.currentChannel && s.currentChannel.name) || '', selfId: s.userId, participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted })) })
                 : voiceEmpty(s),
             audioQueueView(s),
             h('div', { class: 'vx-dock' },
@@ -361,10 +362,11 @@ export function mountCommunityApp(root, adapter = {}) {
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
             h('header', { class: 'app-topbar' },
                 h('span', { class: 'brand' }, brandName, ...brandContext(s, ch)),
-                h('span', {}),
+                (s.unreadTotal > 0 && A.markAllRead) ? CatchUpButton({ count: s.unreadTotal, onClick: () => A.markAllRead() }) : h('span', {}),
                 h('nav', {},
                     h('a', { href: '../', title: 'Home', onclick: (e) => { if (A.goHome) { e.preventDefault(); A.goHome(); } } }, 'home'),
                     h('a', { href: '#', title: 'Servers', onclick: (e) => { e.preventDefault(); A.openServers && A.openServers(); } }, 'servers'),
+                    A.openGamePrefs ? h('a', { href: '#', onclick: (e) => { e.preventDefault(); A.openGamePrefs(); } }, 'preferences') : null,
                     h('a', { href: 'https://github.com/AnEntrypoint/zellous', target: '_blank', rel: 'noopener' }, 'source ->'),
                 ),
             ),
@@ -394,6 +396,7 @@ export function mountCommunityApp(root, adapter = {}) {
             s.voiceSettingsOpen ? VoiceSettingsModal({ open: true, mode: s.voiceMode || 'ptt', inputId: s.inputDeviceId, outputId: s.outputDeviceId, inputDevices: s.inputDevices || [], outputDevices: s.outputDevices || [], vadThreshold: s.vadThreshold, rnnoise: !!s.rnnoiseEnabled, autoGain: !!s.autoGainEnabled, forceTurn: !!s.forceTurnEnabled, bitrate: s.voiceBitrate, volume: s.masterVolume, onChange: (p) => A.voiceSettingsChange && A.voiceSettingsChange(p), onSave: () => A.voiceSettingsSave && A.voiceSettingsSave(), onCancel: () => A.voiceSettingsClose && A.voiceSettingsClose(), onClose: () => A.voiceSettingsClose && A.voiceSettingsClose() }) : null,
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
+            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
