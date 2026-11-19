@@ -124,6 +124,16 @@ export function EventsList({ events = [], now = Date.now(), emptyText = '', key 
     )));
 }
 
+export function LeaderboardList({ rows = [], emptyText = '', key } = {}) {
+    if (!rows.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ol', { key, class: 'ds-g3-leaderboard' }, ...rows.map((r, i) => h('li', { key: r.id, class: 'ds-g3-leaderboard-row' },
+        h('span', { key: 'r', class: 'ds-g3-leaderboard-rank' }, String(i + 1)),
+        h('span', { key: 'n', class: 'ds-g3-leaderboard-name' }, r.name),
+        h('span', { key: 'l', class: 'ds-g3-leaderboard-level' }, 'Lv ' + r.level),
+        h('span', { key: 'x', class: 'ds-g3-leaderboard-xp' }, r.xp + ' xp')
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
