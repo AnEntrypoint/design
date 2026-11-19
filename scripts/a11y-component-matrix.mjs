@@ -14,8 +14,6 @@ export const THEME_MODES = [
     { name: 'dark', theme: 'dark', scheme: 'light' },
     { name: 'ink', theme: 'ink', scheme: 'light' },
     { name: 'thebird', theme: 'thebird', scheme: 'light' },
-    { name: 'herd', theme: 'herd', scheme: 'light' },
-    { name: 'herd-ink', theme: 'herd-ink', scheme: 'light' },
     { name: 'dark+brand', theme: 'dark', scheme: 'light', accent: 'brand' },
     { name: 'dark+purple', theme: 'dark', scheme: 'light', accent: 'purple' },
     { name: 'dark+green', theme: 'dark', scheme: 'light', accent: 'green' },
