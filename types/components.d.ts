@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 319 exported symbols across 33 source files.
+// 327 exported symbols across 34 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -3944,4 +3944,126 @@ export declare function monthLabel(monthDate?: any, locale?: any): VNode;
 
 /** Create a damage numbers manager. */
 export declare function createDamageNumbers(scene?: any, camera?: any, config?: any): any;
+
+// ---- src/components/game3-social.js ----------------------------------
+
+/**
+ * Props for {@link GameEventCard} (src/components/game3-social.js).
+ */
+export interface GameEventCardProps {
+    title?: any;
+    /** @default '' */
+    about?: string;
+    /** @default '' */
+    byName?: string;
+    /** @default 0 */
+    at?: number;
+    /** @default Date.now() */
+    now?: any;
+    /** @default 0 */
+    interested?: number;
+    /** @default false */
+    isInterested?: boolean;
+    /** @default false */
+    canCancel?: boolean;
+    onRsvp?: (...args: any[]) => any;
+    onCancel?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function GameEventCard(props?: GameEventCardProps): VNode;
+
+/**
+ * Props for {@link GameEventList} (src/components/game3-social.js).
+ */
+export interface GameEventListProps {
+    /** @default [] */
+    events?: any[];
+    /** @default Date.now() */
+    now?: any;
+    /** @default '' */
+    viewerId?: string;
+    /** @default false */
+    isOwner?: boolean;
+    onRsvp?: (...args: any[]) => any;
+    onCancel?: (...args: any[]) => any;
+    onCreate?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function GameEventList(props?: GameEventListProps): VNode;
+
+/**
+ * Props for {@link GameEventComposer} (src/components/game3-social.js).
+ */
+export interface GameEventComposerProps {
+    onCreate?: (...args: any[]) => any;
+    /** @default '' */
+    defaultAt?: string;
+    key?: string | number;
+}
+export declare function GameEventComposer(props?: GameEventComposerProps): VNode;
+
+/**
+ * Props for {@link StickerPicker} (src/components/game3-social.js).
+ */
+export interface StickerPickerProps {
+    /** @default [] */
+    stickers?: any[];
+    /** @default '' */
+    server?: string;
+    onPick?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function StickerPicker(props?: StickerPickerProps): VNode;
+
+/**
+ * Props for {@link SoundBoard} (src/components/game3-social.js).
+ */
+export interface SoundBoardProps {
+    /** @default [] */
+    sounds?: any[];
+    onPlay?: (...args: any[]) => any;
+    /** @default false */
+    disabled?: boolean;
+    key?: string | number;
+}
+export declare function SoundBoard(props?: SoundBoardProps): VNode;
+
+/**
+ * Props for {@link RadioPill} (src/components/game3-social.js).
+ */
+export interface RadioPillProps {
+    /** @default false */
+    playing?: boolean;
+    /** @default '' */
+    channel?: string;
+    onToggle?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function RadioPill(props?: RadioPillProps): VNode;
+
+/**
+ * Props for {@link KeywordAlerts} (src/components/game3-social.js).
+ */
+export interface KeywordAlertsProps {
+    /** @default [] */
+    words?: any[];
+    /** @default 12 */
+    max?: number;
+    onChange?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function KeywordAlerts(props?: KeywordAlertsProps): VNode;
+
+/**
+ * Props for {@link ServerDiscover} (src/components/game3-social.js).
+ */
+export interface ServerDiscoverProps {
+    /** @default [] */
+    servers?: any[];
+    /** @default [] */
+    joinedIds?: any[];
+    onJoin?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function ServerDiscover(props?: ServerDiscoverProps): VNode;
 

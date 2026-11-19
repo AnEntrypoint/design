@@ -163,3 +163,5 @@ export {
 export {
     createDamageNumbers
 } from './components/game-editor-kit.js';
+
+export { GameEventCard, GameEventList, GameEventComposer, StickerPicker, SoundBoard, RadioPill, KeywordAlerts, ServerDiscover } from './components/game3-social.js';

@@ -37,3 +37,48 @@
 .ds-invite-name { font-weight: 600; }
 .ds-invite-join { justify-self: start; min-block-size: 36px; padding-inline: var(--space-3); border-radius: var(--r-2); border: 0; background: var(--accent); color: var(--on-accent); cursor: pointer; }
 .ds-invite-join:disabled { opacity: 0.6; cursor: default; }
+
+.ds-g3-event-list { display: grid; gap: var(--space-2); }
+.ds-g3-event { display: grid; gap: var(--space-1); padding: var(--space-3); border: 1px solid var(--border); border-radius: var(--r-2); }
+.ds-g3-event.is-live { border-color: var(--accent); }
+.ds-g3-event-live { font-size: var(--fs-micro); font-weight: 600; color: var(--accent); }
+.ds-g3-event-when, .ds-g3-event-meta, .ds-g3-event-empty { font-size: var(--fs-xs); color: var(--fg-2); }
+.ds-g3-event-title { margin: 0; font-size: var(--fs-sm); font-weight: 600; }
+.ds-g3-event-about { margin: 0; color: var(--fg-2); }
+.ds-g3-event-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.ds-g3-event-actions { display: flex; gap: var(--space-1); }
+.ds-g3-event-composer { display: grid; gap: var(--space-2); padding-block-start: var(--space-3); border-block-start: 1px solid var(--border); }
+
+.ds-g3-btn { min-block-size: 36px; padding-inline: var(--space-3); border-radius: var(--r-2); border: 1px solid var(--border); background: var(--bg-2); color: inherit; cursor: pointer; }
+.ds-g3-btn:disabled { opacity: 0.6; cursor: default; }
+.ds-g3-btn.is-on { border-color: var(--accent); color: var(--accent); }
+.ds-g3-btn--ghost { background: transparent; }
+.ds-g3-input { min-block-size: 36px; padding-inline: var(--space-2); border-radius: var(--r-2); border: 1px solid var(--border); background: var(--bg-2); color: inherit; font: inherit; }
+
+.ds-g3-stickers { display: grid; gap: var(--space-2); }
+.ds-g3-stickers-head { font-size: var(--fs-xs); color: var(--fg-2); }
+.ds-g3-stickers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: var(--space-1); }
+.ds-g3-sticker { min-block-size: 64px; padding: var(--space-1); border: 0; border-radius: var(--r-2); background: transparent; cursor: pointer; }
+.ds-g3-sticker img { inline-size: 100%; block-size: auto; }
+
+.ds-g3-soundboard { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ds-g3-sound { display: inline-flex; align-items: center; gap: var(--space-1); min-block-size: 36px; padding-inline: var(--space-2); border-radius: var(--r-pill); border: 1px solid var(--border); background: var(--bg-2); color: inherit; cursor: pointer; }
+.ds-g3-sound:disabled { opacity: 0.6; cursor: default; }
+.ds-g3-sound-glyph { font-size: var(--fs-sm); }
+
+.ds-g3-radio { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--r-2); background: var(--bg-2); }
+.ds-g3-radio.is-playing .ds-g3-radio-text { color: var(--accent); }
+.ds-g3-radio-text { flex: 1; min-inline-size: 0; font-size: var(--fs-xs); }
+.ds-g3-radio-eq { display: inline-flex; align-items: flex-end; gap: var(--space-hair); block-size: 14px; }
+.ds-g3-radio-eq i { display: inline-block; inline-size: 3px; block-size: 100%; background: var(--accent); }
+
+.ds-g3-keywords { display: grid; gap: var(--space-1); }
+.ds-g3-keywords-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ds-g3-keyword { display: inline-flex; align-items: center; gap: var(--space-1); padding-inline: var(--space-2); border-radius: var(--r-pill); background: var(--bg-2); font-size: var(--fs-xs); }
+.ds-g3-keyword-remove { border: 0; background: transparent; color: inherit; cursor: pointer; min-inline-size: 24px; min-block-size: 24px; }
+
+.ds-g3-discover-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); }
+.ds-g3-discover-row { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: var(--space-2); }
+.ds-g3-discover-tile { display: inline-flex; align-items: center; justify-content: center; inline-size: 36px; block-size: 36px; border-radius: var(--r-2); background: var(--ds-tile); color: var(--on-accent); font-size: var(--fs-xs); font-weight: 600; }
+.ds-g3-discover-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ds-g3-discover-meta, .ds-g3-discover-empty { font-size: var(--fs-xs); color: var(--fg-2); }
