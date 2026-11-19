@@ -54,7 +54,7 @@ export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen,
 
 const MEMBER_STATUS_CLASS = { online: 'online', idle: 'idle', busy: 'busy', focus: 'status-focus' };
 
-export function MemberItem({ identity, name, color, nameColor, status = 'online', onClick } = {}) {
+export function MemberItem({ identity, name, color, nameColor, status = 'online', suffix, onClick } = {}) {
     const initial = avatarInitial(name || identity);
     const statusClass = MEMBER_STATUS_CLASS[status];
     return h('div', {
@@ -65,7 +65,8 @@ export function MemberItem({ identity, name, color, nameColor, status = 'online'
             h('span', { class: 'cm-member-status' + (statusClass ? ' ' + statusClass : '') }),
             initial
         ),
-        h('span', { class: 'cm-member-name', style: nameColor ? `color:${nameColor}` : null }, name || identity)
+        h('span', { class: 'cm-member-name', style: nameColor ? `color:${nameColor}` : null }, name || identity),
+        suffix ? h('span', { class: 'cm-member-suffix' }, suffix) : null
     );
 }
 
@@ -132,7 +133,7 @@ export function MemberList({ categories = [], open, loading = false, onSelectMem
                 h('span', { class: 'cm-member-empty-text' }, userId ? 'Only you for now.' : 'no members in this channel yet'))
             : null,
         ...categories.flatMap(cat => [
-            h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label}: ${cat.members.length}`),
+            h('div', { class: 'cm-member-category', key: cat.label }, `${cat.label} (${cat.members.length})`),
             ...cat.members.map((m, i) => MemberItem({
                 ...m, key: m.identity || i,
                 onClick: onSelectMember ? (e) => onSelectMember(m, e) : undefined,

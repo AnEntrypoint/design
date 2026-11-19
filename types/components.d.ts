@@ -2011,6 +2011,7 @@ export interface MemberItemProps {
     nameColor?: any;
     /** @default 'online' */
     status?: string;
+    suffix?: any;
     onClick?: (...args: any[]) => any;
 }
 export declare function MemberItem(props?: MemberItemProps): VNode;
