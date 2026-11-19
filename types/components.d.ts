@@ -1977,6 +1977,8 @@ export interface UserPanelProps {
     onSettings?: (...args: any[]) => any;
     onMembers?: (...args: any[]) => any;
     membersOpen?: any;
+    level?: any;
+    xpPct?: any;
 }
 export declare function UserPanel(props?: UserPanelProps): VNode;
 

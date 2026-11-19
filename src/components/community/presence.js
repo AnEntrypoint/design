@@ -22,7 +22,7 @@ export function VoiceUser({ identity, speaking, color, muted, camera, videoEl } 
     );
 }
 
-export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen, onSettings, onMembers, membersOpen } = {}) {
+export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen, onSettings, onMembers, membersOpen, level, xpPct } = {}) {
     const initial = avatarInitial(name);
     const handleSettings = (e) => {
         e.preventDefault();
@@ -41,7 +41,13 @@ export function UserPanel({ name, tag, color, muted, deafened, onMute, onDeafen,
         ),
         h('div', { class: 'cm-user-info' },
             h('div', { class: 'cm-user-name' }, name || 'You'),
-            tag ? h('div', { class: 'cm-user-tag' }, tag) : null
+            tag ? h('div', { class: 'cm-user-tag' }, tag) : null,
+            level !== undefined ? h('div', { class: 'cm-user-level' },
+                h('span', { class: 'cm-user-level-label' }, 'Lv ' + level),
+                h('span', { class: 'cm-user-level-bar', role: 'progressbar', 'aria-label': 'XP to next level', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.round(xpPct || 0)) },
+                    h('span', { class: 'cm-user-level-fill', ref: (el) => { if (el) el.style.width = Math.round(xpPct || 0) + '%'; } })
+                )
+            ) : null
         ),
         h('div', { class: 'cm-user-controls' },
             h('button', { class: 'cm-user-btn' + (muted ? ' muted' : ''), onclick: onMute, 'aria-label': muted ? 'Unmute microphone' : 'Mute microphone', 'aria-pressed': muted ? 'true' : 'false' }, Icon(muted ? 'mic-off' : 'mic')),
