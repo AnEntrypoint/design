@@ -143,6 +143,14 @@ export function PollList({ polls = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function RecapList({ items = [], emptyText = '', key } = {}) {
+    if (!items.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-recap' }, ...items.map((r) => h('li', { key: r.id, class: 'ds-g3-recap-item' },
+        h('span', { key: 'n', class: 'ds-g3-recap-name' }, r.name),
+        h('span', { key: 'c', class: 'ds-g3-recap-text' }, r.content)
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
