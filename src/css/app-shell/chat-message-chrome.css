@@ -133,7 +133,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .chat-typing span {
-    animation: chat-typing-fade 1.4s infinite ease-in-out;
+    animation: chat-typing-fade 1.4s ease-in-out 10;
   }
   .chat-typing span:nth-child(1) { animation-delay: 0s; }
   .chat-typing span:nth-child(2) { animation-delay: 0.18s; }

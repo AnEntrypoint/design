@@ -440,7 +440,7 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .ds-upload-bar.indeterminate .ds-upload-fill {
-    animation: ds-upload-marquee 1.1s ease-in-out infinite;
+    animation: ds-upload-marquee 1.1s ease-in-out 10;
   }
 }
 @keyframes ds-upload-marquee {
