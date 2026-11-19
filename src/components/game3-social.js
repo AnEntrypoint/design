@@ -114,6 +114,16 @@ export function KeywordAlerts({ words = [], max = 12, onChange, key } = {}) {
     );
 }
 
+export function EventsList({ events = [], now = Date.now(), emptyText = '', key } = {}) {
+    if (!events.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-events' }, ...events.map((e) => h('li', { key: e.id, class: 'ds-g3-event' },
+        h('span', { key: 't', class: 'ds-g3-event-title' }, e.title),
+        h('span', { key: 'w', class: 'ds-g3-event-when' }, new Date(e.start).toLocaleString()),
+        e.location ? h('span', { key: 'l', class: 'ds-g3-event-where' }, e.location) : null,
+        (e.start <= now && (!e.end || e.end > now)) ? h('span', { key: 'live', class: 'ds-g3-event-live' }, 'LIVE') : null
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length

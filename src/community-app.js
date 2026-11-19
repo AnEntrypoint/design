@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover } from './components/game3-social.js';
+import { ServerDiscover, EventsList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -405,6 +405,7 @@ export function mountCommunityApp(root, adapter = {}) {
                     A.openServers ? h('button', { key: 'servers', type: 'button', class: 'ds-g3-btn', onclick: () => A.openServers() }, 'servers') : null,
                     A.openGamePrefs ? h('button', { key: 'prefs', type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
                     A.openSurface ? h('button', { key: 'discover', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
+                    A.openSurface ? h('button', { key: 'events', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('events') }, 'events') : null,
                     A.openSurface ? h('button', { key: 'roles', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('roles') }, 'roles') : null,
                     A.openSurface ? h('button', { key: 'split', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('split') }, 'split view') : null,
                 ].filter(Boolean),
@@ -436,13 +437,14 @@ export function mountCommunityApp(root, adapter = {}) {
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate() }) }) : null,
-            s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
+            s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface, s), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
             s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
 
-    const surfaceBody = (name) => {
+    const surfaceBody = (name, s) => {
+        if (name === 'events') { const now = Date.now(); return EventsList({ events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3), now, emptyText: 'No events in this channel yet.' }); }
         if (name === 'discover') return ServerDiscover({ servers: [], emptyText: 'This client has no public server directory yet, so there is nothing to discover. Join a server by its invite instead.' });
         if (name === 'roles') return h('p', { class: 'ds-g3-empty' }, 'This client does not show or assign roles yet.');
         if (name === 'split') return h('p', { class: 'ds-g3-empty' }, 'Split view needs a second channel feed. This client loads one channel at a time, so there is only one view.');
