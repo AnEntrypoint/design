@@ -196,6 +196,18 @@ export function DiscoverList({ servers = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function SplitPane({ channel = null, messages = [], emptyText = '', key } = {}) {
+    if (!channel) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('section', { key, class: 'ds-g3-split' },
+        h('h3', { key: 'h', class: 'ds-g3-split-title' }, '#' + channel.name),
+        messages.length
+            ? h('ul', { key: 'm', class: 'ds-g3-split-messages' }, ...messages.map((m) => h('li', { key: m.id, class: 'ds-g3-split-message' },
+                h('span', { key: 'n', class: 'ds-g3-split-name' }, m.name),
+                h('span', { key: 'c', class: 'ds-g3-split-text' }, m.content))))
+            : h('p', { key: 'e', class: 'ds-g3-empty' }, 'No messages in #' + channel.name + ' yet.')
+    );
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length

@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
+import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -464,7 +464,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'events') { const now = Date.now(); return EventsList({ events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3), now, emptyText: 'No events in this channel yet.' }); }
         if (name === 'discover') return DiscoverList({ servers: s.discoverServers || [], emptyText: 'This client has no public server directory yet, so it lists only the servers you have joined. Join by invite.' });
         if (name === 'roles') return h('p', { class: 'ds-g3-empty' }, 'This client does not show or assign roles yet.');
-        if (name === 'split') return h('p', { class: 'ds-g3-empty' }, 'Split view needs a second channel feed. This client loads one channel at a time, so there is only one view.');
+        if (name === 'split') return SplitPane({ channel: s.splitChannel || null, messages: s.splitMessages || [], emptyText: 'Split view needs a second text channel. This server has none besides the one you are in.' });
         return null;
     };
     let gamePrefWasOpen = false;
