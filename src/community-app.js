@@ -324,6 +324,12 @@ export function mountCommunityApp(root, adapter = {}) {
             participants.length
                 ? VoiceRoom({ name: (s.currentChannel && s.currentChannel.name) || '', selfId: s.userId, participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted })) })
                 : voiceEmpty(s),
+            h('div', { class: 'vx-extras' },
+                h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => { const t = railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page'); if (t && A.switchChannel) A.switchChannel(t); } }, '#' + ((railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page') || {}).name || 'chat')),
+                h('button', { type: 'button', class: 'ds-g3-btn', disabled: true, 'aria-disabled': 'true', title: 'No sound clips are available yet' }, 'Soundboard'),
+                h('button', { type: 'button', class: 'ds-g3-btn', disabled: true, 'aria-disabled': 'true', title: 'No radio stream is available yet' }, 'Lofi radio'),
+                h('p', { class: 'vx-extras-note' }, 'Soundboard and lofi radio are not available: zellous has no sound or radio data yet.')
+            ),
             audioQueueView(s),
             h('div', { class: 'vx-dock' },
                 h('span', { class: 'vx-dock-mode', role: 'status', 'aria-label': 'transmit mode' }, transmitMode === 'vad' ? 'voice activity' : 'push to talk'),

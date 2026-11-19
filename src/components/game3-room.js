@@ -1,4 +1,5 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
+import { Icon } from './shell.js';
 const h = webjsx.createElement;
 
 export function VoiceRoom({ name = '', participants = [], selfId = '', muted = false, deafened = false, onToggleMute, onToggleDeafen, onLeave, key } = {}) {
@@ -11,7 +12,7 @@ export function VoiceRoom({ name = '', participants = [], selfId = '', muted = f
             participants.map((p) => h('li', { key: p.id, class: 'ds-g3-voice-person' + (p.speaking ? ' is-speaking' : '') + (p.id === selfId ? ' is-self' : '') },
                 h('span', { key: 'a', class: 'ds-g3-voice-dot', 'aria-hidden': 'true' }),
                 h('span', { key: 'n' }, p.name),
-                p.muted ? h('span', { key: 'm', class: 'ds-g3-voice-flag' }, 'muted') : null
+                p.muted ? h('span', { key: 'm', class: 'ds-g3-voice-flag', title: 'muted', 'aria-label': 'muted' }, Icon('mic-off', { size: 14 })) : null
             ))
         ),
         (onToggleMute || onToggleDeafen || onLeave) ? h('div', { key: 'k', class: 'ds-g3-voice-controls' },
