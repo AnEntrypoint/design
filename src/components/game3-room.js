@@ -40,19 +40,22 @@ export function GameSettingsSection({ title, children = [], key } = {}) {
 }
 
 export function ServerCreateForm({ colors = [], initialColor = '', onCreate, onCancel, key } = {}) {
-    let name = '';
     let color = initialColor || colors[0] || '';
     const submit = (e) => {
         e.preventDefault();
-        if (name.trim() && onCreate) onCreate({ name: name.trim(), color });
+        const form = e.currentTarget;
+        const input = form.querySelector('input[type=text]');
+        const on = form.querySelector('.ds-g3-swatch.is-on');
+        const nm = input ? input.value.trim() : '';
+        if (nm && onCreate) onCreate({ name: nm, color: on ? on.getAttribute('data-color') : color });
     };
     return h('form', { key, class: 'ds-g3-server-form', onsubmit: submit },
         h('label', { key: 'n', class: 'ds-g3-field' }, 'Server name',
-            h('input', { key: 'i', type: 'text', maxlength: '24', class: 'ds-g3-input', placeholder: 'My server', oninput: (e) => { name = e.target.value; } })
+            h('input', { key: 'i', type: 'text', maxlength: '24', class: 'ds-g3-input', placeholder: 'My server' })
         ),
         h('fieldset', { key: 'c', class: 'ds-g3-swatches' },
             h('legend', null, 'Colour'),
-            colors.map((c) => h('button', { key: c, type: 'button', class: 'ds-g3-swatch' + (c === color ? ' is-on' : ''), 'aria-pressed': c === color ? 'true' : 'false', 'aria-label': c, style: '--ds-swatch:' + c, onclick: (e) => { color = c; e.currentTarget.parentNode.querySelectorAll('.ds-g3-swatch').forEach((b) => b.setAttribute('aria-pressed', String(b === e.currentTarget))); } }))
+            colors.map((c) => h('button', { key: c, type: 'button', class: 'ds-g3-swatch' + (c === color ? ' is-on' : ''), 'data-color': c, 'aria-pressed': c === color ? 'true' : 'false', 'aria-label': c, style: '--ds-swatch:' + c, onclick: (e) => { e.currentTarget.parentNode.querySelectorAll('.ds-g3-swatch').forEach((b) => { const on = b === e.currentTarget; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); }); } }))
         ),
         h('div', { key: 'a', class: 'ds-g3-form-actions' },
             onCancel ? h('button', { key: 'x', type: 'button', class: 'ds-g3-btn ds-g3-btn--ghost', onclick: onCancel }, 'Cancel') : null,

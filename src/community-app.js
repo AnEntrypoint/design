@@ -6,7 +6,7 @@ import {
     ServerRail, ChannelItem, MemberList, MobileHeader,
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
-import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection } from './components/game3-room.js';
+import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
@@ -72,8 +72,8 @@ export function mountCommunityApp(root, adapter = {}) {
     let dropAnywhere = { active: false, count: 0, fileCount: 0 };
     let imageLightbox = { open: false, src: null, alt: '' };
 
-    const railServerAdd = (s) => (A.createOrJoinServer)
-        ? h('a', { href: '#', class: 'ca-rail-server-add', title: 'Create or join a server', 'aria-label': 'create or join a server', onclick: (e) => { e.preventDefault(); A.createOrJoinServer(); } }, Icon('plus', { size: 15 }))
+    const railServerAdd = (s) => (A.openServerCreate)
+        ? h('a', { href: '#', class: 'ca-rail-server-add', title: 'Create a server', 'aria-label': 'create a server', onclick: (e) => { e.preventDefault(); A.openServerCreate(); } }, Icon('plus', { size: 15 }))
         : null;
     const railServerExplore = (s) => (A.explore)
         ? h('a', { href: '#', class: 'ca-rail-server-explore', title: 'Find new servers to join', 'aria-label': 'find new servers to join', onclick: (e) => { e.preventDefault(); A.explore(); } }, Icon('compass', { size: 15 }))
@@ -396,6 +396,7 @@ export function mountCommunityApp(root, adapter = {}) {
             s.voiceSettingsOpen ? VoiceSettingsModal({ open: true, mode: s.voiceMode || 'ptt', inputId: s.inputDeviceId, outputId: s.outputDeviceId, inputDevices: s.inputDevices || [], outputDevices: s.outputDevices || [], vadThreshold: s.vadThreshold, rnnoise: !!s.rnnoiseEnabled, autoGain: !!s.autoGainEnabled, forceTurn: !!s.forceTurnEnabled, bitrate: s.voiceBitrate, volume: s.masterVolume, onChange: (p) => A.voiceSettingsChange && A.voiceSettingsChange(p), onSave: () => A.voiceSettingsSave && A.voiceSettingsSave(), onCancel: () => A.voiceSettingsClose && A.voiceSettingsClose(), onClose: () => A.voiceSettingsClose && A.voiceSettingsClose() }) : null,
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
+            s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate() }) }) : null,
             s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
