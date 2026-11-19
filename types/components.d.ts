@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 327 exported symbols across 34 source files.
+// 333 exported symbols across 35 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -4066,4 +4066,88 @@ export interface ServerDiscoverProps {
     key?: string | number;
 }
 export declare function ServerDiscover(props?: ServerDiscoverProps): VNode;
+
+// ---- src/components/game3-room.js ------------------------------------
+
+/**
+ * Props for {@link VoiceRoom} (src/components/game3-room.js).
+ */
+export interface VoiceRoomProps {
+    /** @default '' */
+    name?: string;
+    /** @default [] */
+    participants?: any[];
+    /** @default '' */
+    selfId?: string;
+    /** @default false */
+    muted?: boolean;
+    /** @default false */
+    deafened?: boolean;
+    onToggleMute?: (...args: any[]) => any;
+    onToggleDeafen?: (...args: any[]) => any;
+    onLeave?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function VoiceRoom(props?: VoiceRoomProps): VNode;
+
+/**
+ * Props for {@link ToggleRow} (src/components/game3-room.js).
+ */
+export interface ToggleRowProps {
+    label?: any;
+    /** @default '' */
+    hint?: string;
+    /** @default false */
+    checked?: boolean;
+    onChange?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function ToggleRow(props?: ToggleRowProps): VNode;
+
+/**
+ * Props for {@link GameSettingsSection} (src/components/game3-room.js).
+ */
+export interface GameSettingsSectionProps {
+    title?: any;
+    /** @default [] */
+    children?: any[];
+    key?: string | number;
+}
+export declare function GameSettingsSection(props?: GameSettingsSectionProps): VNode;
+
+/**
+ * Props for {@link ServerCreateForm} (src/components/game3-room.js).
+ */
+export interface ServerCreateFormProps {
+    /** @default [] */
+    colors?: any[];
+    /** @default '' */
+    initialColor?: string;
+    onCreate?: (...args: any[]) => any;
+    onCancel?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function ServerCreateForm(props?: ServerCreateFormProps): VNode;
+
+/**
+ * Props for {@link CatchUpButton} (src/components/game3-room.js).
+ */
+export interface CatchUpButtonProps {
+    /** @default 0 */
+    count?: number;
+    onClick?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function CatchUpButton(props?: CatchUpButtonProps): VNode;
+
+/**
+ * Props for {@link SplitToggle} (src/components/game3-room.js).
+ */
+export interface SplitToggleProps {
+    /** @default 'single' */
+    mode?: string;
+    onChange?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function SplitToggle(props?: SplitToggleProps): VNode;
 
