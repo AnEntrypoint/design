@@ -113,10 +113,8 @@
 .ds-slide-split-cell--accent {
   position: relative;
   padding-left: calc(var(--space-3-5) + var(--bw-chunk));
-  border-radius: 0 var(--r-2) var(--r-2) 0;
-}
-.ds-slide-split-cell--accent::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: var(--bw-chunk); background: var(--slide-accent, var(--accent));
-  border-radius: var(--bw-chunk) 0 0 var(--bw-chunk);
+  border-radius: var(--r-2);
+  background: color-mix(in oklab, var(--slide-accent, var(--accent)) 12%, transparent);
+  outline: 1px solid color-mix(in oklab, var(--slide-accent, var(--accent)) 55%, transparent);
+  outline-offset: -1px;
 }

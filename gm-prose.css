@@ -180,14 +180,11 @@
   margin: var(--space-3-5) 0;
   padding: var(--space-2-75) var(--space-3-5);
   padding-left: calc(var(--space-3-5) + var(--bw-chunk));
-  background: var(--panel-1);
-  border-radius: 0 var(--r-1) var(--r-1) 0;
+  background: color-mix(in oklab, var(--panel-accent) 12%, var(--panel-1));
+  border-radius: var(--r-1);
   color: var(--panel-text);
-}
-.ds-prose .gm-callout::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: var(--bw-chunk); background: var(--panel-accent);
-  border-radius: var(--bw-chunk) 0 0 var(--bw-chunk);
+  outline: 1px solid color-mix(in oklab, var(--panel-accent) 55%, transparent);
+  outline-offset: -1px;
 }
 .ds-prose .gm-callout .who {
   display: block;
