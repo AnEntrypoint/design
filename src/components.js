@@ -165,3 +165,5 @@ export {
 } from './components/game-editor-kit.js';
 
 export { GameEventCard, GameEventList, GameEventComposer, StickerPicker, SoundBoard, RadioPill, KeywordAlerts, ServerDiscover } from './components/game3-social.js';
+
+export { VoiceRoom, ToggleRow, GameSettingsSection, ServerCreateForm, CatchUpButton, SplitToggle } from './components/game3-room.js';
