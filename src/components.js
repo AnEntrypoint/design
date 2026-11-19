@@ -98,6 +98,8 @@ export {
 
 export { Slider } from './components/slider.js';
 
+export { LevelBar, Leaderboard, PollCard, AwayRecap, InviteCard } from './components/game3.js';
+
 export { Carousel } from './components/carousel.js';
 
 export {

@@ -89,6 +89,7 @@ const appShellSplitFiles = [
     'models-config.css',
     'skills-config.css',
     'slider.css',
+    'game3.css',
     'otp-input.css',
     'carousel.css',
     'calendar.css',

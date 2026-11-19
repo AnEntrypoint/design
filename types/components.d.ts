@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 314 exported symbols across 32 source files.
+// 319 exported symbols across 33 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -2834,6 +2834,81 @@ export interface SliderProps {
     key?: any;
 }
 export declare function Slider(props?: SliderProps): VNode;
+
+// ---- src/components/game3.js -----------------------------------------
+
+/**
+ * Props for {@link LevelBar} (src/components/game3.js).
+ */
+export interface LevelBarProps {
+    /** @default 0 */
+    level?: number;
+    /** @default 0 */
+    xp?: number;
+    /** @default 0 */
+    nextXp?: number;
+    key?: string | number;
+}
+export declare function LevelBar(props?: LevelBarProps): VNode;
+
+/**
+ * Props for {@link Leaderboard} (src/components/game3.js).
+ */
+export interface LeaderboardProps {
+    /** @default [] */
+    rows?: any[];
+    /** @default 'Leaderboard' */
+    title?: string;
+    key?: string | number;
+}
+export declare function Leaderboard(props?: LeaderboardProps): VNode;
+
+/**
+ * Props for {@link PollCard} (src/components/game3.js).
+ */
+export interface PollCardProps {
+    question?: any;
+    /** @default [] */
+    options?: any[];
+    /** @default {} */
+    votes?: Record<string, any>;
+    /** @default null */
+    myVote?: any;
+    onVote?: (...args: any[]) => any;
+    /** @default false */
+    closed?: boolean;
+    key?: string | number;
+}
+export declare function PollCard(props?: PollCardProps): VNode;
+
+/**
+ * Props for {@link AwayRecap} (src/components/game3.js).
+ */
+export interface AwayRecapProps {
+    /** @default '' */
+    since?: string;
+    /** @default [] */
+    lines?: any[];
+    onDismiss?: (...args: any[]) => any;
+    key?: string | number;
+}
+export declare function AwayRecap(props?: AwayRecapProps): VNode;
+
+/**
+ * Props for {@link InviteCard} (src/components/game3.js).
+ */
+export interface InviteCardProps {
+    server?: any;
+    /** @default 0 */
+    members?: number;
+    onJoin?: (...args: any[]) => any;
+    /** @default false */
+    joined?: boolean;
+    /** @default false */
+    dead?: boolean;
+    key?: string | number;
+}
+export declare function InviteCard(props?: InviteCardProps): VNode;
 
 // ---- src/components/carousel.js --------------------------------------
 

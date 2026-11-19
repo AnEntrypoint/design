@@ -25,6 +25,7 @@ const COMPONENT_SHEETS = [
     'src/css/app-shell/plugins-config.css',
     'src/css/app-shell/models-config.css',
     'src/css/app-shell/skills-config.css',
+    'src/css/app-shell/game3.css',
 ];
 
 export function extraCssFiles() {
