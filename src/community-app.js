@@ -7,6 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
+import { ServerDiscover } from './components/game3-social.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
@@ -369,6 +370,9 @@ export function mountCommunityApp(root, adapter = {}) {
                     h('a', { href: 'https://github.com/AnEntrypoint/zellous', target: '_blank', rel: 'noopener' }, 'source ->'),
                 ),
                 A.openGamePrefs ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
+                A.openSurface ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
+                A.openSurface ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('roles') }, 'roles') : null,
+                A.openSurface ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('split') }, 'split view') : null,
             ),
             MobileHeader({ channelType: s.homeMode ? 'dm' : (ch.type || 'text'), channelName: ch.name || '', serverName: s.homeMode ? '' : (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), membersOpen: !!s.memberListOpen, menuOpen: !!s.mobileMenuOpen, onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
@@ -397,12 +401,20 @@ export function mountCommunityApp(root, adapter = {}) {
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate() }) }) : null,
+            s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
             s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
 
+    const surfaceBody = (name) => {
+        if (name === 'discover') return ServerDiscover({ servers: [], emptyText: 'This client has no public server directory yet, so there is nothing to discover. Join a server by its invite instead.' });
+        if (name === 'roles') return h('p', { class: 'ds-g3-empty' }, 'This client does not show or assign roles yet.');
+        if (name === 'split') return h('p', { class: 'ds-g3-empty' }, 'Split view needs a second channel feed. This client loads one channel at a time, so there is only one view.');
+        return null;
+    };
     let gamePrefWasOpen = false;
+    let surfaceWasOpen = false;
     const render = () => {
         const active = document.activeElement;
         const focusedSwitch = active && active.getAttribute && active.getAttribute('role') === 'switch' && root.contains(active) ? active.getAttribute('aria-label') : null;
@@ -414,6 +426,9 @@ export function mountCommunityApp(root, adapter = {}) {
         const open = !!get().gamePrefOpen;
         if (open && !gamePrefWasOpen) setTimeout(() => { const sw = root.querySelector('.ds-g3-prefs [role=switch]'); if (sw) sw.focus(); }, 0);
         gamePrefWasOpen = open;
+        const surf = !!get().gameSurface;
+        if (surf && !surfaceWasOpen) setTimeout(() => { const b = root.querySelector('.ds-g3-surface .ds-g3-btn'); if (b) b.focus(); }, 0);
+        surfaceWasOpen = surf;
     };
 
     const NARROW_VIEWPORT_QUERY = '(max-width: 900px)';

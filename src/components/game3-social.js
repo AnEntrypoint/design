@@ -114,7 +114,7 @@ export function KeywordAlerts({ words = [], max = 12, onChange, key } = {}) {
     );
 }
 
-export function ServerDiscover({ servers = [], joinedIds = [], onJoin, key } = {}) {
+export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
             ? h('ul', { key: 'l', class: 'ds-g3-discover-list' }, servers.map((s) => {
@@ -126,6 +126,6 @@ export function ServerDiscover({ servers = [], joinedIds = [], onJoin, key } = {
                     h('button', { key: 'b', type: 'button', class: 'ds-g3-btn' + (joined ? ' is-on' : ''), disabled: joined ? true : null, onclick: joined || !onJoin ? null : () => onJoin(s.id) }, joined ? 'Joined' : 'Join')
                 );
             }))
-            : h('p', { key: 'e', class: 'ds-g3-discover-empty' }, 'No servers yet.')
+            : h('p', { key: 'e', class: 'ds-g3-discover-empty' }, emptyText || 'No servers yet.')
     );
 }
