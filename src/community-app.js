@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, EventsList, LeaderboardList, PollList, RecapList } from './components/game3-social.js';
+import { ServerDiscover, EventsList, LeaderboardList, PollList, RecapList, ReminderList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -405,6 +405,7 @@ export function mountCommunityApp(root, adapter = {}) {
                     A.openServers ? h('button', { key: 'servers', type: 'button', class: 'ds-g3-btn', onclick: () => A.openServers() }, 'servers') : null,
                     A.openGamePrefs ? h('button', { key: 'prefs', type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
                     A.openSurface ? h('button', { key: 'discover', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
+                    A.openSurface ? h('button', { key: 'reminders', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('reminders') }, 'reminders') : null,
                     A.openSurface ? h('button', { key: 'recap', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('recap') }, 'recap') : null,
                     A.openSurface ? h('button', { key: 'polls', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('polls') }, 'polls') : null,
                     A.openSurface ? h('button', { key: 'leaderboard', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('leaderboard') }, 'leaderboard') : null,
@@ -447,6 +448,7 @@ export function mountCommunityApp(root, adapter = {}) {
     };
 
     const surfaceBody = (name, s) => {
+        if (name === 'reminders') return ReminderList({ items: s.reminders || [], emptyText: 'No reminders set. Reminders are kept in this browser only.' });
         if (name === 'recap') return RecapList({ items: s.recap || [], emptyText: 'Nothing new in this channel since you last read it.' });
         if (name === 'polls') return PollList({ polls: s.polls || [], emptyText: 'No polls in this channel yet. Votes are not counted by this client yet.' });
         if (name === 'leaderboard') return LeaderboardList({ rows: s.leaderboard || [], emptyText: 'No messages in this channel yet, so nobody has earned xp.' });

@@ -151,6 +151,14 @@ export function RecapList({ items = [], emptyText = '', key } = {}) {
     )));
 }
 
+export function ReminderList({ items = [], emptyText = '', key } = {}) {
+    if (!items.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
+    return h('ul', { key, class: 'ds-g3-reminders' }, ...items.map((r) => h('li', { key: r.id, class: 'ds-g3-reminder' },
+        h('span', { key: 't', class: 'ds-g3-reminder-text' }, r.text),
+        h('span', { key: 'w', class: 'ds-g3-reminder-when' }, new Date(r.at).toLocaleString())
+    )));
+}
+
 export function ServerDiscover({ servers = [], joinedIds = [], onJoin, emptyText = '', key } = {}) {
     return h('section', { key, class: 'ds-g3-discover', 'aria-label': 'Discover servers' },
         servers.length
