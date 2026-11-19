@@ -6693,6 +6693,14 @@
 .ds-247420 .ds-g3-segment { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-2); overflow: hidden; }
 .ds-247420 .ds-g3-segment-opt { min-block-size: 32px; padding-inline: var(--space-3); border: 0; background: transparent; color: inherit; cursor: pointer; }
 .ds-247420 .ds-g3-segment-opt.is-on { background: var(--accent); color: var(--on-accent); }
+
+.ds-247420 .ds-g3-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-block-end: 1px solid var(--border); min-inline-size: 0; }
+.ds-247420 .ds-g3-header-channel { display: flex; align-items: baseline; gap: var(--space-1); min-inline-size: 0; overflow: hidden; }
+.ds-247420 .ds-g3-header-brand, .ds-247420 .ds-g3-header-server, .ds-247420 .ds-g3-header-topic { font-size: var(--fs-xs); color: var(--fg-2); white-space: nowrap; }
+.ds-247420 .ds-g3-header-glyph { color: var(--fg-2); }
+.ds-247420 .ds-g3-header-name { margin: 0; font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; }
+.ds-247420 .ds-g3-header-topic { overflow: hidden; text-overflow: ellipsis; }
+.ds-247420 .ds-g3-header-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-1); }
 .ds-247420 .ds-otp { display: inline-flex; gap: var(--space-2); }
 .ds-247420 .ds-otp-box {
   width: var(--ctl-md); height: var(--ctl-md);

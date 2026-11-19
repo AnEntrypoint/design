@@ -8,6 +8,7 @@ import {
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
 import { ServerDiscover } from './components/game3-social.js';
+import { GameHeader } from './components/game3-header.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
@@ -361,19 +362,25 @@ export function mountCommunityApp(root, adapter = {}) {
         },
             DropAnywhereOverlay({ active: dropAnywhere.active, fileCount: dropAnywhere.fileCount }),
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
-            h('header', { class: 'app-topbar' },
-                h('span', { class: 'brand' }, brandName, ...brandContext(s, ch)),
-                (s.unreadTotal > 0 && A.markAllRead) ? CatchUpButton({ count: s.unreadTotal, onClick: () => A.markAllRead() }) : h('span', {}),
-                h('nav', {},
-                    h('a', { href: '../', title: 'Home', onclick: (e) => { if (A.goHome) { e.preventDefault(); A.goHome(); } } }, 'home'),
-                    h('a', { href: '#', title: 'Servers', onclick: (e) => { e.preventDefault(); A.openServers && A.openServers(); } }, 'servers'),
-                    h('a', { href: 'https://github.com/AnEntrypoint/zellous', target: '_blank', rel: 'noopener' }, 'source ->'),
-                ),
-                A.openGamePrefs ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
-                A.openSurface ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
-                A.openSurface ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('roles') }, 'roles') : null,
-                A.openSurface ? h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('split') }, 'split view') : null,
-            ),
+            GameHeader({
+                brand: brandName,
+                serverName: s.homeMode ? '' : (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''),
+                channelName: ch.name || 'general',
+                channelType: ch.type || 'text',
+                topic: ch.topic || '',
+                unread: s.unreadTotal || 0,
+                onCatchUp: A.markAllRead ? () => A.markAllRead() : null,
+                memberListOpen: !!s.memberListOpen,
+                onMembers: A.toggleMembers ? () => A.toggleMembers() : null,
+                buttons: [
+                    A.goHome ? h('button', { key: 'home', type: 'button', class: 'ds-g3-btn', onclick: () => A.goHome() }, 'home') : null,
+                    A.openServers ? h('button', { key: 'servers', type: 'button', class: 'ds-g3-btn', onclick: () => A.openServers() }, 'servers') : null,
+                    A.openGamePrefs ? h('button', { key: 'prefs', type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
+                    A.openSurface ? h('button', { key: 'discover', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
+                    A.openSurface ? h('button', { key: 'roles', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('roles') }, 'roles') : null,
+                    A.openSurface ? h('button', { key: 'split', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('split') }, 'split view') : null,
+                ].filter(Boolean),
+            }),
             MobileHeader({ channelType: s.homeMode ? 'dm' : (ch.type || 'text'), channelName: ch.name || '', serverName: s.homeMode ? '' : (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), membersOpen: !!s.memberListOpen, menuOpen: !!s.mobileMenuOpen, onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),

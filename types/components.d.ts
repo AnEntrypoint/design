@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 333 exported symbols across 35 source files.
+// 334 exported symbols across 36 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -4152,4 +4152,32 @@ export interface SplitToggleProps {
     key?: string | number;
 }
 export declare function SplitToggle(props?: SplitToggleProps): VNode;
+
+// ---- src/components/game3-header.js ----------------------------------
+
+/**
+ * Props for {@link GameHeader} (src/components/game3-header.js).
+ */
+export interface GameHeaderProps {
+    /** @default '' */
+    brand?: string;
+    /** @default '' */
+    serverName?: string;
+    /** @default '' */
+    channelName?: string;
+    /** @default 'text' */
+    channelType?: 'text' | 'voice' | (string & {});
+    /** @default '' */
+    topic?: string;
+    /** @default 0 */
+    unread?: number;
+    /** @default false */
+    memberListOpen?: boolean;
+    onCatchUp?: (...args: any[]) => any;
+    onMembers?: (...args: any[]) => any;
+    /** @default [] */
+    buttons?: any[];
+    key?: string | number;
+}
+export declare function GameHeader(props?: GameHeaderProps): VNode;
 

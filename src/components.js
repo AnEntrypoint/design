@@ -167,3 +167,5 @@ export {
 export { GameEventCard, GameEventList, GameEventComposer, StickerPicker, SoundBoard, RadioPill, KeywordAlerts, ServerDiscover } from './components/game3-social.js';
 
 export { VoiceRoom, ToggleRow, GameSettingsSection, ServerCreateForm, CatchUpButton, SplitToggle } from './components/game3-room.js';
+
+export { GameHeader } from './components/game3-header.js';
