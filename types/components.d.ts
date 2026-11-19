@@ -949,6 +949,8 @@ export interface ChatComposerProps {
     streamingSince?: any;
     detectAttachment?: any;
     mentionFiles?: any;
+    maxLength?: any;
+    onKeyDown?: (...args: any[]) => any;
 }
 export declare function ChatComposer(props?: ChatComposerProps): VNode;
 

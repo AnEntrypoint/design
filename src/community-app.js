@@ -254,6 +254,28 @@ export function mountCommunityApp(root, adapter = {}) {
         });
     };
 
+    const railOrder = (s) => {
+        const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
+        const info = channels.filter(c => c.type === 'announcement' || c.type === 'page');
+        const voice = channels.filter(c => c.type === 'voice' || c.type === 'threaded');
+        return [...info, ...channels.filter(c => !info.includes(c) && !voice.includes(c)), ...voice];
+    };
+
+    const composerKey = (e, ta, s, ch) => {
+        if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+            const order = railOrder(s);
+            const idx = order.findIndex(c => c.id === ch.id);
+            const next = order[(idx + (e.key === 'ArrowUp' ? -1 : 1) + order.length) % order.length];
+            if (next && A.switchChannel) { e.preventDefault(); A.switchChannel(next); }
+            return;
+        }
+        if (e.key === 'ArrowUp' && !ta.value && A.setInput) {
+            const mine = (s.messages || []).filter(m => String(m.userId) === String(s.userId));
+            const last = mine[mine.length - 1];
+            if (last) { e.preventDefault(); A.setInput(last.content || ''); }
+        }
+    };
+
     const chatView = (s) => {
         const ch = s.currentChannel || {};
         const sub = s.homeMode ? 'encrypted' : ch.type === 'voice' ? 'voice' : ch.type === 'forum' ? 'forum' : ch.type === 'page' ? 'page' : ch.type === 'announcement' ? 'announcement' : 'public';
@@ -274,6 +296,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 placeholder: s.composerLockedReason ? s.composerLockedReason : rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
                 onInput: (v) => A.setInput && A.setInput(v),
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
+                maxLength: 190,
+                onKeyDown: (e, ta) => composerKey(e, ta, s, ch),
                 onAttach: (!s.composerLockedReason && A.attachFiles) ? (files) => A.attachFiles(files) : null,
                 disabled: !!s.composerLockedReason, disabledReason: s.composerLockedReason || undefined,
             })),

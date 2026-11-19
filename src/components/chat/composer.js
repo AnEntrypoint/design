@@ -9,7 +9,7 @@ const h = webjsx.createElement;
 
 const EMOJI_TRIGGER_RE = /(?:^|\s)(:([a-zA-Z0-9_+-]{0,24}))$/;
 
-export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, placeholder = 'message…', disabled, disabledReason, label, context, onPasteFiles, onDropFiles, onAttach, streamingSince, detectAttachment, mentionFiles }) {
+export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, placeholder = 'message…', disabled, disabledReason, label, context, onPasteFiles, onDropFiles, onAttach, streamingSince, detectAttachment, mentionFiles, maxLength, onKeyDown }) {
     let taEl = null;
     let attachEl = null;
     const attachRef = (el) => { if (el) attachEl = el; };
@@ -142,7 +142,7 @@ export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, 
         contextLine,
         triggerPicker,
         mentionPicker,
-        h('textarea', { ref: taRef, placeholder, rows: 1,
+        h('textarea', { ref: taRef, placeholder, rows: 1, maxLength: maxLength || null,
             'aria-label': label || (disabled && disabledReason ? 'message input: ' + disabledReason : 'message input'),
             disabled: !!disabled, 'aria-disabled': disabled ? 'true' : null,
             oninput: autoGrow,
@@ -160,6 +160,7 @@ export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, 
                 }
             },
             onkeydown: (e) => {
+                if (onKeyDown) onKeyDown(e, taEl);
                 if (e.key === 'Escape') {
                     if (!busy) { e.currentTarget.blur(); return; }
                     if (onCancel) { e.preventDefault(); onCancel(e); return; }
@@ -168,6 +169,7 @@ export function ChatComposer({ value, onInput, onSend, onEmoji, onCancel, busy, 
                 if (e.key === ';' && e.ctrlKey) { e.preventDefault(); onEmoji && onEmoji(e); }
             } }),
         disabled ? null : h('div', { class: 'chat-composer-hint' }, isCoarsePointer() ? 'Tap Send to send' : 'Enter to send · Shift+Enter for a new line'),
+        (maxLength && value && value.length > 150) ? h('span', { class: 'chat-composer-count', 'aria-live': 'off' }, String(maxLength - value.length)) : null,
         (busy && streamingSince) ? ChatComposerElapsed({ streamingSince }) : null,
         h('div', { class: 'chat-composer-toolbar' },
             onAttach ? h('input', { ref: attachRef, type: 'file', multiple: true, class: 'chat-composer-attach-input', tabindex: '-1', 'aria-hidden': 'true',
