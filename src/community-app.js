@@ -138,8 +138,8 @@ export function mountCommunityApp(root, adapter = {}) {
         const active = cur.id === c.id;
         const inVoice = isVoice && s.voiceConnected && s.voiceChannelName === c.name;
         const glyph = inVoice ? h('span', { class: 'glyph glyph-voice', 'aria-hidden': 'true' }, h('span', { class: 'ds-dot ds-dot-live' }))
-            : (c.type === 'threaded' ? h('span', { class: 'glyph glyph-threaded', 'aria-hidden': 'true' }, Icon('circle-dot', { size: 15 }))
-                : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(CHANNEL_ICON[c.type] || 'hash', { size: 15 })));
+            : (c.type === 'threaded' ? h('span', { class: 'glyph glyph-threaded', 'aria-hidden': 'true' }, Icon('circle-dot', { size: 20 }))
+                : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(CHANNEL_ICON[c.type] || 'hash', { size: 20 })));
         const canReorder = !!s.canManage && !!A.reorderChannel;
         const dropAllowed = () => !!railDragId && railDragId !== c.id;
         return h('a', {

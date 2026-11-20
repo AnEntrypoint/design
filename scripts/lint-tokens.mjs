@@ -115,7 +115,7 @@ const ZINDEX_RE = /\bz-index\s*:\s*-?\d/;
 const TRANSITION_ALL_RE = /\btransition(?:-property)?\s*:\s*[^;}]*\ball\b/;
 const IMPORTANT_RE = /!\s*important/;
 
-const ALLOW = { 'community-app.css': ['#1e1f22', '#313338', '#dbdee1', '#5865f2', '#23a55a', '#35363c', '#fff'] };
+const ALLOW = { 'community-app.css': ['#1e1f22', '#313338', '#dbdee1', '#5865f2', '#23a55a', '#35363c', '#fff', '#2b2d31', '#80848e', '#404249', '#f23f43'] };
 
 const RADIUS_ALLOW = { 'community-app.css': ['border-radius: 16px', 'border-radius: 1px'] };
 

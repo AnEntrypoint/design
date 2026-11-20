@@ -173,13 +173,13 @@ html.ds-247420 .ca-rail-servers a.ca-rail-server-add:hover { background: #23a55a
 html.ds-247420 .ca-rail-channels {
   display: flex;
   flex-direction: column;
-  gap: var(--space-hair);
-  width: var(--ca-channel-column-width);
-  min-width: var(--ca-channel-column-width);
-  padding: var(--space-2);
+  gap: 0;
+  width: 240px;
+  min-width: 240px;
+  padding: 0;
   overflow-y: auto;
   overflow-x: hidden;
-
+  background: #2b2d31;
 }
 html.ds-247420 .ca-rail-channels .group {
   font-size: var(--fs-micro);
@@ -218,42 +218,46 @@ html.ds-247420 .ca-rail-channels .group-add-btn:hover {
 html.ds-247420 .ca-rail-channels a {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1-75) var(--space-2);
-  border-radius: var(--r-1);
-  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+  box-sizing: border-box;
+  gap: 6px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 8px;
+  margin: 1px 0;
+  border-radius: var(--r-0);
+  color: #80848e;
   text-decoration: none;
-  font-size: var(--fs-sm, 14px);
+  font-size: var(--fs-body);
+  font-weight: 500;
   line-height: 1.2;
   transition: background 0.1s, color 0.1s;
 }
-html.ds-247420 .ca-rail-channels a:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
-html.ds-247420 .ca-rail-channels a.active {
-  background: color-mix(in oklab, var(--accent) 34%, transparent);
-  color: var(--fg);
-  font-weight: var(--fw-medium, 500);
-  box-shadow: inset var(--space-half) 0 0 0 var(--accent-ink, var(--accent));
-}
+html.ds-247420 .ca-rail-channels a:hover { background: #35373c; color: #dbdee1; }
+html.ds-247420 .ca-rail-channels a.active { background: #404249; color: #fff; }
 html.ds-247420 .ca-rail-channels a .glyph {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
+  width: 20px;
   flex-shrink: 0;
-  color: var(--fg-3, currentColor);
+  color: #80848e;
 }
+html.ds-247420 .ca-rail-channels a:hover .glyph,
+html.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
 html.ds-247420 .ca-rail-channels a .glyph-voice { color: var(--presence-online, var(--green)); }
 html.ds-247420 .ca-rail-channels a .glyph-announcement { color: var(--accent); }
 html.ds-247420 .ca-rail-channels a > span:nth-child(2) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 html.ds-247420 .ca-rail-channels a .count {
   flex-shrink: 0;
-  min-width: 18px;
-  padding: 0 var(--space-1-5);
+  min-width: 16px;
+  height: 16px;
+  padding: 0 5px;
   border-radius: var(--r-1);
-  background: var(--accent);
-  color: var(--on-accent);
+  background: #f23f43;
+  color: #fff;
   font-size: var(--fs-micro);
-  font-weight: var(--fw-semibold, 600);
+  font-weight: 700;
+  line-height: 16px;
   text-align: center;
 }
 html.ds-247420 .ca-rail-channels .rail-empty {
