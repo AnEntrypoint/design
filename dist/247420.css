@@ -13352,6 +13352,50 @@
 .ds-247420.ds-247420 .ds-g3-ibtn:hover { background: #3f4248; color: #dbdee1; }
 .ds-247420.ds-247420 .ds-g3-ibtn.red { color: #f23f43; }
 
+.ds-247420.ds-247420 .ds-g3-evm {
+  width: 520px;
+  max-width: 94vw;
+  max-height: 86vh;
+  background: #313338;
+  border-radius: var(--r-1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 24px #000a;
+}
+.ds-247420.ds-247420 .ds-g3-evh {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  font-size: var(--fs-rail-tile);
+  color: #f2f3f5;
+  border-bottom: 1px solid #26272b;
+}
+.ds-247420.ds-247420 .ds-g3-evt2 { display: flex; gap: 8px; align-items: center; }
+.ds-247420.ds-247420 .ds-g3-evx { cursor: pointer; display: flex; color: #b5bac1; }
+.ds-247420.ds-247420 .ds-g3-evl { overflow-y: auto; padding: 12px 16px; flex: 1; }
+.ds-247420.ds-247420 .ds-g3-ev {
+  background: #2b2d31;
+  border-radius: var(--r-1);
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.ds-247420.ds-247420 .ds-g3-evtitle { margin: 4px 0 17px; color: #f2f3f5; font-size: 17px; }
+.ds-247420.ds-247420 .ds-g3-evabout { margin: 0 0 6px 14px; color: #b5bac1; font-size: 14px; }
+.ds-247420.ds-247420 .ds-g3-evt { color: #f0b232; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.ds-247420.ds-247420 .ds-g3-evlive {
+  margin-left: auto;
+  background: #23a55a;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: var(--r-0);
+  padding: 1px 5px;
+  letter-spacing: 0.03em;
+}
+.ds-247420.ds-247420 .ds-g3-empty { padding: 28px; text-align: center; color: #b5bac1; font-size: 14px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
