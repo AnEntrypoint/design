@@ -377,6 +377,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 onText: () => { if (textChannel && A.switchChannel) A.switchChannel(textChannel); },
                 onMic: () => A.toggleMic && A.toggleMic(),
                 onLeave: () => A.leaveVoice && A.leaveVoice(),
+                sounds: s.soundboard || [],
+                onSound: (id) => A.playSound && A.playSound(id),
             }),
         );
     };

@@ -13599,6 +13599,10 @@
 .ds-247420.ds-247420 .ds-g3-spoil.shown { background: #ffffff1a; color: inherit; }
 .ds-247420.ds-247420.zellous-spoilers .ds-g3-spoil { background: #ffffff1a; color: inherit; }
 
+.ds-247420.ds-247420 .ds-g3-sboard { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 0 16px 4px; }
+.ds-247420.ds-247420 .ds-g3-sboard span { background: #2b2d31; color: #dbdee1; border-radius: var(--r-1); padding: 8px 12px; font-size: 14px; cursor: pointer; display: flex; gap: 6px; align-items: center; }
+.ds-247420.ds-247420 .ds-g3-sboard span:hover { background: #404249; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

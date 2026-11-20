@@ -3,7 +3,7 @@ import { Icon } from './shell.js';
 
 const h = webjsx.createElement;
 
-export function Game3VoiceView({ participants = [], micMuted = false, textName = 'general', onText, onMic, onLeave } = {}) {
+export function Game3VoiceView({ participants = [], micMuted = false, textName = 'general', onText, onMic, onLeave, sounds = [], onSound } = {}) {
     const tiles = participants.map((p, i) => {
         const initial = String(p.name || '?').trim().slice(0, 1).toUpperCase();
         return h('div', {
@@ -17,6 +17,7 @@ export function Game3VoiceView({ participants = [], micMuted = false, textName =
     });
     return h('div', { class: 'ds-g3-voice' },
         h('div', { class: 'ds-g3-tiles' }, tiles),
+        h('div', { class: 'ds-g3-sboard' }, sounds.map((s) => h('span', { key: s.id, role: 'button', tabindex: '0', onclick: () => onSound && onSound(s.id) }, s.e + ' ' + s.name))),
         h('div', { class: 'ds-g3-vctl' },
             h('div', { class: 'ds-g3-vchat is-disabled', title: 'No radio stream is available yet', 'aria-disabled': 'true' }, '📻 Lofi radio'),
             h('div', { class: 'ds-g3-vchat', role: 'button', tabindex: '0', onclick: onText }, '💬 #' + textName),
