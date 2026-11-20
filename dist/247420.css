@@ -13563,6 +13563,18 @@
 .ds-247420.ds-247420 .ds-g3-tx a:hover { text-decoration: underline; }
 .ds-247420.ds-247420.zellous-ulinks .ds-g3-tx a { text-decoration: underline; }
 
+.ds-247420.ds-247420 .ds-g3-crow { gap: 8px; padding: 2px 48px 2px 16px; margin-top: 0; }
+.ds-247420.ds-247420 .ds-g3-ctime {
+  font-size: 11px;
+  color: #949ba4;
+  width: 62px;
+  flex-shrink: 0;
+  line-height: 22px;
+  text-align: right;
+}
+.ds-247420.ds-247420 .ds-g3-crow .ds-g3-tx { display: inline; }
+.ds-247420.ds-247420 .ds-g3-crow .ds-g3-who { font-size: 15px; margin-right: 4px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

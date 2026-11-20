@@ -14,7 +14,7 @@ export function isJumbo(text) {
 const URL_RE = /(https?:\/\/[^\s<]+)/g;
 const linkify = (value) => String(value || '').split(URL_RE).map((part, i) => (i % 2 === 1 ? h('a', { key: 'l' + i, href: part, target: '_blank', rel: 'noopener' }, part) : part));
 
-export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false } = {}) {
+export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false } = {}) {
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -41,6 +41,13 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
         reactionChips
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
+    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' },
+        replyLine,
+        h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
+        h('div', { key: 'cb', class: 'ds-g3-col' },
+            h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
+            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text))),
+        bar);
     return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') },
         replyLine,
         avatar,

@@ -1097,3 +1097,15 @@ html.ds-247420 .ds-g3-jumbo { font-size: 44px; line-height: 52px; letter-spacing
 html.ds-247420 .ds-g3-tx a { color: #00a8fc; text-decoration: none; }
 html.ds-247420 .ds-g3-tx a:hover { text-decoration: underline; }
 html.ds-247420.zellous-ulinks .ds-g3-tx a { text-decoration: underline; }
+
+html.ds-247420 .ds-g3-crow { gap: 8px; padding: 2px 48px 2px 16px; margin-top: 0; }
+html.ds-247420 .ds-g3-ctime {
+  font-size: 11px;
+  color: #949ba4;
+  width: 62px;
+  flex-shrink: 0;
+  line-height: 22px;
+  text-align: right;
+}
+html.ds-247420 .ds-g3-crow .ds-g3-tx { display: inline; }
+html.ds-247420 .ds-g3-crow .ds-g3-who { font-size: 15px; margin-right: 4px; }
