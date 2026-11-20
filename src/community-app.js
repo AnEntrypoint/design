@@ -14,6 +14,7 @@ import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
 import { Game3UserPanel } from './components/game3-user.js';
 import { Game3EventsPanel } from './components/game3-events.js';
+import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -490,7 +491,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'reminders') return ReminderList({ items: s.reminders || [], emptyText: 'No reminders set. Reminders are kept in this browser only.' });
         if (name === 'recap') return RecapList({ items: s.recap || [], emptyText: 'Nothing new in this channel since you last read it.' });
         if (name === 'polls') return PollList({ polls: s.polls || [], emptyText: 'No polls in this channel yet. Votes are not counted by this client yet.' });
-        if (name === 'leaderboard') return LeaderboardList({ rows: s.leaderboard || [], emptyText: 'No messages in this channel yet, so nobody has earned xp.' });
+        if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, location: e.location, at: e.start })), now, emptyText: 'no events yet.', onClose: () => A.closeSurface && A.closeSurface() }); }
         if (name === 'discover') return DiscoverList({ servers: s.discoverServers || [], emptyText: 'This client has no public server directory yet, so it lists only the servers you have joined. Join by invite.' });
         if (name === 'roles') return h('p', { class: 'ds-g3-empty' }, 'This client does not show or assign roles yet.');
