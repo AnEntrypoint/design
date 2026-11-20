@@ -978,3 +978,30 @@ html.ds-247420 .ds-g3-xpb i {
   border-radius: 3px;
 }
 html.ds-247420 .ds-g3-lbmid small { font-size: 12px; color: #949ba4; }
+
+html.ds-247420 .ds-g3-plist { display: flex; flex-direction: column; gap: 4px; }
+html.ds-247420 .ds-g3-poll {
+  background: #2b2d31;
+  border: 1px solid #1e1f22;
+  border-radius: var(--r-1);
+  padding: 12px;
+  max-width: 460px;
+  margin-top: 4px;
+}
+html.ds-247420 .ds-g3-pq { font-weight: 600; color: #f2f3f5; margin-bottom: 8px; }
+html.ds-247420 .ds-g3-po {
+  position: relative;
+  background: #383a40;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  margin: 6px 0;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: #dbdee1;
+  overflow: hidden;
+}
+html.ds-247420 .ds-g3-po span { position: relative; }
+html.ds-247420 .ds-g3-pt { font-size: 12px; color: #949ba4; margin-top: 6px; }
+html.ds-247420 .ds-g3-empty { padding: 28px; text-align: center; color: #b5bac1; font-size: 14px; }
