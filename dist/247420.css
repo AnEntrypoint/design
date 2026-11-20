@@ -13559,6 +13559,10 @@
 
 .ds-247420.ds-247420 .ds-g3-jumbo { font-size: 44px; line-height: 52px; letter-spacing: 2px; }
 
+.ds-247420.ds-247420 .ds-g3-tx a { color: #00a8fc; text-decoration: none; }
+.ds-247420.ds-247420 .ds-g3-tx a:hover { text-decoration: underline; }
+.ds-247420.ds-247420.zellous-ulinks .ds-g3-tx a { text-decoration: underline; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
