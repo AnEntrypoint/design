@@ -1005,3 +1005,26 @@ html.ds-247420 .ds-g3-po {
 html.ds-247420 .ds-g3-po span { position: relative; }
 html.ds-247420 .ds-g3-pt { font-size: 12px; color: #949ba4; margin-top: 6px; }
 html.ds-247420 .ds-g3-empty { padding: 28px; text-align: center; color: #b5bac1; font-size: 14px; }
+
+html.ds-247420 .ds-g3-aip {
+  background: #2b2d31;
+  border: 1px solid #5865f2;
+  border-radius: var(--r-1);
+  box-shadow: 0 8px 24px #0008;
+  padding: 12px 14px;
+  max-height: 55%;
+  overflow-y: auto;
+}
+html.ds-247420 .ds-g3-aih {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 2px;
+  gap: 8px;
+  color: #f2f3f5;
+  margin-bottom: 6px;
+}
+html.ds-247420 .ds-g3-aiv { flex: 1; font-size: 12px; color: #949ba4; }
+html.ds-247420 .ds-g3-aitx { color: #dbdee1; font-size: 15px; line-height: 1.45; }
+html.ds-247420 .ds-g3-airow b { color: #f2f3f5; font-weight: 500; margin-right: 4px; }
+html.ds-247420 .ds-g3-aiempty { color: #b5bac1; }
