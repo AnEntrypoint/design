@@ -1091,3 +1091,5 @@ html.ds-247420 .ds-g3-switch-knob {
   transition: left 0.15s;
 }
 html.ds-247420 .ds-g3-switch.on .ds-g3-switch-knob { left: 19px; }
+
+html.ds-247420 .ds-g3-jumbo { font-size: 44px; line-height: 52px; letter-spacing: 2px; }

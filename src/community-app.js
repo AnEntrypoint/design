@@ -9,7 +9,7 @@ import {
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
 import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
-import { Game3Message } from './components/game3-message.js';
+import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
 import { Game3UserPanel } from './components/game3-user.js';
@@ -287,7 +287,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: initial(username), avatarColor: avatarColor(m.userId),
                 time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
-                continuation, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId,
+                continuation, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId, jumbo: !!s.jumbo && isJumbo(m.content),
                 onReact: A.reactToMessage ? react : null,
                 onAddReaction: A.reactToMessage ? openPicker : null,
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),

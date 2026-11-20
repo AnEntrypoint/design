@@ -4,7 +4,14 @@ import { Icon } from './shell.js';
 const h = webjsx.createElement;
 const QUICK = ['\u{1F44D}', '\u{2764}\u{FE0F}', '\u{1F602}'];
 
-export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '' } = {}) {
+export function isJumbo(text) {
+    const x = String(text || '').trim();
+    if (!x || x.length > 120 || !/^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\p{Regional_Indicator}|\uFE0F|\u200D|\s)+$/u.test(x)) return false;
+    return (x.match(/\p{Extended_Pictographic}|\p{Regional_Indicator}{2}/gu) || []).length <= 27;
+}
+
+
+export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false } = {}) {
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -27,7 +34,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
             : h('div', { key: 'head', class: 'ds-g3-head' },
                 h('span', { key: 'who', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, time)),
-        h('div', { key: 'tx', class: 'ds-g3-tx' }, text),
+        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, text),
         reactionChips
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
