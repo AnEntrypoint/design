@@ -286,7 +286,7 @@ export function mountCommunityApp(root, adapter = {}) {
             return Game3Message({
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: initial(username), avatarColor: avatarColor(m.userId),
-                time: formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
+                time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
                 continuation, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId,
                 onReact: A.reactToMessage ? react : null,
                 onAddReaction: A.reactToMessage ? openPicker : null,
