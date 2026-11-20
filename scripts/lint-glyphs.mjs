@@ -26,7 +26,7 @@ const DASH_DIRS = [...SCAN_DIRS, 'docs'];
 const DASH_EXT = new Set([...SCAN_EXT, '.md', '.yaml', '.yml']);
 const DASH_RE = /[\u2013\u2014]|&(?:mdash|ndash);|&#(?:0*8211|0*8212);|&#x0*201[34];/i;
 
-const ALLOW = { 'src/components/game3-room.js': ['\u{1F9ED}'], 'src/components/game3-members.js': ['\\u2014', '—'] };
+const ALLOW = { 'src/components/game3-room.js': ['\u{1F9ED}'], 'src/components/game3-members.js': ['\\u2014', '—'], 'src/components/game3-voice.js': ['📻', '💬'] };
 
 function isAllowed(rel, line) {
     const list = ALLOW[rel] || [];

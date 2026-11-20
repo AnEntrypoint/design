@@ -115,9 +115,9 @@ const ZINDEX_RE = /\bz-index\s*:\s*-?\d/;
 const TRANSITION_ALL_RE = /\btransition(?:-property)?\s*:\s*[^;}]*\ball\b/;
 const IMPORTANT_RE = /!\s*important/;
 
-const ALLOW = { 'community-app.css': ['#1e1f22', '#313338', '#dbdee1', '#5865f2', '#23a55a', '#35363c', '#fff', '#2b2d31', '#80848e', '#404249', '#f23f43', '#2e3035', '#949ba4', '#f2f3f5', '#b5bac1', '#4e5058', '#dee0fc', '#26272b', '#393c41', '#0000000a', '#0003', '#383a40', '#6d6f78', '#f0b232', '#35373c'] };
+const ALLOW = { 'community-app.css': ['#1e1f22', '#313338', '#dbdee1', '#5865f2', '#23a55a', '#35363c', '#fff', '#2b2d31', '#80848e', '#404249', '#f23f43', '#2e3035', '#949ba4', '#f2f3f5', '#b5bac1', '#4e5058', '#dee0fc', '#26272b', '#393c41', '#0000000a', '#0003', '#383a40', '#6d6f78', '#f0b232', '#35373c', '#000', '#da373c', '#a12828'] };
 
-const RADIUS_ALLOW = { 'community-app.css': ['border-radius: 16px', 'border-radius: 1px', 'border-top-left-radius: 6px'] };
+const RADIUS_ALLOW = { 'community-app.css': ['border-radius: 16px', 'border-radius: 1px', 'border-top-left-radius: 6px', 'border-radius: 24px'] };
 
 const lineMatchesAny = (table, rel, line) => (table[rel] || []).some((s) => line.includes(s));
 const isAllowed = (rel, line) => lineMatchesAny(ALLOW, rel, line);

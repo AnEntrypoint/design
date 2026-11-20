@@ -11,6 +11,7 @@ import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, P
 import { GameHeader } from './components/game3-header.js';
 import { Game3Message } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
+import { Game3VoiceView } from './components/game3-voice.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -361,31 +362,16 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const voiceView = (s) => {
         const participants = s.voiceParticipants || [];
-        const transmitMode = s.pttUiMode === 'vad' ? 'vad' : 'ptt';
+        const textChannel = railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page');
         return h('div', { class: 'vx-view' },
-            participants.length
-                ? VoiceRoom({ name: (s.currentChannel && s.currentChannel.name) || '', selfId: s.userId, participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted })) })
-                : voiceEmpty(s),
-            h('div', { class: 'vx-extras' },
-                h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => { const t = railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page'); if (t && A.switchChannel) A.switchChannel(t); } }, '#' + ((railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page') || {}).name || 'chat')),
-                h('button', { type: 'button', class: 'ds-g3-btn', disabled: true, 'aria-disabled': 'true', title: 'No sound clips are available yet' }, 'Soundboard'),
-                h('button', { type: 'button', class: 'ds-g3-btn', disabled: true, 'aria-disabled': 'true', title: 'No radio stream is available yet' }, 'Lofi radio'),
-                h('p', { class: 'vx-extras-note' }, 'Soundboard and lofi radio are not available: zellous has no sound or radio data yet.')
-            ),
-            audioQueueView(s),
-            h('div', { class: 'vx-dock' },
-                h('span', { class: 'vx-dock-mode', role: 'status', 'aria-label': 'transmit mode' }, transmitMode === 'vad' ? 'voice activity' : 'push to talk'),
-                s.webcamEnabled ? WebcamPreview({ videoStream: s.webcamStream, resolution: s.webcamResolution, fps: s.webcamFps, enabled: true }) : null,
-                transmitMode === 'vad' ? VadMeter({ level: s.micRawLevel || 0, threshold: s.vadThreshold, onThresholdChange: (t) => A.setVadThreshold && A.setVadThreshold(t) }) : null,
-                transmitMode === 'ptt' ? PttButton({ state: s.isSpeaking ? 'live' : 'idle', mode: transmitMode, disabled: !!s.voiceListenOnly, disabledReason: 'No microphone: listening only', onHoldStart: () => A.pttStart && A.pttStart(), onHoldEnd: () => A.pttStop && A.pttStop() }) : null,
-                VoiceControls({
-                    muted: !!s.micMuted, deafened: !!s.voiceDeafened,
-                    onMic: () => A.toggleMic && A.toggleMic(),
-                    onDeafen: () => A.toggleDeafen && A.toggleDeafen(),
-                    onSettings: () => A.openVoiceSettings && A.openVoiceSettings(),
-                    onLeave: () => A.leaveVoice && A.leaveVoice(),
-                }),
-            ),
+            Game3VoiceView({
+                participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted })),
+                micMuted: !!s.micMuted,
+                textName: textChannel ? textChannel.name : 'general',
+                onText: () => { if (textChannel && A.switchChannel) A.switchChannel(textChannel); },
+                onMic: () => A.toggleMic && A.toggleMic(),
+                onLeave: () => A.leaveVoice && A.leaveVoice(),
+            }),
         );
     };
 
