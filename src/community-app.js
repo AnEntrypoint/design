@@ -10,6 +10,7 @@ import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateF
 import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { Game3Message } from './components/game3-message.js';
+import { Game3MemberList } from './components/game3-members.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -470,7 +471,7 @@ export function mountCommunityApp(root, adapter = {}) {
                     UserPanel({ name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', tag: s.currentUser && s.currentUser.tag, level: s.level, xpPct: s.xpPct, color: avatarColor(s.userId), muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onSettings: () => A.openSettings && A.openSettings(), onMembers: A.toggleMembers ? () => A.toggleMembers() : null, membersOpen: !!s.memberListOpen }),
                     bodyMain,
                 ),
-                MemberList({
+                Game3MemberList({
                     categories: s.memberCategories || [], open: !!s.memberListOpen, userId: s.userId,
                     onSelectMember: (m) => { card = { open: true, member: m }; render(); },
                 }),

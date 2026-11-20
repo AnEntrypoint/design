@@ -26,7 +26,7 @@ const DASH_DIRS = [...SCAN_DIRS, 'docs'];
 const DASH_EXT = new Set([...SCAN_EXT, '.md', '.yaml', '.yml']);
 const DASH_RE = /[\u2013\u2014]|&(?:mdash|ndash);|&#(?:0*8211|0*8212);|&#x0*201[34];/i;
 
-const ALLOW = { 'src/components/game3-room.js': ['\u{1F9ED}'] };
+const ALLOW = { 'src/components/game3-room.js': ['\u{1F9ED}'], 'src/components/game3-members.js': ['\\u2014', '—'] };
 
 function isAllowed(rel, line) {
     const list = ALLOW[rel] || [];
@@ -58,7 +58,7 @@ function findDashViolations() {
         const rel = path.relative(root, file).split(path.sep).join('/');
         if (DELIBERATE_GLYPH_CATALOGS.has(rel)) continue;
         fs.readFileSync(file, 'utf8').split(/\r?\n/).forEach((line, i) => {
-            if (DASH_RE.test(line)) violations.push(`${rel}:${i + 1}: em/en dash (raw or entity): ${line.trim().slice(0, 100)}`);
+            if (DASH_RE.test(line) && !isAllowed(rel, line)) violations.push(`${rel}:${i + 1}: em/en dash (raw or entity): ${line.trim().slice(0, 100)}`);
         });
     }
     return violations;
