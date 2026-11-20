@@ -9,6 +9,7 @@ import {
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
 import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
+import { Game3Message } from './components/game3-message.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
@@ -256,6 +257,36 @@ export function mountCommunityApp(root, adapter = {}) {
         });
     };
 
+    const game3Rows = (s) => {
+        const msgs = s.messages || [];
+        const selfId = s.userId;
+        return msgs.map((m, i) => {
+            if (m.type === 'system') return null;
+            const username = (A.resolveProfile && A.resolveProfile(m.userId)) || m.username || 'User';
+            const isYou = !!selfId && String(m.userId) === String(selfId);
+            const prev = msgs[i - 1];
+            const continuation = !!prev && prev.type !== 'system' && String(prev.userId) === String(m.userId);
+            const reactions = Array.isArray(m.reactions) ? m.reactions.map(r => ({ emoji: r.emoji, count: r.count != null ? r.count : (r.users ? r.users.length : 1), you: !!(r.you || (r.users && selfId && r.users.includes(selfId))) })) : [];
+            const react = (emoji) => A.reactToMessage && A.reactToMessage(m.id, m.userId, emoji);
+            const openPicker = (e) => {
+                if (!A.reactToMessage) return;
+                const rect = e && e.currentTarget && e.currentTarget.getBoundingClientRect ? e.currentTarget.getBoundingClientRect() : null;
+                if (api.emojiPicker) api.emojiPicker.show(rect ? rect.left : 200, rect ? rect.bottom + 4 : 200, (em) => A.reactToMessage(m.id, m.userId, em));
+                else A.reactToMessage(m.id, m.userId);
+            };
+            return Game3Message({
+                key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
+                name: username, initial: initial(username), avatarColor: avatarColor(m.userId),
+                time: formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
+                continuation, text: m.content || '', reactions, mine: isYou,
+                onReact: A.reactToMessage ? react : null,
+                onAddReaction: A.reactToMessage ? openPicker : null,
+                onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
+                onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
+            });
+        }).filter(Boolean);
+    };
+
     const railOrder = (s) => {
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
         const info = channels.filter(c => c.type === 'announcement' || c.type === 'page');
@@ -292,7 +323,7 @@ export function mountCommunityApp(root, adapter = {}) {
             : 'Be the first to post in #' + (ch.name || 'general') + '.';
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
-            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), header: null,
+            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: game3Rows(s), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, replyPreview, typingBar, ChatComposer({
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',

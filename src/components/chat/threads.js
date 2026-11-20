@@ -54,7 +54,7 @@ export function ChatSuggestions({ heading = 'What can I help with?', subtext = '
     );
 }
 
-export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], composer, header, suggestions, onSuggestionClick } = {}) {
+export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], rows = null, composer, header, suggestions, onSuggestionClick } = {}) {
     ensureCachesInit();
     const msgCount = messages.length;
     let threadEl = null;
@@ -106,7 +106,7 @@ export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], com
                                     typeof s === 'string' ? s : (s.label || s.text || s.prompt))))
                             : null)
                     : null,
-                ...threadNodes(messages)
+                ...(rows || threadNodes(messages))
             ),
             jumpBtn
         ),
