@@ -1189,3 +1189,19 @@ html.ds-247420.zellous-spoilers .ds-g3-spoil { background: #ffffff1a; color: inh
 html.ds-247420 .ds-g3-sboard { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 0 16px 4px; }
 html.ds-247420 .ds-g3-sboard span { background: #2b2d31; color: #dbdee1; border-radius: var(--r-1); padding: 8px 12px; font-size: 14px; cursor: pointer; display: flex; gap: 6px; align-items: center; }
 html.ds-247420 .ds-g3-sboard span:hover { background: #404249; }
+
+.ds-g3-rolepick { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+.ds-g3-rhero { display: flex; gap: var(--space-4); align-items: center; padding: var(--space-5); border-radius: var(--r-1); background: var(--bg); }
+.ds-g3-ric { width: 80px; height: 80px; border-radius: var(--r-1); background: var(--accent); flex: none; }
+.ds-g3-rhero h1 { margin: 0; font-size: var(--fs-lg); }
+.ds-g3-rhero p { margin: var(--space-1) 0 0; color: var(--fg-2); }
+.ds-g3-rgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-2); }
+.ds-g3-rcard { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 2px solid transparent; border-radius: var(--r-1); background: var(--bg); cursor: pointer; }
+.ds-g3-rcard:hover { border-color: var(--fg-3); }
+.ds-g3-rcard.on { border-color: var(--rc); }
+.ds-g3-re { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: color-mix(in srgb, currentColor 16%, transparent); flex: none; }
+.ds-g3-rtxt { flex: 1; min-width: 0; }
+.ds-g3-rtxt p { margin: var(--space-1) 0 0; font-size: var(--fs-sm); color: var(--fg-2); }
+.ds-g3-chk { width: 24px; height: 24px; border-radius: var(--r-0); border: 2px solid var(--fg-3); display: flex; align-items: center; justify-content: center; font-weight: var(--fw-medium); flex: none; }
+.ds-g3-rcard.on .ds-g3-chk { background: var(--rc); border-color: var(--rc); }
+.ds-g3-cta { display: inline-block; align-self: flex-start; padding: var(--space-2) var(--space-3); border-radius: var(--r-0); background: var(--accent); cursor: pointer; font-weight: var(--fw-medium); }

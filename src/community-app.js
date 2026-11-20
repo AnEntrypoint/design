@@ -18,6 +18,7 @@ import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
 import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3PrefsPanel } from './components/game3-prefs.js';
+import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -489,7 +490,7 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const surfaceBody = (name, s) => {
         if (name === 'roles') return RoleList({ roles: s.roles || [], emptyText: 'No roles in this server.' });
-        if (name === 'pick-roles') return RoleList({ roles: [], emptyText: 'Picking a role publishes a role change to the relays, which this client does not do yet.' });
+        if (name === 'pick-roles') return Game3RolesPanel({ roles: s.selfRoles || [], onToggle: (id) => A.toggleSelfRole && A.toggleSelfRole(id), onDone: () => A.goToGeneral && A.goToGeneral() });
         if (name === 'rules') return RulesList({ rules: s.rules || [], emptyText: 'This server has no rules page yet.' });
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: 'No pinned messages in this channel.' });
@@ -498,7 +499,6 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ onCreate: A.createEvent ? (f) => A.createEvent(f) : null, events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, about: e.about, location: e.location, at: e.start, name: e.name, mine: e.mine, count: e.going.length, interested: e.interested })), now, onRsvp: A.rsvpEvent ? (id) => A.rsvpEvent(id) : null, onDelete: A.deleteEvent ? (id) => A.deleteEvent(id) : null, onClose: () => A.closeSurface && A.closeSurface() }); }
         if (name === 'discover') return DiscoverList({ servers: s.discoverServers || [], emptyText: 'This client has no public server directory yet, so it lists only the servers you have joined. Join by invite.' });
-        if (name === 'roles') return h('p', { class: 'ds-g3-empty' }, 'This client does not show or assign roles yet.');
         if (name === 'split') return SplitPane({ channel: s.splitChannel || null, messages: s.splitMessages || [], emptyText: 'Split view needs a second text channel. This server has none besides the one you are in.' });
         return null;
     };
