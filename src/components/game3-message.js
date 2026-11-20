@@ -14,7 +14,20 @@ export function isJumbo(text) {
 const URL_RE = /(https?:\/\/[^\s<]+)/g;
 const linkify = (value) => String(value || '').split(URL_RE).map((part, i) => (i % 2 === 1 ? h('a', { key: 'l' + i, href: part, target: '_blank', rel: 'noopener' }, part) : part));
 
-export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false } = {}) {
+const CARD_IMAGE_RE = /\.(?:png|jpe?g|gif|webp)(?:\?|$)/i;
+const YT_RE = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})/;
+const cardNodes = (value, on) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"'|]+/gi) || [])].filter((u) => !CARD_IMAGE_RE.test(u)).slice(0, 3).map((u, i) => {
+    let host = '', path = '';
+    try { const x = new URL(u); host = x.hostname.replace(/^www\./, ''); path = decodeURIComponent(x.pathname + x.search).slice(0, 80); } catch (e) { return null; }
+    const yt = YT_RE.exec(u);
+    return h('a', { key: 'card' + i, class: 'ds-g3-lcard', href: u, target: '_blank', rel: 'noopener' },
+        h('span', { key: 'lb', class: 'ds-g3-lbody' },
+            h('span', { key: 'ls', class: 'ds-g3-lsite' }, host),
+            h('span', { key: 'lt', class: 'ds-g3-ltitle' }, yt ? 'YouTube video' : (path.length > 1 ? path : host))),
+        yt ? h('img', { key: 'li', src: 'https://i.ytimg.com/vi/' + yt[1] + '/hqdefault.jpg', loading: 'lazy' }) : null);
+}).filter(Boolean);
+
+export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true } = {}) {
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -38,6 +51,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
                 h('span', { key: 'who', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, time)),
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text)),
+        ...cardNodes(text, previews),
         reactionChips
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
@@ -46,7 +60,8 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
         h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
         h('div', { key: 'cb', class: 'ds-g3-col' },
             h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
-            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text))),
+            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text)),
+            ...cardNodes(text, previews)),
         bar);
     return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') },
         replyLine,

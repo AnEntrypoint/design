@@ -287,7 +287,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: initial(username), avatarColor: avatarColor(m.userId),
                 time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
-                continuation: !s.gamePrefCompact && continuation, compact: !!s.gamePrefCompact, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId, jumbo: !!s.jumbo && isJumbo(m.content),
+                continuation: !s.gamePrefCompact && continuation, compact: !!s.gamePrefCompact, previews: s.previews !== false, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId, jumbo: !!s.jumbo && isJumbo(m.content),
                 onReact: A.reactToMessage ? react : null,
                 onAddReaction: A.reactToMessage ? openPicker : null,
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
