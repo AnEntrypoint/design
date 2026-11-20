@@ -13271,6 +13271,87 @@
 }
 .ds-247420.ds-247420 .ds-g3-vchat.is-disabled { opacity: 0.5; cursor: default; }
 
+.ds-247420.ds-247420 .ds-g3-me {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 52px;
+  padding: 0 8px;
+  flex-shrink: 0;
+  background: #232428;
+}
+.ds-247420.ds-247420 .ds-g3-mebtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 2px;
+  border-radius: var(--r-0);
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+.ds-247420.ds-247420 .ds-g3-mebtn:hover { background: #3d3e45; }
+.ds-247420.ds-247420 .ds-g3-meav {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ds-g3-av-color, var(--accent));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.ds-247420.ds-247420 .ds-g3-medot {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 3px solid #232428;
+  background: var(--ds-g3-dot-color, #23a55a);
+  box-sizing: content-box;
+}
+.ds-247420.ds-247420 .ds-g3-mentext { min-width: 0; display: flex; flex-direction: column; }
+.ds-247420.ds-247420 .ds-g3-men {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f2f3f5;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ds-247420.ds-247420 .ds-g3-mes {
+  font-size: 12px;
+  color: #b5bac1;
+  line-height: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ds-247420.ds-247420 .ds-g3-ibtn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--r-0);
+  background: none;
+  color: #b5bac1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+.ds-247420.ds-247420 .ds-g3-ibtn:hover { background: #3f4248; color: #dbdee1; }
+.ds-247420.ds-247420 .ds-g3-ibtn.red { color: #f23f43; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

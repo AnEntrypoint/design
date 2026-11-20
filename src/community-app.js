@@ -12,6 +12,7 @@ import { GameHeader } from './components/game3-header.js';
 import { Game3Message } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
+import { Game3UserPanel } from './components/game3-user.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -454,7 +455,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 h('main', { class: 'app-main ds-app-surface', id: 'app-main', tabindex: '-1', onclick: () => { if (s.mobileMenuOpen && A.closeMobileMenu) A.closeMobileMenu(); } },
                     h('h1', { class: 'sr-only' }, ch.name || 'general'),
                     !inVoiceChannel && s.voiceConnected ? VoiceStrip({ channelName: s.voiceChannelName, status: s.voiceConnectionState || 'connected', muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onLeave: () => A.leaveVoice && A.leaveVoice(), open: true }) : null,
-                    UserPanel({ name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', tag: s.currentUser && s.currentUser.tag, level: s.level, xpPct: s.xpPct, color: avatarColor(s.userId), muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onSettings: () => A.openSettings && A.openSettings(), onMembers: A.toggleMembers ? () => A.toggleMembers() : null, membersOpen: !!s.memberListOpen }),
+                    Game3UserPanel({ name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: avatarColor(s.userId), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openSettings && A.openSettings() }),
                     bodyMain,
                 ),
                 Game3MemberList({
