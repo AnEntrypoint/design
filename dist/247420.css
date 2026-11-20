@@ -13671,6 +13671,12 @@
 .ds-247420 .ds-g3-rcard.on .ds-g3-chk { background: var(--rc); border-color: var(--rc); }
 .ds-247420 .ds-g3-cta { display: inline-block; align-self: flex-start; padding: var(--space-2) var(--space-3); border-radius: var(--r-0); background: var(--accent); cursor: pointer; font-weight: var(--fw-medium); }
 
+.ds-247420 .ds-g3-rl { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); }
+.ds-247420 .ds-g3-rl-item { display: flex; gap: var(--space-4); padding: var(--space-4); border-radius: var(--r-1); background: var(--bg); }
+.ds-247420 .ds-g3-rl-n { font-weight: var(--fw-medium); font-size: var(--fs-lg); color: var(--accent); width: 28px; flex: none; }
+.ds-247420 .ds-g3-rl-item b { color: var(--fg); }
+.ds-247420 .ds-g3-rl-item p { margin: var(--space-1) 0 0; color: var(--fg-2); font-size: var(--fs-sm); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

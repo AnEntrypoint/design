@@ -19,6 +19,7 @@ import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3PrefsPanel } from './components/game3-prefs.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
+import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -491,7 +492,7 @@ export function mountCommunityApp(root, adapter = {}) {
     const surfaceBody = (name, s) => {
         if (name === 'roles') return RoleList({ roles: s.roles || [], emptyText: 'No roles in this server.' });
         if (name === 'pick-roles') return Game3RolesPanel({ roles: s.selfRoles || [], onToggle: (id) => A.toggleSelfRole && A.toggleSelfRole(id), onDone: () => A.goToGeneral && A.goToGeneral() });
-        if (name === 'rules') return RulesList({ rules: s.rules || [], emptyText: 'This server has no rules page yet.' });
+        if (name === 'rules') return Game3RulesPanel({ serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), online: (s.rulesStats || {}).online || 0, members: (s.rulesStats || {}).members || 0, onDone: () => A.goToGeneral && A.goToGeneral() });
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: 'No pinned messages in this channel.' });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
