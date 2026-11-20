@@ -177,7 +177,7 @@ export function mountCommunityApp(root, adapter = {}) {
             style: sv._home ? null : '--sv-color:' + (sv.iconColor || sv.color || 'var(--accent)'),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },
             oncontextmenu: sv._home ? null : (e) => { e.preventDefault(); A.serverContext && A.serverContext(sv.id, e.clientX, e.clientY); },
-        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 24 }) : serverAbbr(sv)),
+        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('game3-home', { size: 24 }) : serverAbbr(sv)),
             h('span', {}, sv.name || sv.id),
             sv.unreadCount ? h('span', { class: 'count' }, sv.unreadCount > 99 ? '99+' : String(sv.unreadCount)) : null);
     };

@@ -2,6 +2,7 @@ import * as webjsx from '../../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 
 export const ICON_PATHS = {
+    'game3-home': '<path fill="currentColor" fill-rule="evenodd" d="M12 2C6.48 2 2 6.04 2 11c0 2.62 1.25 4.97 3.24 6.62-.12 1.3-.6 2.6-1.5 3.6a.5.5 0 0 0 .4.83c2-.06 3.8-.8 5.1-1.85.9.2 1.8.3 2.76.3 5.52 0 10-4.04 10-9S17.52 2 12 2Zm-5 10.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>',
     lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
     mic: '<path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',

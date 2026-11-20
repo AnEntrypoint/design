@@ -83,13 +83,14 @@ html.ds-247420 .ca-rail-servers {
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
+  background: #1e1f22;
 }
 html.ds-247420 .ca-rail-sep {
   width: 32px;
   height: 2px;
   flex: 0 0 auto;
-  border-radius: var(--r-hair);
-  background: var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent));
+  border-radius: 1px;
+  background: #35363c;
 }
 html.ds-247420 .ca-rail-servers a {
   position: relative;
@@ -101,7 +102,7 @@ html.ds-247420 .ca-rail-servers a {
   padding: 0;
   border-radius: 50%;
   background: var(--sv-color, var(--accent));
-  color: var(--on-accent);
+  color: #fff;
   text-decoration: none;
   font-size: var(--fs-rail-tile);
   font-weight: 700;
@@ -124,18 +125,18 @@ html.ds-247420 .ca-rail-servers a::before {
   width: 4px;
   height: 0;
   border-radius: 0 var(--r-0) var(--r-0) 0;
-  background: var(--fg);
+  background: #fff;
   transition: height var(--dur-snap, .12s) var(--ease, ease);
 }
 html.ds-247420 .ca-rail-servers a.active::before { height: 40px; }
 html.ds-247420 .ca-rail-servers a:hover,
-html.ds-247420 .ca-rail-servers a.active { border-radius: var(--r-3); }
+html.ds-247420 .ca-rail-servers a.active { border-radius: 16px; }
 html.ds-247420 .ca-rail-servers a.ca-rail-home {
-  background: color-mix(in oklab, var(--fg) 8%, transparent);
-  color: var(--fg-2, var(--fg));
+  background: #313338;
+  color: #dbdee1;
 }
 html.ds-247420 .ca-rail-servers a.ca-rail-home.active,
-html.ds-247420 .ca-rail-servers a.ca-rail-home:hover { background: var(--accent); color: var(--on-accent); }
+html.ds-247420 .ca-rail-servers a.ca-rail-home:hover { background: #5865f2; color: #fff; }
 html.ds-247420 .ca-rail-servers a > span:nth-child(2) { display: none; }
 html.ds-247420 .ca-rail-servers a .count {
   position: absolute;
@@ -160,13 +161,15 @@ html.ds-247420 .ca-rail-servers a.ca-rail-server-explore {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--panel-2, var(--hover));
-  color: var(--success);
+  background: #313338;
+  color: #23a55a;
+  font-size: 26px;
+  font-weight: 400;
   text-decoration: none;
   transition: background 0.1s, color 0.1s;
 }
-html.ds-247420 .ca-rail-servers a.ca-rail-server-explore:hover { background: var(--accent); color: var(--on-accent); border-radius: var(--r-3); }
-html.ds-247420 .ca-rail-servers a.ca-rail-server-add:hover { background: var(--success); color: var(--on-accent); border-radius: var(--r-3); }
+html.ds-247420 .ca-rail-servers a.ca-rail-server-explore:hover { background: #5865f2; color: #fff; border-radius: 16px; }
+html.ds-247420 .ca-rail-servers a.ca-rail-server-add:hover { background: #23a55a; color: #fff; border-radius: 16px; }
 html.ds-247420 .ca-rail-channels {
   display: flex;
   flex-direction: column;

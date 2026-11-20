@@ -62,7 +62,7 @@ export function ServerCreateForm({ colors = [], initialColor = '', onCreate, onC
             onCancel ? h('button', { key: 'x', type: 'button', class: 'ds-g3-btn ds-g3-btn--ghost', onclick: onCancel }, 'Cancel') : null,
             h('button', { key: 's', type: 'submit', class: 'ds-g3-btn is-on' }, 'Create server')
         ),
-        onJoin ? h('button', { key: 'j', type: 'button', class: 'ds-g3-btn ds-g3-btn--ghost', onclick: onJoin }, 'or join one: discover servers') : null
+        onJoin ? h('button', { key: 'j', type: 'button', class: 'ds-g3-btn ds-g3-btn--ghost', onclick: onJoin }, 'or join one: 🧭') : null
     );
 }
 
