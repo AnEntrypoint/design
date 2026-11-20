@@ -159,12 +159,13 @@ export function ReminderList({ items = [], emptyText = '', key } = {}) {
     )));
 }
 
-export function PinList({ pins = [], emptyText = '', key } = {}) {
-    if (!pins.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
-    return h('ul', { key, class: 'ds-g3-pins' }, ...pins.map((p) => h('li', { key: p.id, class: 'ds-g3-pin' },
-        h('span', { key: 'n', class: 'ds-g3-pin-name' }, p.name),
-        h('span', { key: 'c', class: 'ds-g3-pin-text' }, p.content)
-    )));
+export function PinList({ pins = [], emptyText = '', onJump, key } = {}) {
+    if (!pins.length) return h('div', { key, class: 'ds-g3-empty' }, emptyText, h('br', null), 'hover a message and press the pin');
+    return h('div', { key, class: 'ds-g3-pins' },
+        h('h2', null, 'Pinned Messages'),
+        h('ul', null, ...pins.map((p) => h('li', { key: p.id, class: 'ds-g3-pin', onclick: () => onJump && onJump(p.id) },
+            h('b', { key: 'n', class: 'ds-g3-pin-name' }, p.name),
+            h('span', { key: 'c', class: 'ds-g3-pin-text' }, p.content)))));
 }
 
 export function RulesList({ rules = [], emptyText = '', key } = {}) {
@@ -188,11 +189,14 @@ export function RoleList({ roles = [], emptyText = '', key } = {}) {
     )));
 }
 
-export function DiscoverList({ servers = [], emptyText = '', key } = {}) {
+export function DiscoverList({ servers = [], emptyText = '', onOpen, key } = {}) {
     if (!servers.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
     return h('ul', { key, class: 'ds-g3-discover' }, ...servers.map((sv) => h('li', { key: sv.id, class: 'ds-g3-discover-row' },
-        h('span', { key: 'n', class: 'ds-g3-discover-name' }, sv.name),
-        h('span', { key: 'j', class: 'ds-g3-discover-state' }, sv.current ? 'open' : 'joined')
+        h('span', { key: 'i', class: 'ds-g3-discover-ico', 'aria-hidden': 'true' }, (sv.name || '?').slice(0, 1).toUpperCase()),
+        h('div', { key: 't', class: 'ds-g3-discover-txt' },
+            h('h3', { key: 'n' }, sv.name),
+            h('p', { key: 'm' }, sv.members != null ? sv.members + ' members · ' + (sv.online || 0) + ' online' : 'members not shared by this client')),
+        h('button', { key: 'b', type: 'button', class: 'ds-g3-btn', onclick: () => onOpen && onOpen(sv.id) }, 'Open')
     )));
 }
 

@@ -13677,6 +13677,12 @@
 .ds-247420 .ds-g3-rl-item b { color: var(--fg); }
 .ds-247420 .ds-g3-rl-item p { margin: var(--space-1) 0 0; color: var(--fg-2); font-size: var(--fs-sm); }
 
+.ds-247420 .ds-g3-discover-row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--r-1); background: var(--bg); margin-bottom: var(--space-2); }
+.ds-247420 .ds-g3-discover-ico { width: 40px; height: 40px; border-radius: var(--r-1); background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: var(--fw-medium); flex: none; }
+.ds-247420 .ds-g3-discover-txt { flex: 1; min-width: 0; }
+.ds-247420 .ds-g3-discover-txt h3 { margin: 0; font-size: var(--fs-sm); }
+.ds-247420 .ds-g3-discover-txt p { margin: var(--space-1) 0 0; font-size: var(--fs-sm); color: var(--fg-2); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
