@@ -10,6 +10,7 @@ import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateF
 import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { Game3Message } from './components/game3-message.js';
+import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
@@ -324,14 +325,21 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: game3Rows(s), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, replyPreview, typingBar, ChatComposer({
+            composer: h('div', { class: 'cm-composer-wrap' }, typingBar, Game3Composer({
                 value: s.chatInputValue || '',
-                placeholder: s.composerLockedReason ? s.composerLockedReason : rt ? 'reply to ' + (rt.username || 'User') + '…' : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
+                placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
+                replyTo: rt ? { username: rt.username || 'User' } : null,
+                onCancelReply: () => A.startReply && A.startReply(null),
                 onInput: (v) => A.setInput && A.setInput(v),
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
                 maxLength: 190,
                 onKeyDown: (e, ta) => composerKey(e, ta, s, ch),
                 onAttach: (!s.composerLockedReason && A.attachFiles) ? (files) => A.attachFiles(files) : null,
+                onEmoji: (e) => {
+                    if (!api.emojiPicker) return;
+                    const rect = e && e.currentTarget && e.currentTarget.getBoundingClientRect ? e.currentTarget.getBoundingClientRect() : null;
+                    api.emojiPicker.show(rect ? rect.left : 200, rect ? rect.top - 8 : 200, (em) => A.setInput && A.setInput((s.chatInputValue || '') + em));
+                },
                 disabled: !!s.composerLockedReason, disabledReason: s.composerLockedReason || undefined,
             })),
         });
