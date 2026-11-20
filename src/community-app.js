@@ -20,6 +20,7 @@ import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
+import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -452,7 +453,7 @@ export function mountCommunityApp(root, adapter = {}) {
                     A.openSurface ? h('button', { key: 'leaderboard', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('leaderboard') }, 'leaderboard') : null,
                     A.openSurface ? h('button', { key: 'events', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('events') }, 'events') : null,
                     A.openSurface ? h('button', { key: 'roles', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('roles') }, 'roles') : null,
-                    A.openSurface ? h('button', { key: 'split', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('split') }, 'split view') : null,
+                    s.splitOptions && s.splitOptions.length ? Game3SplitSelect({ key: 'split', options: s.splitOptions, current: s.splitChannel ? s.splitChannel.id : null, onChange: (id) => A.splitTo && A.splitTo(id) }) : null,
                 ].filter(Boolean),
             }),
             MobileHeader({ channelType: s.homeMode ? 'dm' : (ch.type || 'text'), channelName: ch.name || '', serverName: s.homeMode ? '' : (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), membersOpen: !!s.memberListOpen, menuOpen: !!s.mobileMenuOpen, onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
@@ -466,6 +467,7 @@ export function mountCommunityApp(root, adapter = {}) {
                     Game3UserPanel({ name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: avatarColor(s.userId), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openSettings && A.openSettings() }),
                     bodyMain,
                 ),
+                s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null) }) : null,
                 Game3MemberList({
                     categories: s.memberCategories || [], open: !!s.memberListOpen, userId: s.userId,
                     onSelectMember: (m) => { card = { open: true, member: m }; render(); },
@@ -499,7 +501,6 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some, once every 30 seconds.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ onCreate: A.createEvent ? (f) => A.createEvent(f) : null, events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, about: e.about, location: e.location, at: e.start, name: e.name, mine: e.mine, count: e.going.length, interested: e.interested })), now, onRsvp: A.rsvpEvent ? (id) => A.rsvpEvent(id) : null, onDelete: A.deleteEvent ? (id) => A.deleteEvent(id) : null, onClose: () => A.closeSurface && A.closeSurface() }); }
         if (name === 'discover') return h('div', null, h('h2', null, 'Discover servers'), DiscoverList({ servers: s.discoverServers || [], emptyText: 'No servers joined yet.', onOpen: (id) => A.switchServer && A.switchServer(id) }));
-        if (name === 'split') return SplitPane({ channel: s.splitChannel || null, messages: s.splitMessages || [], emptyText: 'Split view needs a second text channel. This server has none besides the one you are in.' });
         return null;
     };
     let gamePrefWasOpen = false;

@@ -1230,3 +1230,15 @@ html.ds-247420 .ds-g3-sboard span:hover { background: #404249; }
 .ds-g3-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
 .ds-g3-swatch.on { border-color: var(--fg); }
 .ds-g3-input { width: 100%; padding: var(--space-2); border-radius: var(--r-0); border: 1px solid var(--fg-3); background: var(--bg); color: var(--fg); }
+
+.ds-g3-splitc { width: 360px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bg); border-left: 1px solid var(--fg-3); min-height: 0; }
+.ds-g3-sph { display: flex; justify-content: space-between; align-items: center; padding: var(--space-2) var(--space-3); font-weight: var(--fw-medium); border-bottom: 1px solid var(--fg-3); }
+.ds-g3-sph b { cursor: pointer; margin-left: var(--space-3); color: var(--fg-2); }
+.ds-g3-sph b:hover { color: var(--fg); }
+.ds-g3-spl { flex: 1; overflow-y: auto; padding: var(--space-2) var(--space-3); }
+.ds-g3-spl ul { list-style: none; margin: 0; padding: 0; }
+.ds-g3-sl { font-size: var(--fs-sm); color: var(--fg-2); line-height: 1.35; overflow-wrap: anywhere; margin-bottom: var(--space-2); }
+.ds-g3-sl-when { font-size: var(--fs-micro); color: var(--fg-3); }
+.ds-g3-sl b { color: var(--fg); }
+.ds-g3-splitsel { background: var(--bg); color: var(--fg-2); border: 0; border-radius: var(--r-0); padding: var(--space-1); margin-right: var(--space-2); max-width: 120px; }
+@media (max-width: 900px) { .ds-g3-splitc { display: none; } }
