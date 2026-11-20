@@ -31,7 +31,7 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
 
-export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -44,6 +44,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
         QUICK.map((e) => h('span', { key: 'q' + e, role: 'button', tabindex: '0', title: 'react ' + e, onclick: () => onReact && onReact(e) }, e)),
         h('span', { key: 'add', role: 'button', tabindex: '0', title: 'Add Reaction', onclick: (e) => onAddReaction && onAddReaction(e) }, Icon('smile', { size: 18 })),
         h('span', { key: 'reply', role: 'button', tabindex: '0', title: 'Reply', onclick: () => onReply && onReply() }, Icon('corner-up-left', { size: 18 })),
+        onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: 'Pin', onclick: () => onPin() }, Icon('g3-pin', { size: 18 })) : null,
         mine ? h('span', { key: 'del', role: 'button', tabindex: '0', title: 'Delete', onclick: () => onDelete && onDelete() }, Icon('trash', { size: 18 })) : null,
         devMode ? h('span', { key: 'cid', role: 'button', tabindex: '0', title: 'Copy Message ID', onclick: () => copyText(messageId) }, Icon('copy', { size: 18 })) : null,
         devMode ? h('span', { key: 'cuid', role: 'button', tabindex: '0', title: 'Copy User ID', onclick: () => copyText(userId) }, Icon('clipboard', { size: 18 })) : null

@@ -292,6 +292,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 onAddReaction: A.reactToMessage ? openPicker : null,
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
                 onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
+                onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
             });
         }).filter(Boolean);
     };
@@ -491,7 +492,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'pick-roles') return RoleList({ roles: [], emptyText: 'Picking a role publishes a role change to the relays, which this client does not do yet.' });
         if (name === 'rules') return RulesList({ rules: s.rules || [], emptyText: 'This server has no rules page yet.' });
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
-        if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: 'No pinned messages in this channel. Pinning is not available yet: it would publish a pin to the relays.' });
+        if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: 'No pinned messages in this channel.' });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
         if (name === 'polls') return Game3PollsPanel({ polls: s.polls || [], emptyText: 'No polls in this channel yet.' });
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some.', onClose: () => A.closeSurface && A.closeSurface() });

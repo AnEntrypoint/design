@@ -965,6 +965,8 @@ export interface ChatProps {
     locked?: any;
     /** @default [] */
     messages?: any[];
+    /** @default null */
+    rows?: any;
     composer?: any;
     header?: any;
     suggestions?: any;
