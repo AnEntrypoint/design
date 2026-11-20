@@ -1128,3 +1128,4 @@ html.ds-247420 .ds-g3-lsite { font-size: 12px; color: #b5bac1; }
 html.ds-247420 .ds-g3-ltitle { color: #00a8fc; font-weight: 600; font-size: 15px; word-break: break-all; }
 html.ds-247420 .ds-g3-lcard:hover .ds-g3-ltitle { text-decoration: underline; }
 html.ds-247420 .ds-g3-lcard img { max-width: min(400px, 100%); border-radius: var(--r-0); margin-top: 4px; }
+html.ds-247420 .ds-g3-pic { display: block; max-width: min(400px, 100%); border-radius: var(--r-0); margin-top: 4px; }

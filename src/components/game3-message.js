@@ -27,7 +27,9 @@ const cardNodes = (value, on) => on === false ? [] : [...new Set(String(value ||
         yt ? h('img', { key: 'li', src: 'https://i.ytimg.com/vi/' + yt[1] + '/hqdefault.jpg', loading: 'lazy' }) : null);
 }).filter(Boolean);
 
-export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true } = {}) {
+const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"']+\.(?:png|jpe?g|gif|webp)(?:\?[^\s<>"']*)?/gi) || [])].slice(0, 4).map((u, i) => h('img', { key: 'pic' + i, class: 'ds-g3-pic', src: u, loading: 'lazy', onerror: (e) => e.currentTarget.remove() }));
+
+export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -52,6 +54,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, time)),
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text)),
         ...cardNodes(text, previews),
+        ...embedNodes(text, embeds),
         reactionChips
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
@@ -61,7 +64,8 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
         h('div', { key: 'cb', class: 'ds-g3-col' },
             h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
             h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text)),
-            ...cardNodes(text, previews)),
+            ...cardNodes(text, previews),
+            ...embedNodes(text, embeds)),
         bar);
     return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') },
         replyLine,
