@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, ReminderList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
+import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { Game3Message } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
@@ -442,7 +442,6 @@ export function mountCommunityApp(root, adapter = {}) {
                     A.openSurface ? h('button', { key: 'rules', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('rules') }, 'rules') : null,
                     A.openSurface ? h('button', { key: 'announcements', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('announcements') }, 'announcements') : null,
                     A.openSurface ? h('button', { key: 'pins', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('pins') }, 'pins') : null,
-                    A.openSurface ? h('button', { key: 'reminders', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('reminders') }, 'reminders') : null,
                     A.openSurface ? h('button', { key: 'recap', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('recap') }, 'recap') : null,
                     A.openSurface ? h('button', { key: 'polls', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('polls') }, 'polls') : null,
                     A.openSurface ? h('button', { key: 'leaderboard', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('leaderboard') }, 'leaderboard') : null,
@@ -490,7 +489,6 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'rules') return RulesList({ rules: s.rules || [], emptyText: 'This server has no rules page yet.' });
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: 'No pinned messages in this channel. Pinning is not available yet: it would publish a pin to the relays.' });
-        if (name === 'reminders') return ReminderList({ items: s.reminders || [], emptyText: 'No reminders set. Reminders are kept in this browser only.' });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
         if (name === 'polls') return Game3PollsPanel({ polls: s.polls || [], emptyText: 'No polls in this channel yet.' });
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some.', onClose: () => A.closeSurface && A.closeSurface() });
