@@ -195,7 +195,8 @@ export function DiscoverList({ servers = [], emptyText = '', onOpen, key } = {})
         h('span', { key: 'i', class: 'ds-g3-discover-ico', 'aria-hidden': 'true' }, (sv.name || '?').slice(0, 1).toUpperCase()),
         h('div', { key: 't', class: 'ds-g3-discover-txt' },
             h('h3', { key: 'n' }, sv.name),
-            h('p', { key: 'm' }, sv.members != null ? sv.members + ' members · ' + (sv.online || 0) + ' online' : 'members not shared by this client')),
+            h('p', { key: 'm' }, sv.members != null ? sv.members + ' member' + (sv.members === 1 ? '' : 's') + ' · ' + (sv.online || 0) + ' online · by ' + (sv.owner || 'nobody') : 'details load when you open this server'),
+            sv.channels ? h('p', { key: 'c' }, sv.channels.map((c) => '#' + c).join(' ')) : null),
         h('button', { key: 'b', type: 'button', class: 'ds-g3-btn', onclick: () => onOpen && onOpen(sv.id) }, 'Open')
     )));
 }

@@ -17,7 +17,7 @@ import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
 import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
-import { Game3PrefsPanel } from './components/game3-prefs.js';
+import { Game3SettingsPanel } from './components/game3-settings.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3Composer } from './components/game3-composer.js';
@@ -441,7 +441,6 @@ export function mountCommunityApp(root, adapter = {}) {
                 onMembers: A.toggleMembers ? () => A.toggleMembers() : null,
                 buttons: [
                     A.goHome ? h('button', { key: 'home', type: 'button', class: 'ds-g3-btn', onclick: () => A.goHome() }, 'home') : null,
-                    A.openServers ? h('button', { key: 'servers', type: 'button', class: 'ds-g3-btn', onclick: () => A.openServers() }, 'servers') : null,
                     A.openGamePrefs ? h('button', { key: 'prefs', type: 'button', class: 'ds-g3-btn', onclick: () => A.openGamePrefs() }, 'preferences') : null,
                     A.openSurface ? h('button', { key: 'discover', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('discover') }, 'discover') : null,
                     A.openSurface ? h('button', { key: 'pick-roles', type: 'button', class: 'ds-g3-btn', onclick: () => A.openSurface('pick-roles') }, 'pick roles') : null,
@@ -484,7 +483,7 @@ export function mountCommunityApp(root, adapter = {}) {
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate(), onJoin: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) }) : null,
             s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface, s), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
-            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, Game3PrefsPanel({ compact: !!s.gamePrefCompact, toggles: s.gamePrefToggles || [], onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
+            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, Game3SettingsPanel({ tab: s.gamePrefTab || 'appearance', onTab: (t) => A.setGamePrefTab && A.setGamePrefTab(t), compact: !!s.gamePrefCompact, toggles: s.gamePrefToggles || [], keywords: s.gamePrefKeywords || '', banner: s.gamePrefBanner || '', onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val), onKeywords: (val) => A.setGamePref && A.setGamePref('kw', val), onBanner: (c) => A.setGamePref && A.setGamePref('banner', c), onReset: () => A.setGamePref && A.setGamePref('reset', true) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };

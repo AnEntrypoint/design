@@ -13683,6 +13683,19 @@
 .ds-247420 .ds-g3-discover-txt h3 { margin: 0; font-size: var(--fs-sm); }
 .ds-247420 .ds-g3-discover-txt p { margin: var(--space-1) 0 0; font-size: var(--fs-sm); color: var(--fg-2); }
 
+.ds-247420 .ds-g3-flash { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.ds-247420 .ds-g3-settings { display: flex; gap: var(--space-4); min-height: 320px; }
+.ds-247420 .ds-g3-settings-nav { min-width: 180px; display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-247420 .ds-g3-settings-nav h5 { margin: 0 0 var(--space-2); font-size: var(--fs-micro); color: var(--fg-3); text-transform: uppercase; }
+.ds-247420 .ds-g3-settings-tab { margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--r-0); cursor: pointer; color: var(--fg-2); }
+.ds-247420 .ds-g3-settings-tab.on { background: var(--bg); color: var(--fg); }
+.ds-247420 .ds-g3-settings-pane { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.ds-247420 .ds-g3-swatches { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.ds-247420 .ds-g3-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.ds-247420 .ds-g3-swatch.on { border-color: var(--fg); }
+.ds-247420 .ds-g3-input { width: 100%; padding: var(--space-2); border-radius: var(--r-0); border: 1px solid var(--fg-3); background: var(--bg); color: var(--fg); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
