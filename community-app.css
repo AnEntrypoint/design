@@ -76,29 +76,36 @@ html.ds-247420 .ca-rail-servers {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1-75);
-  width: var(--ca-rail-icon-width);
-  min-width: var(--ca-rail-icon-width);
-  padding: var(--space-2) var(--space-1-75);
+  gap: var(--space-rail-gap);
+  width: 72px;
+  min-width: 72px;
+  padding: var(--space-rail-pad) 0;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
-  border-right: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent));
+}
+html.ds-247420 .ca-rail-sep {
+  width: 32px;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: var(--r-hair);
+  background: var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent));
 }
 html.ds-247420 .ca-rail-servers a {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   padding: 0;
-  border-radius: var(--r-2);
-  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+  border-radius: 50%;
+  background: var(--sv-color, var(--accent));
+  color: var(--on-accent);
   text-decoration: none;
-  font-size: var(--fs-sm, 14px);
-  font-weight: var(--fw-semibold, 600);
-  transition: background 0.1s, color 0.1s;
+  font-size: var(--fs-rail-tile);
+  font-weight: 700;
+  transition: border-radius 0.15s;
 }
 html.ds-247420 .ca-rail-servers a .glyph { color: inherit; }
 @media (max-width: 640px) {
@@ -112,19 +119,23 @@ html.ds-247420 .ca-rail-servers a .glyph { color: inherit; }
 html.ds-247420 .ca-rail-servers a::before {
   content: '';
   position: absolute;
-  left: -6px;
-  top: 50%;
+  left: -12px;
+  top: 4px;
   width: 4px;
   height: 0;
-  border-radius: var(--r-0);
+  border-radius: 0 var(--r-0) var(--r-0) 0;
   background: var(--fg);
-  transform: translateY(-50%);
   transition: height var(--dur-snap, .12s) var(--ease, ease);
 }
-html.ds-247420 .ca-rail-servers a:hover::before { height: 16px; }
-html.ds-247420 .ca-rail-servers a.active::before { height: 32px; }
-html.ds-247420 .ca-rail-servers a:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); }
-html.ds-247420 .ca-rail-servers a.active { background: color-mix(in oklab, var(--accent) 22%, transparent); color: var(--fg); }
+html.ds-247420 .ca-rail-servers a.active::before { height: 40px; }
+html.ds-247420 .ca-rail-servers a:hover,
+html.ds-247420 .ca-rail-servers a.active { border-radius: var(--r-3); }
+html.ds-247420 .ca-rail-servers a.ca-rail-home {
+  background: color-mix(in oklab, var(--fg) 8%, transparent);
+  color: var(--fg-2, var(--fg));
+}
+html.ds-247420 .ca-rail-servers a.ca-rail-home.active,
+html.ds-247420 .ca-rail-servers a.ca-rail-home:hover { background: var(--accent); color: var(--on-accent); }
 html.ds-247420 .ca-rail-servers a > span:nth-child(2) { display: none; }
 html.ds-247420 .ca-rail-servers a .count {
   position: absolute;
@@ -140,22 +151,22 @@ html.ds-247420 .ca-rail-servers a .count {
   line-height: 16px;
   text-align: center;
 }
-html.ds-247420 .ca-rail-server-add,
-html.ds-247420 .ca-rail-server-explore {
+html.ds-247420 .ca-rail-servers a.ca-rail-server-add,
+html.ds-247420 .ca-rail-servers a.ca-rail-server-explore {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-2);
-  color: var(--fg-2, color-mix(in oklab, var(--fg) 78%, transparent));
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--panel-2, var(--hover));
+  color: var(--success);
   text-decoration: none;
   transition: background 0.1s, color 0.1s;
 }
-html.ds-247420 .ca-rail-server-add { margin-top: var(--space-1-75); border-top: 1px solid var(--panel-3, color-mix(in oklab, var(--fg) 10%, transparent)); padding-top: var(--space-1-75); }
-html.ds-247420 .ca-rail-server-add:hover,
-html.ds-247420 .ca-rail-server-explore:hover { background: color-mix(in oklab, var(--fg) 8%, transparent); color: var(--fg); }
+html.ds-247420 .ca-rail-servers a.ca-rail-server-explore:hover { background: var(--accent); color: var(--on-accent); border-radius: var(--r-3); }
+html.ds-247420 .ca-rail-servers a.ca-rail-server-add:hover { background: var(--success); color: var(--on-accent); border-radius: var(--r-3); }
 html.ds-247420 .ca-rail-channels {
   display: flex;
   flex-direction: column;

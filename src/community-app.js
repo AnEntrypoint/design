@@ -54,7 +54,7 @@ const brandContext = (s, ch) => {
 const serverAbbr = (sv) => {
     if (sv.abbr) return sv.abbr;
     const words = String(sv.name || '?').trim().split(/\s+/).filter(Boolean);
-    return (words.length > 1 ? words[0][0] + words[1][0] : (words[0] || '?').slice(0, 2)).toUpperCase();
+    return words.map((w) => [...w][0]).join('').slice(0, 3).toUpperCase() || '?';
 };
 
 export function mountCommunityApp(root, adapter = {}) {
@@ -85,6 +85,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (!servers.length && !A.createOrJoinServer) return null;
         return h('div', { class: 'ca-rail-servers' },
             railServerPill({ name: 'home', _home: true }, s),
+            h('div', { class: 'ca-rail-sep', 'aria-hidden': 'true' }),
             ...servers.map(sv => railServerPill(sv, s)),
             railServerAdd(s), railServerExplore(s));
     };
@@ -171,11 +172,12 @@ export function mountCommunityApp(root, adapter = {}) {
     const railServerPill = (sv, s) => {
         const active = sv._home ? s.homeMode : (!s.homeMode && s.currentServerId === sv.id);
         return h('a', {
-            href: '#', class: active ? 'active' : '', 'aria-label': sv._home ? 'home' : (sv.name || sv.id),
-            title: sv._home ? 'home' : (sv.name || sv.id),
+            href: '#', class: (sv._home ? 'ca-rail-home ' : '') + (active ? 'active' : ''), 'aria-label': sv._home ? 'direct messages' : (sv.name || sv.id),
+            title: sv._home ? 'Direct Messages' : (sv.name || sv.id),
+            style: sv._home ? null : '--sv-color:' + (sv.iconColor || sv.color || 'var(--accent)'),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },
             oncontextmenu: sv._home ? null : (e) => { e.preventDefault(); A.serverContext && A.serverContext(sv.id, e.clientX, e.clientY); },
-        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 15 }) : serverAbbr(sv)),
+        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('forum', { size: 24 }) : serverAbbr(sv)),
             h('span', {}, sv.name || sv.id),
             sv.unreadCount ? h('span', { class: 'count' }, sv.unreadCount > 99 ? '99+' : String(sv.unreadCount)) : null);
     };
@@ -444,7 +446,7 @@ export function mountCommunityApp(root, adapter = {}) {
             s.voiceSettingsOpen ? VoiceSettingsModal({ open: true, mode: s.voiceMode || 'ptt', inputId: s.inputDeviceId, outputId: s.outputDeviceId, inputDevices: s.inputDevices || [], outputDevices: s.outputDevices || [], vadThreshold: s.vadThreshold, rnnoise: !!s.rnnoiseEnabled, autoGain: !!s.autoGainEnabled, forceTurn: !!s.forceTurnEnabled, bitrate: s.voiceBitrate, volume: s.masterVolume, onChange: (p) => A.voiceSettingsChange && A.voiceSettingsChange(p), onSave: () => A.voiceSettingsSave && A.voiceSettingsSave(), onCancel: () => A.voiceSettingsClose && A.voiceSettingsClose(), onClose: () => A.voiceSettingsClose && A.voiceSettingsClose() }) : null,
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
-            s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate() }) }) : null,
+            s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate(), onJoin: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) }) : null,
             s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface, s), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
             s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,

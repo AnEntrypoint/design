@@ -40,7 +40,7 @@ export function GameSettingsSection({ title, children = [], key } = {}) {
     );
 }
 
-export function ServerCreateForm({ colors = [], initialColor = '', onCreate, onCancel, key } = {}) {
+export function ServerCreateForm({ colors = [], initialColor = '', onCreate, onCancel, onJoin, key } = {}) {
     let color = initialColor || colors[0] || '';
     const submit = (e) => {
         e.preventDefault();
@@ -61,7 +61,8 @@ export function ServerCreateForm({ colors = [], initialColor = '', onCreate, onC
         h('div', { key: 'a', class: 'ds-g3-form-actions' },
             onCancel ? h('button', { key: 'x', type: 'button', class: 'ds-g3-btn ds-g3-btn--ghost', onclick: onCancel }, 'Cancel') : null,
             h('button', { key: 's', type: 'submit', class: 'ds-g3-btn is-on' }, 'Create server')
-        )
+        ),
+        onJoin ? h('button', { key: 'j', type: 'button', class: 'ds-g3-btn ds-g3-btn--ghost', onclick: onJoin }, 'or join one: discover servers') : null
     );
 }
 

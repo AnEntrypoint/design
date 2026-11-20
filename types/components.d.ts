@@ -4132,6 +4132,7 @@ export interface ServerCreateFormProps {
     initialColor?: string;
     onCreate?: (...args: any[]) => any;
     onCancel?: (...args: any[]) => any;
+    onJoin?: (...args: any[]) => any;
     key?: string | number;
 }
 export declare function ServerCreateForm(props?: ServerCreateFormProps): VNode;
