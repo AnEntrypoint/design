@@ -29,6 +29,8 @@ const cardNodes = (value, on) => on === false ? [] : [...new Set(String(value ||
 
 const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"']+\.(?:png|jpe?g|gif|webp)(?:\?[^\s<>"']*)?/gi) || [])].slice(0, 4).map((u, i) => h('img', { key: 'pic' + i, class: 'ds-g3-pic', src: u, loading: 'lazy', onerror: (e) => e.currentTarget.remove() }));
 
+const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
+
 export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
@@ -52,7 +54,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
             : h('div', { key: 'head', class: 'ds-g3-head' },
                 h('span', { key: 'who', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, time)),
-        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text)),
+        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...spoilerNodes(text)),
         ...cardNodes(text, previews),
         ...embedNodes(text, embeds),
         reactionChips
@@ -63,7 +65,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
         h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
         h('div', { key: 'cb', class: 'ds-g3-col' },
             h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
-            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, linkify(text)),
+            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...spoilerNodes(text)),
             ...cardNodes(text, previews),
             ...embedNodes(text, embeds)),
         bar);

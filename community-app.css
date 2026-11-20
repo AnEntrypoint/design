@@ -1129,3 +1129,7 @@ html.ds-247420 .ds-g3-ltitle { color: #00a8fc; font-weight: 600; font-size: 15px
 html.ds-247420 .ds-g3-lcard:hover .ds-g3-ltitle { text-decoration: underline; }
 html.ds-247420 .ds-g3-lcard img { max-width: min(400px, 100%); border-radius: var(--r-0); margin-top: 4px; }
 html.ds-247420 .ds-g3-pic { display: block; max-width: min(400px, 100%); border-radius: var(--r-0); margin-top: 4px; }
+
+html.ds-247420 .ds-g3-spoil { background: #1e1f22; color: transparent; border-radius: 3px; cursor: pointer; }
+html.ds-247420 .ds-g3-spoil.shown { background: #ffffff1a; color: inherit; }
+html.ds-247420.zellous-spoilers .ds-g3-spoil { background: #ffffff1a; color: inherit; }
