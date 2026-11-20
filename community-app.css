@@ -1028,3 +1028,66 @@ html.ds-247420 .ds-g3-aiv { flex: 1; font-size: 12px; color: #949ba4; }
 html.ds-247420 .ds-g3-aitx { color: #dbdee1; font-size: 15px; line-height: 1.45; }
 html.ds-247420 .ds-g3-airow b { color: #f2f3f5; font-weight: 500; margin-right: 4px; }
 html.ds-247420 .ds-g3-aiempty { color: #b5bac1; }
+
+html.ds-247420 .ds-g3-prefs-list { display: flex; flex-direction: column; }
+html.ds-247420 .ds-g3-prefs-h {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #b5bac1;
+  margin: 28px 0 10px;
+  font-weight: 700;
+}
+html.ds-247420 .ds-g3-radio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #2b2d31;
+  border-radius: var(--r-0);
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: #dbdee1;
+}
+html.ds-247420 .ds-g3-radio.on { background: #404249; color: #fff; }
+html.ds-247420 .ds-g3-radio-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #b5bac1;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+html.ds-247420 .ds-g3-radio.on .ds-g3-radio-dot { border: 5px solid #5865f2; background: #fff; }
+html.ds-247420 .ds-g3-prow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #3f4147;
+  color: #dbdee1;
+}
+html.ds-247420 .ds-g3-prow-text { min-width: 0; }
+html.ds-247420 .ds-g3-prow-hint { font-size: 13px; color: #949ba4; margin: 6px 0 0; }
+html.ds-247420 .ds-g3-switch {
+  width: 40px;
+  height: 24px;
+  border: 0;
+  border-radius: 12px;
+  background: #80848e;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+html.ds-247420 .ds-g3-switch.on { background: #23a55a; }
+html.ds-247420 .ds-g3-switch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.15s;
+}
+html.ds-247420 .ds-g3-switch.on .ds-g3-switch-knob { left: 19px; }

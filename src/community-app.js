@@ -17,6 +17,7 @@ import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
 import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
+import { Game3PrefsPanel } from './components/game3-prefs.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
@@ -478,7 +479,7 @@ export function mountCommunityApp(root, adapter = {}) {
             imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeServerCreate && A.closeServerCreate(), ariaLabel: 'create a server', children: ServerCreateForm({ colors: s.serverColors || [], onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onCancel: () => A.closeServerCreate && A.closeServerCreate(), onJoin: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) }) : null,
             s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface, s), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
-            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, GameSettingsSection({ title: 'Notifications and sound', children: (s.gamePrefToggles || []).map((t) => ToggleRow({ label: t.label, checked: !!t.checked, onChange: (val) => A.setGamePref && A.setGamePref(t.key, val) })) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
+            s.gamePrefOpen ? Dialog({ open: true, dismissible: true, onClose: () => A.closeGamePrefs && A.closeGamePrefs(), ariaLabel: 'preferences', children: h('div', { class: 'ds-g3-prefs' }, Game3PrefsPanel({ compact: !!s.gamePrefCompact, toggles: s.gamePrefToggles || [], onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val) }), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeGamePrefs && A.closeGamePrefs() }, 'Done')) }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
