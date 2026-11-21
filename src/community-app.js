@@ -459,6 +459,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 onPins: A.openSurface ? () => A.openSurface('pins') : null,
                 buttons: [
                     s.splitOptions && s.splitOptions.length ? Game3SplitSelect({ key: 'split', options: s.splitOptions, current: s.splitChannel ? s.splitChannel.id : null, onChange: (id) => A.splitTo && A.splitTo(id) }) : null,
+                    h('button', { key: 'mute', type: 'button', class: 'ds-g3-ibtn' + (s.mutedChannel ? ' on' : ''), title: 'Mute Channel', 'aria-label': 'Mute Channel', 'aria-pressed': s.mutedChannel ? 'true' : 'false', onclick: () => A.toggleMuteChannel && A.toggleMuteChannel() }, Icon('mute-channel', { size: 24 })),
                 ].filter(Boolean),
             }),
                     h('div', { class: 'ca-right-body' },
