@@ -1,4 +1,5 @@
 {
-  "count": 193,
-  "updated": "2026-10-05T13:09:11.154Z"
+  "count": 195,
+  "updated": "2026-11-21T04:23:05.989Z",
+  "reason": "game-3 HUD reference (test.html): rail group header padding 18px 8px 4px 2px and topbar 58px right inset have no --space token"
 }

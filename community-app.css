@@ -182,18 +182,19 @@ html.ds-247420 .ca-rail-channels {
   background: #2b2d31;
 }
 html.ds-247420 .ca-rail-channels .group {
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-semibold, 600);
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--fg-3, color-mix(in oklab, var(--fg) 55%, transparent));
-  padding: var(--space-2-5) var(--space-2) var(--space-1);
+  color: #949ba4;
+  padding: 18px 8px 4px 2px;
 }
 html.ds-247420 .ca-rail-channels .group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-right: var(--space-1, 4px);
+  padding-right: var(--space-2);
+  margin-bottom: 0;
 }
 html.ds-247420 .ca-rail-channels .group-add-btn {
   display: flex;
@@ -825,6 +826,8 @@ html.ds-247420 .ds-g3-mebtn {
   cursor: pointer;
   flex: 1;
   min-width: 0;
+
+  border-radius: var(--r-0);
 }
 html.ds-247420 .ds-g3-mebtn:hover { background: #3d3e45; }
 html.ds-247420 .ds-g3-meav {
@@ -1242,3 +1245,40 @@ html.ds-247420 .ds-g3-sboard span:hover { background: #404249; }
 .ds-g3-sl b { color: var(--fg); }
 .ds-g3-splitsel { background: var(--bg); color: var(--fg-2); border: 0; border-radius: var(--r-0); padding: var(--space-1); margin-right: var(--space-2); max-width: 120px; }
 @media (max-width: 900px) { .ds-g3-splitc { display: none; } }
+
+html.ds-247420 .app-main .chat-head {
+  height: 48px;
+  padding: 0 58px 0 var(--space-3);
+  gap: var(--space-2);
+  box-shadow: 0 1px 0 #26272b, 0 1.5px 0 #2b2d31, 0 2px 0 #2f3136;
+  flex-shrink: 0;
+  z-index: var(--z-header);
+}
+html.ds-247420 .app-main .chat-head .ds-chat-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: #f2f3f5;
+  white-space: nowrap;
+}
+html.ds-247420 .app-main .chat-head .sub {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: #b5bac1;
+  border-left: 1px solid #3f4147;
+  padding-left: var(--space-2-75);
+  margin-left: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html.ds-247420 .ds-g3-me .ds-g3-nmtxt {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  color: #f2f3f5;
+}

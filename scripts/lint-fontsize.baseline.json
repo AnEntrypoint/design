@@ -1,4 +1,5 @@
 {
-  "count": 54,
-  "updated": "2026-10-05T13:09:11.179Z"
+  "count": 58,
+  "updated": "2026-11-21T04:23:10.961Z",
+  "reason": "game-3 HUD reference (test.html) uses px sizes (12px, 14px, 16px) for the rail, header and member name; the rem scale differs"
 }
