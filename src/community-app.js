@@ -389,8 +389,10 @@ export function mountCommunityApp(root, adapter = {}) {
         const textChannel = railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page');
         return h('div', { class: 'vx-view' },
             Game3VoiceView({
-                participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted })),
+                participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted, videoKey: p.videoKey || null, isLocal: !!p.isLocal })),
                 micMuted: !!s.micMuted,
+                camera: !!s.cameraOn,
+                onCamera: () => A.toggleCamera && A.toggleCamera(),
                 textName: textChannel ? textChannel.name : 'general',
                 onText: () => { if (textChannel && A.switchChannel) A.switchChannel(textChannel); },
                 onMic: () => A.toggleMic && A.toggleMic(),
