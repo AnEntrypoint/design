@@ -116,8 +116,8 @@ export function mountCommunityApp(root, adapter = {}) {
         return [head, ...(list.length ? list.map(c => railPill(c, cur, isVoice, s)) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
     };
     const railSurfaceRows = (s) => [
-        h('a', { key: 'events', href: '#', class: s.gameSurface === 'events' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('events'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-events', { size: 20 })), h('span', {}, 'Events')),
-        h('a', { key: 'leaderboard', href: '#', class: s.gameSurface === 'leaderboard' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('leaderboard'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-leaderboard', { size: 20 })), h('span', {}, 'Leaderboard')),
+        h('a', { key: 'events', href: '#', class: s.gameSurface === 'events' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('events'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-events', { size: 20 })), h('span', {}, s.eventCount ? s.eventCount + (s.eventCount === 1 ? ' Event' : ' Events') : 'Events')),
+        h('a', { key: 'leaderboard', href: '#', class: s.gameSurface === 'leaderboard' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('leaderboard'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-leaderboard', { size: 20 })), h('span', {}, 'Leaderboard'), s.myLevel != null ? h('span', { class: 'ds-g3-rail-lv' }, 'lv ' + s.myLevel) : null),
     ];
     const railChannelsView = (s, bottom = []) => {
         if (s.homeMode) return dmRailView(s);
