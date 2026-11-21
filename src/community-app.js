@@ -115,6 +115,10 @@ export function mountCommunityApp(root, adapter = {}) {
                 : null);
         return [head, ...(list.length ? list.map(c => railPill(c, cur, isVoice, s)) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
     };
+    const railSurfaceRows = (s) => [
+        h('a', { key: 'events', href: '#', class: s.gameSurface === 'events' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('events'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-events', { size: 20 })), h('span', {}, 'Events')),
+        h('a', { key: 'leaderboard', href: '#', class: s.gameSurface === 'leaderboard' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('leaderboard'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-leaderboard', { size: 20 })), h('span', {}, 'Leaderboard')),
+    ];
     const railChannelsView = (s, bottom = []) => {
         if (s.homeMode) return dmRailView(s);
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
@@ -125,6 +129,7 @@ export function mountCommunityApp(root, adapter = {}) {
         return h('div', { class: 'ca-rail-channels' },
             railServerHead(s),
             h('div', { class: 'chans' },
+                ...railSurfaceRows(s),
                 ...railGroup('Information', s, info, cur, false, null),
                 ...railGroup('Text Channels', s, text, cur, false, 'text'),
                 ...railGroup('Voice Channels', s, voice, cur, true, 'voice')),
