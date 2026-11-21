@@ -1382,3 +1382,5 @@ html.ds-247420 .ds-g3-mcat { line-height: 18px; }
 html.ds-247420 .ds-g3-header { justify-content: flex-start; }
 html.ds-247420 .ds-g3-header-actions { margin-left: auto; }
 html.ds-247420 .ds-g3-header .ds-g3-splitsel { height: 26px; }
+
+html.ds-247420 .ds-g3-mentext { flex: 0 1 auto; }
