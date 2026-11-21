@@ -13844,6 +13844,10 @@
 
 .ds-247420.ds-247420 .ds-g3-mcat { line-height: 18px; }
 
+.ds-247420.ds-247420 .ds-g3-header { justify-content: flex-start; }
+.ds-247420.ds-247420 .ds-g3-header-actions { margin-left: auto; }
+.ds-247420.ds-247420 .ds-g3-header .ds-g3-splitsel { height: 26px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
