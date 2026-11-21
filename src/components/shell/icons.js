@@ -38,6 +38,7 @@ export const ICON_PATHS = {
     'chevron-right': '<path d="m9 6 6 6-6 6"/>',
     'chevron-down': '<path d="m6 9 6 6 6-6"/>',
     'chevron-down-fill': '<path fill="currentColor" d="M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z"/>',
+    'voice-disconnect': '<path fill="currentColor" d="M21.1 13.6c-.5.9-1.6 1.2-2.5.8l-2.4-1.1a1.9 1.9 0 0 1-1.1-1.9l.1-1.1a10 10 0 0 0-6.4 0l.1 1.1c.1.8-.4 1.6-1.1 1.9l-2.4 1.1c-.9.4-2 .1-2.5-.8l-.6-1a2 2 0 0 1 .3-2.4C5 7.9 8.4 6.5 12 6.5s7 1.4 9.4 3.7c.6.6.8 1.6.3 2.4l-.6 1Z"/>',
     'chevron-up': '<path d="m6 15 6-6 6 6"/>',
     'arrow-down': '<path d="M12 5v14M5 12l7 7 7-7"/>',
     'arrow-right': '<path d="M5 12h14M12 5l7 7-7 7"/>',

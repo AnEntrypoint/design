@@ -148,27 +148,13 @@ export function MemberList({ categories = [], open, loading = false, onSelectMem
     );
 }
 
-export function VoiceStrip({ channelName, status, muted, deafened, onMute, onDeafen, onLeave, open } = {}) {
+export function VoiceStrip({ channelName, status, onLeave, open } = {}) {
     return h('div', { class: 'cm-voice-strip' + (open ? ' open' : ''), role: 'region', 'aria-label': 'voice controls' },
-        h('div', { class: 'cm-vs-label' },
-            h('span', { class: 'cm-vs-channel' }, Icon('speaker'), ' ' + (channelName || 'voice')),
-            h('span', { class: 'cm-vs-status' }, status || 'connected')
-        ),
+        h('div', null,
+            h('div', { class: 'cm-vs-title' }, '📶 Voice Connected'),
+            h('div', { class: 'cm-vs-sub' }, channelName || 'voice')),
         h('button', {
-            class: 'cm-vs-btn', type: 'button', onclick: onMute,
-            title: muted ? 'Unmute' : 'Mute',
-            'aria-label': muted ? 'unmute microphone' : 'mute microphone',
-            'aria-pressed': muted ? 'true' : 'false'
-        }, Icon(muted ? 'mic-off' : 'mic')),
-        h('button', {
-            class: 'cm-vs-btn', type: 'button', onclick: onDeafen,
-            title: deafened ? 'Undeafen' : 'Deafen',
-            'aria-label': deafened ? 'undeafen' : 'deafen',
-            'aria-pressed': deafened ? 'true' : 'false'
-        }, Icon(deafened ? 'speaker-off' : 'speaker')),
-        h('button', {
-            class: 'cm-vs-btn danger', type: 'button', onclick: onLeave,
-            title: 'Leave voice', 'aria-label': 'leave voice channel'
-        }, Icon('x'))
-    );
+            class: 'cm-vs-btn', type: 'button', onclick: onLeave,
+            title: 'Disconnect', 'aria-label': 'disconnect from voice'
+        }, Icon('voice-disconnect', { size: 24 })));
 }

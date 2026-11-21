@@ -13767,6 +13767,13 @@
 
 .ds-247420.ds-247420 .ds-g3-mbody { min-width: 0; }
 
+.ds-247420.ds-247420 .cm-voice-strip { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 0; padding: var(--space-2) var(--space-2-5); background: #232428; border-bottom: 1px solid #1f2023; box-shadow: none; color: #f2f3f5; }
+.ds-247420.ds-247420 .cm-voice-strip.open { display: flex; }
+.ds-247420.ds-247420 .cm-vs-title { color: #23a55a; font-weight: 600; font-size: 14px; }
+.ds-247420.ds-247420 .cm-vs-sub { color: #b5bac1; font-size: 12px; }
+.ds-247420.ds-247420 .cm-voice-strip .cm-vs-btn { width: 32px; height: 32px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #b5bac1; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.ds-247420.ds-247420 .cm-voice-strip .cm-vs-btn:hover { background: #3f4248; color: #dbdee1; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
