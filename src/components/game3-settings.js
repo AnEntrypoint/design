@@ -14,6 +14,7 @@ const COPY = {
     mentionsonly: ['Only ping for mentions', 'stay quiet unless someone @s you or says an alert word'],
     motion: ['Reduced motion', 'stops animations: typing dots, the radio bars, flashes'],
     ulinks: ['Always underline links', 'easier to tell links from text'],
+    rolecolors: ['Show role colours on names', 'off: every name in the chat is plain'],
     embeds: ['Show pictures from links', 'image links show the picture itself'],
     jumbo: ['Big emoji', 'a message of only emoji shows them large'],
     spoilers: ['Always reveal spoilers', 'no click needed on ||hidden|| text'],
@@ -22,7 +23,7 @@ const COPY = {
 };
 
 const GROUPS = {
-    access: ['motion', 'ulinks'],
+    access: ['motion', 'ulinks', 'rolecolors'],
     voice: ['vcsounds', 'sbsounds'],
     notif: ['sound', 'mentionsonly'],
     media: ['embeds', 'jumbo', 'spoilers'],
