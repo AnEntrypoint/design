@@ -3,7 +3,7 @@ import * as webjsx from '../../vendor/webjsx/index.js';
 const h = webjsx.createElement;
 const DOT = { online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' };
 
-export function Game3MemberRow({ identity, name, color, nameColor, status = 'online', suffix, offline = false, onClick, key } = {}) {
+export function Game3MemberRow({ identity, name, color, nameColor, status = 'online', suffix, activity, offline = false, onClick, key } = {}) {
     const initial = String(name || identity || '?').trim().slice(0, 1).toUpperCase();
     const dot = DOT[status] || DOT.online;
     return h('div', {
@@ -18,7 +18,8 @@ export function Game3MemberRow({ identity, name, color, nameColor, status = 'onl
         h('div', { class: 'ds-g3-mbody' },
             h('div', { class: 'ds-g3-nm', style: nameColor ? '--ds-g3-nm-color:' + nameColor : null },
                 h('span', { class: 'ds-g3-nmtxt' }, name || identity),
-                suffix ? h('span', { class: 'ds-g3-msuffix' }, suffix) : null)));
+                suffix ? h('span', { class: 'ds-g3-msuffix' }, suffix) : null),
+            h('div', { class: 'ds-g3-msub' }, activity || '')));
 }
 
 export function Game3MemberList({ categories = [], open, loading = false, onSelectMember, userId } = {}) {

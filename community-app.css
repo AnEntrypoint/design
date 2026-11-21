@@ -1386,3 +1386,8 @@ html.ds-247420 .ds-g3-header .ds-g3-splitsel { height: 26px; }
 html.ds-247420 .ds-g3-mentext { flex: 0 1 auto; }
 
 html.ds-247420 .ds-g3-header-name { line-height: 24px; }
+
+html.ds-247420 .ds-g3-live { margin-left: auto; background: #23a55a; color: #fff; font-size: 10px; font-weight: 800; border-radius: var(--r-0); padding: 1px 5px; letter-spacing: 0.03em; }
+html.ds-247420 .ds-g3-mbody { align-self: stretch; }
+html.ds-247420 .ds-g3-nm { line-height: 24px; }
+html.ds-247420 .ds-g3-msub { font-size: 12px; line-height: 18px; color: #949ba4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 18px; }
