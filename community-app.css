@@ -828,8 +828,6 @@ html.ds-247420 .ds-g3-mebtn {
   cursor: pointer;
   flex: 1;
   min-width: 0;
-
-  border-radius: var(--r-0);
 }
 html.ds-247420 .ds-g3-mebtn:hover { background: #3d3e45; }
 html.ds-247420 .ds-g3-meav {

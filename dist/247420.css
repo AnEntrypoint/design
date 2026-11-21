@@ -13293,8 +13293,6 @@
   cursor: pointer;
   flex: 1;
   min-width: 0;
-
-  border-radius: var(--r-0);
 }
 .ds-247420.ds-247420 .ds-g3-mebtn:hover { background: #3d3e45; }
 .ds-247420.ds-247420 .ds-g3-meav {

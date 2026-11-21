@@ -471,7 +471,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 h('main', { class: 'app-main ds-app-surface', id: 'app-main', tabindex: '-1', onclick: () => { if (s.mobileMenuOpen && A.closeMobileMenu) A.closeMobileMenu(); } },
                     h('h1', { class: 'sr-only' }, ch.name || 'general'),
                     !inVoiceChannel && s.voiceConnected ? VoiceStrip({ channelName: s.voiceChannelName, status: s.voiceConnectionState || 'connected', muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onLeave: () => A.leaveVoice && A.leaveVoice(), open: true }) : null,
-                    Game3UserPanel({ name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: avatarColor(s.userId), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openSettings && A.openSettings() }),
+                    Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: avatarColor(s.userId), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openSettings && A.openSettings() }),
                     bodyMain,
                 ),
                 s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null) }) : null,
