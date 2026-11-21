@@ -13860,6 +13860,9 @@
 .ds-247420.ds-247420 .ds-g3-mav { font-size: 16px; box-shadow: 0 0 0 2px #2b2d31; }
 .ds-247420.ds-247420 .ds-g3-msub { font-weight: 400; }
 
+.ds-247420.ds-247420 .ca-rail-channels .ds-g3-sep2 { height: 1px; background: #3f4147; margin: 8px 8px 0; }
+.ds-247420.ds-247420 .ca-rail-channels .group-header { height: 40px; box-sizing: border-box; align-items: flex-end; padding: 18px 8px 4px 2px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

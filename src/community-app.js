@@ -131,6 +131,7 @@ export function mountCommunityApp(root, adapter = {}) {
             railServerHead(s),
             h('div', { class: 'chans' },
                 ...railSurfaceRows(s),
+                h('div', { class: 'ds-g3-sep2', 'aria-hidden': 'true' }),
                 ...railGroup('Information', s, info, cur, false, null),
                 ...railGroup('Text Channels', s, text, cur, false, 'text'),
                 ...railGroup('Voice Channels', s, voice, cur, true, 'voice')),
