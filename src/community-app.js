@@ -344,9 +344,9 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: game3Rows(s), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, typingBar, Game3Composer({
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ typing: typingBar,
                 value: s.chatInputValue || '',
-                placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'message ' + (s.activeDmPeer ? (ch.name || '') : 'someone') : 'message #' + (ch.name || 'general')) + '…',
+                placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
                 onCancelReply: () => A.startReply && A.startReply(null),
                 onInput: (v) => A.setInput && A.setInput(v),

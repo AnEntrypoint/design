@@ -13762,6 +13762,8 @@
 .ds-247420.ds-247420 .ca-rail-channels a:hover .glyph,
 .ds-247420.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
 
+.ds-247420.ds-247420 .ds-g3-typ { height: 24px; font-size: 14px; color: #dbdee1; padding: 0 2px; display: flex; align-items: center; gap: 6px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

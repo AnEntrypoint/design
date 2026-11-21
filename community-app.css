@@ -1296,3 +1296,5 @@ html.ds-247420 .ca-rail-channels a .glyph { color: #80848e; }
 html.ds-247420 .ca-rail-channels a:hover { background: #35373c; color: #dbdee1; }
 html.ds-247420 .ca-rail-channels a:hover .glyph,
 html.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
+
+html.ds-247420 .ds-g3-typ { height: 24px; font-size: 14px; color: #dbdee1; padding: 0 2px; display: flex; align-items: center; gap: 6px; }
