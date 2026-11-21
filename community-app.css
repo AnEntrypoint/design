@@ -1397,3 +1397,11 @@ html.ds-247420 .ds-g3-msub { font-weight: 400; }
 
 html.ds-247420 .ca-rail-channels .ds-g3-sep2 { height: 1px; background: #3f4147; margin: 8px 8px 0; }
 html.ds-247420 .ca-rail-channels .group-header { height: 40px; box-sizing: border-box; align-items: flex-end; padding: 18px 8px 4px 2px; }
+
+html.ds-247420 .ca-rail-channels a.unread { color: #f2f3f5; font-weight: 600; position: relative; }
+html.ds-247420 .ca-rail-channels a.unread::before { content: ""; position: absolute; left: -8px; top: 13px; width: 4px; height: 8px; background: #f2f3f5; border-radius: 0 var(--r-0) var(--r-0) 0; }
+
+html.ds-247420 .ca-rail-channels .vu { display: flex; align-items: center; gap: 8px; padding: 4px 8px 4px 36px; color: #949ba4; font-size: 14px; border-radius: var(--r-0); cursor: pointer; }
+html.ds-247420 .ca-rail-channels .vu:hover { background: #35373c; }
+html.ds-247420 .ca-rail-channels .ds-g3-vu-av { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-shadow: 0 0 0 2px #2b2d31; }
+html.ds-247420 .ca-rail-channels .vu.talk .ds-g3-vu-av { box-shadow: 0 0 0 2px #2b2d31, 0 0 0 4px #23a55a; }

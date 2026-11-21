@@ -114,7 +114,8 @@ export function mountCommunityApp(root, adapter = {}) {
             (s.canManage && A.createChannel && createType)
                 ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label, title: 'Create ' + label, onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType); } }, Icon('plus', { size: 13 }))
                 : null);
-        return [head, ...(list.length ? list.map(c => railPill(c, cur, isVoice, s)) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
+        const vuRows = (c) => (isVoice && s.voiceConnected && s.voiceChannelName === c.name ? (s.voiceParticipants || []) : []).map((p, i) => h('div', { key: 'vu' + c.id + i, class: 'vu' + (p.speaking ? ' talk' : '') }, h('span', { class: 'ds-g3-vu-av', 'aria-hidden': 'true' }, String(p.name || p.identity || '?').trim().slice(0, 1).toUpperCase()), p.name || p.identity || ''));
+        return [head, ...(list.length ? list.flatMap(c => [railPill(c, cur, isVoice, s), ...vuRows(c)]) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
     };
     const railSurfaceRows = (s) => [
         h('a', { key: 'events', href: '#', class: s.gameSurface === 'events' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('events'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-events', { size: 20 })), h('span', {}, s.eventCount ? s.eventCount + (s.eventCount === 1 ? ' Event' : ' Events') : 'Events'), s.eventLive ? h('span', { class: 'ds-g3-live' }, 'LIVE') : null),
@@ -170,7 +171,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const canReorder = !!s.canManage && !!A.reorderChannel;
         const dropAllowed = () => !!railDragId && railDragId !== c.id;
         return h('a', {
-            href: '#', class: active ? 'active' : '', 'aria-label': (c.name || c.id) + (inVoice ? ' (in voice)' : ''),
+            href: '#', class: [active ? 'active' : '', c.unreadCount ? 'unread' : ''].filter(Boolean).join(' '), 'aria-label': (c.name || c.id) + (inVoice ? ' (in voice)' : ''),
             title: canReorder ? ((c.name || c.id) + ': drag, or hold Alt and press the arrow keys, to reorder') : (c.name || c.id),
             'aria-keyshortcuts': canReorder ? 'Alt+ArrowUp Alt+ArrowDown' : null,
             onclick: (e) => { e.preventDefault(); A.switchChannel && A.switchChannel(c); },
@@ -192,8 +193,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 e.preventDefault();
                 A.reorderChannel(c.id, e.key === 'ArrowUp' ? -1 : 1);
             } : null,
-        }, glyph, h('span', {}, c.name || c.id),
-            c.unreadCount ? h('span', { class: 'count' }, c.unreadCount > 99 ? '99+' : String(c.unreadCount)) : null);
+        }, glyph, h('span', {}, c.name || c.id));
     };
 
     const railServerPill = (sv, s) => {
