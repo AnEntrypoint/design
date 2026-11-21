@@ -4164,21 +4164,17 @@ export declare function SplitToggle(props?: SplitToggleProps): VNode;
  */
 export interface GameHeaderProps {
     /** @default '' */
-    brand?: string;
-    /** @default '' */
-    serverName?: string;
-    /** @default '' */
     channelName?: string;
     /** @default 'text' */
     channelType?: 'text' | 'voice' | (string & {});
     /** @default '' */
     topic?: string;
-    /** @default 0 */
-    unread?: number;
     /** @default false */
     memberListOpen?: boolean;
-    onCatchUp?: (...args: any[]) => any;
     onMembers?: (...args: any[]) => any;
+    /** @default false */
+    pinsOpen?: boolean;
+    onPins?: (...args: any[]) => any;
     /** @default [] */
     buttons?: any[];
     key?: string | number;
