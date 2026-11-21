@@ -1356,3 +1356,5 @@ html.ds-247420 .ds-g3-fi { background: #1e1f22; border: 0; outline: 0; border-ra
 html.ds-247420 .ds-g3-set-close { position: absolute; right: 40px; top: 60px; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #b5bac1; color: #b5bac1; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; }
 html.ds-247420 .ds-g3-set-close:hover { background: #ffffff14; }
 html.ds-247420 .ds-g3-evb-ghost { background: transparent; color: #f23f43; }
+
+html.ds-247420 .ca-right-body .chat-thread { padding-left: 0; padding-right: 0; }
