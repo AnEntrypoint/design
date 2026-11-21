@@ -103,9 +103,13 @@ export function mountCommunityApp(root, adapter = {}) {
             railServerAdd(s), railServerExplore(s));
     };
 
+    const railServerHead = (s) => {
+        const sv = (s.servers || []).find((x) => x.id === s.currentServerId);
+        return h('div', { class: 'shead' }, h('span', {}, sv ? sv.name : 'home'), Icon('chevron-down-fill', { size: 18 }));
+    };
     const railGroup = (label, s, list, cur, isVoice, createType) => {
         const head = h('div', { class: 'group group-header' },
-            h('span', {}, label),
+            h('span', {}, Icon('chevron-down-fill', { size: 12 }), label),
             (s.canManage && A.createChannel && createType)
                 ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label, title: 'Create ' + label, onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType); } }, Icon('plus', { size: 13 }))
                 : null);
@@ -119,9 +123,11 @@ export function mountCommunityApp(root, adapter = {}) {
         const voice = channels.filter(c => c.type === 'voice' || c.type === 'threaded');
         const text = channels.filter(c => !info.includes(c) && !voice.includes(c));
         return h('div', { class: 'ca-rail-channels' },
-            ...railGroup('information', s, info, cur, false, null),
-            ...railGroup('text channels', s, text, cur, false, 'text'),
-            ...railGroup('voice channels', s, voice, cur, true, 'voice'));
+            railServerHead(s),
+            h('div', { class: 'chans' },
+                ...railGroup('Information', s, info, cur, false, null),
+                ...railGroup('Text Channels', s, text, cur, false, 'text'),
+                ...railGroup('Voice Channels', s, voice, cur, true, 'voice')));
     };
 
     const dmRailView = (s) => {

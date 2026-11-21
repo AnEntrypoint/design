@@ -13748,6 +13748,19 @@
   color: #f2f3f5;
 }
 
+.ds-247420.ds-247420 .ca-rail-channels { overflow: hidden; }
+.ds-247420.ds-247420 .ca-rail-channels .chans { flex: 1; overflow-y: auto; padding: var(--space-2); }
+.ds-247420.ds-247420 .ca-rail-channels .shead { height: 48px; padding: 0 var(--space-3); display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 16px; color: #f2f3f5; box-shadow: 0 1px 0 #1f2023, 0 1.5px 0 #232428, 0 2px 0 #26272b; cursor: pointer; flex-shrink: 0; }
+.ds-247420.ds-247420 .ca-rail-channels .shead:hover { background: #35373c; }
+.ds-247420.ds-247420 .ca-rail-channels .shead span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-247420.ds-247420 .ca-rail-channels .group-header span:first-child svg { width: 12px; height: 12px; transition: transform 0.1s; }
+.ds-247420.ds-247420 .ca-rail-channels .group-header span:first-child { display: inline-flex; align-items: center; gap: var(--space-hair); }
+
+.ds-247420.ds-247420 .ca-rail-channels a .glyph { color: #80848e; }
+.ds-247420.ds-247420 .ca-rail-channels a:hover { background: #35373c; color: #dbdee1; }
+.ds-247420.ds-247420 .ca-rail-channels a:hover .glyph,
+.ds-247420.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
