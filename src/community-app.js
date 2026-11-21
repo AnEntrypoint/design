@@ -15,6 +15,7 @@ import { Game3VoiceView } from './components/game3-voice.js';
 import { Game3UserPanel } from './components/game3-user.js';
 import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
+import { Game3InboxPanel } from './components/game3-inbox.js';
 import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
@@ -457,6 +458,10 @@ export function mountCommunityApp(root, adapter = {}) {
                 onMembers: A.toggleMembers ? () => A.toggleMembers() : null,
                 pinsOpen: s.gameSurface === 'pins',
                 onPins: A.openSurface ? () => A.openSurface('pins') : null,
+                trailing: [
+                    h('label', { key: 'srch', class: 'ds-g3-srch' }, h('input', { type: 'text', placeholder: 'Search', value: s.chatSearch || '', onkeydown: (e) => { if (e.key === 'Enter' && A.setChatSearch) A.setChatSearch(e.currentTarget.value); } }), Icon('search-ref', { size: 16 })),
+                    h('button', { key: 'inbox', type: 'button', class: 'ds-g3-ibtn' + (s.gameSurface === 'inbox' ? ' on' : ''), title: 'Inbox', 'aria-label': 'Inbox', onclick: () => A.openSurface && A.openSurface('inbox') }, Icon('inbox', { size: 24 })),
+                ],
                 buttons: [
                     s.splitOptions && s.splitOptions.length ? Game3SplitSelect({ key: 'split', options: s.splitOptions, current: s.splitChannel ? s.splitChannel.id : null, onChange: (id) => A.splitTo && A.splitTo(id) }) : null,
                     h('button', { key: 'mute', type: 'button', class: 'ds-g3-ibtn' + (s.mutedChannel ? ' on' : ''), title: 'Mute Channel', 'aria-label': 'Mute Channel', 'aria-pressed': s.mutedChannel ? 'true' : 'false', onclick: () => A.toggleMuteChannel && A.toggleMuteChannel() }, Icon('mute-channel', { size: 24 })),
@@ -500,6 +505,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: "This channel doesn't have any pinned messages... yet.", onJump: (id) => A.jumpToMessage && A.jumpToMessage(id) });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
         if (name === 'polls') return Game3PollsPanel({ polls: s.polls || [], emptyText: 'No polls in this channel yet.', onVote: A.votePoll ? (id, i) => A.votePoll(id, i) : null });
+        if (name === 'inbox') return Game3InboxPanel({ tab: s.inboxTab || 'mentions', onTab: (t) => A.setInboxTab && A.setInboxTab(t), rows: s.mentions || [], saved: s.savedMessages || [], onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some, once every 30 seconds.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ onCreate: A.createEvent ? (f) => A.createEvent(f) : null, events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, about: e.about, location: e.location, at: e.start, name: e.name, mine: e.mine, count: e.going.length, interested: e.interested })), now, onRsvp: A.rsvpEvent ? (id) => A.rsvpEvent(id) : null, onDelete: A.deleteEvent ? (id) => A.deleteEvent(id) : null, onClose: () => A.closeSurface && A.closeSurface() }); }
         if (name === 'discover') return h('div', null, h('h2', null, 'Discover servers'), DiscoverList({ servers: s.discoverServers || [], emptyText: 'No servers joined yet.', onOpen: (id) => A.switchServer && A.switchServer(id) }));
