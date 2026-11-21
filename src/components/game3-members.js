@@ -15,9 +15,10 @@ export function Game3MemberRow({ identity, name, color, nameColor, status = 'onl
         h('div', { class: 'ds-g3-mav', style: '--ds-g3-av-color:' + (color || 'var(--accent)') },
             initial,
             h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + dot, 'aria-label': status })),
-        h('div', { class: 'ds-g3-nm', style: nameColor ? '--ds-g3-nm-color:' + nameColor : null },
-            h('span', { class: 'ds-g3-nmtxt' }, name || identity),
-            suffix ? h('span', { class: 'ds-g3-msuffix' }, suffix) : null));
+        h('div', { class: 'ds-g3-mbody' },
+            h('div', { class: 'ds-g3-nm', style: nameColor ? '--ds-g3-nm-color:' + nameColor : null },
+                h('span', { class: 'ds-g3-nmtxt' }, name || identity),
+                suffix ? h('span', { class: 'ds-g3-msuffix' }, suffix) : null)));
 }
 
 export function Game3MemberList({ categories = [], open, loading = false, onSelectMember, userId } = {}) {

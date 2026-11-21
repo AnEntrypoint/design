@@ -13152,11 +13152,12 @@
   flex-shrink: 0;
 }
 .ds-247420.ds-247420 .ds-g3-mdot {
+  box-sizing: content-box;
   position: absolute;
-  right: -2px;
-  bottom: -2px;
-  width: 12px;
-  height: 12px;
+  right: -3px;
+  bottom: -3px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 3px solid #2b2d31;
   background: var(--ds-g3-dot-color, #23a55a);
@@ -13763,6 +13764,8 @@
 .ds-247420.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
 
 .ds-247420.ds-247420 .ds-g3-typ { height: 24px; font-size: 14px; color: #dbdee1; padding: 0 2px; display: flex; align-items: center; gap: 6px; }
+
+.ds-247420.ds-247420 .ds-g3-mbody { min-width: 0; }
 
 /* app-surfaces.css */
 
