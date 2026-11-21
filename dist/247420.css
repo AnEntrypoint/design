@@ -12941,7 +12941,8 @@
 .ds-247420.ds-247420 .ds-g3-msg:hover { background: #2e3035; }
 .ds-247420.ds-247420 .ds-g3-msg.ds-g3-cont { margin-top: 0; padding-left: 72px; }
 .ds-247420.ds-247420 .ds-g3-msg:hover > .ds-g3-bar { display: flex; }
-.ds-247420.ds-247420 .ds-g3-msg.ds-g3-cont:hover > .ds-g3-col > .ds-g3-stamp { display: block; }
+.ds-247420.ds-247420 .ds-g3-msg.ds-g3-cont:hover > .ds-g3-stamp { display: block; }
+.ds-247420.ds-247420 .ds-g3-msg > .ds-g3-tx-wrap { min-width: 0; flex: 1; }
 .ds-247420.ds-247420 .ds-g3-av {
   width: 40px;
   height: 40px;
