@@ -2075,10 +2075,6 @@ export declare function ChatHeader(props?: ChatHeaderProps): VNode;
 export interface VoiceStripProps {
     channelName?: any;
     status?: any;
-    muted?: any;
-    deafened?: any;
-    onMute?: (...args: any[]) => any;
-    onDeafen?: (...args: any[]) => any;
     onLeave?: (...args: any[]) => any;
     open?: any;
 }
