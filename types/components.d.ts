@@ -4177,6 +4177,8 @@ export interface GameHeaderProps {
     onPins?: (...args: any[]) => any;
     /** @default [] */
     buttons?: any[];
+    /** @default [] */
+    trailing?: any[];
     key?: string | number;
 }
 export declare function GameHeader(props?: GameHeaderProps): VNode;
