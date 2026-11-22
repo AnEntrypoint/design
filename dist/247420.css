@@ -13106,6 +13106,7 @@
 }
 .ds-247420.ds-247420 .ds-g3-box textarea::placeholder { color: #6d6f78; }
 .ds-247420.ds-247420 .ds-g3-box textarea, .ds-247420.ds-247420 .ds-g3-box textarea:hover, .ds-247420.ds-247420 .ds-g3-box textarea:focus, .ds-247420.ds-247420 .ds-g3-box textarea:focus-visible { box-shadow: none; outline: 0; }
+.ds-247420.ds-247420 .ds-g3-srch input, .ds-247420.ds-247420 .ds-g3-srch input:hover, .ds-247420.ds-247420 .ds-g3-srch input:focus, .ds-247420.ds-247420 .ds-g3-srch input:focus-visible { box-shadow: none; outline: 0; }
 .ds-247420.ds-247420 .ds-g3-cc { font-size: 12px; color: #f0b232; margin: 0 6px; }
 .ds-247420.ds-247420 .ds-g3-compbtn { color: #b5bac1; padding: 4px; display: flex; cursor: pointer; flex-shrink: 0; }
 .ds-247420.ds-247420 .ds-g3-compbtn:hover { color: #f0b232; }
