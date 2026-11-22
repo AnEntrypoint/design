@@ -41,7 +41,7 @@ const toggleRow = (key, checked, onToggle) => h('div', { key, class: 'ds-g3-tgl'
         h('div', { class: 'ds-g3-hint' }, COPY[key][1])),
     h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }));
 
-export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
+export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color = '', initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
     const group = (g) => GROUPS[g].map((k) => toggleRow(k, !!toggles[k], onToggle));
     const pane = {
         account: () => [
@@ -49,12 +49,15 @@ export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', initi
             h('div', { key: 'acct', class: 'ds-g3-acct' },
                 h('div', { class: 'ds-g3-acct-ban', style: 'background:' + (banner || '#c4602f') }),
                 h('div', { class: 'ds-g3-acct-row' },
-                    h('div', { class: 'ds-g3-acct-av' }, initial),
-                    h('div', null, h('h3', null, name)))),
+                    h('div', { class: 'ds-g3-acct-av', style: 'background:' + (color || 'var(--accent)') }, initial),
+                    h('div', null, h('h3', null, name))),
+                h('div', { class: 'ds-g3-acct-note' }, 'your name and picture are your profile: change them there and they change here.')),
             h('div', { key: 'stat', class: 'ds-g3-stat' },
                 h('div', null, h('b', null, String(level)), h('span', null, 'level')),
                 h('div', null, h('b', null, String(xp)), h('span', null, 'xp')),
-                h('div', null, h('b', null, String(servers)), h('span', null, 'servers'))),
+                h('div', null, h('b', null, String(servers)), h('span', null, 'servers')),
+                h('div', null, h('b', null, '0'), h('span', null, 'saved')),
+                h('div', null, h('b', null, '0'), h('span', null, 'reminders'))),
         ],
         profile: () => [
             h('h2', { key: 'h' }, 'Profiles'),
