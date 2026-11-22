@@ -347,6 +347,7 @@ export function mountCommunityApp(root, adapter = {}) {
     const closeOverlays = () => {
         moreFor = null; reactPickFor = null; stickersOpen = false; emojisOpen = false; statusMenuOpen = false;
         switcher = { open: false, q: '' }; imageLightbox = { open: false, src: null, alt: '' };
+        card = { ...card, open: false }; ctx = { ...ctx, open: false }; emoji = { ...emoji, open: false }; palette = { ...palette, open: false };
         const open = get() || {};
         if (open.gameSurface && A.closeSurface) A.closeSurface();
         if (open.gameServerCreateOpen && A.closeServerCreate) A.closeServerCreate();
