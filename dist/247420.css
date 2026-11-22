@@ -13920,6 +13920,8 @@
 .ds-247420.ds-247420 .ds-g3-dev-k { color: #b5bac1; }
 .ds-247420.ds-247420 .ds-g3-dev-v { font-family: var(--ff-mono, monospace); color: #dbdee1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 
+.ds-247420.ds-247420 .ds-g3-dev-reset { padding-top: var(--space-2-75); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
