@@ -13772,6 +13772,7 @@
 .ds-247420.ds-247420 .ca-right-body .chat { padding-bottom: 0; }
 
 .ds-247420.ds-247420 .ca-right-body .ds-g3-comp { width: 726px; box-sizing: border-box; }
+.ds-247420.ds-247420 .ca-right-body { color: #dbdee1; }
 .ds-247420.ds-247420 .ds-g3-set { position: fixed; inset: 0; display: flex; z-index: var(--z-modal); background: #313338; }
 .ds-247420.ds-247420 .ds-g3-set-nav { width: min(38%, 300px); background: #2b2d31; display: flex; justify-content: flex-end; padding: 60px 6px 60px 20px; }
 .ds-247420.ds-247420 .ds-g3-set-nav > div { width: 192px; }
