@@ -19,7 +19,7 @@ export function Game3MemberRow({ identity, name, color, nameColor, status = 'onl
         h('div', { class: 'ds-g3-mbody' },
             h('div', { class: 'ds-g3-nm', style: nameColor ? '--ds-g3-nm-color:' + nameColor : null },
                 h('span', { class: 'ds-g3-nmtxt' }, name || identity),
-                suffix ? h('span', { class: 'ds-g3-msuffix' }, suffix) : null),
+                suffix ? h('span', { class: 'ds-g3-msuffix' + (String(suffix).indexOf('APP') >= 0 ? ' ds-g3-msuffix-app' : '') }, suffix) : null),
             h('div', { class: 'ds-g3-msub' }, activity || '')));
 }
 

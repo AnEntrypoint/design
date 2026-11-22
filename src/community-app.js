@@ -20,6 +20,7 @@ import { Game3ServerCreate } from './components/game3-server-create.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
 import { Game3PeopleHere } from './components/game3-people.js';
+import { game3AvatarBg } from './components/game3-hue.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
@@ -78,7 +79,6 @@ export function mountCommunityApp(root, adapter = {}) {
     const A = adapter.actions || {};
     const H = adapter.helpers || {};
     const brandName = adapter.brandName || 'app';
-    const avatarColor = H.avatarColor || (() => 'var(--accent)');
     const initial = H.initial || ((n) => String(n || '?').slice(0, 1).toUpperCase());
     const formatTime = H.formatTime || ((t) => new Date(t || Date.now()).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
 
@@ -304,7 +304,7 @@ export function mountCommunityApp(root, adapter = {}) {
             return Game3Message({
                 poll: m.poll ? { ...m.poll, onVote: (i) => A.votePoll && A.votePoll(m.poll.id, i) } : null,
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
-                name: username, initial: initial(username), avatarColor: avatarColor(m.userId),
+                name: username, initial: initial(username), avatarColor: game3AvatarBg(username),
                 headTime: m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp),
                 time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
                 continuation: !s.gamePrefCompact && continuation, compact: !!s.gamePrefCompact, previews: s.previews !== false, embeds: s.embeds !== false, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId, jumbo: !!s.jumbo && isJumbo(m.content),
