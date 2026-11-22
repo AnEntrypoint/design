@@ -14041,6 +14041,11 @@
 .ds-247420.ds-247420 .ca-rail-servers a.ca-rail-server-explore { gap: var(--space-2-75); }
 .ds-247420.ds-247420 .ca-rail-channels .group { gap: var(--space-hair); }
 @media (min-width: 901px) { .ds-247420.ds-247420 .ds-g3-header .ds-g3-ibtn[aria-label="Member List"] { color: #f2f3f5; } }
+.ds-247420.ds-247420 .ca-app :where(*) { scrollbar-width: auto; scrollbar-color: auto; }
+.ds-247420.ds-247420 .ca-app ::-webkit-scrollbar { width: 8px; }
+.ds-247420.ds-247420 .ca-app ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
+.ds-247420.ds-247420 .ca-app ::-webkit-scrollbar-track { background: transparent; }
+.ds-247420.ds-247420 .ds-g3-systx { line-height: 22px; }
 
 /* app-surfaces.css */
 

@@ -45,9 +45,9 @@ export function Game3Message({ poll = null, invite = null, key, id, name = '', i
         : null;
     const bar = h('div', { class: 'ds-g3-bar', key: 'bar', role: 'group', 'aria-label': 'message actions' },
         QUICK.map((e) => h('span', { key: 'q' + e, role: 'button', tabindex: '0', title: 'react ' + e, onclick: () => onReact && onReact(e) }, e)),
-        h('span', { key: 'add', role: 'button', tabindex: '0', title: 'Add Reaction', onclick: (e) => onAddReaction && onAddReaction(e) }, Icon('smile', { size: 18 })),
-        h('span', { key: 'reply', role: 'button', tabindex: '0', title: 'Reply', onclick: () => onReply && onReply() }, Icon('corner-up-left', { size: 18 })),
-        onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: 'Pin', onclick: () => onPin() }, Icon('g3-pin', { size: 18 })) : null,
+        h('span', { key: 'add', role: 'button', tabindex: '0', title: 'Add Reaction', onclick: (e) => onAddReaction && onAddReaction(e) }, Icon('ref-smile', { size: 20 })),
+        h('span', { key: 'reply', role: 'button', tabindex: '0', title: 'Reply', onclick: () => onReply && onReply() }, Icon('ref-reply', { size: 20 })),
+        onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: 'Pin', onclick: () => onPin() }, Icon('ref-pins', { size: 24 })) : null,
         mine ? h('span', { key: 'del', role: 'button', tabindex: '0', title: 'Delete', onclick: () => onDelete && onDelete() }, Icon('trash', { size: 18 })) : null,
         devMode ? h('span', { key: 'cid', role: 'button', tabindex: '0', title: 'Copy Message ID', onclick: () => copyText(messageId) }, Icon('copy', { size: 18 })) : null,
         devMode ? h('span', { key: 'cuid', role: 'button', tabindex: '0', title: 'Copy User ID', onclick: () => copyText(userId) }, Icon('clipboard', { size: 18 })) : null

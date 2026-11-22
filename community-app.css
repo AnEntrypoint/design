@@ -1576,3 +1576,8 @@ html.ds-247420 .ds-g3-smenu-i { display: flex; }
 html.ds-247420 .ca-rail-servers a.ca-rail-server-explore { gap: var(--space-2-75); }
 html.ds-247420 .ca-rail-channels .group { gap: var(--space-hair); }
 @media (min-width: 901px) { html.ds-247420 .ds-g3-header .ds-g3-ibtn[aria-label="Member List"] { color: #f2f3f5; } }
+html.ds-247420 .ca-app :where(*) { scrollbar-width: auto; scrollbar-color: auto; }
+html.ds-247420 .ca-app ::-webkit-scrollbar { width: 8px; }
+html.ds-247420 .ca-app ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
+html.ds-247420 .ca-app ::-webkit-scrollbar-track { background: transparent; }
+html.ds-247420 .ds-g3-systx { line-height: 22px; }

@@ -38,7 +38,8 @@ import { attempt } from './best-effort.js';
 
 const h = webjsx.createElement;
 
-const CHANNEL_ICON = { voice: 'speaker', forum: 'forum', threaded: 'thread', announcement: 'send', page: 'page', text: 'hash' };
+const CHANNEL_ICON = { voice: 'ref-speaker', forum: 'forum', threaded: 'thread', announcement: 'ref-mega', page: 'ref-rules', text: 'ref-hash' };
+const CHANNEL_NAME_ICON = { rules: 'ref-rules', 'pick-roles': 'ref-roles', announcements: 'ref-mega' };
 
 function UserCardOverlay({ member, onClose } = {}) {
     if (!member) return null;
@@ -97,10 +98,10 @@ export function mountCommunityApp(root, adapter = {}) {
     let imageLightbox = { open: false, src: null, alt: '' };
 
     const railServerAdd = (s) => (A.openServerCreate)
-        ? h('a', { href: '#', class: 'ca-rail-server-add', title: 'Create a server', 'aria-label': 'create a server', onclick: (e) => { e.preventDefault(); A.openServerCreate(); } }, Icon('plus', { size: 15 }))
+        ? h('a', { href: '#', class: 'ca-rail-server-add', title: 'Create a server', 'aria-label': 'create a server', onclick: (e) => { e.preventDefault(); A.openServerCreate(); } }, Icon('ref-plus', { size: 24 }))
         : null;
     const railServerExplore = (s) => (A.explore)
-        ? h('a', { href: '#', class: 'ca-rail-server-explore', title: 'Find new servers to join', 'aria-label': 'find new servers to join', onclick: (e) => { e.preventDefault(); A.explore(); } }, Icon('compass', { size: 15 }))
+        ? h('a', { href: '#', class: 'ca-rail-server-explore', title: 'Find new servers to join', 'aria-label': 'find new servers to join', onclick: (e) => { e.preventDefault(); A.explore(); } }, Icon('ref-compass', { size: 24 }))
         : null;
     const railServersView = (s) => {
         const servers = s.servers || [];
@@ -114,7 +115,7 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const railServerHead = (s) => {
         const sv = (s.servers || []).find((x) => x.id === s.currentServerId);
-        return h('div', { class: 'shead', role: 'button', tabindex: '0', 'aria-haspopup': 'menu', 'aria-expanded': serverMenuOpen ? 'true' : 'false', onclick: () => { serverMenuOpen = !serverMenuOpen; render(); } }, h('span', {}, sv ? sv.name : 'home'), Icon('chevron-down-fill', { size: 18 }));
+        return h('div', { class: 'shead', role: 'button', tabindex: '0', 'aria-haspopup': 'menu', 'aria-expanded': serverMenuOpen ? 'true' : 'false', onclick: () => { serverMenuOpen = !serverMenuOpen; render(); } }, h('span', {}, sv ? sv.name : 'home'), Icon('ref-chevron', { size: 18 }));
     };
     const serverMenuItems = (s) => {
         const owner = !!s.canManage;
@@ -186,9 +187,8 @@ export function mountCommunityApp(root, adapter = {}) {
     const railPill = (c, cur, isVoice, s) => {
         const active = cur.id === c.id;
         const inVoice = isVoice && s.voiceConnected && s.voiceChannelName === c.name;
-        const glyph = inVoice ? h('span', { class: 'glyph glyph-voice', 'aria-hidden': 'true' }, h('span', { class: 'ds-dot ds-dot-live' }))
-            : (c.type === 'threaded' ? h('span', { class: 'glyph glyph-threaded', 'aria-hidden': 'true' }, Icon('circle-dot', { size: 20 }))
-                : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(CHANNEL_ICON[c.type] || 'hash', { size: 20 })));
+        const glyph = c.type === 'threaded' ? h('span', { class: 'glyph glyph-threaded', 'aria-hidden': 'true' }, Icon('circle-dot', { size: 20 }))
+            : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(CHANNEL_NAME_ICON[c.name] || CHANNEL_ICON[c.type] || 'ref-hash', { size: isVoice ? 20 : 24 }));
         const canReorder = !!s.canManage && !!A.reorderChannel;
         const dropAllowed = () => !!railDragId && railDragId !== c.id;
         return h('a', {
@@ -225,7 +225,7 @@ export function mountCommunityApp(root, adapter = {}) {
             style: sv._home ? null : '--sv-color:' + (sv.iconColor || sv.color || 'var(--accent)'),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },
             oncontextmenu: sv._home ? null : (e) => { e.preventDefault(); A.serverContext && A.serverContext(sv.id, e.clientX, e.clientY); },
-        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('game3-home', { size: 24 }) : serverAbbr(sv)),
+        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, sv._home ? Icon('ref-home', { size: 24 }) : serverAbbr(sv)),
             h('span', {}, sv.name || sv.id),
             sv.unreadCount ? h('span', { class: 'count' }, sv.unreadCount > 99 ? '99+' : String(sv.unreadCount)) : null);
     };
@@ -453,7 +453,6 @@ export function mountCommunityApp(root, adapter = {}) {
             : ch.type === 'page' && (ch.name === 'rules' || ch.name === 'pick-roles') ? surfaceBody(ch.name, s)
             : ch.type === 'page' ? PageView({ title: ch.name, html: s.pageHtml || '', author: s.pageAuthor || '', updatedAt: s.pageUpdatedAt || 0, isAdmin: !!s.canManage, onEdit: () => A.editPage && A.editPage() })
             : chatView(s);
-        const showVoiceBanner = s.voiceConnected && s.voiceChannelName && !(inVoiceChannel && s.voiceChannelName === ch.name);
         return h('div', {
             class: 'ca-app',
             ondragenter: (e) => {
@@ -489,7 +488,6 @@ export function mountCommunityApp(root, adapter = {}) {
             DropAnywhereOverlay({ active: dropAnywhere.active, fileCount: dropAnywhere.fileCount }),
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
-            Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
                 h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
                 h('div', { class: 'ca-right' },
