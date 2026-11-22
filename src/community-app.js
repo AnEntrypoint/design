@@ -347,7 +347,7 @@ export function mountCommunityApp(root, adapter = {}) {
     const closeOverlays = () => {
         moreFor = null; reactPickFor = null; stickersOpen = false; emojisOpen = false; statusMenuOpen = false;
         switcher = { open: false, q: '' }; imageLightbox = { open: false, src: null, alt: '' };
-        card = { ...card, open: false }; ctx = { ...ctx, open: false }; emoji = { ...emoji, open: false }; palette = { ...palette, open: false };
+        serverMenuOpen = false; card = { ...card, open: false }; ctx = { ...ctx, open: false }; emoji = { ...emoji, open: false }; palette = { ...palette, open: false };
         const open = get() || {};
         if (open.gameSurface && A.closeSurface) A.closeSurface();
         if (open.gameServerCreateOpen && A.closeServerCreate) A.closeServerCreate();
@@ -576,6 +576,7 @@ export function mountCommunityApp(root, adapter = {}) {
             },
             onclick: (e) => {
                 if (moreFor && !(e.target.closest && e.target.closest('.ds-g3-mmenu, .ds-g3-bar'))) { moreFor = null; render(); }
+                if (serverMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-smenu, .shead'))) { serverMenuOpen = false; render(); }
                 if (stickersOpen && !(e.target.closest && e.target.closest('.ds-g3-stkpop, .ds-g3-compbtn'))) { stickersOpen = false; render(); }
                 if (statusMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-mebtn'))) { statusMenuOpen = false; render(); }
                 if (emojisOpen && !(e.target.closest && e.target.closest('.ds-g3-cpick, .ds-g3-compbtn'))) { emojisOpen = false; render(); }
