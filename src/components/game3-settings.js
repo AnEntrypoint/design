@@ -20,6 +20,9 @@ const COPY = {
     spoilers: ['Always reveal spoilers', 'no click needed on ||hidden|| text'],
     h24: ['24-hour time', '13:37 instead of 1:37 PM'],
     devmode: ['Developer Mode', 'adds Copy Message ID and Copy User ID'],
+    devevents: ['Event log', 'the events in this channel, with a title filter'],
+    devinspect: ['Channel and member inspector', 'channel and member ids with their status'],
+    devtraffic: ['Relay message counters', 'messages received and sent per relay'],
 };
 
 const GROUPS = {
@@ -28,7 +31,7 @@ const GROUPS = {
     notif: ['sound', 'mentionsonly'],
     media: ['embeds', 'jumbo', 'spoilers'],
     lang: ['h24'],
-    adv: ['devmode'],
+    adv: ['devmode', 'devevents', 'devinspect', 'devtraffic'],
 };
 
 const KEYBINDS = [['Quick Switcher', 'Ctrl P'], ['Send message', 'Enter'], ['New line', 'Shift Enter'], ['Mark channel read, close menus', 'Esc'], ['Previous / next channel', 'Alt ↑ ↓'], ['Bring back your last message', '↑'], ['Jump to newest', 'End'], ['Scroll a page', 'Page Up / Down'], ['Mention someone', 'Shift click name'], ['Reply to a message', 'Double-click it'], ['Emoji by name', ':fire'], ['Upload a picture', 'Ctrl V or drop it'], ['Pick a suggestion', 'Enter']];
@@ -52,7 +55,7 @@ const devRows = (d, onDevReset, onDevFilter, toggles, onDevRefresh) => [
     devRow('Connection', d.connection, 'c'),
     ...d.relays.map((r, i) => devRow(r.url, r.status, 'r' + i)),
     devRow('Presence', d.presence, 'p'),
-    devRow('Members', String(d.members), 'm'),
+    devRow('Members', String(d.members.length), 'm'),
     ...(toggles.devinspect ? [
         h('h6', { key: 'dch' }, 'Channels'),
         ...d.channels.map((c) => devRow(c.name, c.type + ' · ' + c.id, 'ch' + c.id)),
