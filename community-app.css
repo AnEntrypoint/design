@@ -1430,3 +1430,5 @@ html.ds-247420 .ca-right-body .chat-head { display: none; }
 
 html.ds-247420 .ca-right-body .chat-thread-wrap { padding-bottom: var(--space-3); box-sizing: border-box; }
 html.ds-247420 .ca-right-body .chat-thread { padding-bottom: 0; }
+
+html.ds-247420 .ca-right-body .app-main .chat { gap: 0; }
