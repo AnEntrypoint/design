@@ -160,12 +160,12 @@ export function mountCommunityApp(root, adapter = {}) {
         const convos = s.dmConversations || [];
         const items = convos.map((c) => h('a', {
             key: 'dm' + c.id, href: '#', class: 'ds-g3-dmrow' + (s.activeDmPeer === c.id ? ' active' : '') + (c.unread ? ' unread' : ''), 'aria-label': 'conversation with ' + c.name,
-            onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); },
+            onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); if (A.closeMobileMenu) A.closeMobileMenu(); },
         }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name) }, initial(c.name), h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + ({ online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' }[c.status] || '#23a55a'), 'aria-label': c.status || 'online' })), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
         return h('div', { class: 'ca-rail-channels' },
             h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => { switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } }, h('span', {}, 'Find or start a conversation')),
             h('div', { class: 'chans' },
-                h('a', { href: '#', class: s.activeDmPeer ? '' : 'active', onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(null); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })), h('span', {}, 'People here')),
+                h('a', { href: '#', class: s.activeDmPeer ? '' : 'active', onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(null); if (A.closeMobileMenu) A.closeMobileMenu(); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })), h('span', {}, 'People here')),
                 h('div', { class: 'ds-g3-dmcat' }, 'Direct Messages'),
                 ...(items.length ? items : [h('div', { class: 'ds-g3-dmempty', role: 'status' }, 'no DMs yet. Use Find or start a conversation.')])),
             ...bottom.filter(Boolean));
@@ -331,10 +331,14 @@ export function mountCommunityApp(root, adapter = {}) {
     const switcherItems = (s) => {
         const q = (switcher.q || '').toLowerCase().replace(/^[#@!]/, '');
         const server = ((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || '';
-        const channels = s.channels || [];
+        const channels = s.knownChannels || s.channels || [];
+        const serverName = (c) => ((s.servers || []).find((sv) => sv.id === c.serverId) || {}).name || server;
+        const openChannel = (c) => () => {
+            if (c.serverId && c.serverId !== s.currentServerId && A.switchServer) { A.switchServer(c.serverId); setTimeout(() => A.switchChannel && A.switchChannel(c), 900); } else if (A.switchChannel) A.switchChannel(c);
+        };
         const items = [
-            ...channels.filter((c) => c.type !== 'voice').map((c) => ({ label: '#' + c.name, hint: server, key: c.name + ' ' + server, go: () => A.switchChannel && A.switchChannel(c) })),
-            ...channels.filter((c) => c.type === 'voice').map((c) => ({ label: '\u{1F50A} ' + c.name, hint: 'voice \u00b7 ' + server, key: c.name + ' ' + server, go: () => A.switchChannel && A.switchChannel(c) })),
+            ...channels.filter((c) => c.type !== 'voice').map((c) => ({ label: '#' + c.name, hint: serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
+            ...channels.filter((c) => c.type === 'voice').map((c) => ({ label: '\u{1F50A} ' + c.name, hint: 'voice \u00b7 ' + serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
             ...(s.servers || []).filter((sv) => !sv._home).map((sv) => ({ label: sv.name, hint: sv.id === s.currentServerId ? 'server' : 'join server', key: sv.name, go: () => A.switchServer && A.switchServer(sv.id) })),
             ...(s.memberCategories || []).flatMap((c) => c.members || []).filter((m) => String(m.identity) !== String(s.userId)).map((m) => ({ label: '@ ' + m.name, hint: 'dm', key: m.name, go: () => { if (A.goHome) A.goHome(); if (A.selectDm) A.selectDm(m.identity); } })),
         ];
