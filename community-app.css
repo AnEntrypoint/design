@@ -1662,7 +1662,7 @@ html.ds-247420[data-g3-theme="light"] .ds-g3-bar { background: #fff; border-colo
 html.ds-247420[data-g3-theme="light"] .ds-g3-rx span, html.ds-247420[data-g3-theme="light"] .ds-g3-pollcard { background: #f2f3f5; border-color: #e3e5e8 }
 html.ds-247420[data-g3-theme="light"] .ds-g3-srch, html.ds-247420[data-g3-theme="light"] .ds-g3-findbtn span { background: #e3e5e8 }
 html.ds-247420[data-g3-theme="light"] .ds-g3-welcome-big { background: #e3e5e8; color: #313338 }
-html.ds-247420[data-g3-theme="light"] .ca-rail-home { background: #fff; color: #313338 }
+html.ds-247420[data-g3-theme="light"] .ca-rail-servers a.ca-rail-home { background: #fff; color: #313338 }
 html.ds-247420[data-g3-theme="light"] .ds-g3-header { color: #313338 }
 html.ds-247420 .cm-uc-role { display: inline-flex; align-items: center; gap: var(--space-1); background: #2b2d31; border-radius: 4px; padding: var(--space-hair) var(--space-1-75); font-size: var(--fs-micro); margin: var(--space-1) var(--space-1) 0 0; }
 
@@ -1719,4 +1719,5 @@ html.ds-247420 .ds-g3-role i { width: 12px; height: 12px; border-radius: 50%; }
 html.ds-247420 .ds-g3-btnp { display: block; text-align: center; background: #5865f2; color: #fff; border-radius: 4px; padding: var(--space-2); font-weight: 600; font-size: var(--fs-xs); cursor: pointer; margin-top: var(--space-2-75); }
 html.ds-247420 .ds-g3-btnp:hover { background: #4752c4; }
 html.ds-247420 .ds-g3-btnp-alt { background: #4e5058; }
-
+html.ds-247420[data-g3-theme="light"] .ds-g3-tx code, html.ds-247420[data-g3-theme="light"] .ds-g3-cb { background: #f2f3f5; border-color: #e3e5e8; }
+html.ds-247420[data-g3-theme="light"] .ds-g3-box textarea { color: #313338; }
