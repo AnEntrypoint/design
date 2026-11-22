@@ -345,6 +345,8 @@ export function mountCommunityApp(root, adapter = {}) {
         switcher = { open: false, q: '' }; imageLightbox = { open: false, src: null, alt: '' };
         const open = get() || {};
         if (open.gameSurface && A.closeSurface) A.closeSurface();
+        if (open.gameServerCreateOpen && A.closeServerCreate) A.closeServerCreate();
+        if (open.gamePrefOpen && A.closeGamePrefs) A.closeGamePrefs();
         render();
     };
     let lastSwitcherKey = 0;
@@ -365,8 +367,8 @@ export function mountCommunityApp(root, adapter = {}) {
             }
             return;
         }
+        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw')))) { closeOverlays(); return; }
         if (typing) return;
-        if (k === 'Escape') { closeOverlays(); return; }
         const thread = root.querySelector('.chat-thread');
         if (k === 'End' && thread) { e.preventDefault(); thread.scrollTop = thread.scrollHeight; return; }
         if ((k === 'PageUp' || k === 'PageDown') && thread) { e.preventDefault(); thread.scrollBy(0, (k === 'PageUp' ? -1 : 1) * thread.clientHeight * 0.85); return; }

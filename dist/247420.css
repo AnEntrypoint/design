@@ -12840,7 +12840,7 @@
   .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers { flex-direction: row; width: auto; min-width: 0; padding: 0; gap: var(--space-1-75); overflow: visible; background: none; }
   .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers a { width: 40px; height: 40px; min-width: 0; min-height: 0; flex-shrink: 0; font-size: calc(var(--fs-rail-tile) - 3px); }
   .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers a::before { display: none; }
-  .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers .ca-rail-sep, .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers a.ca-rail-server-add, .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers a.ca-rail-server-explore { display: none; }
+  .ds-247420.ds-247420 .ds-g3-srvstrip .ca-rail-servers .ca-rail-sep { display: none; }
   .ds-247420.ds-247420 .ca-app .app-side > .ca-rail-channels { flex: 1; min-height: 0; width: auto; min-width: 0; }
   .ds-247420.ds-247420 .ds-g3-header { overflow-x: auto; scrollbar-width: none; }
   .ds-247420.ds-247420 .ds-g3-header::-webkit-scrollbar { display: none; }
