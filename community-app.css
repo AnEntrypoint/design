@@ -1582,3 +1582,7 @@ html.ds-247420 .ca-app ::-webkit-scrollbar { width: 8px; }
 html.ds-247420 .ca-app ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
 html.ds-247420 .ca-app ::-webkit-scrollbar-track { background: transparent; }
 html.ds-247420 .ds-g3-systx { line-height: 22px; }
+html.ds-247420 .ds-g3-newdiv { display: flex; align-items: center; margin: var(--space-3) var(--space-3) 0; position: relative; }
+html.ds-247420 .ds-g3-newdiv::before { content: ''; flex: 1; height: 1px; background: #f23f43; }
+html.ds-247420 .ds-g3-newdiv span { background: #f23f43; color: #fff; font-size: var(--fs-pico); font-weight: 700; border-radius: 0 4px 4px 0; padding: 0 var(--space-1); line-height: 13px; margin-inline-start: -1px; }
+

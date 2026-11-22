@@ -26,6 +26,7 @@ import { Game3DayDivider } from './components/game3-day.js';
 import { Game3VoiceBar } from './components/game3-voicebar.js';
 import { Game3SystemLine } from './components/game3-system.js';
 import { Game3Modal } from './components/game3-modal.js';
+import { Game3NewDivider } from './components/game3-newdiv.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
@@ -319,7 +320,8 @@ export function mountCommunityApp(root, adapter = {}) {
     const game3Rows = (s) => {
         const msgs = s.messages || [];
         const selfId = s.userId;
-        return msgs.map((m, i) => {
+        const newIndex = s.newAt ? msgs.findIndex((m) => m.type !== 'system' && String(m.userId) !== String(selfId) && m.timestamp / 1000 > s.newAt) : -1;
+        const rows = msgs.map((m, i) => {
             if (m.type === 'system') {
                 if (!m.sys) return null;
                 const stamp = m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
@@ -351,7 +353,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
                 onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
             });
-        }).filter(Boolean);
+        });
+        return rows.flatMap((row, i) => (i === newIndex ? [Game3NewDivider({ key: 'newdiv' }), row] : [row])).filter(Boolean);
     };
 
     const railOrder = (s) => {
