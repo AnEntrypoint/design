@@ -4148,6 +4148,8 @@ export declare function SplitToggle(props?: SplitToggleProps): VNode;
  * Props for {@link GameHeader} (src/components/game3-header.js).
  */
 export interface GameHeaderProps {
+    /** @default false */
+    dm?: boolean;
     onBurger?: (...args: any[]) => any;
     /** @default '' */
     channelName?: string;

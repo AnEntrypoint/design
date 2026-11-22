@@ -28,6 +28,7 @@ import { Game3SystemLine } from './components/game3-system.js';
 import { Game3Modal } from './components/game3-modal.js';
 import { Game3NewDivider } from './components/game3-newdiv.js';
 import { Game3SearchBar } from './components/game3-search.js';
+import { Game3DmWelcome } from './components/game3-welcome.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
@@ -145,7 +146,7 @@ export function mountCommunityApp(root, adapter = {}) {
         h('a', { key: 'leaderboard', href: '#', class: s.gameSurface === 'leaderboard' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('leaderboard'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-leaderboard', { size: 20 })), h('span', {}, 'Leaderboard'), s.myLevel != null ? h('span', { class: 'ds-g3-rail-lv' }, 'lv ' + s.myLevel) : null),
     ];
     const railChannelsView = (s, bottom = []) => {
-        if (s.homeMode) return dmRailView(s);
+        if (s.homeMode) return dmRailView(s, bottom);
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
         const cur = s.currentChannel || {};
         const info = channels.filter(c => c.type === 'announcement' || c.type === 'page');
@@ -163,17 +164,19 @@ export function mountCommunityApp(root, adapter = {}) {
             ...bottom.filter(Boolean));
     };
 
-    const dmRailView = (s) => {
+    const dmRailView = (s, bottom = []) => {
         const convos = s.dmConversations || [];
         const items = convos.map((c) => h('a', {
-            href: '#', class: s.activeDmPeer === c.id ? 'active' : '', 'aria-label': 'conversation with ' + c.name,
+            key: 'dm' + c.id, href: '#', class: 'ds-g3-dmrow' + (s.activeDmPeer === c.id ? ' active' : '') + (c.unread ? ' unread' : ''), 'aria-label': 'conversation with ' + c.name,
             onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); },
-        }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('user', { size: 15 })), h('span', {}, c.name)));
+        }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name) }, initial(c.name)), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
         return h('div', { class: 'ca-rail-channels' },
-            h('div', { class: 'group group-header' },
-                h('span', {}, 'direct messages'),
-                A.newDm ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'new message', title: 'New message', onclick: (e) => { e.preventDefault(); A.newDm(); } }, Icon('plus', { size: 13 })) : null),
-            ...(items.length ? items : [h('div', { class: 'rail-empty', role: 'status' }, 'no conversations yet')]));
+            h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => A.newDm && A.newDm() }, h('span', {}, 'Find or start a conversation')),
+            h('div', { class: 'chans' },
+                h('a', { href: '#', class: s.activeDmPeer ? '' : 'active', onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(null); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })), h('span', {}, 'People here')),
+                h('div', { class: 'ds-g3-dmcat' }, 'Direct Messages'),
+                ...(items.length ? items : [h('div', { class: 'ds-g3-dmempty', role: 'status' }, 'no DMs yet. Use Find or start a conversation.')])),
+            ...bottom.filter(Boolean));
     };
 
     const groupHeader = (label, s, createType) => h('div', { class: 'group group-header' },
@@ -369,6 +372,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
                 onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
                 onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
+                sendState: m.send || null,
+                onRetry: () => A.retrySend && A.retrySend(m.id),
                 onJump: s.chatSearch ? () => { if (A.setChatSearch) A.setChatSearch(''); setTimeout(() => { const el = root.querySelector('#m-' + m.id); if (el) el.scrollIntoView({ block: 'center' }); }, 600); } : null,
                 onMore: () => { moreFor = moreFor === m.id ? null : m.id; render(); },
                 moreOpen: moreFor === m.id,
@@ -417,7 +422,7 @@ export function mountCommunityApp(root, adapter = {}) {
             : 'Be the first to post in #' + (ch.name || 'general') + '.';
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
-            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
+            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
@@ -522,6 +527,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
                 h('div', { class: 'ca-right' },
             GameHeader({
+                dm: !!(s.homeMode && s.activeDmPeer),
                 onBurger: () => (s.mobileMenuOpen ? A.closeMobileMenu && A.closeMobileMenu() : A.openMobileMenu && A.openMobileMenu()),
                 channelName: ch.name || 'general',
                 channelType: ch.type || 'text',
@@ -546,10 +552,10 @@ export function mountCommunityApp(root, adapter = {}) {
                                 s.gameSurface === 'pins' || s.gameSurface === 'inbox' ? h('div', { class: 'ds-g3-pop-wrap' }, h('div', { class: 'ds-g3-pop' }, h('h3', { class: 'ds-g3-pop-h' }, h('span', {}, s.gameSurface === 'pins' ? 'Pinned Messages' : 'Inbox'), h('span', { class: 'ds-g3-pop-x', role: 'button', tabindex: '0', 'aria-label': 'close', onclick: () => A.closeSurface && A.closeSurface() }, Icon('x', { size: 14 }))), h('div', { class: 'ds-g3-pop-body' }, surfaceBody(s.gameSurface, s)))) : null,
                 ),
                 s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null) }) : null,
-                Game3MemberList({
+                ...(s.homeMode ? [] : [Game3MemberList({
                     categories: s.memberCategories || [], apps: s.memberApps || [], open: !!s.memberListOpen, userId: s.userId,
                     onSelectMember: (m) => { card = { open: true, member: m }; render(); },
-                }),
+                })]),
                     ),
                 ),
             ),
