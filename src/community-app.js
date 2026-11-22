@@ -480,7 +480,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 ),
                 s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null) }) : null,
                 Game3MemberList({
-                    categories: s.memberCategories || [], open: !!s.memberListOpen, userId: s.userId,
+                    categories: s.memberCategories || [], apps: s.memberApps || [], open: !!s.memberListOpen, userId: s.userId,
                     onSelectMember: (m) => { card = { open: true, member: m }; render(); },
                 }),
                     ),

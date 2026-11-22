@@ -22,8 +22,8 @@ export function Game3MemberRow({ identity, name, color, nameColor, status = 'onl
             h('div', { class: 'ds-g3-msub' }, activity || '')));
 }
 
-export function Game3MemberList({ categories = [], open, loading = false, onSelectMember, userId } = {}) {
-    const total = categories.reduce((n, cat) => n + (cat.members ? cat.members.length : 0), 0);
+export function Game3MemberList({ categories = [], apps = [], open, loading = false, onSelectMember, userId } = {}) {
+    const total = categories.reduce((n, cat) => n + (cat.members ? cat.members.length : 0), 0) + apps.length;
     return h('div', { class: 'ds-g3-mem' + (open ? ' open' : '') },
         total === 0
             ? h('div', { key: '_empty', class: 'ds-g3-mempty', role: 'status' }, userId ? 'Only you for now.' : 'no members in this channel yet')
@@ -35,5 +35,9 @@ export function Game3MemberList({ categories = [], open, loading = false, onSele
                 offline: cat.label === 'Offline',
                 onClick: onSelectMember ? (e) => onSelectMember(m, e) : undefined,
             })),
-        ]));
+        ]),
+        ...(apps.length ? [
+            h('div', { key: 'capps', class: 'ds-g3-mcat' }, 'Apps — ' + apps.length),
+            ...apps.map((a) => Game3MemberRow({ key: 'app-' + a.identity, identity: a.identity, name: a.name, color: a.color, nameColor: a.color, suffix: '✓ APP', activity: a.activity, status: 'online' })),
+        ] : []));
 }
