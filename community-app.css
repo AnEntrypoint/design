@@ -1428,5 +1428,5 @@ html.ds-247420 .ds-g3-msg .ds-g3-who, html.ds-247420 .ds-g3-msg .ds-g3-when { di
 
 html.ds-247420 .ca-right-body .chat-head { display: none; }
 
-html.ds-247420 .ca-right-body .chat-thread-wrap { padding-bottom: 16px; }
+html.ds-247420 .ca-right-body .chat-thread-wrap { padding-bottom: var(--space-3); }
 html.ds-247420 .ca-right-body .chat-thread { padding-bottom: 0; }
