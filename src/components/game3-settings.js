@@ -47,20 +47,27 @@ const devRow = (label, value, key) => h('div', { key, class: 'ds-g3-dev-row' }, 
 
 const devReset = (onDevReset) => h('div', { key: 'dev-reset', class: 'ds-g3-dev-reset' }, h('div', { class: 'ds-g3-evb ds-g3-evb-ghost', role: 'button', tabindex: '0', onclick: (e) => { const b = e.currentTarget; if (b.dataset.sure) { onDevReset && onDevReset(); b.dataset.sure = ''; b.textContent = 'Reset local state'; } else { b.dataset.sure = '1'; b.textContent = 'press again to clear zellous preferences'; } } }, 'Reset local state'));
 
-const devRows = (d, onDevReset) => [
+const devRows = (d, onDevReset, onDevFilter, toggles) => [
     h('h6', { key: 'dev' }, 'Developer'),
     devRow('Connection', d.connection, 'c'),
     ...d.relays.map((r, i) => devRow(r.url, r.status, 'r' + i)),
     devRow('Presence', d.presence, 'p'),
     devRow('Members', String(d.members), 'm'),
-    h('h6', { key: 'dch' }, 'Channels'),
-    ...d.channels.map((c) => devRow(c.name, c.type + ' · ' + c.id, 'ch' + c.id)),
-    h('h6', { key: 'dev-ev' }, 'Recent events'),
-    ...(d.events.length ? d.events.map((e, i) => devRow(String(e.title || 'event'), e.start ? new Date(e.start * 1000).toLocaleString() : '', 'e' + i)) : [h('p', { key: 'none', class: 'ds-g3-hint' }, 'no events in this channel')]),
+    ...(toggles.devinspect ? [
+        h('h6', { key: 'dch' }, 'Channels'),
+        ...d.channels.map((c) => devRow(c.name, c.type + ' · ' + c.id, 'ch' + c.id)),
+        h('h6', { key: 'dmem' }, 'Member inspector'),
+        ...d.members.map((m, i) => devRow(m.name || 'member', m.status + ' · ' + m.id, 'mm' + i)),
+    ] : []),
+    ...(toggles.devevents ? [
+        h('h6', { key: 'dev-ev' }, 'Event log'),
+        h('input', { key: 'dev-flt', class: 'ds-g3-fi', maxlength: '60', placeholder: 'filter by title', value: d.filter || '', onchange: (e) => onDevFilter && onDevFilter(e.target.value) }),
+        ...(d.events.length ? d.events.map((e, i) => devRow(String(e.title || 'event'), e.start ? new Date(e.start * 1000).toLocaleString() : '', 'e' + i)) : [h('p', { key: 'none', class: 'ds-g3-hint' }, 'no events match')]),
+    ] : []),
     devReset(onDevReset),
 ];
 
-export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color = '', presenceStatus = 'online', presenceCustom = '', onPresence, onCustom, devInfo = null, onDevReset, initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
+export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color = '', presenceStatus = 'online', presenceCustom = '', onPresence, onCustom, devInfo = null, onDevReset, onDevFilter, initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
     const group = (g) => GROUPS[g].map((k) => toggleRow(k, !!toggles[k], onToggle));
     const pane = {
         account: () => [
@@ -124,7 +131,7 @@ export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color
         adv: () => [
             h('h2', { key: 'h' }, 'Advanced'),
             ...group('adv'),
-            ...(devInfo && toggles.devmode ? devRows(devInfo, onDevReset) : []),
+            ...(devInfo && toggles.devmode ? devRows(devInfo, onDevReset, onDevFilter, toggles) : []),
             h('h6', { key: 'r' }, 'Reset'),
             h('div', { key: 'rb', class: 'ds-g3-evb ds-g3-evb-ghost', role: 'button', tabindex: '0', onclick: (e) => { const b = e.currentTarget; if (b.dataset.sure) { onReset && onReset(); b.dataset.sure = ''; b.textContent = 'Reset all settings'; } else { b.dataset.sure = '1'; b.textContent = 'press again to reset every setting'; } } }, 'Reset all settings'),
         ],
