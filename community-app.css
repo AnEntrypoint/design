@@ -85,8 +85,8 @@ html.ds-247420 .ca-rail-servers {
   overflow-x: hidden;
   scrollbar-width: none;
   background: #1e1f22;
-  font-size: calc(var(--fs-body) + 1px);
-  line-height: 24px;
+  font-size: var(--fs-body);
+  line-height: 1.5;
 }
 html.ds-247420 .ca-rail-sep {
   width: 32px;
