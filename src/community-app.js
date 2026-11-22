@@ -20,6 +20,7 @@ import { Game3ServerCreate } from './components/game3-server-create.js';
 import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
+import { Game3PeopleHere } from './components/game3-people.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
@@ -409,7 +410,8 @@ export function mountCommunityApp(root, adapter = {}) {
         const s = get();
         const ch = s.currentChannel || {};
         const inVoiceChannel = ch.type === 'voice';
-        const bodyMain = inVoiceChannel ? voiceView(s)
+        const bodyMain = s.homeMode && !s.activeDmPeer ? Game3PeopleHere({ serverName: s.homeServerName || 'Zellous Public', people: s.peopleHere || [], onMessage: (id) => A.selectDm && A.selectDm(id) })
+            : inVoiceChannel ? voiceView(s)
             : ch.type === 'forum' ? ForumView({ posts: s.forumPosts || [], onSelect: (id) => A.openThread && A.openThread(id), onNewPost: () => A.newForumPost && A.newForumPost(), resolveAuthor: A.resolveAuthor })
             : ch.type === 'page' ? PageView({ title: ch.name, html: s.pageHtml || '', author: s.pageAuthor || '', updatedAt: s.pageUpdatedAt || 0, isAdmin: !!s.canManage, onEdit: () => A.editPage && A.editPage() })
             : chatView(s);
