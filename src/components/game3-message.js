@@ -66,7 +66,7 @@ export function Game3Message({ poll = null, key, id, name = '', initial = '?', a
         reactionChips
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
-    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' },
+    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' + (mine ? ' ds-g3-selfmsg' : '') },
         replyLine,
         h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
         h('div', { key: 'cb', class: 'ds-g3-col' },
@@ -75,7 +75,7 @@ export function Game3Message({ poll = null, key, id, name = '', initial = '?', a
             ...cardNodes(text, previews),
             ...embedNodes(text, embeds)),
         bar);
-    return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') },
+    return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mine ? ' ds-g3-selfmsg' : '') },
         replyLine,
         stamp,
         avatar,

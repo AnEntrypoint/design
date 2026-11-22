@@ -13838,7 +13838,7 @@
 .ds-247420.ds-247420 .ds-g3-nm { line-height: 24px; }
 .ds-247420.ds-247420 .ds-g3-msub { font-size: 12px; line-height: 18px; color: #949ba4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 18px; }
 
-.ds-247420.ds-247420 .ds-g3-mav { font-size: 16px; box-shadow: 0 0 0 2px #2b2d31; }
+.ds-247420.ds-247420 .ds-g3-selfmsg .ds-g3-who { color: #5865f2; }
 .ds-247420.ds-247420 .ds-g3-msub { font-weight: 400; }
 
 .ds-247420.ds-247420 .ca-rail-channels .ds-g3-sep2 { height: 1px; background: #3f4147; margin: 8px 8px 0; }
