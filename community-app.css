@@ -1526,3 +1526,4 @@ html.ds-247420 .chat-jump-latest { background: #5865f2; color: #fff; }
 html.ds-247420 .ds-g3-welcome { padding: var(--space-3); }
 html.ds-247420 .ds-g3-welcome-big { width: 68px; height: 68px; border-radius: 50%; background: #41434a; display: flex; align-items: center; justify-content: center; color: #fff; margin-bottom: var(--space-2); font-size: 34px; }
 html.ds-247420 .ds-g3-welcome h1 { font-size: 32px; font-weight: 700; color: #f2f3f5; margin: var(--space-2) 0; line-height: 40px; }
+html.ds-247420 .ds-g3-welcome p { color: #b5bac1; }
