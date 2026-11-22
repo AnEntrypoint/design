@@ -28,5 +28,5 @@ export function Game3VoiceView({ participants = [], micMuted = false, camera = f
                 Icon(micMuted ? 'ref-micoff' : 'ref-mic', { size: 26 })),
             h('button', { type: 'button', class: 'ds-g3-vcbtn ds-g3-vhang', title: 'Disconnect', 'aria-label': 'disconnect from voice', onclick: onLeave },
                 Icon('ref-hangup', { size: 26 }))),
-        h('div', { key: 'vtip', class: 'ds-g3-vtip' }, 'your mic is in the controls below · only people in ' + voiceName + ' hear you · the soundboard plays for everyone in here'));
+        h('div', { key: 'vtip', class: 'ds-g3-vtip' }, 'your mic is in the controls below · only people in ' + voiceName + ' hear you · the soundboard plays on your own device'));
 }

@@ -18,7 +18,14 @@ const linkify = (value) => String(value || '').split(URL_RE).map((part, i) => (i
 
 const CARD_IMAGE_RE = /\.(?:png|jpe?g|gif|webp)(?:\?|$)/i;
 const YT_RE = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})/;
-const cardNodes = (value, on) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"'|]+/gi) || [])].filter((u) => !CARD_IMAGE_RE.test(u)).slice(0, 3).map((u, i) => {
+const cardNodes = (value, on, unfurls = []) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"'|]+/gi) || [])].filter((u) => !CARD_IMAGE_RE.test(u)).slice(0, 3).map((u, i) => {
+    const rich = unfurls.find((p) => p.url === u);
+    if (rich) return h('a', { key: 'card' + i, class: 'ds-g3-lcard' + (rich.image ? ' ds-g3-side' : ''), href: u, target: '_blank', rel: 'noopener noreferrer' },
+        h('span', { key: 'lb', class: 'ds-g3-lbody' },
+            h('span', { key: 'ls', class: 'ds-g3-lsite' }, (() => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; } })()),
+            h('span', { key: 'lt', class: 'ds-g3-ltitle ds-g3-real' }, rich.title || u),
+            rich.description ? h('span', { key: 'ld', class: 'ds-g3-ldesc' }, rich.description) : null),
+        rich.image ? h('img', { key: 'li', src: rich.image, loading: 'lazy', referrerpolicy: 'no-referrer', alt: '', onerror: (e) => e.currentTarget.remove() }) : null);
     let host = '', path = '';
     try { const x = new URL(u); host = x.hostname.replace(/^www\./, ''); path = decodeURIComponent(x.pathname + x.search).slice(0, 80); } catch (e) { return null; }
     const yt = YT_RE.exec(u);
@@ -33,8 +40,8 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
 
-export function Game3Message({ sendState = null, onRetry, onJump, onMore, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
-    const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : null;
+export function Game3Message({ unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+    const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : sticker ? [h('img', { key: 'stk', class: 'ds-g3-stk', src: sticker.url, title: sticker.name, alt: sticker.name })] : null;
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const sendLine = sendState && sendState.state === 'pending'
         ? h('div', { key: 'sendst', class: 'ds-g3-sendst' }, 'Sending…')
@@ -66,14 +73,14 @@ export function Game3Message({ sendState = null, onRetry, onJump, onMore, moreOp
     const stamp = continuation ? h('span', { key: 'stamp', class: 'ds-g3-stamp', style: 'left:8px', title: fullTime }, time) : null;
     const body = continuation ? h('div', { key: 'body', class: 'ds-g3-tx-wrap' },
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
-        ...cardNodes(text, previews),
+        ...cardNodes(text, previews, unfurls),
         ...embedNodes(text, embeds),
         reactionChips, sendLine) : h('div', { key: 'body', class: 'ds-g3-col' },
             h('div', { key: 'head', class: 'ds-g3-head' },
                 h('span', { key: 'who', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, headTime || time)),
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
-        ...cardNodes(text, previews),
+        ...cardNodes(text, previews, unfurls),
         ...embedNodes(text, embeds),
         reactionChips, sendLine
     );
@@ -84,7 +91,7 @@ export function Game3Message({ sendState = null, onRetry, onJump, onMore, moreOp
         h('div', { key: 'cb', class: 'ds-g3-col' },
             h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
             h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
-            ...cardNodes(text, previews),
+            ...cardNodes(text, previews, unfurls),
             ...embedNodes(text, embeds)),
         bar, menu);
     return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mine ? ' ds-g3-selfmsg' : '') },

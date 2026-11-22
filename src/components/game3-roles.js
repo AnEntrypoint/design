@@ -1,11 +1,13 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
 
+import { Icon } from './shell.js';
+
 const h = webjsx.createElement;
 
 export function Game3RolesPanel({ roles = [], onToggle, onDone, key } = {}) {
     return h('div', { key, class: 'ds-g3-rolepick' },
         h('div', { class: 'ds-g3-rhero' },
-            h('div', { class: 'ds-g3-ric', 'aria-hidden': 'true' }),
+            h('div', { class: 'ds-g3-ric', 'aria-hidden': 'true' }, Icon('ref-roles', { size: 24 })),
             h('div', null,
                 h('h1', null, 'Pick your roles'),
                 h('p', null, 'press to add or take one off. your first role colours your name for everyone.'))),

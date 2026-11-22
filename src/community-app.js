@@ -29,6 +29,7 @@ import { Game3Modal } from './components/game3-modal.js';
 import { Game3NewDivider } from './components/game3-newdiv.js';
 import { Game3SearchBar } from './components/game3-search.js';
 import { Game3DmWelcome } from './components/game3-welcome.js';
+import { STICKERS, STICKER_RE, stickerText } from './game3-data.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
@@ -169,7 +170,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const items = convos.map((c) => h('a', {
             key: 'dm' + c.id, href: '#', class: 'ds-g3-dmrow' + (s.activeDmPeer === c.id ? ' active' : '') + (c.unread ? ' unread' : ''), 'aria-label': 'conversation with ' + c.name,
             onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); },
-        }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name) }, initial(c.name)), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
+        }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name) }, initial(c.name), h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + ({ online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' }[c.status] || '#23a55a'), 'aria-label': c.status || 'online' })), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
         return h('div', { class: 'ca-rail-channels' },
             h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => A.newDm && A.newDm() }, h('span', {}, 'Find or start a conversation')),
             h('div', { class: 'chans' },
@@ -335,6 +336,7 @@ export function mountCommunityApp(root, adapter = {}) {
         return items;
     };
     let moreFor = null;
+    let stickersOpen = false;
     let soundToast = null;
     const mentionNames = (s) => [...(s.memberCategories || []).flatMap((c) => (c.members || []).map((m) => m.name)), ...(s.memberApps || []).map((a) => a.name)].filter(Boolean);
     const game3Rows = (s) => {
@@ -372,6 +374,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
                 onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
                 onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
+                unfurls: m.previews || [],
+                sticker: (() => { const hit = STICKER_RE.exec(m.content || ''); const st = hit && STICKERS.find((x) => x.id === hit[1]); return st ? { url: (s.stickerBase || '') + st.id + '.webp', name: st.name } : null; })(),
                 sendState: m.send || null,
                 onRetry: () => A.retrySend && A.retrySend(m.id),
                 onJump: s.chatSearch ? () => { if (A.setChatSearch) A.setChatSearch(''); setTimeout(() => { const el = root.querySelector('#m-' + m.id); if (el) el.scrollIntoView({ block: 'center' }); }, 600); } : null,
@@ -423,7 +427,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), typing: typingBar,
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
@@ -511,6 +515,7 @@ export function mountCommunityApp(root, adapter = {}) {
             },
             onclick: (e) => {
                 if (moreFor && !(e.target.closest && e.target.closest('.ds-g3-mmenu, .ds-g3-bar'))) { moreFor = null; render(); }
+                if (stickersOpen && !(e.target.closest && e.target.closest('.ds-g3-stkpop, .ds-g3-compbtn'))) { stickersOpen = false; render(); }
                 const a = e.target.closest && e.target.closest('.chat-image');
                 if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
                 const img = a.querySelector('img');

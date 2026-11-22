@@ -115,7 +115,7 @@ const ZINDEX_RE = /\bz-index\s*:\s*-?\d/;
 const TRANSITION_ALL_RE = /\btransition(?:-property)?\s*:\s*[^;}]*\ball\b/;
 const IMPORTANT_RE = /!\s*important/;
 
-const ALLOW = { 'community-app.css': ['#2e2f34', '#4752c4', '#111214', '#1a1b1e', '#f0b232', '#c4602f', '#1e1f22', '#313338', '#dbdee1', '#5865f2', '#23a55a', '#35363c', '#fff', '#2b2d31', '#80848e', '#404249', '#f23f43', '#2e3035', '#949ba4', '#f2f3f5', '#b5bac1', '#4e5058', '#dee0fc', '#26272b', '#393c41', '#0000000a', '#0003', '#383a40', '#6d6f78', '#f0b232', '#35373c', '#000', '#da373c', '#a12828', '#232428', '#3d3e45', '#3f4248', '#3f4147', '#00a8fc'] };
+const ALLOW = { 'community-app.css': ['#2e2f34', '#1c1c20', '#3a3a40', '#242428', '#36363c', '#17171a', '#0e0e10', '#ebedef', '#232328', '#060607', '#2b2b30', '#e3e5e8', '#1a1a1e', '#e0e1e5', '#d7d9dc', '#08080a', '#f5f6f7', '#4752c4', '#111214', '#1a1b1e', '#f0b232', '#c4602f', '#1e1f22', '#313338', '#dbdee1', '#5865f2', '#23a55a', '#35363c', '#fff', '#2b2d31', '#80848e', '#404249', '#f23f43', '#2e3035', '#949ba4', '#f2f3f5', '#b5bac1', '#4e5058', '#dee0fc', '#26272b', '#393c41', '#0000000a', '#0003', '#383a40', '#6d6f78', '#f0b232', '#35373c', '#000', '#da373c', '#a12828', '#232428', '#3d3e45', '#3f4248', '#3f4147', '#00a8fc'] };
 
 const RADIUS_ALLOW = { 'community-app.css': ['border-radius: 16px', 'border-radius: 1px', 'border-top-left-radius: 6px', 'border-radius: 24px', 'border-radius: 3px', 'border-radius: 6px', 'border-radius: 12px'] };
 
