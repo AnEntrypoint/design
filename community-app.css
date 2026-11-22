@@ -101,6 +101,7 @@ html.ds-247420 .ca-rail-servers a {
   width: 48px;
   height: 48px;
   padding: 0;
+  margin: 0;
   border-radius: 50%;
   background: var(--sv-color, var(--accent));
   color: #fff;
@@ -508,7 +509,7 @@ html.ds-247420 .ds-g3-stamp {
 html.ds-247420 .ds-g3-head { display: flex; align-items: baseline; }
 html.ds-247420 .ds-g3-who { font-size: 16px; font-weight: 500; color: #f2f3f5; cursor: pointer; }
 html.ds-247420 .ds-g3-who:hover { text-decoration: underline; }
-html.ds-247420 .ds-g3-when { font-size: 12px; font-weight: 500; color: #949ba4; margin-left: 6px; }
+html.ds-247420 .ds-g3-when { font-size: 12px; font-weight: 500; line-height: 22px; color: #949ba4; margin-left: 6px; }
 html.ds-247420 .ds-g3-tx { line-height: 22px; color: #dbdee1; overflow-wrap: break-word; white-space: pre-wrap; }
 html.ds-247420 .ds-g3-rep {
   position: relative;
@@ -1271,7 +1272,7 @@ html.ds-247420 .ca-rail-channels .shead span { white-space: nowrap; overflow: hi
 html.ds-247420 .ca-rail-channels .group-header span:first-child svg { width: 12px; height: 12px; transition: transform 0.1s; }
 html.ds-247420 .ca-rail-channels .group-header span:first-child { display: inline-flex; align-items: center; gap: var(--space-hair); }
 
-html.ds-247420 .ca-rail-channels a .glyph { color: #80848e; font-size: 15px; font-weight: 500; width: 20px; height: 20px; text-align: center; }
+html.ds-247420 .ca-rail-channels a .glyph { color: #80848e; line-height: 1.5; font-size: 15px; font-weight: 500; width: 20px; height: 20px; text-align: center; }
 html.ds-247420 .ca-rail-channels a:hover { background: #35373c; color: #dbdee1; }
 html.ds-247420 .ca-rail-channels a:hover .glyph,
 html.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
@@ -1342,7 +1343,7 @@ html.ds-247420 .ca-right-body .chat-thread { padding-left: 0; padding-right: 0; 
 
 html.ds-247420 .ds-g3-rail-lv { margin-left: auto; font-size: 12px; line-height: 18px; color: #f0b232; }
 
-html.ds-247420 .ds-g3-srch { width: 144px; height: 24px; background: #1e1f22; border-radius: var(--r-0); display: flex; align-items: center; gap: 6px; padding: 0 6px; color: #949ba4; flex-shrink: 0; box-sizing: border-box; }
+html.ds-247420 .ds-g3-srch { width: 144px; height: 24px; background: #1e1f22; border-radius: var(--r-0); display: flex; align-items: center; padding: 0 6px; color: #949ba4; flex-shrink: 0; box-sizing: border-box; }
 html.ds-247420 .ds-g3-srch input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: #dbdee1; font: inherit; font-size: 14px; }
 html.ds-247420 .ds-g3-inbox { padding: 60px 40px; max-width: 740px; color: #dbdee1; }
 html.ds-247420 .ds-g3-inbox-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
@@ -1519,9 +1520,9 @@ html.ds-247420 .ds-g3-ev .ds-g3-evtitle { font-weight: 700; }
 
 html.ds-247420 .app-main { position: relative; }
 
-html.ds-247420 .ds-g3-msuffix-app { background: #5865f2; color: #fff; }
+html.ds-247420 .ds-g3-msuffix-app { background: #5865f2; color: #fff; font-size: var(--fs-pico); font-weight: 600; border-radius: 3px; padding: 1px 4px; margin-left: 5px; vertical-align: 2px; line-height: 15px; }
 
-html.ds-247420 .chat-jump-latest { background: #5865f2; color: #fff; }
+html.ds-247420 .chat-jump-latest { background: #5865f2; color: #fff; font-weight: 400; padding: var(--space-1-75) var(--space-3); gap: normal; box-shadow: none; }
 
 html.ds-247420 .ds-g3-welcome { padding: var(--space-3); }
 html.ds-247420 .ds-g3-welcome-big { width: 68px; height: 68px; border-radius: 50%; background: #41434a; display: flex; align-items: center; justify-content: center; color: #fff; margin-bottom: var(--space-2); font-size: 34px; }
@@ -1546,7 +1547,7 @@ html.ds-247420 .ds-g3-systx b { color: #f2f3f5; font-weight: 500; }
 html.ds-247420 .ds-g3-syswhen { font-size: var(--fs-micro); font-weight: 500; color: #949ba4; margin-left: var(--space-1-75); }
 html.ds-247420 .ds-g3-wave { display: inline-flex; align-items: center; gap: var(--space-1-75); background: #4e5058; color: #fff; border-radius: 4px; padding: var(--space-1) var(--space-2-5); font-size: 14px; margin-top: var(--space-1-75); cursor: pointer; font-weight: 500; }
 html.ds-247420 .ds-g3-wave:hover { background: #6d6f78; }
-html.ds-247420 .ds-g3-inv { background: #2b2d31; border: 1px solid #1e1f22; border-radius: 8px; padding: calc(var(--space-2-75) + var(--space-hair)) var(--space-3); max-width: 430px; margin-top: var(--space-1); }
+html.ds-247420 .ds-g3-inv { line-height: 24px; background: #2b2d31; border: 1px solid #1e1f22; border-radius: 8px; padding: calc(var(--space-2-75) + var(--space-hair)) var(--space-3); max-width: 430px; margin-top: var(--space-1); }
 html.ds-247420 .ds-g3-inv-ih { font-size: var(--fs-micro); font-weight: 700; color: #b5bac1; text-transform: uppercase; letter-spacing: .02em; line-height: 1.5; margin-bottom: var(--space-2-5); }
 html.ds-247420 .ds-g3-inv-ib { display: flex; align-items: center; gap: var(--space-2) calc(var(--space-2-75) + var(--space-hair)); flex-wrap: wrap; }
 html.ds-247420 .ds-g3-inv-ib > div:nth-child(2) { flex: 1 1 130px; min-width: 0; }
@@ -1556,7 +1557,7 @@ html.ds-247420 .ds-g3-inv p { margin: var(--space-hair) 0 0; line-height: 1.5; f
 html.ds-247420 .ds-g3-inv-dot { width: 8px; height: 8px; border-radius: 50%; background: #80848e; display: inline-block; }
 html.ds-247420 .ds-g3-inv-dot-g { background: #23a55a; }
 html.ds-247420 .ds-g3-inv-dot + i, html.ds-247420 .ds-g3-inv p i:nth-of-type(2) { margin-left: var(--space-2); }
-html.ds-247420 .ds-g3-inv-dico { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex: none; color: #fff; font-weight: 700; }
+html.ds-247420 .ds-g3-inv-dico { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1.5; flex: none; color: #fff; font-weight: 700; }
 html.ds-247420 .ds-g3-inv .ds-g3-evb { flex: none; padding: var(--space-2) calc(var(--space-3) + var(--space-hair)); margin-left: auto; }
 html.ds-247420 .ca-rail-channels { position: relative; }
 html.ds-247420 .ds-g3-smenu { position: absolute; top: 56px; left: 10px; right: 10px; background: #111214; border-radius: 4px; padding: var(--space-1-75) var(--space-2); z-index: 20; box-shadow: 0 8px 16px #0006; }
