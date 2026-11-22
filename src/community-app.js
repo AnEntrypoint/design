@@ -25,6 +25,7 @@ import { Game3Welcome } from './components/game3-welcome.js';
 import { Game3DayDivider } from './components/game3-day.js';
 import { Game3VoiceBar } from './components/game3-voicebar.js';
 import { Game3SystemLine } from './components/game3-system.js';
+import { Game3Modal } from './components/game3-modal.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
@@ -551,7 +552,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'inbox') return Game3InboxPanel({ tab: s.inboxTab || 'mentions', onTab: (t) => A.setInboxTab && A.setInboxTab(t), rows: s.mentions || [], saved: s.savedMessages || [], onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some, once every 30 seconds.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ onCreate: A.createEvent ? (f) => A.createEvent(f) : null, events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, about: e.about, location: e.location, at: e.start, name: e.name, mine: e.mine, count: e.going.length, interested: e.interested })), now, onRsvp: A.rsvpEvent ? (id) => A.rsvpEvent(id) : null, onDelete: A.deleteEvent ? (id) => A.deleteEvent(id) : null, onClose: () => A.closeSurface && A.closeSurface() }); }
-        if (name === 'discover') return h('div', null, h('h2', null, 'Discover servers'), DiscoverList({ servers: s.discoverServers || [], emptyText: 'No servers joined yet.', onOpen: (id) => A.switchServer && A.switchServer(id) }));
+        if (name === 'discover') return Game3Modal({ title: 'Discover servers', onClose: () => A.closeSurface && A.closeSurface() }, DiscoverList({ servers: s.discoverServers || [], emptyText: 'No servers joined yet.', onOpen: (id) => A.switchServer && A.switchServer(id) }));
         return null;
     };
     let gamePrefWasOpen = false;
