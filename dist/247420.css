@@ -14200,6 +14200,12 @@
 .ds-247420.ds-247420 .ds-g3-swl, .ds-247420.ds-247420 .ds-g3-swtip { margin-top: calc(var(--space-2) + var(--space-1)); }
 .ds-247420.ds-247420 .ds-g3-lb img { max-width: 90vw; max-height: 80vh; border-radius: var(--r-0); display: block; }
 .ds-247420.ds-247420 .ds-g3-lb a { color: #dbdee1; font-size: 14px; display: block; margin-top: var(--space-2); }
+.ds-247420.ds-247420 .ds-g3-newbar-wrap { position: sticky; top: 0; height: 0; z-index: var(--z-raised); }
+.ds-247420.ds-247420 .ds-g3-newbar { position: absolute; inset-inline: var(--space-3); top: 0; background: #5865f2; color: #fff; border-radius: 0 0 var(--r-1) var(--r-1); padding: var(--space-1) calc(var(--space-2) + var(--space-1)); font-size: var(--fs-tiny); font-weight: 500; display: flex; justify-content: space-between; cursor: pointer; }
+.ds-247420.ds-247420 .ds-g3-newbar b { font-weight: 700; cursor: pointer; white-space: nowrap; }
+.ds-247420.ds-247420 .ds-g3-newbar > span { white-space: nowrap; }
+.ds-247420.ds-247420 .ds-g3-nbx { font-style: normal; }
+@media (max-width: 640px) { .ds-247420.ds-247420 .ds-g3-nbx { display: none; } }
 
 /* app-surfaces.css */
 

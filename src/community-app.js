@@ -29,6 +29,7 @@ import { Game3Modal } from './components/game3-modal.js';
 import { Game3Switcher } from './components/game3-switcher.js';
 import { Game3Lightbox } from './components/game3-lightbox.js';
 import { Game3NewDivider } from './components/game3-newdiv.js';
+import { Game3NewBar } from './components/game3-newbar.js';
 import { Game3SearchBar } from './components/game3-search.js';
 import { Game3ProfileCard } from './components/game3-profile.js';
 import { Game3DmWelcome } from './components/game3-welcome.js';
@@ -432,7 +433,9 @@ export function mountCommunityApp(root, adapter = {}) {
             });
         });
         const all = rows.flatMap((row, i) => (i === newIndex ? [Game3NewDivider({ key: 'newdiv' }), row] : [row])).filter(Boolean);
-        return s.chatSearch ? [Game3SearchBar({ key: 'sres', count: msgs.length, query: s.chatSearch, onClear: () => A.setChatSearch && A.setChatSearch('') }), ...all] : all;
+        const newCount = newIndex >= 0 ? msgs.filter((m) => m.type !== 'system' && String(m.userId) !== String(selfId) && m.timestamp / 1000 > s.newAt).length : 0;
+        const newBar = newCount && !s.chatSearch ? Game3NewBar({ key: 'newbar', count: newCount, since: new Date(s.newAt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), onJump: () => { const el = root.querySelector('#newline'); if (el) el.scrollIntoView({ block: 'center' }); }, onRead: A.markChannelRead ? () => A.markChannelRead() : null }) : null;
+        return s.chatSearch ? [Game3SearchBar({ key: 'sres', count: msgs.length, query: s.chatSearch, onClear: () => A.setChatSearch && A.setChatSearch('') }), ...all] : [newBar, ...all].filter(Boolean);
     };
 
     const railOrder = (s) => {
