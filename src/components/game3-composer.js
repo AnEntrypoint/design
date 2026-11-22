@@ -1,9 +1,28 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
+import { CMDS, EMOJI_NAMES } from '../game3-data.js';
 
 const h = webjsx.createElement;
 
-export function Game3Composer({ typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, key } = {}) {
+const AC_RE = /(@[^@]*|^\/\w*|:\w*)$/;
+
+const acOptions = (value, mentions) => {
+    const m = AC_RE.exec(value || '');
+    if (!m) return null;
+    const q = m[1], rest = q.slice(1).toLowerCase();
+    if (q[0] === '/') {
+        const f = CMDS.filter(([c]) => c.startsWith(rest));
+        return f.length ? { head: 'Commands', items: f.map(([c, d]) => ({ key: c, label: h('b', {}, '/' + c), small: d, insert: '/' + c })) } : null;
+    }
+    if (q[0] === ':') {
+        const f = Object.entries(EMOJI_NAMES).filter(([n]) => n.includes(rest)).slice(0, 8);
+        return f.length ? { head: 'Emoji matching :' + rest, items: f.map(([n, e]) => ({ key: n, glyph: e, label: ':' + n + ':', insert: e })) } : null;
+    }
+    const f = mentions.filter((n) => n.toLowerCase().includes(rest)).slice(0, 8);
+    return f.length ? { head: 'Members', items: f.map((n) => ({ key: n, label: n, insert: '@' + n })) } : null;
+};
+
+export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, key } = {}) {
     const count = maxLength && value && value.length > 150 ? String(maxLength - value.length) : null;
     const submit = (ta) => {
         const v = ta.value;
@@ -12,7 +31,16 @@ export function Game3Composer({ typing = null, value = '', placeholder = '', max
         ta.value = '';
         if (onInput) onInput('');
     };
+    const ac = acOptions(value, mentions);
+    const apply = (insert, root) => {
+        if (onInput) onInput(String(value || '').replace(AC_RE, insert + ' '));
+        setTimeout(() => { const ta = root && root.querySelector('textarea'); if (ta) ta.focus(); }, 0);
+    };
     return h('div', { key, class: 'ds-g3-comp' },
+        ac ? h('div', { key: 'ac', class: 'ds-g3-acpop', role: 'listbox' },
+            h('div', { class: 'ds-g3-ac-h' }, ac.head),
+            ac.items.map((it) => h('div', { key: it.key, class: 'ds-g3-ac-it', role: 'option', onclick: (e) => apply(it.insert, e.currentTarget.closest('.ds-g3-comp')) },
+                it.glyph ? h('span', { class: 'ds-g3-ac-glyph' }, it.glyph) : null, it.label, it.small ? h('small', {}, it.small) : null))) : null,
         replyTo
             ? h('div', { key: 'rb', class: 'ds-g3-replybar' },
                 h('span', {}, 'Replying to ', h('b', {}, replyTo.username || 'someone')),
@@ -31,6 +59,7 @@ export function Game3Composer({ typing = null, value = '', placeholder = '', max
                 onkeydown: (e) => {
                     if (onKeyDown) onKeyDown(e, e.target);
                     if (e.defaultPrevented) return;
+                    if (e.key === 'Tab' && ac && !e.shiftKey) { e.preventDefault(); apply(ac.items[0].insert, e.target.closest('.ds-g3-comp')); return; }
                     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) {
                         e.preventDefault();
                         submit(e.target);

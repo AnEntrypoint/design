@@ -17,6 +17,7 @@ const SHIPPED_ROOT_SHEETS = [
 
 const DELIBERATE_GLYPH_CATALOGS = new Set([
     'preview/icons-unicode.html',
+    'src/game3-data.js',
     'src/components/overlay-primitives/emoji-picker.js',
 ]);
 
@@ -26,7 +27,7 @@ const DASH_DIRS = [...SCAN_DIRS, 'docs'];
 const DASH_EXT = new Set([...SCAN_EXT, '.md', '.yaml', '.yml']);
 const DASH_RE = /[\u2013\u2014]|&(?:mdash|ndash);|&#(?:0*8211|0*8212);|&#x0*201[34];/i;
 
-const ALLOW = { 'src/components/game3-header.js': ['☰'], 'src/components/game3-system.js': ['→', '👋'], 'src/components/game3-invite.js': ['✕'], 'src/components/game3-voicebar.js': ['📶'], 'src/components/game3-poll.js': ['📊', '✓', '·'], 'src/components/game3-people.js': ['\\u2014', '—'], 'src/components/game3-room.js': ['\u{1F9ED}'], 'src/components/game3-members.js': ['✓', '\\u2014', '—'], 'src/components/game3-voice.js': ['📻', '💬'], 'src/components/game3-leaderboard.js': ['🥇', '🥈', '🥉'], 'src/components/game3-polls.js': ['📊', '✓', '·'], 'src/components/game3-recap.js': ['👋'], 'src/components/game3-events.js': ['⭐', '✓', '…'], 'src/components/game3-roles.js': ['🎮', '🎨', '🦉', '🎵', '🤡', '🌿', '✓', '·', '→'], 'src/components/game3-rules.js': ['👋', '·', '→'], 'src/components/game3-split.js': ['⇱', '✕', '⧉'], 'src/components/game3-settings.js': ['✕', '↑', '↓', '●', '😀', '🧭'], 'src/components/game3-inbox.js': ['✕'], 'src/components/game3-server-create.js': ['✕', '🧭'], 'src/components/community/presence.js': ['📶'] };
+const ALLOW = { 'src/community-app.js': ['😀', '📋', '🔖', '🆔'], 'src/components/game3-search.js': ['✕'], 'src/components/game3-header.js': ['☰'], 'src/components/game3-system.js': ['→', '👋'], 'src/components/game3-invite.js': ['✕'], 'src/components/game3-voicebar.js': ['📶'], 'src/components/game3-poll.js': ['📊', '✓', '·'], 'src/components/game3-people.js': ['\\u2014', '—'], 'src/components/game3-room.js': ['\u{1F9ED}'], 'src/components/game3-members.js': ['✓', '\\u2014', '—'], 'src/components/game3-voice.js': ['📻', '💬'], 'src/components/game3-leaderboard.js': ['🥇', '🥈', '🥉'], 'src/components/game3-polls.js': ['📊', '✓', '·'], 'src/components/game3-recap.js': ['👋'], 'src/components/game3-events.js': ['⭐', '✓', '…'], 'src/components/game3-roles.js': ['🎮', '🎨', '🦉', '🎵', '🤡', '🌿', '✓', '·', '→'], 'src/components/game3-rules.js': ['👋', '·', '→'], 'src/components/game3-split.js': ['⇱', '✕', '⧉'], 'src/components/game3-settings.js': ['✕', '↑', '↓', '●', '😀', '🧭'], 'src/components/game3-inbox.js': ['✕'], 'src/components/game3-server-create.js': ['✕', '🧭'], 'src/components/community/presence.js': ['📶'] };
 
 function isAllowed(rel, line) {
     const list = ALLOW[rel] || [];

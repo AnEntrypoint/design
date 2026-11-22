@@ -27,6 +27,7 @@ import { Game3VoiceBar } from './components/game3-voicebar.js';
 import { Game3SystemLine } from './components/game3-system.js';
 import { Game3Modal } from './components/game3-modal.js';
 import { Game3NewDivider } from './components/game3-newdiv.js';
+import { Game3SearchBar } from './components/game3-search.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
@@ -317,6 +318,22 @@ export function mountCommunityApp(root, adapter = {}) {
             return out;
         });
     };
+    const moreItemsFor = (m, s, username, openPicker) => {
+        const close = () => { moreFor = null; render(); };
+        const saved = (s.savedIds || []).includes(m.id);
+        const items = [
+            A.reactToMessage ? { key: 'react', label: 'Add Reaction', glyph: '😀', onClick: (e) => { moreFor = null; openPicker(e); } } : null,
+            { key: 'reply', label: 'Reply', glyph: '↩', onClick: () => { close(); if (A.startReply) A.startReply({ id: m.id, username, text: m.content }); } },
+            { key: 'mention', label: 'Mention @' + username, glyph: '@', onClick: () => { close(); if (A.setInput) A.setInput((s.chatInputValue || '') + '@' + username + ' '); } },
+            { key: 'copy', label: 'Copy Text', glyph: '📋', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(m.content || ''); } },
+            A.toggleSave ? { key: 'save', label: saved ? 'Remove from Saved' : 'Save for Later', glyph: '🔖', onClick: () => { close(); A.toggleSave({ id: m.id, who: username, text: m.content || '' }); } } : null,
+            s.devMode ? { key: 'cid', label: 'Copy Message ID', glyph: '🆔', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(String(m.id)); } } : null,
+        ].filter(Boolean);
+        return items;
+    };
+    let moreFor = null;
+    let soundToast = null;
+    const mentionNames = (s) => [...(s.memberCategories || []).flatMap((c) => (c.members || []).map((m) => m.name)), ...(s.memberApps || []).map((a) => a.name)].filter(Boolean);
     const game3Rows = (s) => {
         const msgs = s.messages || [];
         const selfId = s.userId;
@@ -352,9 +369,16 @@ export function mountCommunityApp(root, adapter = {}) {
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
                 onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
                 onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
+                onJump: s.chatSearch ? () => { if (A.setChatSearch) A.setChatSearch(''); setTimeout(() => { const el = root.querySelector('#m-' + m.id); if (el) el.scrollIntoView({ block: 'center' }); }, 600); } : null,
+                onMore: () => { moreFor = moreFor === m.id ? null : m.id; render(); },
+                moreOpen: moreFor === m.id,
+                moreItems: moreItemsFor(m, s, username, openPicker),
+                remind: A.remindMe ? [[20, '20m'], [60, '1h'], [180, '3h'], [1440, '1d']] : [],
+                onRemind: (mn) => { moreFor = null; if (A.remindMe) A.remindMe(mn, { who: username, text: m.content || '' }); render(); },
             });
         });
-        return rows.flatMap((row, i) => (i === newIndex ? [Game3NewDivider({ key: 'newdiv' }), row] : [row])).filter(Boolean);
+        const all = rows.flatMap((row, i) => (i === newIndex ? [Game3NewDivider({ key: 'newdiv' }), row] : [row])).filter(Boolean);
+        return s.chatSearch ? [Game3SearchBar({ key: 'sres', count: msgs.length, query: s.chatSearch, onClear: () => A.setChatSearch && A.setChatSearch('') }), ...all] : all;
     };
 
     const railOrder = (s) => {
@@ -394,7 +418,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ typing: typingBar,
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
@@ -441,7 +465,9 @@ export function mountCommunityApp(root, adapter = {}) {
                 onMic: () => A.toggleMic && A.toggleMic(),
                 onLeave: () => A.leaveVoice && A.leaveVoice(),
                 sounds: s.soundboard || [],
-                onSound: (id) => A.playSound && A.playSound(id),
+                voiceName: s.voiceChannelName || (s.currentChannel && s.currentChannel.name) || '',
+                soundToast,
+                onSound: (id) => { const snd = (s.soundboard || []).find((x) => x.id === id); if (snd) { soundToast = { e: snd.e, name: snd.name, who: 'You' }; setTimeout(() => { soundToast = null; render(); }, 3000); } if (A.playSound) A.playSound(id); render(); },
             }),
         );
     };
@@ -479,6 +505,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 render();
             },
             onclick: (e) => {
+                if (moreFor && !(e.target.closest && e.target.closest('.ds-g3-mmenu, .ds-g3-bar'))) { moreFor = null; render(); }
                 const a = e.target.closest && e.target.closest('.chat-image');
                 if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
                 const img = a.querySelector('img');
