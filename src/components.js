@@ -70,7 +70,7 @@ export {
     VoiceUser, UserPanel, ChannelSidebar,
     MemberItem, MemberList, UserCard,
     ChatHeader, VoiceStrip, CommunityShell,
-    MobileHeader, ReplyBar, Banner,
+    ReplyBar, Banner,
     ThreadPanel, ForumView, PageView,
     RoleRow, RoleList, RoleEditor, BanList, InviteList,
     WebhookList, WebhookListItem, WebhookEditor,

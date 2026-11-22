@@ -1,7 +1,7 @@
 
 import { ServerIcon, ServerRail, ChannelItem, ChannelCategory, ChannelSidebar } from './community/navigation.js';
 import { VoiceUser, UserPanel, MemberItem, MemberList, VoiceStrip, UserCard } from './community/presence.js';
-import { ChatHeader, MobileHeader, ReplyBar, Banner } from './community/chrome.js';
+import { ChatHeader, ReplyBar, Banner } from './community/chrome.js';
 import { ThreadPanel, ForumView, PageView } from './community/views.js';
 import { CommunityShell } from './community/shell.js';
 import { RoleRow, RoleList, RoleEditor, BanList, InviteList, PERMISSION_GROUPS } from './community/moderation.js';
@@ -13,7 +13,7 @@ import { SearchBar, SearchResults, SearchResultMessage, SearchResultEntity } fro
 export {
     ServerIcon, ServerRail, ChannelItem, ChannelCategory, ChannelSidebar,
     VoiceUser, UserPanel, MemberItem, MemberList, VoiceStrip, UserCard,
-    ChatHeader, MobileHeader, ReplyBar, Banner,
+    ChatHeader, ReplyBar, Banner,
     ThreadPanel, ForumView, PageView,
     CommunityShell,
     RoleRow, RoleList, RoleEditor, BanList, InviteList, PERMISSION_GROUPS,

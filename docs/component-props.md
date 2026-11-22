@@ -2,7 +2,7 @@
 
 Generated from `src/components.js`'s real export barrel + each symbol's real definition in `src/components/*.js`, via `node scripts/generate-component-docs.mjs`. Do not hand-edit: re-run after any component signature or JSDoc change.
 
-314 exported symbols across 32 source files.
+333 exported symbols across 36 source files.
 
 ---
 
@@ -519,13 +519,13 @@ Segmented one-time-code / PIN entry.
 
 **Kind:** component
 
-**Signature:** `value`, `onInput`, `onSend`, `onEmoji`, `onCancel`, `busy`, `placeholder` = `'message…'`, `disabled`, `disabledReason`, `label`, `context`, `onPasteFiles`, `onDropFiles`, `onAttach`, `streamingSince`, `detectAttachment`, `mentionFiles`
+**Signature:** `value`, `onInput`, `onSend`, `onEmoji`, `onCancel`, `busy`, `placeholder` = `'message…'`, `disabled`, `disabledReason`, `label`, `context`, `onPasteFiles`, `onDropFiles`, `onAttach`, `streamingSince`, `detectAttachment`, `mentionFiles`, `maxLength`, `onKeyDown`
 
 ### Chat
 
 **Kind:** component
 
-**Signature:** `title` = `'chat'`, `sub`, `emptySub`, `locked`, `messages` = `[]`, `composer`, `header`, `suggestions`, `onSuggestionClick`
+**Signature:** `title` = `'chat'`, `sub`, `emptySub`, `locked`, `messages` = `[]`, `rows` = `null`, `composer`, `header`, `suggestions`, `onSuggestionClick`
 
 ### flashComposerNote
 
@@ -1040,7 +1040,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `name`, `tag`, `color`, `muted`, `deafened`, `onMute`, `onDeafen`, `onSettings`, `onMembers`, `membersOpen`
+**Signature:** `name`, `tag`, `color`, `muted`, `deafened`, `onMute`, `onDeafen`, `onSettings`, `onMembers`, `membersOpen`, `level`, `xpPct`
 
 ### ChannelSidebar
 
@@ -1052,7 +1052,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `identity`, `name`, `color`, `nameColor`, `status` = `'online'`, `onClick`
+**Signature:** `identity`, `name`, `color`, `nameColor`, `status` = `'online'`, `suffix`, `onClick`
 
 ### MemberList
 
@@ -1076,19 +1076,13 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `channelName`, `status`, `muted`, `deafened`, `onMute`, `onDeafen`, `onLeave`, `open`
+**Signature:** `channelName`, `status`, `onLeave`, `open`
 
 ### CommunityShell
 
 **Kind:** component
 
 **Signature:** `serverRailProps`, `sidebarProps`, `children`, `memberListProps`, `voiceStripProps`
-
-### MobileHeader
-
-**Kind:** component
-
-**Signature:** `title`, `channelType`, `channelName`, `serverName`, `onMenu`, `onMembers`, `membersOpen`, `menuOpen`
 
 ### ReplyBar
 
@@ -1410,6 +1404,38 @@ A single-value range slider (track + fill + thumb) built on a real, invisible na
 - `props.key` _(*)_
 
 **Returns:** {*} webjsx vnode
+
+## `src/components/game3.js`
+
+### LevelBar
+
+**Kind:** component
+
+**Signature:** `level` = `0`, `xp` = `0`, `nextXp` = `0`, `key`
+
+### Leaderboard
+
+**Kind:** component
+
+**Signature:** `rows` = `[]`, `title` = `'Leaderboard'`, `key`
+
+### PollCard
+
+**Kind:** component
+
+**Signature:** `question`, `options` = `[]`, `votes` = `{}`, `myVote` = `null`, `onVote`, `closed` = `false`, `key`
+
+### AwayRecap
+
+**Kind:** component
+
+**Signature:** `since` = `''`, `lines` = `[]`, `onDismiss`, `key`
+
+### InviteCard
+
+**Kind:** component
+
+**Signature:** `server`, `members` = `0`, `onJoin`, `joined` = `false`, `dead` = `false`, `key`
 
 ## `src/components/carousel.js`
 
@@ -2233,4 +2259,100 @@ Create a damage numbers manager.
 - `config.useLargerFontForBigDamage` _(boolean)_: Scale font size with damage amount.
 
 **Returns:** {Object} Manager with methods: addNumber, update, getActiveNumbers, cleanup.
+
+## `src/components/game3-social.js`
+
+### GameEventCard
+
+**Kind:** component
+
+**Signature:** `title`, `about` = `''`, `byName` = `''`, `at` = `0`, `now` = `Date.now()`, `interested` = `0`, `isInterested` = `false`, `canCancel` = `false`, `onRsvp`, `onCancel`, `key`
+
+### GameEventList
+
+**Kind:** component
+
+**Signature:** `events` = `[]`, `now` = `Date.now()`, `viewerId` = `''`, `isOwner` = `false`, `onRsvp`, `onCancel`, `onCreate`, `key`
+
+### GameEventComposer
+
+**Kind:** component
+
+**Signature:** `onCreate`, `defaultAt` = `''`, `key`
+
+### StickerPicker
+
+**Kind:** component
+
+**Signature:** `stickers` = `[]`, `server` = `''`, `onPick`, `key`
+
+### SoundBoard
+
+**Kind:** component
+
+**Signature:** `sounds` = `[]`, `onPlay`, `disabled` = `false`, `key`
+
+### RadioPill
+
+**Kind:** component
+
+**Signature:** `playing` = `false`, `channel` = `''`, `onToggle`, `key`
+
+### KeywordAlerts
+
+**Kind:** component
+
+**Signature:** `words` = `[]`, `max` = `12`, `onChange`, `key`
+
+### ServerDiscover
+
+**Kind:** component
+
+**Signature:** `servers` = `[]`, `joinedIds` = `[]`, `onJoin`, `emptyText` = `''`, `key`
+
+## `src/components/game3-room.js`
+
+### VoiceRoom
+
+**Kind:** component
+
+**Signature:** `name` = `''`, `participants` = `[]`, `selfId` = `''`, `muted` = `false`, `deafened` = `false`, `onToggleMute`, `onToggleDeafen`, `onLeave`, `key`
+
+### ToggleRow
+
+**Kind:** component
+
+**Signature:** `label`, `hint` = `''`, `checked` = `false`, `onChange`, `key`
+
+### GameSettingsSection
+
+**Kind:** component
+
+**Signature:** `title`, `children` = `[]`, `key`
+
+### ServerCreateForm
+
+**Kind:** component
+
+**Signature:** `colors` = `[]`, `initialColor` = `''`, `onCreate`, `onCancel`, `onJoin`, `key`
+
+### CatchUpButton
+
+**Kind:** component
+
+**Signature:** `count` = `0`, `onClick`, `key`
+
+### SplitToggle
+
+**Kind:** component
+
+**Signature:** `mode` = `'single'`, `onChange`, `key`
+
+## `src/components/game3-header.js`
+
+### GameHeader
+
+**Kind:** component
+
+**Signature:** `onBurger`, `channelName` = `''`, `channelType` = `'text'`, `topic` = `''`, `memberListOpen` = `false`, `onMembers`, `pinsOpen` = `false`, `onPins`, `buttons` = `[]`, `trailing` = `[]`, `key`
 

@@ -6,7 +6,7 @@
 // signature change; `npm run lint:component-types` fails CI when this
 // file is stale.
 //
-// 334 exported symbols across 36 source files.
+// 333 exported symbols across 36 source files.
 
 /** A webjsx virtual node, as returned by every component in this SDK. */
 export type VNode = any;
@@ -2093,21 +2093,6 @@ export interface CommunityShellProps {
 export declare function CommunityShell(props?: CommunityShellProps): VNode;
 
 /**
- * Props for {@link MobileHeader} (src/components/community.js).
- */
-export interface MobileHeaderProps {
-    title?: any;
-    channelType?: any;
-    channelName?: any;
-    serverName?: any;
-    onMenu?: (...args: any[]) => any;
-    onMembers?: (...args: any[]) => any;
-    membersOpen?: any;
-    menuOpen?: any;
-}
-export declare function MobileHeader(props?: MobileHeaderProps): VNode;
-
-/**
  * Props for {@link ReplyBar} (src/components/community.js).
  */
 export interface ReplyBarProps {
@@ -4163,6 +4148,7 @@ export declare function SplitToggle(props?: SplitToggleProps): VNode;
  * Props for {@link GameHeader} (src/components/game3-header.js).
  */
 export interface GameHeaderProps {
+    onBurger?: (...args: any[]) => any;
     /** @default '' */
     channelName?: string;
     /** @default 'text' */

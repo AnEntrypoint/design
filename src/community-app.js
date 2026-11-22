@@ -3,7 +3,7 @@ import { Icon } from './components/shell.js';
 import { register } from './debug.js';
 import { Chat, ChatComposer, TypingIndicator } from './components/chat.js';
 import {
-    ServerRail, ChannelItem, MemberList, MobileHeader,
+    ServerRail, ChannelItem, MemberList,
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
@@ -488,13 +488,13 @@ export function mountCommunityApp(root, adapter = {}) {
         },
             DropAnywhereOverlay({ active: dropAnywhere.active, fileCount: dropAnywhere.fileCount }),
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
-            MobileHeader({ channelType: s.homeMode ? 'dm' : (ch.type || 'text'), channelName: ch.name || '', serverName: s.homeMode ? '' : (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), membersOpen: !!s.memberListOpen, menuOpen: !!s.mobileMenuOpen, onMenu: () => A.openMobileMenu && A.openMobileMenu(), onMembers: () => A.toggleMembers && A.toggleMembers() }),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
                 h('div', { class: 'ca-right' },
             GameHeader({
+                onBurger: () => (s.mobileMenuOpen ? A.closeMobileMenu && A.closeMobileMenu() : A.openMobileMenu && A.openMobileMenu()),
                 channelName: ch.name || 'general',
                 channelType: ch.type || 'text',
                 topic: ch.topic || '',
@@ -573,7 +573,7 @@ export function mountCommunityApp(root, adapter = {}) {
         surfaceWasOpen = surf;
     };
 
-    const NARROW_VIEWPORT_QUERY = '(max-width: 900px)';
+    const NARROW_VIEWPORT_QUERY = '(max-width: 640px)';
     const narrowViewportQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(NARROW_VIEWPORT_QUERY) : null;
     let isNarrowViewport = !!(narrowViewportQuery && narrowViewportQuery.matches);
     if (narrowViewportQuery && narrowViewportQuery.addEventListener) narrowViewportQuery.addEventListener('change', (e) => {

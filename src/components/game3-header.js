@@ -2,8 +2,9 @@ import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
 const h = webjsx.createElement;
 
-export function GameHeader({ channelName = '', channelType = 'text', topic = '', memberListOpen = false, onMembers, pinsOpen = false, onPins, buttons = [], trailing = [], key } = {}) {
+export function GameHeader({ onBurger, channelName = '', channelType = 'text', topic = '', memberListOpen = false, onMembers, pinsOpen = false, onPins, buttons = [], trailing = [], key } = {}) {
     return h('header', { key, class: 'ds-g3-header' },
+        h('span', { key: 'bg', class: 'ds-g3-burger', role: 'button', tabindex: '0', 'aria-label': 'Open menu', onclick: onBurger }, '☰'),
         h('span', { key: 'g', class: 'ds-g3-header-glyph', 'aria-hidden': 'true' }, Icon(channelType === 'voice' ? 'speaker' : 'ref-hash', { size: 24 })),
         h('h2', { key: 'n', class: 'ds-g3-header-name' }, channelName),
         topic ? h('span', { key: 't', class: 'ds-g3-header-topic' }, topic) : null,

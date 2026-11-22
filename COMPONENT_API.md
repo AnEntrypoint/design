@@ -1067,7 +1067,7 @@ Exports from already-documented modules above that previously had zero mention h
 
 **Files modals** (`files-modals.js`): `ConfirmDialog({ title = 'Are you sure?', message, confirmLabel = 'confirm', cancelLabel = 'cancel', destructive, onConfirm, onCancel, error, busy = false, busyLabel = 'working…' })`, `PromptDialog({ title = 'Enter a name', value = '', placeholder = '', confirmLabel = 'ok', cancelLabel = 'cancel', onConfirm, onCancel, onInput, error, busy = false, busyLabel = 'working…' })`, `FileViewer({ file, body, onClose, onAction, onPrev, onNext })`, `FilePreviewMedia({ src, type = 'other', name })`, `FilePreviewCode({ content = '', lang, filename })`, `FilePreviewText({ content = '', truncated })`.
 
-**Community** (`community.js`): `MobileHeader({ title, channelType, channelName, onMenu, onMembers })`, `ReplyBar({ quotedMessage, quotedAuthor, onCancel })`, `Banner({ tone = 'info', message, visible, actionLabel, onAction, onClick })`, `ThreadPanel({ threads = [], activeId = null, title = 'Threads', onSelect, onCreate, onClose, loading = false })`, `ForumView({ posts = [], onSearch, onSort, onSelect, onNewPost, loading = false })`, `PageView({ title = '', html = '', isAdmin = false, onEdit })`.
+**Community** (`community.js`): `ReplyBar({ quotedMessage, quotedAuthor, onCancel })`, `Banner({ tone = 'info', message, visible, actionLabel, onAction, onClick })`, `ThreadPanel({ threads = [], activeId = null, title = 'Threads', onSelect, onCreate, onClose, loading = false })`, `ForumView({ posts = [], onSearch, onSort, onSelect, onNewPost, loading = false })`, `PageView({ title = '', html = '', isAdmin = false, onEdit })`.
 
 ---
 

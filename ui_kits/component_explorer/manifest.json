@@ -2305,6 +2305,16 @@
           "name": "mentionFiles",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "maxLength",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onKeyDown",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -2337,6 +2347,11 @@
         {
           "name": "messages",
           "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "rows",
+          "default": "null",
           "alias": null
         },
         {
@@ -4951,6 +4966,16 @@
           "name": "membersOpen",
           "default": null,
           "alias": null
+        },
+        {
+          "name": "level",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "xpPct",
+          "default": null,
+          "alias": null
         }
       ],
       "description": ""
@@ -5046,6 +5071,11 @@
         {
           "name": "status",
           "default": "'online'",
+          "alias": null
+        },
+        {
+          "name": "suffix",
+          "default": null,
           "alias": null
         },
         {
@@ -5201,26 +5231,6 @@
           "alias": null
         },
         {
-          "name": "muted",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "deafened",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "onMute",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "onDeafen",
-          "default": null,
-          "alias": null
-        },
-        {
           "name": "onLeave",
           "default": null,
           "alias": null
@@ -5260,54 +5270,6 @@
         },
         {
           "name": "voiceStripProps",
-          "default": null,
-          "alias": null
-        }
-      ],
-      "description": ""
-    },
-    {
-      "name": "MobileHeader",
-      "file": "components/community.js",
-      "kind": "component",
-      "props": [
-        {
-          "name": "title",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "channelType",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "channelName",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "serverName",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "onMenu",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "onMembers",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "membersOpen",
-          "default": null,
-          "alias": null
-        },
-        {
-          "name": "menuOpen",
           "default": null,
           "alias": null
         }
@@ -7174,6 +7136,166 @@
         }
       ],
       "description": "A single-value range slider (track + fill + thumb) built on a real, invisible native `<input type=\"range\">` for keyboard/pointer/a11y semantics, matching the overlay approach voice/capture.js's VadMeter pioneered for its threshold handle."
+    },
+    {
+      "name": "LevelBar",
+      "file": "components/game3.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "level",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "xp",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "nextXp",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "Leaderboard",
+      "file": "components/game3.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "rows",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "title",
+          "default": "'Leaderboard'",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "PollCard",
+      "file": "components/game3.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "question",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "options",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "votes",
+          "default": "{}",
+          "alias": null
+        },
+        {
+          "name": "myVote",
+          "default": "null",
+          "alias": null
+        },
+        {
+          "name": "onVote",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "closed",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "AwayRecap",
+      "file": "components/game3.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "since",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "lines",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "onDismiss",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "InviteCard",
+      "file": "components/game3.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "server",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "members",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "onJoin",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "joined",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "dead",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
     },
     {
       "name": "Carousel",
@@ -10135,6 +10257,541 @@
         }
       ],
       "description": "Create a damage numbers manager."
+    },
+    {
+      "name": "GameEventCard",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "title",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "about",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "byName",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "at",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "now",
+          "default": "Date.now()",
+          "alias": null
+        },
+        {
+          "name": "interested",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "isInterested",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "canCancel",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "onRsvp",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onCancel",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "GameEventList",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "events",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "now",
+          "default": "Date.now()",
+          "alias": null
+        },
+        {
+          "name": "viewerId",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "isOwner",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "onRsvp",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onCancel",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onCreate",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "GameEventComposer",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "onCreate",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "defaultAt",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "StickerPicker",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "stickers",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "server",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "onPick",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "SoundBoard",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "sounds",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "onPlay",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "disabled",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "RadioPill",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "playing",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "channel",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "onToggle",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "KeywordAlerts",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "words",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "max",
+          "default": "12",
+          "alias": null
+        },
+        {
+          "name": "onChange",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "ServerDiscover",
+      "file": "components/game3-social.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "servers",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "joinedIds",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "onJoin",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "emptyText",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "VoiceRoom",
+      "file": "components/game3-room.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "name",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "participants",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "selfId",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "muted",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "deafened",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "onToggleMute",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onToggleDeafen",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onLeave",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "ToggleRow",
+      "file": "components/game3-room.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "label",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "hint",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "checked",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "onChange",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "GameSettingsSection",
+      "file": "components/game3-room.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "title",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "children",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "ServerCreateForm",
+      "file": "components/game3-room.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "colors",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "initialColor",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "onCreate",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onCancel",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "onJoin",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "CatchUpButton",
+      "file": "components/game3-room.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "count",
+          "default": "0",
+          "alias": null
+        },
+        {
+          "name": "onClick",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "SplitToggle",
+      "file": "components/game3-room.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "mode",
+          "default": "'single'",
+          "alias": null
+        },
+        {
+          "name": "onChange",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "GameHeader",
+      "file": "components/game3-header.js",
+      "kind": "component",
+      "props": [
+        {
+          "name": "onBurger",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "channelName",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "channelType",
+          "default": "'text'",
+          "alias": null
+        },
+        {
+          "name": "topic",
+          "default": "''",
+          "alias": null
+        },
+        {
+          "name": "memberListOpen",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "onMembers",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "pinsOpen",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "onPins",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "buttons",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "trailing",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "key",
+          "default": null,
+          "alias": null
+        }
+      ],
+      "description": ""
     }
   ]
 }
