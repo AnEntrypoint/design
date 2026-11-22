@@ -6,8 +6,7 @@ import {
     ServerRail, ChannelItem, MemberList,
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, ReplyBar,
 } from './components/community.js';
-import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, RecapList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
+import { DiscoverList, PinList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
