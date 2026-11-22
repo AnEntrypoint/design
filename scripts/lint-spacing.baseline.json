@@ -1,5 +1,5 @@
 {
-  "count": 200,
+  "count": 201,
   "updated": "2026-11-21T10:23:07.341Z",
-  "reason": "game-3 settings view metrics (60px/40px/80px pane padding, 18px/28px headings, 22px stat values) from the reference CSS have no --space token"
+  "reason": "game-3 settings view metrics (60px/40px/80px pane padding, 18px/28px headings, 22px stat values) from the reference CSS have no --space token; game-3 server-create dialog: input padding 9px 10px and the Create button margin 18px 0 0 have no --space token (game-3 values, reference CSS)"
 }
