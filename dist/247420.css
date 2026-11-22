@@ -13883,7 +13883,7 @@
 .ds-247420.ds-247420 .ca-rail-channels { gap: normal; }
 
 .ds-247420.ds-247420 .ds-g3-scrim { position: fixed; inset: 0; background: #000b; z-index: var(--z-modal); display: flex; align-items: center; justify-content: center; }
-.ds-247420.ds-247420 .ds-g3-evm { width: 520px; max-width: calc(94vw / var(--spawn-viewport-unit-zoom, 1)); max-height: calc(86vh / var(--spawn-viewport-unit-zoom, 1)); background: #313338; border-radius: var(--r-1); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 24px #000a; }
+.ds-247420.ds-247420 .ds-g3-evm { color: #dbdee1; width: 520px; max-width: calc(94vw / var(--spawn-viewport-unit-zoom, 1)); max-height: calc(86vh / var(--spawn-viewport-unit-zoom, 1)); background: #313338; border-radius: var(--r-1); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 24px #000a; }
 .ds-247420.ds-247420 .ds-g3-evh { display: flex; justify-content: space-between; padding: var(--space-3); font-size: 18px; color: #f2f3f5; border-bottom: 1px solid #26272b; }
 .ds-247420.ds-247420 .ds-g3-evx { cursor: pointer; }
 .ds-247420.ds-247420 .ds-g3-evl { overflow-y: auto; padding: var(--space-2-75) var(--space-3); flex: 1; }
