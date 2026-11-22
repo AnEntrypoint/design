@@ -13998,6 +13998,11 @@
 .ds-247420.ds-247420 .ds-g3-day span { padding: 0 var(--space-1); }
 .ds-247420.ds-247420 .ds-g3-msg { flex-shrink: 0; }
 
+.ds-247420.ds-247420 .ds-g3-vbar { background: #232428; border-bottom: 1px solid #1f2023; padding: var(--space-2) var(--space-2-5); display: flex; align-items: center; justify-content: space-between; }
+.ds-247420.ds-247420 .ds-g3-vbar-main { cursor: pointer; }
+.ds-247420.ds-247420 .ds-g3-vbar-t { color: #23a55a; font-weight: 600; font-size: 14px; }
+.ds-247420.ds-247420 .ds-g3-vbar-s { color: #b5bac1; font-size: var(--fs-micro); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

@@ -23,6 +23,7 @@ import { Game3PeopleHere } from './components/game3-people.js';
 import { game3AvatarBg } from './components/game3-hue.js';
 import { Game3Welcome } from './components/game3-welcome.js';
 import { Game3DayDivider } from './components/game3-day.js';
+import { Game3VoiceBar } from './components/game3-voicebar.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
@@ -469,7 +470,7 @@ export function mountCommunityApp(root, adapter = {}) {
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             Banner({ tone: 'success', visible: !!showVoiceBanner, message: showVoiceBanner ? ('In voice: ' + (s.voiceChannelName || '') + ': click to return') : '', actionLabel: 'Leave', onAction: (e) => { if (e && e.stopPropagation) e.stopPropagation(); A.leaveVoice && A.leaveVoice(); }, onClick: () => A.returnToVoice && A.returnToVoice() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s, [ !inVoiceChannel && s.voiceConnected ? VoiceStrip({ channelName: s.voiceChannelName, status: s.voiceConnectionState || 'connected', muted: !!s.micMuted, deafened: !!s.voiceDeafened, onMute: () => A.toggleMic && A.toggleMic(), onDeafen: () => A.toggleDeafen && A.toggleDeafen(), onLeave: () => A.leaveVoice && A.leaveVoice(), open: true }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
                 h('div', { class: 'ca-right' },
             GameHeader({
                 channelName: ch.name || 'general',

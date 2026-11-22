@@ -1532,3 +1532,8 @@ html.ds-247420 .ds-g3-day { display: flex; align-items: center; margin: var(--sp
 html.ds-247420 .ds-g3-day::before, html.ds-247420 .ds-g3-day::after { content: ""; flex: 1; height: 1px; background: #3f4147; }
 html.ds-247420 .ds-g3-day span { padding: 0 var(--space-1); }
 html.ds-247420 .ds-g3-msg { flex-shrink: 0; }
+
+html.ds-247420 .ds-g3-vbar { background: #232428; border-bottom: 1px solid #1f2023; padding: var(--space-2) var(--space-2-5); display: flex; align-items: center; justify-content: space-between; }
+html.ds-247420 .ds-g3-vbar-main { cursor: pointer; }
+html.ds-247420 .ds-g3-vbar-t { color: #23a55a; font-weight: 600; font-size: 14px; }
+html.ds-247420 .ds-g3-vbar-s { color: #b5bac1; font-size: var(--fs-micro); }
