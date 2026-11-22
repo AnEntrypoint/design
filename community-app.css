@@ -1450,3 +1450,7 @@ html.ds-247420 .ds-g3-stat { display: grid; grid-template-columns: repeat(auto-f
 html.ds-247420 .ds-g3-stat > div { background: #2b2d31; border-radius: var(--r-1); padding: var(--space-2-75); }
 html.ds-247420 .ds-g3-stat b { display: block; font-size: 22px; line-height: 33px; color: #f2f3f5; }
 html.ds-247420 .ds-g3-stat span { font-size: var(--fs-micro); line-height: 18px; color: #b5bac1; text-transform: uppercase; }
+
+html.ds-247420 .ds-g3-dev-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); padding: var(--space-1-75) 0; border-bottom: 1px solid #3f4147; font-size: var(--fs-xs); color: #dbdee1; }
+html.ds-247420 .ds-g3-dev-k { color: #b5bac1; }
+html.ds-247420 .ds-g3-dev-v { font-family: var(--ff-mono, monospace); color: #dbdee1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }

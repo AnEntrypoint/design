@@ -13916,6 +13916,10 @@
 .ds-247420.ds-247420 .ds-g3-stat b { display: block; font-size: 22px; line-height: 33px; color: #f2f3f5; }
 .ds-247420.ds-247420 .ds-g3-stat span { font-size: var(--fs-micro); line-height: 18px; color: #b5bac1; text-transform: uppercase; }
 
+.ds-247420.ds-247420 .ds-g3-dev-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); padding: var(--space-1-75) 0; border-bottom: 1px solid #3f4147; font-size: var(--fs-xs); color: #dbdee1; }
+.ds-247420.ds-247420 .ds-g3-dev-k { color: #b5bac1; }
+.ds-247420.ds-247420 .ds-g3-dev-v { font-family: var(--ff-mono, monospace); color: #dbdee1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
