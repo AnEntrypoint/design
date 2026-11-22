@@ -29,6 +29,7 @@ const cardNodes = (value, on, unfurls = []) => on === false ? [] : [...new Set(S
     let host = '', path = '';
     try { const x = new URL(u); host = x.hostname.replace(/^www\./, ''); path = decodeURIComponent(x.pathname + x.search).slice(0, 80); } catch (e) { return null; }
     const yt = YT_RE.exec(u);
+    if (!yt) return null;
     return h('a', { key: 'card' + i, class: 'ds-g3-lcard', href: u, target: '_blank', rel: 'noopener' },
         h('span', { key: 'lb', class: 'ds-g3-lbody' },
             h('span', { key: 'ls', class: 'ds-g3-lsite' }, host),

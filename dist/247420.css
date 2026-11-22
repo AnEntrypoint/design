@@ -14170,6 +14170,20 @@
 .ds-247420.ds-247420 .ds-g3-statusmenu > div:hover { background: #4752c4; color: #fff; }
 .ds-247420.ds-247420 .ds-g3-statusmenu i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .ds-247420.ds-247420 .ds-g3-cst { box-sizing: border-box; width: 100%; background: #1e1f22; border: 0; outline: 0; border-radius: 4px; color: #dbdee1; font: inherit; font-size: var(--fs-xs); padding: var(--space-2); margin-bottom: var(--space-1-75); }
+.ds-247420.ds-247420 .ds-g3-pcard { width: 340px; max-width: calc(100vw - var(--space-4)); background: #232428; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.667); }
+.ds-247420.ds-247420 .ds-g3-pc-ban { height: 105px; }
+.ds-247420.ds-247420 .ds-g3-pc-cb { padding: 0 var(--space-3) var(--space-3); margin-top: calc(var(--space-6) * -1 + var(--space-hair)); }
+.ds-247420.ds-247420 .ds-g3-pc-av { border: 6px solid #232428; box-sizing: border-box; margin-bottom: 0; position: relative; }
+.ds-247420.ds-247420 .ds-g3-pc-inner { background: #111214; border-radius: 8px; padding: var(--space-2-75); margin-top: var(--space-2-75); }
+.ds-247420.ds-247420 .ds-g3-pc-inner h2 { font-size: calc(var(--fs-body) * 1.25); font-weight: 600; color: #f2f3f5; margin: 0; }
+.ds-247420.ds-247420 .ds-g3-pc-status { font-size: var(--fs-xs); color: #b5bac1; }
+.ds-247420.ds-247420 .ds-g3-pc-lbl { font-size: var(--fs-micro); font-weight: 700; color: #f2f3f5; text-transform: uppercase; margin-top: var(--space-2-75); }
+.ds-247420.ds-247420 .ds-g3-pc-val { font-size: var(--fs-xs); color: #dbdee1; margin-top: var(--space-1); }
+.ds-247420.ds-247420 .ds-g3-role { display: inline-flex; align-items: center; gap: var(--space-1); background: #2b2d31; border-radius: 4px; padding: var(--space-hair) var(--space-1-75); font-size: var(--fs-micro); margin: var(--space-1) var(--space-1) 0 0; }
+.ds-247420.ds-247420 .ds-g3-role i { width: 12px; height: 12px; border-radius: 50%; }
+.ds-247420.ds-247420 .ds-g3-btnp { display: block; text-align: center; background: #5865f2; color: #fff; border-radius: 4px; padding: var(--space-2); font-weight: 600; font-size: var(--fs-xs); cursor: pointer; margin-top: var(--space-2-75); }
+.ds-247420.ds-247420 .ds-g3-btnp:hover { background: #4752c4; }
+.ds-247420.ds-247420 .ds-g3-btnp-alt { background: #4e5058; }
 
 
 /* app-surfaces.css */

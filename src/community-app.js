@@ -4,7 +4,7 @@ import { register } from './debug.js';
 import { Chat, ChatComposer, TypingIndicator } from './components/chat.js';
 import {
     ServerRail, ChannelItem, MemberList,
-    UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
+    UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
 import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, RecapList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
@@ -29,6 +29,7 @@ import { Game3SystemLine } from './components/game3-system.js';
 import { Game3Modal } from './components/game3-modal.js';
 import { Game3NewDivider } from './components/game3-newdiv.js';
 import { Game3SearchBar } from './components/game3-search.js';
+import { Game3ProfileCard } from './components/game3-profile.js';
 import { Game3DmWelcome } from './components/game3-welcome.js';
 import { STICKERS, STICKER_RE, stickerText } from './game3-data.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
@@ -46,20 +47,6 @@ const h = webjsx.createElement;
 const CHANNEL_ICON = { voice: 'ref-speaker', forum: 'forum', threaded: 'thread', announcement: 'ref-mega', page: 'ref-rules', text: 'ref-hash' };
 const CHANNEL_NAME_ICON = { rules: 'ref-rules', 'pick-roles': 'ref-roles', announcements: 'ref-mega' };
 
-function UserCardOverlay({ member, onClose } = {}) {
-    if (!member) return null;
-    return Dialog({
-        open: true, onClose, dismissible: true,
-        ariaLabel: (member.name || member.identity || 'user') + ' profile',
-        children: UserCard({
-            identity: member.identity, name: member.name, color: member.color,
-            bannerUrl: member.bannerUrl, status: member.status, statusLabel: member.statusLabel,
-            bio: member.bio, roles: member.roles, joinedAt: member.joinedAt,
-            joinedServerAt: member.joinedServerAt, serverName: member.serverName,
-            actions: member.actions,
-        }),
-    });
-}
 
 function DropAnywhereOverlay({ active, fileCount } = {}) {
     if (!active) return null;
@@ -572,7 +559,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 ),
             ),
             ctx.open ? ContextMenu({ items: ctx.items, anchor: { x: ctx.x, y: ctx.y }, onClose: () => { ctx = { ...ctx, open: false }; render(); } }) : null,
-            card.open ? UserCardOverlay({ member: card.member, onClose: () => { card = { ...card, open: false }; render(); } }) : null,
+            card.open ? Game3ProfileCard({ member: card.member, isSelf: !!(card.member && s.userId && String(card.member.identity) === String(s.userId)), devMode: !!s.devMode, onClose: () => { card = { ...card, open: false }; render(); }, onMessage: (m) => { card = { ...card, open: false }; if (A.goHome) A.goHome(); if (A.selectDm) A.selectDm(m.identity); render(); }, onSettings: () => { card = { ...card, open: false }; if (A.openGamePrefs) A.openGamePrefs(); render(); } }) : null,
             emoji.open ? EmojiPicker({ open: true, anchorX: emoji.x, anchorY: emoji.y, onSelect: (em) => { attempt(() => { emoji.onSelect && emoji.onSelect(em); }); emoji = { ...emoji, open: false }; render(); }, onClose: () => { emoji = { ...emoji, open: false }; render(); } }) : null,
             palette.open ? CommandPalette({ open: true, items: palette.items, onSelect: (it) => { attempt(() => { palette.onSelect && palette.onSelect(it); }); palette = { ...palette, open: false }; render(); }, onClose: () => { palette = { ...palette, open: false }; render(); } }) : null,
             s.showAuthModal ? AuthModal({ open: true, isLoggedIn: !!s.userId, mode: s.authMode || 'extension', error: s.authError || '', busy: !!s.authBusy, onModeChange: (m) => A.setAuthMode && A.setAuthMode(m), onConnectExtension: () => A.authExtension && A.authExtension(), onGenerate: () => A.authGenerate && A.authGenerate(), onImport: (k) => A.authImport && A.authImport(k), onClose: () => A.closeAuth && A.closeAuth() }) : null,
