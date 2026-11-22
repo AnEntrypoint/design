@@ -280,7 +280,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 if (api.emojiPicker) api.emojiPicker.show(rect ? rect.left : 200, rect ? rect.bottom + 4 : 200, (em) => A.reactToMessage(m.id, m.userId, em));
                 else A.reactToMessage(m.id, m.userId);
             };
-            return { key: m.id || ('m' + i), who: isYou ? 'you' : 'them', flat: true, variant: 'community', authorId: m.userId, ts: m.timestamp, name: username, avatar: initial(username), avatarColor: avatarColor(m.userId), time: formatTime(m.timestamp), parts: partsFromMessage(m), reactions, onToggleReaction: A.reactToMessage ? (emoji) => A.reactToMessage(m.id, m.userId, emoji) : null, onAddReaction: A.reactToMessage ? openReactPicker : null, actions: msgActions, receipt: isYou && m.read ? 'read' : (isYou && m.delivered ? 'delivered' : null) };
+            return { key: m.id || ('m' + i), who: isYou ? 'you' : 'them', flat: true, variant: 'community', authorId: m.userId, ts: m.timestamp, name: username, avatar: initial(username), avatarColor: game3AvatarBg(username), time: formatTime(m.timestamp), parts: partsFromMessage(m), reactions, onToggleReaction: A.reactToMessage ? (emoji) => A.reactToMessage(m.id, m.userId, emoji) : null, onAddReaction: A.reactToMessage ? openReactPicker : null, actions: msgActions, receipt: isYou && m.read ? 'read' : (isYou && m.delivered ? 'delivered' : null) };
         });
     };
 
