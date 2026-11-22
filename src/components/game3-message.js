@@ -20,16 +20,15 @@ const CARD_IMAGE_RE = /\.(?:png|jpe?g|gif|webp)(?:\?|$)/i;
 const YT_RE = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})/;
 const cardNodes = (value, on, unfurls = []) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"'|]+/gi) || [])].filter((u) => !CARD_IMAGE_RE.test(u)).slice(0, 3).map((u, i) => {
     const rich = unfurls.find((p) => p.url === u);
-    if (rich) return h('a', { key: 'card' + i, class: 'ds-g3-lcard' + (rich.image ? ' ds-g3-side' : ''), href: u, target: '_blank', rel: 'noopener noreferrer' },
+    if (rich) return h('a', { key: 'card' + i, class: 'ds-g3-lcard' + (rich.image && !YT_RE.test(u) ? ' ds-g3-side' : ''), href: u, target: '_blank', rel: 'noopener noreferrer' },
         h('span', { key: 'lb', class: 'ds-g3-lbody' },
             h('span', { key: 'ls', class: 'ds-g3-lsite' }, (() => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; } })()),
             h('span', { key: 'lt', class: 'ds-g3-ltitle ds-g3-real' }, rich.title || u),
             rich.description ? h('span', { key: 'ld', class: 'ds-g3-ldesc' }, rich.description) : null),
-        rich.image ? h('img', { key: 'li', src: rich.image, loading: 'lazy', referrerpolicy: 'no-referrer', alt: '', onerror: (e) => e.currentTarget.remove() }) : null);
+        rich.image || YT_RE.test(u) ? h('img', { key: 'li', src: YT_RE.test(u) ? 'https://i.ytimg.com/vi/' + YT_RE.exec(u)[1] + '/hqdefault.jpg' : rich.image, loading: 'lazy', referrerpolicy: 'no-referrer', alt: '', onerror: (e) => e.currentTarget.remove() }) : null);
     let host = '', path = '';
     try { const x = new URL(u); host = x.hostname.replace(/^www\./, ''); path = decodeURIComponent(x.pathname + x.search).slice(0, 80); } catch (e) { return null; }
     const yt = YT_RE.exec(u);
-    if (!yt) return null;
     return h('a', { key: 'card' + i, class: 'ds-g3-lcard', href: u, target: '_blank', rel: 'noopener' },
         h('span', { key: 'lb', class: 'ds-g3-lbody' },
             h('span', { key: 'ls', class: 'ds-g3-lsite' }, host),

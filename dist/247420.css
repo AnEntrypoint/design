@@ -6704,6 +6704,7 @@
 .ds-247420 .ds-g3-header-name { margin: 0; font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; }
 .ds-247420 .ds-g3-header-topic { overflow: hidden; text-overflow: ellipsis; }
 .ds-247420 .ds-g3-header-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-1); }
+.ds-247420 .ds-247420.ds-247420 .ds-g3-crown { display: flex; }
 .ds-247420 .ds-otp { display: inline-flex; gap: var(--space-2); }
 .ds-247420 .ds-otp-box {
   width: var(--ctl-md); height: var(--ctl-md);
