@@ -33,6 +33,8 @@ const GROUPS = {
 
 const KEYBINDS = [['Quick Switcher', 'Ctrl P'], ['Send message', 'Enter'], ['New line', 'Shift Enter'], ['Mark channel read, close menus', 'Esc'], ['Previous / next channel', 'Alt ↑ ↓'], ['Bring back your last message', '↑'], ['Jump to newest', 'End'], ['Scroll a page', 'Page Up / Down'], ['Mention someone', 'Shift click name'], ['Reply to a message', 'Double-click it'], ['Emoji by name', ':fire'], ['Upload a picture', 'Ctrl V or drop it'], ['Pick a suggestion', 'Enter']];
 
+const PRESENCE = [['online', 'Online', '#23a55a'], ['idle', 'Idle', '#f0b232'], ['dnd', 'Do Not Disturb', '#f23f43'], ['invisible', 'Invisible', '#80848e']];
+
 const SWATCHES = ['#c4602f', '#5865f2', '#eb459e', '#9b84ee', '#1abc9c', '#f1c40f', '#57f287', '#2b2d31'];
 
 const toggleRow = (key, checked, onToggle) => h('div', { key, class: 'ds-g3-tgl' + (checked ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': checked ? 'true' : 'false', 'aria-label': COPY[key][0], onclick: () => onToggle && onToggle(key, !checked) },
@@ -41,7 +43,7 @@ const toggleRow = (key, checked, onToggle) => h('div', { key, class: 'ds-g3-tgl'
         h('div', { class: 'ds-g3-hint' }, COPY[key][1])),
     h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }));
 
-export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color = '', initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
+export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color = '', presenceStatus = 'online', presenceCustom = '', onPresence, onCustom, initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
     const group = (g) => GROUPS[g].map((k) => toggleRow(k, !!toggles[k], onToggle));
     const pane = {
         account: () => [
@@ -58,6 +60,10 @@ export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color
                 h('div', null, h('b', null, String(servers)), h('span', null, 'servers')),
                 h('div', null, h('b', null, '0'), h('span', null, 'saved')),
                 h('div', null, h('b', null, '0'), h('span', null, 'reminders'))),
+            h('h6', { key: 'st' }, 'Status'),
+            ...PRESENCE.map(([k, n, c]) => h('div', { key: k, class: 'ds-g3-radio' + (presenceStatus === k ? ' on' : ''), role: 'radio', tabindex: '0', 'aria-checked': presenceStatus === k ? 'true' : 'false', onclick: () => onPresence && onPresence(k) }, h('i', { 'aria-hidden': 'true' }), h('span', { style: 'color:' + c }, '●'), ' ' + n)),
+            h('h6', { key: 'cs' }, 'Custom Status'),
+            h('input', { key: 'cs-i', class: 'ds-g3-fi', maxlength: '60', placeholder: '😀 what are you up to?', value: presenceCustom, onchange: (e) => onCustom && onCustom(e.target.value) }),
         ],
         profile: () => [
             h('h2', { key: 'h' }, 'Profiles'),
