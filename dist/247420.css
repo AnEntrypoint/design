@@ -12545,11 +12545,13 @@
   gap: var(--space-rail-gap);
   width: 72px;
   min-width: 72px;
-  padding: var(--space-rail-pad) 0;
+  padding: var(--space-rail-pad) 0 0;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
   background: #1e1f22;
+  font-size: calc(var(--fs-body) + 1px);
+  line-height: 24px;
 }
 .ds-247420.ds-247420 .ca-rail-sep {
   width: 32px;
@@ -12715,7 +12717,7 @@
 .ds-247420.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
 .ds-247420.ds-247420 .ca-rail-channels a .glyph-voice { color: var(--presence-online, var(--green)); }
 .ds-247420.ds-247420 .ca-rail-channels a .glyph-announcement { color: var(--accent); }
-.ds-247420.ds-247420 .ca-rail-channels a > span:nth-child(2) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-247420.ds-247420 .ca-rail-channels a > span:nth-child(2) { flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-247420.ds-247420 .ca-rail-channels a .count {
   flex-shrink: 0;
   min-width: 16px;
@@ -13109,11 +13111,11 @@
 .ds-247420.ds-247420 .ds-g3-compbtn.is-unavailable { opacity: 0.5; cursor: default; }
 
 .ds-247420.ds-247420 .ds-g3-mem {
-  width: 240px;
-  min-width: 240px;
+  width: calc(240px + var(--spawn-chrome-reservation-right-inset, 52px));
+  min-width: calc(240px + var(--spawn-chrome-reservation-right-inset, 52px));
   background: #2b2d31;
   overflow-y: auto;
-  padding: 0 8px 16px 8px;
+  padding: 0 calc(var(--spawn-chrome-reservation-right-inset, 52px) + 8px) 16px 8px;
   flex-shrink: 0;
 }
 .ds-247420.ds-247420 .ds-g3-mcat {
