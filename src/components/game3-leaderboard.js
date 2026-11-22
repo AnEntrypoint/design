@@ -13,7 +13,7 @@ function LeaderboardRow({ key, row, rank }) {
     const initial = String(name).trim().slice(0, 1).toUpperCase();
     return h('div', { key, class: 'ds-g3-lbr' + (row.me ? ' me' : '') },
         h('span', { key: 'rk', class: 'ds-g3-rk' }, rank < 3 ? MEDALS[rank] : '#' + (rank + 1)),
-        h('div', { key: 'av', class: 'ds-g3-lbav' }, initial),
+        h('div', { key: 'av', class: 'ds-g3-lbav', style: row.color ? 'background:' + row.color : null }, initial),
         h('div', { key: 'mid', class: 'ds-g3-lbmid' },
             h('div', { key: 'top', class: 'ds-g3-lbtop' },
                 h('b', {}, name),
