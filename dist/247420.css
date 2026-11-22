@@ -14132,7 +14132,7 @@
 .ds-247420.ds-247420 .cm-uc-role { display: inline-flex; align-items: center; gap: var(--space-1); background: #2b2d31; border-radius: 4px; padding: var(--space-hair) var(--space-1-75); font-size: var(--fs-micro); margin: var(--space-1) var(--space-1) 0 0; }
 
 .ds-247420.ds-247420 .ds-g3-ric { display: flex; align-items: center; justify-content: center; color: #fff; }
-.ds-247420.ds-247420 .ds-g3-ric svg { width: 44px; height: 44px; }
+.ds-247420.ds-247420 .ds-g3-ric svg { width: 40px; height: 40px; }
 .ds-247420.ds-247420 .ds-g3-epick { display: grid; grid-template-columns: repeat(8, 36px); gap: var(--space-hair); background: #2b2d31; border-radius: 8px; padding: var(--space-2); box-shadow: 0 8px 16px rgba(0,0,0,0.4); width: max-content; }
 .ds-247420.ds-247420 .ds-g3-epick span { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: calc(var(--fs-body) * 1.375); border-radius: var(--r-0); cursor: pointer; }
 .ds-247420.ds-247420 .ds-g3-epick span:hover { background: #404249; }
@@ -14149,7 +14149,27 @@
   .ds-247420.ds-247420 .ds-g3-set-pane { padding: var(--space-4) var(--space-3) 80px; }
   .ds-247420.ds-247420 .ds-g3-setm { display: block; width: 100%; margin-bottom: var(--space-3); }
   .ds-247420.ds-247420 .ds-g3-rolepick, .ds-247420.ds-247420 .ds-g3-rl { padding: var(--space-3); }
+  .ds-247420.ds-247420 .ds-g3-vctl { flex-wrap: wrap; justify-content: center; }
 }
+.ds-247420.ds-247420 .ds-g3-cta { display: inline-block; background: #5865f2; color: #fff; border-radius: var(--r-0); padding: var(--space-2-5) calc(var(--space-3) + var(--space-hair)); font-weight: 600; cursor: pointer; margin-top: var(--space-2-75); }
+.ds-247420.ds-247420 .ds-g3-cta:hover { background: #4752c4; }
+.ds-247420.ds-247420 .ds-g3-ric { background: #c4602f; border: 4px solid rgba(255, 255, 255, 0.2); font-weight: 800; font-size: calc(var(--fs-body) * 1.875); }
+.ds-247420.ds-247420 .ds-g3-tx code { background: #2b2d31; border: 1px solid #1e1f22; border-radius: 4px; padding: 0 var(--space-half); font-family: var(--ff-mono); font-size: var(--fs-xs); }
+.ds-247420.ds-247420 .ds-g3-tx .ds-g3-cb { cursor: copy; background: #2b2d31; border: 1px solid #1e1f22; border-radius: 4px; padding: var(--space-2); font-family: var(--ff-mono); font-size: var(--fs-xs); margin: var(--space-1) 0; white-space: pre-wrap; max-width: 90%; }
+.ds-247420.ds-247420 .ds-g3-tx .ds-g3-cb.copied { outline: 1px solid #23a55a; }
+.ds-247420.ds-247420 .ds-g3-tx h1 { font-size: calc(var(--fs-body) * 1.5); }
+.ds-247420.ds-247420 .ds-g3-tx h2 { font-size: calc(var(--fs-body) * 1.25); }
+.ds-247420.ds-247420 .ds-g3-tx h3 { font-size: var(--fs-body); }
+.ds-247420.ds-247420 .ds-g3-tx h1, .ds-247420.ds-247420 .ds-g3-tx h2, .ds-247420.ds-247420 .ds-g3-tx h3 { margin: var(--space-1-75) 0 var(--space-hair); color: #f2f3f5; line-height: 1.25; }
+.ds-247420.ds-247420 .ds-g3-tx .ds-g3-li { padding-inline-start: var(--space-1-75); }
+.ds-247420.ds-247420 .ds-g3-tx .ds-g3-quote { border-inline-start: 4px solid #4e5058; padding-inline-start: var(--space-2-75); }
+.ds-247420.ds-247420 .ds-g3-mention { background: rgba(88, 101, 242, 0.3); color: #c9cdfb; border-radius: 3px; padding: 0 var(--space-hair); font-weight: 500; }
+.ds-247420.ds-247420 .ds-g3-me { position: relative; }
+.ds-247420.ds-247420 .ds-g3-statusmenu { position: absolute; bottom: 60px; inset-inline-start: var(--space-2); width: 220px; background: #111214; border-radius: 8px; padding: var(--space-1-75) var(--space-2); box-shadow: 0 8px 16px rgba(0,0,0,0.4); z-index: var(--z-dropdown); }
+.ds-247420.ds-247420 .ds-g3-statusmenu > div { display: flex; align-items: center; gap: var(--space-2-5); padding: var(--space-2); border-radius: 2px; font-size: var(--fs-xs); color: #b5bac1; cursor: pointer; }
+.ds-247420.ds-247420 .ds-g3-statusmenu > div:hover { background: #4752c4; color: #fff; }
+.ds-247420.ds-247420 .ds-g3-statusmenu i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.ds-247420.ds-247420 .ds-g3-cst { box-sizing: border-box; width: 100%; background: #1e1f22; border: 0; outline: 0; border-radius: 4px; color: #dbdee1; font: inherit; font-size: var(--fs-xs); padding: var(--space-2); margin-bottom: var(--space-1-75); }
 
 
 /* app-surfaces.css */

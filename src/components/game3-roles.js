@@ -7,7 +7,7 @@ const h = webjsx.createElement;
 export function Game3RolesPanel({ roles = [], onToggle, onDone, key } = {}) {
     return h('div', { key, class: 'ds-g3-rolepick' },
         h('div', { class: 'ds-g3-rhero' },
-            h('div', { class: 'ds-g3-ric', 'aria-hidden': 'true' }, Icon('ref-roles', { size: 24 })),
+            h('div', { class: 'ds-g3-ric', 'aria-hidden': 'true', style: 'background:#5865f2' }, Icon('ref-roles', { size: 24 })),
             h('div', null,
                 h('h1', null, 'Pick your roles'),
                 h('p', null, 'press to add or take one off. your first role colours your name for everyone.'))),

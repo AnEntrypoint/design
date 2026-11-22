@@ -1,5 +1,6 @@
 import { Game3PollCard } from './game3-poll.js';
 import { EMOJI } from '../game3-data.js';
+import { renderMarkdown } from './game3-markdown.js';
 import { Game3InviteCard } from './game3-invite.js';
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
@@ -14,8 +15,6 @@ export function isJumbo(text) {
 }
 
 
-const URL_RE = /(https?:\/\/[^\s<]+)/g;
-const linkify = (value) => String(value || '').split(URL_RE).map((part, i) => (i % 2 === 1 ? h('a', { key: 'l' + i, href: part, target: '_blank', rel: 'noopener' }, part) : part));
 
 const CARD_IMAGE_RE = /\.(?:png|jpe?g|gif|webp)(?:\?|$)/i;
 const YT_RE = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})/;
@@ -39,7 +38,7 @@ const cardNodes = (value, on, unfurls = []) => on === false ? [] : [...new Set(S
 
 const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value || '').match(/https?:\/\/[^\s<>"']+\.(?:png|jpe?g|gif|webp)(?:\?[^\s<>"']*)?/gi) || [])].slice(0, 4).map((u, i) => h('img', { key: 'pic' + i, class: 'ds-g3-pic', src: u, loading: 'lazy', onerror: (e) => e.currentTarget.remove() }));
 
-const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
+const spoilerNodes = (text) => renderMarkdown(text);
 
 export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : sticker ? [h('img', { key: 'stk', class: 'ds-g3-stk', src: sticker.url, title: sticker.name, alt: sticker.name })] : null;

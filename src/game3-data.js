@@ -4,3 +4,4 @@ export const STICKERS = [{ id: 'mustard', name: 'Hi from Mustard' }, { id: 'gg',
 export const STICKER_RE = /^🏷¦(\w+)$/;
 export const stickerText = (id) => '🏷¦' + id;
 export const EMOJI = Object.values(EMOJI_NAMES);
+export const STATUS = { online: ['Online', '#23a55a'], idle: ['Idle', '#f0b232'], dnd: ['Do Not Disturb', '#f23f43'], invisible: ['Invisible', '#80848e'] };

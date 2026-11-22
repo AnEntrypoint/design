@@ -22,7 +22,7 @@ const acOptions = (value, mentions) => {
     return f.length ? { head: 'Members', items: f.map((n) => ({ key: n, label: n, insert: '@' + n })) } : null;
 };
 
-export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, emojiPop = false, onEmojiPick, stickerPop = false, stickerBase = '', stickerTitle = '', onStickerPick, key } = {}) {
+export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, nope = '', emojiPop = false, onEmojiPick, stickerPop = false, stickerBase = '', stickerTitle = '', onStickerPick, key } = {}) {
     const count = maxLength && value && value.length > 150 ? String(maxLength - value.length) : null;
     const submit = (ta) => {
         const v = ta.value;
@@ -50,7 +50,7 @@ export function Game3Composer({ mentions = [], typing = null, value = '', placeh
                 h('span', {}, 'Replying to ', h('b', {}, replyTo.username || 'someone')),
                 h('span', { class: 'ds-g3-replyx', role: 'button', tabindex: '0', 'aria-label': 'cancel reply', onclick: () => onCancelReply && onCancelReply() }, Icon('x', { size: 14 })))
             : null,
-        h('div', { key: 'box', class: 'ds-g3-box' + (replyTo ? ' ds-g3-box-reply' : '') + (disabled ? ' is-disabled' : '') },
+        nope ? h('div', { key: 'box', class: 'ds-g3-box ds-g3-nope' }, nope) : h('div', { key: 'box', class: 'ds-g3-box' + (replyTo ? ' ds-g3-box-reply' : '') + (disabled ? ' is-disabled' : '') },
             onAttach
                 ? h('label', { key: 'plus', class: 'ds-g3-plus', title: 'Upload a picture' },
                     '+',

@@ -12,7 +12,8 @@ import { GameHeader } from './components/game3-header.js';
 import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
-import { Game3UserPanel } from './components/game3-user.js';
+import { Game3UserPanel, Game3StatusMenu } from './components/game3-user.js';
+import { STATUS } from './game3-data.js';
 import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
 import { Game3InboxPanel } from './components/game3-inbox.js';
@@ -338,6 +339,7 @@ export function mountCommunityApp(root, adapter = {}) {
     let moreFor = null;
     let stickersOpen = false;
     let emojisOpen = false;
+    let statusMenuOpen = false;
     let reactPickFor = null;
     let soundToast = null;
     const mentionNames = (s) => [...(s.memberCategories || []).flatMap((c) => (c.members || []).map((m) => m.name)), ...(s.memberApps || []).map((a) => a.name)].filter(Boolean);
@@ -431,7 +433,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
@@ -518,6 +520,7 @@ export function mountCommunityApp(root, adapter = {}) {
             onclick: (e) => {
                 if (moreFor && !(e.target.closest && e.target.closest('.ds-g3-mmenu, .ds-g3-bar'))) { moreFor = null; render(); }
                 if (stickersOpen && !(e.target.closest && e.target.closest('.ds-g3-stkpop, .ds-g3-compbtn'))) { stickersOpen = false; render(); }
+                if (statusMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-mebtn'))) { statusMenuOpen = false; render(); }
                 if (emojisOpen && !(e.target.closest && e.target.closest('.ds-g3-cpick, .ds-g3-compbtn'))) { emojisOpen = false; render(); }
                 if (reactPickFor && !(e.target.closest && e.target.closest('.ds-g3-rxpick, .ds-g3-bar, .ds-g3-mmenu'))) { reactPickFor = null; render(); }
                 const a = e.target.closest && e.target.closest('.chat-image');
@@ -533,7 +536,7 @@ export function mountCommunityApp(root, adapter = {}) {
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: 'Online', name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: s.presenceCustom || (STATUS[s.presenceStatus || 'online'] || STATUS.online)[0], statusColor: (STATUS[s.presenceStatus || 'online'] || STATUS.online)[1], onProfile: () => { statusMenuOpen = !statusMenuOpen; render(); }, menu: statusMenuOpen ? Game3StatusMenu({ status: s.presenceStatus || 'online', custom: s.presenceCustom || '', onStatus: (k) => { statusMenuOpen = false; if (A.setPresence) A.setPresence(k, s.presenceCustom || ''); render(); }, onCustom: (t) => { statusMenuOpen = false; if (A.setPresence) A.setPresence(s.presenceStatus || 'online', t); render(); } }) : null, name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You'), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
                 h('div', { class: 'ca-right' },
             GameHeader({
                 dm: !!(s.homeMode && s.activeDmPeer),
