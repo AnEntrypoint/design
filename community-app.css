@@ -1425,3 +1425,5 @@ html.ds-247420 .ca-right-body .chat-thread { gap: normal; }
 
 html.ds-247420 .ds-g3-msg .ds-g3-head { display: block; }
 html.ds-247420 .ds-g3-msg .ds-g3-who, html.ds-247420 .ds-g3-msg .ds-g3-when { display: inline; }
+
+html.ds-247420 .ca-right-body .chat-head { display: none; }

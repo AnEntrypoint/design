@@ -13891,6 +13891,8 @@
 .ds-247420.ds-247420 .ds-g3-msg .ds-g3-head { display: block; }
 .ds-247420.ds-247420 .ds-g3-msg .ds-g3-who, .ds-247420.ds-247420 .ds-g3-msg .ds-g3-when { display: inline; }
 
+.ds-247420.ds-247420 .ca-right-body .chat-head { display: none; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
