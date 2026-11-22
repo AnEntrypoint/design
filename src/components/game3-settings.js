@@ -7,7 +7,7 @@ const TABS = [
 ];
 
 const COPY = {
-    mic: ['Mic open to the room', 'muting here silences you for everyone; switch your mic on and pick push to talk from the mic in Spawn\'s chat'],
+    mic: ['Mic open to the room', 'muting here silences you for everyone; switch your mic on and pick push to talk from the mic in the voice controls'],
     vcsounds: ['Join and leave sounds', 'the bloop when someone enters or leaves your voice room'],
     sbsounds: ['Hear the soundboard', 'off: airhorns and rimshots skip you'],
     sound: ['Message sounds', 'a soft ping when someone posts where you can hear it'],
@@ -116,7 +116,7 @@ export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color
             h('h2', { key: 'h' }, 'Voice & Audio'),
             toggleRow('mic', micOn, () => onMic && onMic()),
             ...group('voice'),
-            h('p', { key: 'hint', class: 'ds-g3-hint' }, 'volume lives in Spawn\'s settings on the right rail'),
+            h('p', { key: 'hint', class: 'ds-g3-hint' }, 'master volume and devices are in the voice settings next to your mic'),
         ],
         notif: () => [
             h('h2', { key: 'h' }, 'Notifications'),
@@ -150,6 +150,8 @@ export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color
                     h('h5', { key: 'h' + head }, head),
                     ...list.map(([k, n]) => h('p', { key: k, class: k === tab ? 'on' : '', role: 'button', tabindex: '0', onclick: () => onTab && onTab(k) }, n)),
                 ]))),
-        h('div', { class: 'ds-g3-set-pane' }, (pane[tab] || pane.account)()),
+        h('div', { class: 'ds-g3-set-pane' },
+            h('select', { key: 'setm', class: 'ds-g3-langsel ds-g3-setm', 'aria-label': 'settings section', onchange: (e) => onTab && onTab(e.target.value) }, TABS.flatMap(([, list]) => list).map(([k, n]) => h('option', { key: k, value: k, selected: k === tab }, n))),
+            ...((pane[tab] || pane.account)())),
         h('div', { class: 'ds-g3-set-close', role: 'button', tabindex: '0', 'aria-label': 'close settings', onclick: () => onClose && onClose() }, '✕'));
 }

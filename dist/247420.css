@@ -14141,6 +14141,15 @@
 .ds-247420.ds-247420 .ds-g3-themes { display: flex; gap: var(--space-3); }
 .ds-247420.ds-247420 .ds-g3-themes div { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; border: 2px solid #4e5058; }
 .ds-247420.ds-247420 .ds-g3-themes div.on { border: 3px solid #5865f2; box-shadow: 0 0 0 2px #313338 inset; }
+.ds-247420.ds-247420 .ds-g3-setm { display: none; }
+.ds-247420.ds-247420 .ds-g3-langsel { background: #1e1f22; color: #dbdee1; border: 0; border-radius: var(--r-0); font: inherit; padding: var(--space-2); width: 220px; }
+.ds-247420.ds-247420 .ds-g3-themes div { flex: none; }
+@media (max-width: 640px) {
+  .ds-247420.ds-247420 .ds-g3-set-nav { display: none; }
+  .ds-247420.ds-247420 .ds-g3-set-pane { padding: var(--space-4) var(--space-3) 80px; }
+  .ds-247420.ds-247420 .ds-g3-setm { display: block; width: 100%; margin-bottom: var(--space-3); }
+  .ds-247420.ds-247420 .ds-g3-rolepick, .ds-247420.ds-247420 .ds-g3-rl { padding: var(--space-3); }
+}
 
 
 /* app-surfaces.css */
