@@ -26,6 +26,8 @@ import { Game3DayDivider } from './components/game3-day.js';
 import { Game3VoiceBar } from './components/game3-voicebar.js';
 import { Game3SystemLine } from './components/game3-system.js';
 import { Game3Modal } from './components/game3-modal.js';
+import { Game3Switcher } from './components/game3-switcher.js';
+import { Game3Lightbox } from './components/game3-lightbox.js';
 import { Game3NewDivider } from './components/game3-newdiv.js';
 import { Game3SearchBar } from './components/game3-search.js';
 import { Game3ProfileCard } from './components/game3-profile.js';
@@ -38,7 +40,7 @@ import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js'
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
 import { ContextMenu, Dialog } from './components/editor-primitives.js';
-import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox, ImageLightbox } from './components/overlay-primitives.js';
+import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox } from './components/overlay-primitives.js';
 import { attempt } from './best-effort.js';
 
 const h = webjsx.createElement;
@@ -87,6 +89,7 @@ export function mountCommunityApp(root, adapter = {}) {
     let serverMenuOpen = false;
     let dropAnywhere = { active: false, count: 0, fileCount: 0 };
     let imageLightbox = { open: false, src: null, alt: '' };
+    let switcher = { open: false, q: '' };
 
     const railServerAdd = (s) => (A.openServerCreate)
         ? h('a', { href: '#', class: 'ca-rail-server-add', title: 'Create a server', 'aria-label': 'create a server', onclick: (e) => { e.preventDefault(); A.openServerCreate(); } }, Icon('ref-plus', { size: 24 }))
@@ -159,7 +162,7 @@ export function mountCommunityApp(root, adapter = {}) {
             onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); },
         }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name) }, initial(c.name), h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + ({ online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' }[c.status] || '#23a55a'), 'aria-label': c.status || 'online' })), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
         return h('div', { class: 'ca-rail-channels' },
-            h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => A.newDm && A.newDm() }, h('span', {}, 'Find or start a conversation')),
+            h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => { switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } }, h('span', {}, 'Find or start a conversation')),
             h('div', { class: 'chans' },
                 h('a', { href: '#', class: s.activeDmPeer ? '' : 'active', onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(null); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })), h('span', {}, 'People here')),
                 h('div', { class: 'ds-g3-dmcat' }, 'Direct Messages'),
@@ -324,6 +327,52 @@ export function mountCommunityApp(root, adapter = {}) {
         return items;
     };
     let moreFor = null;
+    const switcherItems = (s) => {
+        const q = (switcher.q || '').toLowerCase().replace(/^[#@!]/, '');
+        const server = ((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || '';
+        const channels = s.channels || [];
+        const items = [
+            ...channels.filter((c) => c.type !== 'voice').map((c) => ({ label: '#' + c.name, hint: server, key: c.name + ' ' + server, go: () => A.switchChannel && A.switchChannel(c) })),
+            ...channels.filter((c) => c.type === 'voice').map((c) => ({ label: '\u{1F50A} ' + c.name, hint: 'voice \u00b7 ' + server, key: c.name + ' ' + server, go: () => A.switchChannel && A.switchChannel(c) })),
+            ...(s.servers || []).filter((sv) => !sv._home).map((sv) => ({ label: sv.name, hint: sv.id === s.currentServerId ? 'server' : 'join server', key: sv.name, go: () => A.switchServer && A.switchServer(sv.id) })),
+            ...(s.memberCategories || []).flatMap((c) => c.members || []).filter((m) => String(m.identity) !== String(s.userId)).map((m) => ({ label: '@ ' + m.name, hint: 'dm', key: m.name, go: () => { if (A.goHome) A.goHome(); if (A.selectDm) A.selectDm(m.identity); } })),
+        ];
+        return items.filter((x) => !q || x.key.toLowerCase().includes(q)).slice(0, 12);
+    };
+    const closeOverlays = () => {
+        moreFor = null; reactPickFor = null; stickersOpen = false; emojisOpen = false; statusMenuOpen = false;
+        switcher = { open: false, q: '' }; imageLightbox = { open: false, src: null, alt: '' };
+        render();
+    };
+    let lastSwitcherKey = 0;
+    const onGlobalKeys = (e) => {
+        if (e.__g3) return;
+        e.__g3 = true;
+        const a = document.activeElement;
+        const typing = a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable);
+        const k = e.key;
+        if ((e.ctrlKey || e.metaKey) && (e.code === 'KeyP' || k === 'p') && !e.shiftKey && !e.altKey) {
+            e.preventDefault();
+            const now = Date.now();
+            if (now - lastSwitcherKey > 250) {
+                lastSwitcherKey = now;
+                switcher = { open: !switcher.open, q: '' };
+                render();
+                if (switcher.open) setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0);
+            }
+            return;
+        }
+        if (typing) return;
+        if (k === 'Escape') { closeOverlays(); return; }
+        const thread = root.querySelector('.chat-thread');
+        if (k === 'End' && thread) { e.preventDefault(); thread.scrollTop = thread.scrollHeight; return; }
+        if ((k === 'PageUp' || k === 'PageDown') && thread) { e.preventDefault(); thread.scrollBy(0, (k === 'PageUp' ? -1 : 1) * thread.clientHeight * 0.85); return; }
+        const input = root.querySelector('.ds-g3-comp textarea');
+        if (!input) return;
+        if (!e.ctrlKey && !e.metaKey && !e.altKey && k.length === 1) { input.focus(); const end = input.value.length; input.setSelectionRange(end, end); }
+        else if ((e.ctrlKey || e.metaKey) && k === 'v') input.focus();
+    };
+    document.addEventListener('keydown', onGlobalKeys, true);
     let stickersOpen = false;
     let emojisOpen = false;
     let statusMenuOpen = false;
@@ -514,6 +563,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 if (statusMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-mebtn'))) { statusMenuOpen = false; render(); }
                 if (emojisOpen && !(e.target.closest && e.target.closest('.ds-g3-cpick, .ds-g3-compbtn'))) { emojisOpen = false; render(); }
                 if (reactPickFor && !(e.target.closest && e.target.closest('.ds-g3-rxpick, .ds-g3-bar, .ds-g3-mmenu'))) { reactPickFor = null; render(); }
+                const pic = e.target.closest && e.target.closest('.ds-g3-pic');
+                if (pic && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { imageLightbox = { open: true, src: pic.getAttribute('src'), alt: '' }; render(); return; }
                 const a = e.target.closest && e.target.closest('.chat-image');
                 if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
                 const img = a.querySelector('img');
@@ -571,7 +622,8 @@ export function mountCommunityApp(root, adapter = {}) {
             s.settingsOpen ? SettingsPopover({ open: true, anchorX: (s.settingsAnchor && s.settingsAnchor.x) || 0, anchorY: (s.settingsAnchor && s.settingsAnchor.y) || 0, sections: s.settingsSections || [], onClose: () => A.openSettings && A.openSettings() }) : null,
             s.voiceSettingsOpen ? VoiceSettingsModal({ open: true, mode: s.voiceMode || 'ptt', inputId: s.inputDeviceId, outputId: s.outputDeviceId, inputDevices: s.inputDevices || [], outputDevices: s.outputDevices || [], vadThreshold: s.vadThreshold, rnnoise: !!s.rnnoiseEnabled, autoGain: !!s.autoGainEnabled, forceTurn: !!s.forceTurnEnabled, bitrate: s.voiceBitrate, volume: s.masterVolume, onChange: (p) => A.voiceSettingsChange && A.voiceSettingsChange(p), onSave: () => A.voiceSettingsSave && A.voiceSettingsSave(), onCancel: () => A.voiceSettingsClose && A.voiceSettingsClose(), onClose: () => A.voiceSettingsClose && A.voiceSettingsClose() }) : null,
             s.videoLightbox && s.videoLightbox.open ? VideoLightbox({ open: true, src: s.videoLightbox.src, label: s.videoLightbox.label, onClose: () => A.closeVideoLightbox && A.closeVideoLightbox() }) : null,
-            imageLightbox.open ? ImageLightbox({ open: true, src: imageLightbox.src, alt: imageLightbox.alt, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
+            imageLightbox.open ? Game3Lightbox({ src: imageLightbox.src, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
+            switcher.open ? Game3Switcher({ query: switcher.q, items: switcherItems(s), onQuery: (q) => { switcher = { open: true, q }; render(); }, onPick: (it) => { switcher = { open: false, q: '' }; it.go(); render(); }, onClose: () => { switcher = { open: false, q: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Game3ServerCreate({ homeName: s.homeServerName || 'Zellous Public', userName: s.gamePrefName || 'You', onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onClose: () => A.closeServerCreate && A.closeServerCreate(), onDiscover: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) : null,
             s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface, s), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
             s.gamePrefOpen ? Game3SettingsPanel({ tab: s.gamePrefTab || 'account', onTab: (t) => A.setGamePrefTab && A.setGamePrefTab(t), name: s.gamePrefName || 'You', color: s.gamePrefColor || '', devInfo: s.devInfo || null, onDevReset: () => A.resetLocalState && A.resetLocalState(), onDevFilter: (q) => A.setDevFilter && A.setDevFilter(q), onDevRefresh: () => A.refreshDev && A.refreshDev(), presenceStatus: s.presenceStatus || 'online', presenceCustom: s.presenceCustom || '', onPresence: (k) => A.setPresence && A.setPresence(k, s.presenceCustom || ''), onCustom: (t) => A.setPresence && A.setPresence(s.presenceStatus || 'online', t), initial: String(s.gamePrefName || 'Y').slice(0, 1).toUpperCase(), level: s.myLevel || 0, xp: s.myXp || 0, servers: s.gamePrefServers || 0, toggles: Object.fromEntries((s.gamePrefToggles || []).map((t) => [t.key, !!t.checked])), micOn: !s.micMuted, onMic: () => A.toggleMic && A.toggleMic(), keywords: s.gamePrefKeywords || '', mutedChannels: s.gamePrefMuted || [], onUnmute: (id) => A.toggleMuteId && A.toggleMuteId(id), compact: !!s.gamePrefCompact, banner: s.gamePrefBanner || '', theme: s.themePref || 'ink', onTheme: (t) => A.setTheme && A.setTheme(t), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val), onKeywords: (val) => A.setGamePref && A.setGamePref('kw', val), onBanner: (c) => A.setGamePref && A.setGamePref('banner', c), onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onReset: () => A.setGamePref && A.setGamePref('reset', true), onClose: () => A.closeGamePrefs && A.closeGamePrefs() }) : null,
@@ -643,5 +695,5 @@ export function mountCommunityApp(root, adapter = {}) {
     });
 
     render();
-    return { render, api, destroy: () => { if (unsub) attempt(() => { unsub(); }); } };
+    return { render, api, destroy: () => { document.removeEventListener('keydown', onGlobalKeys, true); if (unsub) attempt(() => { unsub(); }); } };
 }
