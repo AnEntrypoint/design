@@ -380,6 +380,13 @@ export function mountCommunityApp(root, adapter = {}) {
     let reactPickFor = null;
     let soundToast = null;
     const mentionNames = (s) => [...(s.memberCategories || []).flatMap((c) => (c.members || []).map((m) => m.name)), ...(s.memberApps || []).map((a) => a.name)].filter(Boolean);
+    const game3NewBar = (s) => {
+        const msgs = s.messages || [];
+        const selfId = s.userId;
+        const fresh = s.newAt ? msgs.filter((m) => m.type !== 'system' && String(m.userId) !== String(selfId) && m.timestamp / 1000 > s.newAt) : [];
+        if (!fresh.length || s.chatSearch || s.homeMode) return null;
+        return Game3NewBar({ key: 'newbar', count: fresh.length, since: new Date(s.newAt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), onJump: () => { const el = root.querySelector('#newline'); if (el) el.scrollIntoView({ block: 'center' }); }, onRead: A.markChannelRead ? () => A.markChannelRead() : null });
+    };
     const game3Rows = (s) => {
         const msgs = s.messages || [];
         const selfId = s.userId;
@@ -433,9 +440,7 @@ export function mountCommunityApp(root, adapter = {}) {
             });
         });
         const all = rows.flatMap((row, i) => (i === newIndex ? [Game3NewDivider({ key: 'newdiv' }), row] : [row])).filter(Boolean);
-        const newCount = newIndex >= 0 ? msgs.filter((m) => m.type !== 'system' && String(m.userId) !== String(selfId) && m.timestamp / 1000 > s.newAt).length : 0;
-        const newBar = newCount && !s.chatSearch ? Game3NewBar({ key: 'newbar', count: newCount, since: new Date(s.newAt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), onJump: () => { const el = root.querySelector('#newline'); if (el) el.scrollIntoView({ block: 'center' }); }, onRead: A.markChannelRead ? () => A.markChannelRead() : null }) : null;
-        return s.chatSearch ? [Game3SearchBar({ key: 'sres', count: msgs.length, query: s.chatSearch, onClear: () => A.setChatSearch && A.setChatSearch('') }), ...all] : [newBar, ...all].filter(Boolean);
+        return s.chatSearch ? [Game3SearchBar({ key: 'sres', count: msgs.length, query: s.chatSearch, onClear: () => A.setChatSearch && A.setChatSearch('') }), ...all] : all;
     };
 
     const railOrder = (s) => {
@@ -475,7 +480,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingUsers = s.typingUsers || [];
         const typingText = typingUsers.length === 0 ? '' : typingUsers.length === 1 ? typingUsers[0] + ' is typing\u2026' : typingUsers.length === 2 ? typingUsers[0] + ' and ' + typingUsers[1] + ' are typing\u2026' : 'Several people are typing\u2026';
         return Chat({
-            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
+            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: [game3NewBar(s)].filter(Boolean).concat((s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s)))), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingText,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
