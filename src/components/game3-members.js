@@ -28,7 +28,7 @@ export function Game3MemberList({ categories = [], apps = [], open, loading = fa
         total === 0
             ? h('div', { key: '_empty', class: 'ds-g3-mempty', role: 'status' }, userId ? 'Only you for now.' : 'no members in this channel yet')
             : null,
-        ...categories.filter((cat) => cat.members && cat.members.length).flatMap((cat) => [
+        ...categories.filter((cat) => cat.members && cat.members.length && cat.label !== 'Offline').flatMap((cat) => [
             h('div', { key: 'c' + cat.label, class: 'ds-g3-mcat' }, cat.label + ' — ' + cat.members.length),
             ...cat.members.map((m, i) => Game3MemberRow({
                 ...m, key: m.identity || ('m' + i),
@@ -39,5 +39,9 @@ export function Game3MemberList({ categories = [], apps = [], open, loading = fa
         ...(apps.length ? [
             h('div', { key: 'capps', class: 'ds-g3-mcat' }, 'Apps — ' + apps.length),
             ...apps.map((a) => Game3MemberRow({ key: 'app-' + a.identity, identity: a.identity, name: a.name, color: a.color, nameColor: a.color, suffix: '✓ APP', activity: a.activity, status: 'online' })),
-        ] : []));
+        ] : []),
+        ...categories.filter((cat) => cat.members && cat.members.length && cat.label === 'Offline').flatMap((cat) => [
+            h('div', { key: 'c' + cat.label, class: 'ds-g3-mcat' }, cat.label + ' — ' + cat.members.length),
+            ...cat.members.map((m, i) => Game3MemberRow({ ...m, key: m.identity || ('m' + i), offline: true, onClick: onSelectMember ? (e) => onSelectMember(m, e) : undefined })),
+        ]));
 }
