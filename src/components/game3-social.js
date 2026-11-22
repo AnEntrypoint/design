@@ -134,15 +134,6 @@ export function LeaderboardList({ rows = [], emptyText = '', key } = {}) {
     )));
 }
 
-export function PollList({ polls = [], emptyText = '', key } = {}) {
-    if (!polls.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
-    return h('ul', { key, class: 'ds-g3-polls' }, ...polls.map((p) => h('li', { key: p.id, class: 'ds-g3-poll' },
-        h('span', { key: 'q', class: 'ds-g3-poll-question' }, p.question),
-        h('span', { key: 'by', class: 'ds-g3-poll-by' }, p.name || ''),
-        h('ol', { key: 'o', class: 'ds-g3-poll-options' }, ...p.options.map((o, i) => h('li', { key: 'o' + i, class: 'ds-g3-poll-option' }, o)))
-    )));
-}
-
 export function RecapList({ items = [], emptyText = '', key } = {}) {
     if (!items.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
     return h('ul', { key, class: 'ds-g3-recap' }, ...items.map((r) => h('li', { key: r.id, class: 'ds-g3-recap-item' },

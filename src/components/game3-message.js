@@ -1,3 +1,4 @@
+import { Game3PollCard } from './game3-poll.js';
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
 
@@ -31,7 +32,8 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
 
-export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+export function Game3Message({ poll = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+    const bodyNodes = poll ? [Game3PollCard(poll)] : null;
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -51,14 +53,14 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
     );
     const stamp = continuation ? h('span', { key: 'stamp', class: 'ds-g3-stamp', style: 'left:8px', title: fullTime }, time) : null;
     const body = continuation ? h('div', { key: 'body', class: 'ds-g3-tx-wrap' },
-        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...spoilerNodes(text)),
+        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
         ...cardNodes(text, previews),
         ...embedNodes(text, embeds),
         reactionChips) : h('div', { key: 'body', class: 'ds-g3-col' },
             h('div', { key: 'head', class: 'ds-g3-head' },
                 h('span', { key: 'who', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, headTime || time)),
-        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...spoilerNodes(text)),
+        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
         ...cardNodes(text, previews),
         ...embedNodes(text, embeds),
         reactionChips
@@ -69,7 +71,7 @@ export function Game3Message({ key, id, name = '', initial = '?', avatarColor = 
         h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
         h('div', { key: 'cb', class: 'ds-g3-col' },
             h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
-            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...spoilerNodes(text)),
+            h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
             ...cardNodes(text, previews),
             ...embedNodes(text, embeds)),
         bar);

@@ -7,7 +7,7 @@ import {
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, UserCard, ReplyBar,
 } from './components/community.js';
 import { VoiceRoom, CatchUpButton, ToggleRow, GameSettingsSection, ServerCreateForm } from './components/game3-room.js';
-import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, PollList, RecapList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
+import { ServerDiscover, SplitPane, DiscoverList, EventsList, LeaderboardList, RecapList, PinList, RulesList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
 import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
@@ -17,7 +17,6 @@ import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
 import { Game3InboxPanel } from './components/game3-inbox.js';
 import { Game3ServerCreate } from './components/game3-server-create.js';
-import { Game3PollsPanel } from './components/game3-polls.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
 import { Game3PeopleHere } from './components/game3-people.js';
@@ -305,6 +304,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 else A.reactToMessage(m.id, m.userId);
             };
             return Game3Message({
+                poll: m.poll ? { ...m.poll, onVote: (i) => A.votePoll && A.votePoll(m.poll.id, i) } : null,
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: initial(username), avatarColor: avatarColor(m.userId),
                 headTime: m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp),
@@ -512,7 +512,6 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: "This channel doesn't have any pinned messages... yet.", onJump: (id) => A.jumpToMessage && A.jumpToMessage(id) });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
-        if (name === 'polls') return Game3PollsPanel({ polls: s.polls || [], emptyText: 'No polls in this channel yet.', onVote: A.votePoll ? (id, i) => A.votePoll(id, i) : null });
         if (name === 'inbox') return Game3InboxPanel({ tab: s.inboxTab || 'mentions', onTab: (t) => A.setInboxTab && A.setInboxTab(t), rows: s.mentions || [], saved: s.savedMessages || [], onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some, once every 30 seconds.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ onCreate: A.createEvent ? (f) => A.createEvent(f) : null, events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, about: e.about, location: e.location, at: e.start, name: e.name, mine: e.mine, count: e.going.length, interested: e.interested })), now, onRsvp: A.rsvpEvent ? (id) => A.rsvpEvent(id) : null, onDelete: A.deleteEvent ? (id) => A.deleteEvent(id) : null, onClose: () => A.closeSurface && A.closeSurface() }); }
