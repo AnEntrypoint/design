@@ -713,7 +713,7 @@ html.ds-247420 .ds-g3-msuffix { font-size: 12px; color: #949ba4; font-weight: 40
   html.ds-247420 .ds-g3-mem.open { display: block; position: absolute; top: 0; right: 0; bottom: 0; z-index: var(--z-drawer); }
 }
 
-html.ds-247420 .ds-g3-voice { flex: 1; background: #000; display: flex; flex-direction: column; min-height: 0; position: relative; }
+html.ds-247420 .ds-g3-voice { flex: 1; background: #000; display: flex; flex-direction: column; min-height: 0; position: relative; padding: 0; border-radius: 0; }
 html.ds-247420 .ds-g3-tiles {
   flex: 1;
   display: flex;
@@ -725,7 +725,7 @@ html.ds-247420 .ds-g3-tiles {
   overflow: auto;
 }
 html.ds-247420 .ds-g3-vtile {
-  width: 100%;
+  width: min(calc(var(--space-4) * 15), 44%);
   aspect-ratio: 16 / 9;
   border-radius: var(--r-1);
   display: flex;
