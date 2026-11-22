@@ -1271,7 +1271,7 @@ html.ds-247420 .ca-rail-channels .shead span { white-space: nowrap; overflow: hi
 html.ds-247420 .ca-rail-channels .group-header span:first-child svg { width: 12px; height: 12px; transition: transform 0.1s; }
 html.ds-247420 .ca-rail-channels .group-header span:first-child { display: inline-flex; align-items: center; gap: var(--space-hair); }
 
-html.ds-247420 .ca-rail-channels a .glyph { color: #80848e; font-size: 15px; font-weight: 500; width: 20px; text-align: center; }
+html.ds-247420 .ca-rail-channels a .glyph { color: #80848e; font-size: 15px; font-weight: 500; width: 20px; height: 20px; text-align: center; }
 html.ds-247420 .ca-rail-channels a:hover { background: #35373c; color: #dbdee1; }
 html.ds-247420 .ca-rail-channels a:hover .glyph,
 html.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
@@ -1531,3 +1531,4 @@ html.ds-247420 .ds-g3-welcome p { color: #b5bac1; }
 html.ds-247420 .ds-g3-day { display: flex; align-items: center; margin: var(--space-4) var(--space-3) var(--space-2); color: #949ba4; font-size: var(--fs-micro); font-weight: 600; }
 html.ds-247420 .ds-g3-day::before, html.ds-247420 .ds-g3-day::after { content: ""; flex: 1; height: 1px; background: #3f4147; }
 html.ds-247420 .ds-g3-day span { padding: 0 var(--space-1); }
+html.ds-247420 .ds-g3-msg { flex-shrink: 0; }
