@@ -13893,7 +13893,7 @@
 
 .ds-247420.ds-247420 .ca-right-body .chat-head { display: none; }
 
-.ds-247420.ds-247420 .ca-right-body .chat-thread-wrap { padding-bottom: var(--space-3); }
+.ds-247420.ds-247420 .ca-right-body .chat-thread-wrap { padding-bottom: var(--space-3); box-sizing: border-box; }
 .ds-247420.ds-247420 .ca-right-body .chat-thread { padding-bottom: 0; }
 
 /* app-surfaces.css */
