@@ -1504,3 +1504,5 @@ html.ds-247420 .ds-g3-rhero p { color: #b5bac1; margin: 4px 0 0; }
 html.ds-247420 .ds-g3-ric { background: #5865f2; border-radius: 24px; }
 html.ds-247420 .ds-g3-rcard { background: #2b2d31; padding: 14px; gap: 12px; }
 html.ds-247420 .ds-g3-rtxt p { font-size: 13px; color: #b5bac1; margin: 2px 0 0; }
+
+html.ds-247420 .ds-g3-lbtop > *:first-child { font-weight: 700; }

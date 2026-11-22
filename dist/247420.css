@@ -13970,6 +13970,8 @@
 .ds-247420.ds-247420 .ds-g3-rcard { background: #2b2d31; padding: 14px; gap: 12px; }
 .ds-247420.ds-247420 .ds-g3-rtxt p { font-size: 13px; color: #b5bac1; margin: 2px 0 0; }
 
+.ds-247420.ds-247420 .ds-g3-lbtop > *:first-child { font-weight: 700; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
