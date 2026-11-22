@@ -1506,3 +1506,6 @@ html.ds-247420 .ds-g3-rcard { background: #2b2d31; padding: 14px; gap: 12px; }
 html.ds-247420 .ds-g3-rtxt p { font-size: 13px; color: #b5bac1; margin: 2px 0 0; }
 
 html.ds-247420 .ds-g3-lbtop > *:first-child { font-weight: 700; }
+
+html.ds-247420 .ds-g3-pop .ds-g3-pin-name { color: #f2f3f5; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html.ds-247420 .ds-g3-pop .ds-g3-pin-text { color: #b5bac1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

@@ -13972,6 +13972,9 @@
 
 .ds-247420.ds-247420 .ds-g3-lbtop > *:first-child { font-weight: 700; }
 
+.ds-247420.ds-247420 .ds-g3-pop .ds-g3-pin-name { color: #f2f3f5; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-247420.ds-247420 .ds-g3-pop .ds-g3-pin-text { color: #b5bac1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
