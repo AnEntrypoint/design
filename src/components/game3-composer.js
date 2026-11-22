@@ -1,6 +1,6 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
-import { CMDS, EMOJI_NAMES, STICKERS } from '../game3-data.js';
+import { CMDS, EMOJI_NAMES, EMOJI, STICKERS } from '../game3-data.js';
 
 const h = webjsx.createElement;
 
@@ -22,7 +22,7 @@ const acOptions = (value, mentions) => {
     return f.length ? { head: 'Members', items: f.map((n) => ({ key: n, label: n, insert: '@' + n })) } : null;
 };
 
-export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, stickerPop = false, stickerBase = '', stickerTitle = '', onStickerPick, key } = {}) {
+export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, emojiPop = false, onEmojiPick, stickerPop = false, stickerBase = '', stickerTitle = '', onStickerPick, key } = {}) {
     const count = maxLength && value && value.length > 150 ? String(maxLength - value.length) : null;
     const submit = (ta) => {
         const v = ta.value;
@@ -41,6 +41,7 @@ export function Game3Composer({ mentions = [], typing = null, value = '', placeh
             h('div', { class: 'ds-g3-ac-h' }, ac.head),
             ac.items.map((it) => h('div', { key: it.key, class: 'ds-g3-ac-it', role: 'option', onclick: (e) => apply(it.insert, e.currentTarget.closest('.ds-g3-comp')) },
                 it.glyph ? h('span', { class: 'ds-g3-ac-glyph' }, it.glyph) : null, it.label, it.small ? h('small', {}, it.small) : null))) : null,
+        emojiPop ? h('div', { key: 'cpick', class: 'ds-g3-cpick ds-g3-epick' }, EMOJI.map((e) => h('span', { key: e, role: 'button', tabindex: '0', onclick: (ev) => { if (onEmojiPick) onEmojiPick(e); const ta = ev.currentTarget.closest('.ds-g3-comp').querySelector('textarea'); setTimeout(() => ta && ta.focus(), 0); } }, e))) : null,
         stickerPop ? h('div', { key: 'stkpop', class: 'ds-g3-stkpop' },
             h('div', { class: 'ds-g3-stk-h' }, 'Stickers · ' + stickerTitle),
             h('div', { class: 'ds-g3-stkgrid' }, STICKERS.map((x) => h('img', { key: x.id, src: stickerBase + x.id + '.webp', title: x.name, alt: x.name, loading: 'lazy', onclick: () => onStickerPick && onStickerPick(x.id) })))) : null,

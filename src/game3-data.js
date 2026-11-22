@@ -3,3 +3,4 @@ export const CMDS = [["shrug", "appends ¯\\_(ツ)_/¯"], ["tableflip", "(╯°�
 export const STICKERS = [{ id: 'mustard', name: 'Hi from Mustard' }, { id: 'gg', name: 'GG' }, { id: 'hype', name: 'HYPE' }, { id: 'lol', name: 'LOL cat' }, { id: 'letsgo', name: 'Lets go' }, { id: 'thumbs', name: 'Thumbs up' }, { id: 'sad', name: 'Sad pizza' }, { id: 'sleepy', name: 'Sleepy frog' }];
 export const STICKER_RE = /^🏷¦(\w+)$/;
 export const stickerText = (id) => '🏷¦' + id;
+export const EMOJI = Object.values(EMOJI_NAMES);

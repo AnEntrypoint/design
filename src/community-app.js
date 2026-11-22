@@ -337,6 +337,8 @@ export function mountCommunityApp(root, adapter = {}) {
     };
     let moreFor = null;
     let stickersOpen = false;
+    let emojisOpen = false;
+    let reactPickFor = null;
     let soundToast = null;
     const mentionNames = (s) => [...(s.memberCategories || []).flatMap((c) => (c.members || []).map((m) => m.name)), ...(s.memberApps || []).map((a) => a.name)].filter(Boolean);
     const game3Rows = (s) => {
@@ -355,11 +357,11 @@ export function mountCommunityApp(root, adapter = {}) {
             const continuation = !!prev && prev.type !== 'system' && String(prev.userId) === String(m.userId);
             const reactions = Array.isArray(m.reactions) ? m.reactions.map(r => ({ emoji: r.emoji, count: r.count != null ? r.count : (r.users ? r.users.length : 1), you: !!(r.you || (r.users && selfId && r.users.includes(selfId))) })) : [];
             const react = (emoji) => A.reactToMessage && A.reactToMessage(m.id, m.userId, emoji);
-            const openPicker = (e) => {
+            const openPicker = () => {
                 if (!A.reactToMessage) return;
-                const rect = e && e.currentTarget && e.currentTarget.getBoundingClientRect ? e.currentTarget.getBoundingClientRect() : null;
-                if (api.emojiPicker) api.emojiPicker.show(rect ? rect.left : 200, rect ? rect.bottom + 4 : 200, (em) => A.reactToMessage(m.id, m.userId, em));
-                else A.reactToMessage(m.id, m.userId);
+                reactPickFor = reactPickFor === m.id ? null : m.id;
+                moreFor = null;
+                render();
             };
             return Game3Message({
                 poll: m.poll ? { ...m.poll, onVote: (i) => A.votePoll && A.votePoll(m.poll.id, i) } : null,
@@ -376,6 +378,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
                 unfurls: m.previews || [],
                 sticker: (() => { const hit = STICKER_RE.exec(m.content || ''); const st = hit && STICKERS.find((x) => x.id === hit[1]); return st ? { url: (s.stickerBase || '') + st.id + '.webp', name: st.name } : null; })(),
+                pickerOpen: reactPickFor === m.id,
+                onPick: (em) => { reactPickFor = null; if (A.reactToMessage) A.reactToMessage(m.id, m.userId, em); render(); },
                 sendState: m.send || null,
                 onRetry: () => A.retrySend && A.retrySend(m.id),
                 onJump: s.chatSearch ? () => { if (A.setChatSearch) A.setChatSearch(''); setTimeout(() => { const el = root.querySelector('#m-' + m.id); if (el) el.scrollIntoView({ block: 'center' }); }, 600); } : null,
@@ -427,7 +431,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
@@ -437,11 +441,9 @@ export function mountCommunityApp(root, adapter = {}) {
                 maxLength: 190,
                 onKeyDown: (e, ta) => composerKey(e, ta, s, ch),
                 onAttach: (!s.composerLockedReason && A.attachFiles) ? (files) => A.attachFiles(files) : null,
-                onEmoji: (e) => {
-                    if (!api.emojiPicker) return;
-                    const rect = e && e.currentTarget && e.currentTarget.getBoundingClientRect ? e.currentTarget.getBoundingClientRect() : null;
-                    api.emojiPicker.show(rect ? rect.left : 200, rect ? rect.top - 8 : 200, (em) => A.setInput && A.setInput((s.chatInputValue || '') + em));
-                },
+                onEmoji: () => { emojisOpen = !emojisOpen; stickersOpen = false; render(); },
+                emojiPop: emojisOpen,
+                onEmojiPick: (em) => { if (A.setInput) A.setInput((s.chatInputValue || '') + em); },
                 disabled: !!s.composerLockedReason, disabledReason: s.composerLockedReason || undefined,
             })),
         });
@@ -516,6 +518,8 @@ export function mountCommunityApp(root, adapter = {}) {
             onclick: (e) => {
                 if (moreFor && !(e.target.closest && e.target.closest('.ds-g3-mmenu, .ds-g3-bar'))) { moreFor = null; render(); }
                 if (stickersOpen && !(e.target.closest && e.target.closest('.ds-g3-stkpop, .ds-g3-compbtn'))) { stickersOpen = false; render(); }
+                if (emojisOpen && !(e.target.closest && e.target.closest('.ds-g3-cpick, .ds-g3-compbtn'))) { emojisOpen = false; render(); }
+                if (reactPickFor && !(e.target.closest && e.target.closest('.ds-g3-rxpick, .ds-g3-bar, .ds-g3-mmenu'))) { reactPickFor = null; render(); }
                 const a = e.target.closest && e.target.closest('.chat-image');
                 if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
                 const img = a.querySelector('img');

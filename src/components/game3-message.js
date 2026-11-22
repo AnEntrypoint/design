@@ -1,4 +1,5 @@
 import { Game3PollCard } from './game3-poll.js';
+import { EMOJI } from '../game3-data.js';
 import { Game3InviteCard } from './game3-invite.js';
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
@@ -40,7 +41,7 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
 
-export function Game3Message({ unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : sticker ? [h('img', { key: 'stk', class: 'ds-g3-stk', src: sticker.url, title: sticker.name, alt: sticker.name })] : null;
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const sendLine = sendState && sendState.state === 'pending'
@@ -70,6 +71,7 @@ export function Game3Message({ unfurls = [], sticker = null, sendState = null, o
         moreItems.map((it) => h('div', { key: it.key, role: 'menuitem', tabindex: '0', onclick: (e) => it.onClick(e) }, it.label, h('span', {}, it.glyph))),
         remind.length ? h('div', { key: 'sep', class: 'ds-g3-msep' }, 'Remind me about this') : null,
         remind.length ? h('div', { key: 'rm', class: 'ds-g3-rmrow' }, remind.map(([mn, lab]) => h('b', { key: 'r' + mn, role: 'button', tabindex: '0', onclick: () => onRemind && onRemind(mn) }, lab))) : null) : null;
+    const picker = pickerOpen ? h('div', { key: 'rxpick', class: 'ds-g3-epick ds-g3-rxpick' }, EMOJI.map((e) => h('span', { key: e, role: 'button', tabindex: '0', onclick: () => onPick && onPick(e) }, e))) : null;
     const stamp = continuation ? h('span', { key: 'stamp', class: 'ds-g3-stamp', style: 'left:8px', title: fullTime }, time) : null;
     const body = continuation ? h('div', { key: 'body', class: 'ds-g3-tx-wrap' },
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
@@ -93,13 +95,14 @@ export function Game3Message({ unfurls = [], sticker = null, sendState = null, o
             h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
             ...cardNodes(text, previews, unfurls),
             ...embedNodes(text, embeds)),
-        bar, menu);
+        bar, menu, picker);
     return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mine ? ' ds-g3-selfmsg' : '') },
         replyLine,
         stamp,
         avatar,
         body,
         bar,
-        menu
+        menu,
+        picker
     );
 }
