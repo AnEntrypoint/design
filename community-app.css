@@ -1432,3 +1432,6 @@ html.ds-247420 .ca-right-body .chat-thread-wrap { padding-bottom: var(--space-3)
 html.ds-247420 .ca-right-body .chat-thread { padding-bottom: 0; }
 
 html.ds-247420 .ca-right-body .app-main .chat { gap: 0; }
+
+html.ds-247420 .ds-g3-nm { display: flex; align-items: center; gap: var(--space-1); }
+html.ds-247420 .ca-rail-channels a { line-height: 24px; }

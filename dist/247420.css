@@ -13898,6 +13898,9 @@
 
 .ds-247420.ds-247420 .ca-right-body .app-main .chat { gap: 0; }
 
+.ds-247420.ds-247420 .ds-g3-nm { display: flex; align-items: center; gap: var(--space-1); }
+.ds-247420.ds-247420 .ca-rail-channels a { line-height: 24px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
