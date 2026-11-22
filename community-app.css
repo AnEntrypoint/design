@@ -1354,15 +1354,6 @@ html.ds-247420 .ds-g3-rail-lv { margin-left: auto; font-size: 12px; line-height:
 
 html.ds-247420 .ds-g3-srch { width: 144px; height: 24px; background: #1e1f22; border-radius: var(--r-0); display: flex; align-items: center; padding: 0 6px; color: #949ba4; flex-shrink: 0; box-sizing: border-box; }
 html.ds-247420 .ds-g3-srch input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: #dbdee1; font: inherit; font-size: 14px; }
-html.ds-247420 .ds-g3-inbox { padding: 60px 40px; max-width: 740px; color: #dbdee1; }
-html.ds-247420 .ds-g3-inbox-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-html.ds-247420 .ds-g3-inbox-head h2 { color: #f2f3f5; font-size: 20px; margin: 0; }
-html.ds-247420 .ds-g3-inbox-tab { color: #b5bac1; padding: 4px 10px; border-radius: var(--r-0); cursor: pointer; }
-html.ds-247420 .ds-g3-inbox-tab.on { background: #404249; color: #fff; }
-html.ds-247420 .ds-g3-inbox-close { margin-left: auto; color: #b5bac1; cursor: pointer; }
-html.ds-247420 .ds-g3-inbox-row { padding: 10px 0; border-bottom: 1px solid #3f4147; }
-html.ds-247420 .ds-g3-inbox-who { font-weight: 600; color: #f2f3f5; }
-html.ds-247420 .ds-g3-inbox-txt { font-size: 14px; color: #dbdee1; }
 html.ds-247420 .ds-g3-inbox-empty { color: #949ba4; font-size: 14px; }
 
 html.ds-247420 .ds-g3-vvideo { width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-1); }
@@ -1521,9 +1512,6 @@ html.ds-247420 .ds-g3-lbtop > *:first-child { font-weight: 700; }
 html.ds-247420 .ds-g3-pop .ds-g3-pin-name { color: #f2f3f5; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html.ds-247420 .ds-g3-pop .ds-g3-pin-text { color: #b5bac1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-html.ds-247420 .ds-g3-pop .ds-g3-inbox-row { background: #313338; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
-html.ds-247420 .ds-g3-pop .ds-g3-inbox-who { color: #f2f3f5; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-html.ds-247420 .ds-g3-pop .ds-g3-inbox-txt { color: #b5bac1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 html.ds-247420 .ds-g3-ev .ds-g3-evtitle { font-weight: 700; }
 
@@ -1740,3 +1728,8 @@ html.ds-247420 .ds-g3-newbar b { font-weight: 700; cursor: pointer; white-space:
 html.ds-247420 .ds-g3-newbar > span { white-space: nowrap; }
 html.ds-247420 .ds-g3-nbx { font-style: normal; }
 @media (max-width: 640px) { html.ds-247420 .ds-g3-nbx { display: none; } }
+html.ds-247420 .ds-g3-itab { font-size: 13px; font-weight: 600; color: #b5bac1; padding: 2px var(--space-2); border-radius: var(--r-0); cursor: pointer; }
+html.ds-247420 .ds-g3-itab.on { background: #404249; color: #fff; }
+html.ds-247420 .ds-g3-pi { background: #313338; border-radius: var(--r-0); padding: calc(var(--space-2) + var(--space-hair)) calc(var(--space-2) + var(--space-1)); margin-bottom: var(--space-2); font-size: 14px; cursor: pointer; }
+html.ds-247420 .ds-g3-pi:hover { background: #383a40; }
+html.ds-247420 .ds-g3-pi-chn { font-size: 12px; color: #949ba4; margin-bottom: var(--space-1); }

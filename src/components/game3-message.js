@@ -72,6 +72,13 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         remind.length ? h('div', { key: 'sep', class: 'ds-g3-msep' }, 'Remind me about this') : null,
         remind.length ? h('div', { key: 'rm', class: 'ds-g3-rmrow' }, remind.map(([mn, lab]) => h('b', { key: 'r' + mn, role: 'button', tabindex: '0', onclick: () => onRemind && onRemind(mn) }, lab))) : null) : null;
     const picker = pickerOpen ? h('div', { key: 'rxpick', class: 'ds-g3-epick ds-g3-rxpick' }, EMOJI.map((e) => h('span', { key: e, role: 'button', tabindex: '0', onclick: () => onPick && onPick(e) }, e))) : null;
+    const onDouble = onReply ? (e) => {
+        if (e.target.closest && e.target.closest('a,button,.ds-g3-rx,.ds-g3-bar,.ds-g3-pollo,.ds-g3-who,img')) return;
+        const sel = window.getSelection && window.getSelection();
+        if (sel) sel.removeAllRanges();
+        onReply();
+        setTimeout(() => { const box = document.querySelector('.ds-g3-comp textarea'); if (box) box.focus(); }, 0);
+    } : null;
     const stamp = continuation ? h('span', { key: 'stamp', class: 'ds-g3-stamp', style: 'left:8px', title: fullTime }, time) : null;
     const body = continuation ? h('div', { key: 'body', class: 'ds-g3-tx-wrap' },
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
@@ -87,7 +94,7 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         reactionChips, sendLine
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
-    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' + (mine ? ' ds-g3-selfmsg' : '') },
+    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' + (mine ? ' ds-g3-selfmsg' : ''), ondblclick: onDouble },
         replyLine,
         h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
         h('div', { key: 'cb', class: 'ds-g3-col' },
@@ -96,7 +103,7 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
             ...cardNodes(text, previews, unfurls),
             ...embedNodes(text, embeds)),
         bar, menu, picker);
-    return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mine ? ' ds-g3-selfmsg' : '') },
+    return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mine ? ' ds-g3-selfmsg' : ''), ondblclick: onDouble },
         replyLine,
         stamp,
         avatar,

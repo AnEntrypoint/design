@@ -15,7 +15,7 @@ import { Game3UserPanel, Game3StatusMenu } from './components/game3-user.js';
 import { STATUS } from './game3-data.js';
 import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
-import { Game3InboxPanel } from './components/game3-inbox.js';
+import { Game3InboxPanel, Game3InboxTabs } from './components/game3-inbox.js';
 import { Game3ServerCreate } from './components/game3-server-create.js';
 import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
@@ -40,7 +40,7 @@ import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
-import { ContextMenu, Dialog } from './components/editor-primitives.js';
+import { ContextMenu } from './components/editor-primitives.js';
 import { EmojiPicker, CommandPalette, AuthModal, BootOverlay, SettingsPopover, VideoLightbox } from './components/overlay-primitives.js';
 import { attempt } from './best-effort.js';
 
@@ -343,6 +343,8 @@ export function mountCommunityApp(root, adapter = {}) {
     const closeOverlays = () => {
         moreFor = null; reactPickFor = null; stickersOpen = false; emojisOpen = false; statusMenuOpen = false;
         switcher = { open: false, q: '' }; imageLightbox = { open: false, src: null, alt: '' };
+        const open = get() || {};
+        if (open.gameSurface && A.closeSurface) A.closeSurface();
         render();
     };
     let lastSwitcherKey = 0;
@@ -611,7 +613,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 h('main', { class: 'app-main ds-app-surface', id: 'app-main', tabindex: '-1', onclick: () => { if (s.mobileMenuOpen && A.closeMobileMenu) A.closeMobileMenu(); } },
                     h('h1', { class: 'sr-only' }, ch.name || 'general'),
                     bodyMain,
-                                s.gameSurface === 'pins' || s.gameSurface === 'inbox' ? h('div', { class: 'ds-g3-pop-wrap' }, h('div', { class: 'ds-g3-pop' }, h('h3', { class: 'ds-g3-pop-h' }, h('span', {}, s.gameSurface === 'pins' ? 'Pinned Messages' : 'Inbox'), h('span', { class: 'ds-g3-pop-x', role: 'button', tabindex: '0', 'aria-label': 'close', onclick: () => A.closeSurface && A.closeSurface() }, Icon('x', { size: 14 }))), h('div', { class: 'ds-g3-pop-body' }, surfaceBody(s.gameSurface, s)))) : null,
+                                s.gameSurface === 'pins' || s.gameSurface === 'inbox' ? h('div', { class: 'ds-g3-pop-wrap' }, h('div', { class: 'ds-g3-pop' }, h('h3', { class: 'ds-g3-pop-h' }, h('span', {}, s.gameSurface === 'pins' ? 'Pinned Messages' : 'Inbox'), ...(s.gameSurface === 'inbox' ? Game3InboxTabs({ tab: s.inboxTab || 'mentions', onTab: (t) => A.setInboxTab && A.setInboxTab(t), savedCount: (s.savedMessages || []).length }) : []), h('span', { class: 'ds-g3-pop-x', role: 'button', tabindex: '0', 'aria-label': 'close', onclick: () => A.closeSurface && A.closeSurface() }, Icon('x', { size: 14 }))), h('div', { class: 'ds-g3-pop-body' }, surfaceBody(s.gameSurface, s)))) : null,
                 ),
                 s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null) }) : null,
                 ...(s.homeMode ? [] : [Game3MemberList({
@@ -633,12 +635,13 @@ export function mountCommunityApp(root, adapter = {}) {
             imageLightbox.open ? Game3Lightbox({ src: imageLightbox.src, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
             switcher.open ? Game3Switcher({ query: switcher.q, items: switcherItems(s), onQuery: (q) => { switcher = { open: true, q }; render(); }, onPick: (it) => { switcher = { open: false, q: '' }; it.go(); render(); }, onClose: () => { switcher = { open: false, q: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Game3ServerCreate({ homeName: s.homeServerName || 'Zellous Public', userName: s.gamePrefName || 'You', onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onClose: () => A.closeServerCreate && A.closeServerCreate(), onDiscover: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) : null,
-            s.gameSurface ? Dialog({ open: true, dismissible: true, onClose: () => A.closeSurface && A.closeSurface(), ariaLabel: s.gameSurface, children: h('div', { class: 'ds-g3-surface ds-g3-prefs' }, surfaceBody(s.gameSurface, s), h('button', { type: 'button', class: 'ds-g3-btn', onclick: () => A.closeSurface && A.closeSurface() }, 'Done')) }) : null,
+            MODAL_SURFACES.includes(s.gameSurface) ? h('div', { key: 'surface', class: 'ds-g3-scrim', role: 'presentation', onclick: (e) => { if (e.target === e.currentTarget && A.closeSurface) A.closeSurface(); } }, surfaceBody(s.gameSurface, s)) : null,
             s.gamePrefOpen ? Game3SettingsPanel({ tab: s.gamePrefTab || 'account', onTab: (t) => A.setGamePrefTab && A.setGamePrefTab(t), name: s.gamePrefName || 'You', color: s.gamePrefColor || '', devInfo: s.devInfo || null, onDevReset: () => A.resetLocalState && A.resetLocalState(), onDevFilter: (q) => A.setDevFilter && A.setDevFilter(q), onDevRefresh: () => A.refreshDev && A.refreshDev(), presenceStatus: s.presenceStatus || 'online', presenceCustom: s.presenceCustom || '', onPresence: (k) => A.setPresence && A.setPresence(k, s.presenceCustom || ''), onCustom: (t) => A.setPresence && A.setPresence(s.presenceStatus || 'online', t), initial: String(s.gamePrefName || 'Y').slice(0, 1).toUpperCase(), level: s.myLevel || 0, xp: s.myXp || 0, servers: s.gamePrefServers || 0, toggles: Object.fromEntries((s.gamePrefToggles || []).map((t) => [t.key, !!t.checked])), micOn: !s.micMuted, onMic: () => A.toggleMic && A.toggleMic(), keywords: s.gamePrefKeywords || '', mutedChannels: s.gamePrefMuted || [], onUnmute: (id) => A.toggleMuteId && A.toggleMuteId(id), compact: !!s.gamePrefCompact, banner: s.gamePrefBanner || '', theme: s.themePref || 'ink', onTheme: (t) => A.setTheme && A.setTheme(t), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val), onKeywords: (val) => A.setGamePref && A.setGamePref('kw', val), onBanner: (c) => A.setGamePref && A.setGamePref('banner', c), onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onReset: () => A.setGamePref && A.setGamePref('reset', true), onClose: () => A.closeGamePrefs && A.closeGamePrefs() }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
         );
     };
 
+    const MODAL_SURFACES = ['events', 'leaderboard', 'discover'];
     const surfaceBody = (name, s) => {
         if (name === 'roles') return RoleList({ roles: s.roles || [], emptyText: 'No roles in this server.' });
         if (name === 'pick-roles') return Game3RolesPanel({ roles: s.selfRoles || [], onToggle: (id) => A.toggleSelfRole && A.toggleSelfRole(id), onDone: () => A.goToGeneral && A.goToGeneral() });
@@ -646,7 +649,7 @@ export function mountCommunityApp(root, adapter = {}) {
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: "This channel doesn't have any pinned messages... yet.", onJump: (id) => A.jumpToMessage && A.jumpToMessage(id) });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
-        if (name === 'inbox') return Game3InboxPanel({ tab: s.inboxTab || 'mentions', onTab: (t) => A.setInboxTab && A.setInboxTab(t), rows: s.mentions || [], saved: s.savedMessages || [], onClose: () => A.closeSurface && A.closeSurface() });
+        if (name === 'inbox') return Game3InboxPanel({ tab: s.inboxTab || 'mentions', rows: s.mentions || [], saved: s.savedMessages || [] });
         if (name === 'leaderboard') return Game3LeaderboardPanel({ rows: (s.leaderboard || []).map(r => ({ ...r, me: String(r.id) === String(s.userId) })), emptyText: 'nobody has XP yet. every message earns some, once every 30 seconds.', onClose: () => A.closeSurface && A.closeSurface() });
         if (name === 'events') { const now = Date.now(); return Game3EventsPanel({ onCreate: A.createEvent ? (f) => A.createEvent(f) : null, events: (s.channelEvents || []).filter(e => (e.end || e.start) > now - 3 * 3600e3).map(e => ({ id: e.id, title: e.title, about: e.about, location: e.location, at: e.start, name: e.name, mine: e.mine, count: e.going.length, interested: e.interested })), now, onRsvp: A.rsvpEvent ? (id) => A.rsvpEvent(id) : null, onDelete: A.deleteEvent ? (id) => A.deleteEvent(id) : null, onClose: () => A.closeSurface && A.closeSurface() }); }
         if (name === 'discover') return Game3Modal({ title: 'Discover servers', onClose: () => A.closeSurface && A.closeSurface() }, DiscoverList({ servers: s.discoverServers || [], emptyText: 'No servers joined yet.', onOpen: (id) => A.switchServer && A.switchServer(id) }));
