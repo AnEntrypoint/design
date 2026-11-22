@@ -13898,6 +13898,13 @@
 .ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-big { display: block; text-align: center; margin: 18px 0 0; padding: var(--space-2-5); }
 .ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-link { background: transparent; color: #b5bac1; }
 
+.ds-247420.ds-247420 .ds-g3-set h2 { font-weight: 400; line-height: 30px; letter-spacing: normal; }
+.ds-247420.ds-247420 .ds-g3-kb { display: flex; justify-content: space-between; padding: var(--space-2-5) 0; border-bottom: 1px solid #3f4147; font-size: var(--fs-xs); }
+.ds-247420.ds-247420 .ds-g3-kb span { display: block; }
+.ds-247420.ds-247420 .ds-g3-kb kbd { display: block; background: #1e1f22; border-radius: var(--r-0); padding: var(--space-hair) var(--space-2); font-family: inherit; box-shadow: 0 2px #111; }
+
+.ds-247420.ds-247420 .ds-g3-kb kbd { font-size: var(--fs-xs); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
