@@ -1472,5 +1472,5 @@ html.ds-247420 .ds-g3-pdot { position: absolute; right: calc(var(--space-hair) *
 html.ds-247420 .ds-g3-pinfo { min-width: 0; flex: 1; }
 html.ds-247420 .ds-g3-pname { color: #f2f3f5; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 html.ds-247420 .ds-g3-psub { font-size: var(--fs-xs); color: #b5bac1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-html.ds-247420 .ds-g3-pmsg { margin-left: auto; width: calc(var(--space-4) + var(--space-3)); height: calc(var(--space-4) + var(--space-3)); border-radius: 50%; background: #2b2d31; border: 0; color: #dbdee1; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none; }
+html.ds-247420 .ds-g3-pmsg { margin-left: auto; width: calc(var(--space-4) + var(--space-2-75)); height: calc(var(--space-4) + var(--space-2-75)); border-radius: 50%; background: #2b2d31; border: 0; color: #dbdee1; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none; }
 html.ds-247420 .ds-g3-pmsg:hover { color: #f2f3f5; }
