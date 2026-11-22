@@ -317,6 +317,7 @@ export function mountCommunityApp(root, adapter = {}) {
             { key: 'reply', label: 'Reply', glyph: '↩', onClick: () => { close(); if (A.startReply) A.startReply({ id: m.id, username, text: m.content }); } },
             { key: 'mention', label: 'Mention @' + username, glyph: '@', onClick: () => { close(); if (A.setInput) A.setInput((s.chatInputValue || '') + '@' + username + ' '); } },
             { key: 'copy', label: 'Copy Text', glyph: '📋', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(m.content || ''); } },
+            A.markUnread ? { key: 'unread', label: 'Mark Unread', glyph: '🔵', onClick: () => { moreFor = null; A.markUnread(m.id); render(); } } : null,
             A.toggleSave ? { key: 'save', label: saved ? 'Remove from Saved' : 'Save for Later', glyph: '🔖', onClick: () => { close(); A.toggleSave({ id: m.id, who: username, text: m.content || '' }); } } : null,
             s.devMode ? { key: 'cid', label: 'Copy Message ID', glyph: '🆔', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(String(m.id)); } } : null,
         ].filter(Boolean);
@@ -364,6 +365,9 @@ export function mountCommunityApp(root, adapter = {}) {
                 onReply: () => A.startReply && A.startReply({ id: m.id, userId: m.userId, username, content: m.content }),
                 onDelete: isYou && A.deleteMessage ? () => A.deleteMessage(m.id) : null,
                 onPin: A.pinMessage ? () => A.pinMessage(m.id) : null,
+                pinned: (s.pins || []).some((p) => p.id === m.id),
+                saved: (s.savedIds || []).includes(m.id),
+                onSave: A.toggleSave ? () => A.toggleSave({ id: m.id, who: username, text: m.content || '' }) : null,
                 unfurls: m.previews || [],
                 sticker: (() => { const hit = STICKER_RE.exec(m.content || ''); const st = hit && STICKERS.find((x) => x.id === hit[1]); return st ? { url: (s.stickerBase || '') + st.id + '.webp', name: st.name } : null; })(),
                 pickerOpen: reactPickFor === m.id,

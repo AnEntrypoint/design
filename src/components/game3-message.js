@@ -40,7 +40,7 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => renderMarkdown(text);
 
-export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, pinned = false, saved = false, onSave, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : sticker ? [h('img', { key: 'stk', class: 'ds-g3-stk', src: sticker.url, title: sticker.name, alt: sticker.name })] : null;
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const sendLine = sendState && sendState.state === 'pending'
@@ -59,7 +59,8 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         QUICK.map((e) => h('span', { key: 'q' + e, role: 'button', tabindex: '0', title: 'react ' + e, onclick: () => onReact && onReact(e) }, e)),
         h('span', { key: 'add', role: 'button', tabindex: '0', title: 'Add Reaction', onclick: (e) => onAddReaction && onAddReaction(e) }, Icon('ref-smile', { size: 20 })),
         h('span', { key: 'reply', role: 'button', tabindex: '0', title: 'Reply', onclick: () => onReply && onReply() }, Icon('ref-reply', { size: 20 })),
-        onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: 'Pin', onclick: () => onPin() }, Icon('ref-pins', { size: 24 })) : null,
+        onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: pinned ? 'Unpin Message' : 'Pin Message', style: pinned ? 'color:#f0b232' : null, onclick: () => onPin() }, Icon('ref-pins', { size: 24 })) : null,
+        onSave ? h('span', { key: 'save', role: 'button', tabindex: '0', title: saved ? 'Remove from Saved' : 'Save for Later', style: saved ? 'color:#5865f2' : null, onclick: () => onSave() }, '🔖') : null,
         mine ? h('span', { key: 'del', role: 'button', tabindex: '0', title: 'Delete', onclick: () => onDelete && onDelete() }, Icon('trash', { size: 18 })) : null,
         devMode ? h('span', { key: 'cid', role: 'button', tabindex: '0', title: 'Copy Message ID', onclick: () => copyText(messageId) }, Icon('copy', { size: 18 })) : null,
         devMode ? h('span', { key: 'cuid', role: 'button', tabindex: '0', title: 'Copy User ID', onclick: () => copyText(userId) }, Icon('clipboard', { size: 18 })) : null,
