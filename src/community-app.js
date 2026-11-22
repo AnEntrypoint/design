@@ -21,6 +21,7 @@ import { Game3RecapPanel } from './components/game3-recap.js';
 import { Game3SettingsPanel } from './components/game3-settings.js';
 import { Game3PeopleHere } from './components/game3-people.js';
 import { game3AvatarBg } from './components/game3-hue.js';
+import { Game3Welcome } from './components/game3-welcome.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
@@ -353,7 +354,7 @@ export function mountCommunityApp(root, adapter = {}) {
             : 'Be the first to post in #' + (ch.name || 'general') + '.';
         const typingBar = TypingIndicator({ users: s.typingUsers || [] });
         return Chat({
-            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: game3Rows(s), header: null,
+            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(game3Rows(s)), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
