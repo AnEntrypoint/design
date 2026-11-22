@@ -339,7 +339,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const items = [
             ...channels.filter((c) => c.type !== 'voice').map((c) => ({ label: '#' + c.name, hint: serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
             ...channels.filter((c) => c.type === 'voice').map((c) => ({ label: '\u{1F50A} ' + c.name, hint: 'voice \u00b7 ' + serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
-            ...(s.servers || []).filter((sv) => !sv._home).map((sv) => ({ label: sv.name, hint: sv.id === s.currentServerId ? 'server' : 'join server', key: sv.name, go: () => A.switchServer && A.switchServer(sv.id) })),
+            ...(s.servers || []).filter((sv) => !sv._home).map((sv) => ({ label: sv.name, hint: 'server', key: sv.name, go: () => A.switchServer && A.switchServer(sv.id) })),
             ...(s.memberCategories || []).flatMap((c) => c.members || []).filter((m) => String(m.identity) !== String(s.userId)).map((m) => ({ label: '@ ' + m.name, hint: 'dm', key: m.name, go: () => { if (A.goHome) A.goHome(); if (A.selectDm) A.selectDm(m.identity); } })),
         ];
         return items.filter((x) => !q || x.key.toLowerCase().includes(q)).slice(0, 12);
