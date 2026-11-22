@@ -102,6 +102,7 @@ html.ds-247420 .ca-rail-servers a {
   height: 48px;
   padding: 0;
   margin: 0;
+  gap: normal;
   border-radius: 50%;
   background: var(--sv-color, var(--accent));
   color: #fff;
@@ -1544,7 +1545,7 @@ html.ds-247420 .ds-g3-sysav { width: 40px; height: 22px; background: transparent
 html.ds-247420 .ds-g3-sysbody { min-width: 0; flex: 1; }
 html.ds-247420 .ds-g3-systx { color: #949ba4; }
 html.ds-247420 .ds-g3-systx b { color: #f2f3f5; font-weight: 500; }
-html.ds-247420 .ds-g3-syswhen { font-size: var(--fs-micro); font-weight: 500; color: #949ba4; margin-left: var(--space-1-75); }
+html.ds-247420 .ds-g3-syswhen { font-size: var(--fs-micro); font-weight: 500; line-height: 18px; color: #949ba4; margin-left: var(--space-1-75); }
 html.ds-247420 .ds-g3-wave { display: inline-flex; align-items: center; gap: var(--space-1-75); background: #4e5058; color: #fff; border-radius: 4px; padding: var(--space-1) var(--space-2-5); font-size: 14px; margin-top: var(--space-1-75); cursor: pointer; font-weight: 500; }
 html.ds-247420 .ds-g3-wave:hover { background: #6d6f78; }
 html.ds-247420 .ds-g3-inv { line-height: 24px; background: #2b2d31; border: 1px solid #1e1f22; border-radius: 8px; padding: calc(var(--space-2-75) + var(--space-hair)) var(--space-3); max-width: 430px; margin-top: var(--space-1); }
@@ -1565,3 +1566,6 @@ html.ds-247420 .ds-g3-smenu > div { padding: var(--space-2); border-radius: 2px;
 html.ds-247420 .ds-g3-smenu > div:hover { background: #4752c4; color: #fff; }
 html.ds-247420 .ds-g3-smenu hr { border: 0; height: 1px; background: #2e2f34; margin: var(--space-1) 0; }
 html.ds-247420 .ds-g3-smenu-i { display: flex; }
+html.ds-247420 .ca-rail-servers a.ca-rail-server-explore { gap: var(--space-2-75); }
+html.ds-247420 .ca-rail-channels .group { gap: var(--space-hair); }
+@media (min-width: 901px) { html.ds-247420 .ds-g3-header .ds-g3-ibtn[aria-label="Member List"] { color: #f2f3f5; } }
