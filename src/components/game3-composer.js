@@ -38,8 +38,8 @@ export function Game3Composer({ typing = null, value = '', placeholder = '', max
                 },
             }),
             count ? h('span', { key: 'cc', class: 'ds-g3-cc', 'aria-live': 'off' }, count) : null,
-            h('span', { key: 'st', class: 'ds-g3-compbtn' + (stickersAvailable ? '' : ' is-unavailable'), role: 'button', tabindex: stickersAvailable ? '0' : null, 'aria-disabled': stickersAvailable ? null : 'true', title: stickersAvailable ? 'Stickers' : 'No sticker catalogue is available yet', onclick: stickersAvailable && onStickers ? (e) => onStickers(e) : null }, Icon('image', { size: 22 })),
-            h('span', { key: 'em', class: 'ds-g3-compbtn', role: 'button', tabindex: '0', title: 'Emoji', onclick: (e) => onEmoji && onEmoji(e) }, Icon('smile', { size: 20 }))
+            h('span', { key: 'st', class: 'ds-g3-compbtn' + (stickersAvailable ? '' : ' is-unavailable'), role: 'button', tabindex: stickersAvailable ? '0' : null, 'aria-disabled': stickersAvailable ? null : 'true', title: stickersAvailable ? 'Stickers' : 'No sticker catalogue is available yet', onclick: stickersAvailable && onStickers ? (e) => onStickers(e) : null }, Icon('ref-sticker', { size: 22 })),
+            h('span', { key: 'em', class: 'ds-g3-compbtn', role: 'button', tabindex: '0', title: 'Emoji', onclick: (e) => onEmoji && onEmoji(e) }, Icon('ref-emoji', { size: 24 }))
         ),
         h('div', { key: 'typ', class: 'ds-g3-typ' }, typing)
     );
