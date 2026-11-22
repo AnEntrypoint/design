@@ -13957,6 +13957,12 @@
 .ds-247420.ds-247420 .ds-g3-pop-body { overflow-y: auto; padding: 8px; }
 .ds-247420.ds-247420 .ds-g3-pop .ds-g3-pin { background: #313338; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
 
+.ds-247420.ds-247420 .ds-g3-rl { padding: 24px 32px; }
+.ds-247420.ds-247420 .ds-g3-rl-item { gap: 16px; padding: 16px; background: #2b2d31; border-radius: 8px; margin-bottom: 8px; }
+.ds-247420.ds-247420 .ds-g3-rl-n { font-size: 22px; font-weight: 800; color: #5865f2; width: 28px; }
+.ds-247420.ds-247420 .ds-g3-rl-item b { color: #f2f3f5; }
+.ds-247420.ds-247420 .ds-g3-rl-item p { margin: 4px 0 0; color: #b5bac1; font-size: 15px; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
