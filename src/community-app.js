@@ -24,6 +24,8 @@ import { game3AvatarBg } from './components/game3-hue.js';
 import { Game3Welcome } from './components/game3-welcome.js';
 import { Game3DayDivider } from './components/game3-day.js';
 import { Game3VoiceBar } from './components/game3-voicebar.js';
+import { Game3SystemLine } from './components/game3-system.js';
+import { Game3ServerMenu } from './components/game3-server-menu.js';
 import { Game3RolesPanel } from './components/game3-roles.js';
 import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
@@ -89,6 +91,7 @@ export function mountCommunityApp(root, adapter = {}) {
     let emoji = { open: false, x: 0, y: 0, onSelect: null };
     let palette = { open: false, items: [], onSelect: null };
     let card = { open: false, member: null };
+    let serverMenuOpen = false;
     let dropAnywhere = { active: false, count: 0, fileCount: 0 };
     let imageLightbox = { open: false, src: null, alt: '' };
 
@@ -110,7 +113,19 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const railServerHead = (s) => {
         const sv = (s.servers || []).find((x) => x.id === s.currentServerId);
-        return h('div', { class: 'shead' }, h('span', {}, sv ? sv.name : 'home'), Icon('chevron-down-fill', { size: 18 }));
+        return h('div', { class: 'shead', role: 'button', tabindex: '0', 'aria-haspopup': 'menu', 'aria-expanded': serverMenuOpen ? 'true' : 'false', onclick: () => { serverMenuOpen = !serverMenuOpen; render(); } }, h('span', {}, sv ? sv.name : 'home'), Icon('chevron-down-fill', { size: 18 }));
+    };
+    const serverMenuItems = (s) => {
+        const owner = !!s.canManage;
+        const out = [];
+        if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'plus', onClick: () => A.createChannel('text') }, { divider: true });
+        if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'members', color: '#949cf7', onClick: () => A.inviteToServer() });
+        if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), onClick: () => A.toggleMuteChannel() });
+        if (A.explore) out.push({ label: 'Discover Servers', icon: 'compass', onClick: () => A.explore() });
+        out.push({ divider: true });
+        if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'settings', onClick: () => A.openGamePrefs() });
+        if (!owner && A.leaveServer && s.currentServerId) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', onClick: () => A.leaveServer() });
+        return out;
     };
     const railGroup = (label, s, list, cur, isVoice, createType) => {
         const head = h('div', { class: 'group group-header' },
@@ -134,6 +149,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const text = channels.filter(c => !info.includes(c) && !voice.includes(c));
         return h('div', { class: 'ca-rail-channels' },
             railServerHead(s),
+            serverMenuOpen ? Game3ServerMenu({ items: serverMenuItems(s), onPick: () => { serverMenuOpen = false; } }) : null,
             h('div', { class: 'chans' },
                 ...railSurfaceRows(s),
                 h('div', { class: 'ds-g3-sep2', 'aria-hidden': 'true' }),
@@ -303,7 +319,11 @@ export function mountCommunityApp(root, adapter = {}) {
         const msgs = s.messages || [];
         const selfId = s.userId;
         return msgs.map((m, i) => {
-            if (m.type === 'system') return null;
+            if (m.type === 'system') {
+                if (!m.sys) return null;
+                const stamp = m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
+                return Game3SystemLine({ key: m.id || ('m' + i), name: m.sys.name, text: m.sys.text, time: stamp, fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '', onWave: m.sys.canWave && A.wave ? () => A.wave(m.sys.userId) : null });
+            }
             const username = (A.resolveProfile && A.resolveProfile(m.userId)) || m.username || 'User';
             const isYou = !!selfId && String(m.userId) === String(selfId);
             const prev = msgs[i - 1];
@@ -318,6 +338,7 @@ export function mountCommunityApp(root, adapter = {}) {
             };
             return Game3Message({
                 poll: m.poll ? { ...m.poll, onVote: (i) => A.votePoll && A.votePoll(m.poll.id, i) } : null,
+                invite: m.invite ? { ...m.invite, onJoin: () => A.joinInvite && A.joinInvite(m.invite.serverId, m.invite.name, m.invite.color) } : null,
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: initial(username), avatarColor: game3AvatarBg(username),
                 headTime: m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp),

@@ -1,4 +1,5 @@
 import { Game3PollCard } from './game3-poll.js';
+import { Game3InviteCard } from './game3-invite.js';
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
 
@@ -32,8 +33,8 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => String(text || '').split(/\|\|(.+?)\|\|/).flatMap((part, i) => (i % 2 === 1 ? [h('span', { key: 's' + i, class: 'ds-g3-spoil', role: 'button', tabindex: '0', onclick: (e) => e.currentTarget.classList.add('shown') }, linkify(part))] : linkify(part)));
 
-export function Game3Message({ poll = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
-    const bodyNodes = poll ? [Game3PollCard(poll)] : null;
+export function Game3Message({ poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+    const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : null;
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
