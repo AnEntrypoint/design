@@ -1,7 +1,7 @@
 import * as webjsx from '../vendor/webjsx/index.js';
 import { Icon } from './components/shell.js';
 import { register } from './debug.js';
-import { Chat, ChatComposer, TypingIndicator } from './components/chat.js';
+import { Chat, ChatComposer } from './components/chat.js';
 import {
     ServerRail, ChannelItem, MemberList,
     UserPanel, VoiceStrip, ThreadPanel, ForumView, PageView, Banner, ReplyBar,
@@ -416,10 +416,11 @@ export function mountCommunityApp(root, adapter = {}) {
         const emptySub = s.homeMode
             ? 'Pick a conversation on the left, or start one with +.'
             : 'Be the first to post in #' + (ch.name || 'general') + '.';
-        const typingBar = TypingIndicator({ users: s.typingUsers || [] });
+        const typingUsers = s.typingUsers || [];
+        const typingText = typingUsers.length === 0 ? '' : typingUsers.length === 1 ? typingUsers[0] + ' is typing\u2026' : typingUsers.length === 2 ? typingUsers[0] + ' and ' + typingUsers[1] + ' are typing\u2026' : 'Several people are typing\u2026';
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: (s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s))), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ typing: typingText, nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingBar,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
