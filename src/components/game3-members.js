@@ -1,4 +1,5 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
+import { game3AvatarBg, game3AvatarFont } from './game3-hue.js';
 
 const h = webjsx.createElement;
 const DOT = { online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' };
@@ -12,7 +13,7 @@ export function Game3MemberRow({ identity, name, color, nameColor, status = 'onl
         onclick: onClick || null,
         onkeydown: onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e); } } : null,
     },
-        h('div', { class: 'ds-g3-mav', style: '--ds-g3-av-color:' + (color || 'var(--accent)') },
+        h('div', { class: 'ds-g3-mav', style: '--ds-g3-av-color:' + game3AvatarBg(name || identity) + ';font-size:' + game3AvatarFont(32) },
             initial,
             h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + dot, 'aria-label': status })),
         h('div', { class: 'ds-g3-mbody' },

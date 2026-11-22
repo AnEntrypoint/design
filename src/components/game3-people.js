@@ -1,4 +1,5 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
+import { game3AvatarBg, game3AvatarFont } from './game3-hue.js';
 import { Icon } from './shell.js';
 
 const h = webjsx.createElement;
@@ -15,7 +16,7 @@ export function Game3PeopleHere({ serverName = '', people = [], onMessage } = {}
             ...(people.length
                 ? people.map((p) => h('div', { key: p.id, class: 'ds-g3-prow' },
                     h('span', { class: 'ds-g3-pwrap' },
-                        h('span', { class: 'ds-g3-pav', style: 'background:' + p.color }, (p.name || '?').slice(0, 1).toUpperCase()),
+                        h('span', { class: 'ds-g3-pav', style: 'background:' + game3AvatarBg(p.name) + ';font-size:' + game3AvatarFont(32) }, (p.name || '?').slice(0, 1).toUpperCase()),
                         h('span', { class: 'ds-g3-pdot', style: '--ds-g3-dot-color:' + (DOT[p.status] || DOT.online), 'aria-label': p.status })),
                     h('div', { class: 'ds-g3-pinfo' },
                         h('div', { class: 'ds-g3-pname' }, p.name),
