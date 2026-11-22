@@ -13871,6 +13871,15 @@
 .ds-247420.ds-247420 .ca-rail-channels .ds-g3-vu-av { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-shadow: 0 0 0 2px #2b2d31; }
 .ds-247420.ds-247420 .ca-rail-channels .vu.talk .ds-g3-vu-av { box-shadow: 0 0 0 2px #2b2d31, 0 0 0 4px #23a55a; }
 
+.ds-247420.ds-247420 .ds-g3-comp { color: #dbdee1; }
+.ds-247420.ds-247420 .ds-g3-comp .ds-g3-box { color: #dbdee1; }
+.ds-247420.ds-247420 .ds-g3-comp textarea { border-radius: 0; }
+
+.ds-247420.ds-247420 .ca-rail-servers, .ds-247420.ds-247420 .ca-rail-channels, .ds-247420.ds-247420 .ds-g3-header, .ds-247420.ds-247420 .ds-g3-mem, .ds-247420.ds-247420 .ds-g3-me { color: #dbdee1; }
+.ds-247420.ds-247420 .ca-right-body .app-main { background: #313338; }
+
+.ds-247420.ds-247420 .ca-right-body .app-main { color: #dbdee1; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {
