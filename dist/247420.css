@@ -13880,6 +13880,17 @@
 
 .ds-247420.ds-247420 .ca-right-body .app-main { color: #dbdee1; }
 
+.ds-247420.ds-247420 { font-family: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.ds-247420.ds-247420 .ca-rail-channels, .ds-247420.ds-247420 .ds-g3-me { font-size: var(--fs-body); }
+.ds-247420.ds-247420 .ds-g3-av { font-size: var(--fs-body); }
+.ds-247420.ds-247420 .ca-right-body .chat-thread { padding-top: 0; padding-bottom: 16px; }
+
+.ds-247420.ds-247420 { --ff-sans: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; --lh-base: 1.5; }
+.ds-247420.ds-247420 .ca-right-body .chat-thread { gap: normal; }
+
+.ds-247420.ds-247420 .ds-g3-msg .ds-g3-head { display: block; }
+.ds-247420.ds-247420 .ds-g3-msg .ds-g3-who, .ds-247420.ds-247420 .ds-g3-msg .ds-g3-when { display: inline; }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

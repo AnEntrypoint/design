@@ -1414,3 +1414,14 @@ html.ds-247420 .ca-rail-servers, html.ds-247420 .ca-rail-channels, html.ds-24742
 html.ds-247420 .ca-right-body .app-main { background: #313338; }
 
 html.ds-247420 .ca-right-body .app-main { color: #dbdee1; }
+
+html.ds-247420 { font-family: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+html.ds-247420 .ca-rail-channels, html.ds-247420 .ds-g3-me { font-size: var(--fs-body); }
+html.ds-247420 .ds-g3-av { font-size: var(--fs-body); }
+html.ds-247420 .ca-right-body .chat-thread { padding-top: 0; padding-bottom: 16px; }
+
+html.ds-247420 { --ff-sans: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; --lh-base: 1.5; }
+html.ds-247420 .ca-right-body .chat-thread { gap: normal; }
+
+html.ds-247420 .ds-g3-msg .ds-g3-head { display: block; }
+html.ds-247420 .ds-g3-msg .ds-g3-who, html.ds-247420 .ds-g3-msg .ds-g3-when { display: inline; }
