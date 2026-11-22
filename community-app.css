@@ -1513,3 +1513,5 @@ html.ds-247420 .ds-g3-pop .ds-g3-pin-text { color: #b5bac1; font-size: 12px; whi
 html.ds-247420 .ds-g3-pop .ds-g3-inbox-row { background: #313338; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
 html.ds-247420 .ds-g3-pop .ds-g3-inbox-who { color: #f2f3f5; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html.ds-247420 .ds-g3-pop .ds-g3-inbox-txt { color: #b5bac1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+html.ds-247420 .ds-g3-ev .ds-g3-evtitle { font-weight: 700; }
