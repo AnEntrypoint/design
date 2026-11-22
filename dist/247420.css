@@ -13736,7 +13736,7 @@
 .ds-247420.ds-247420 .ca-rail-channels .group-header span:first-child svg { width: 12px; height: 12px; transition: transform 0.1s; }
 .ds-247420.ds-247420 .ca-rail-channels .group-header span:first-child { display: inline-flex; align-items: center; gap: var(--space-hair); }
 
-.ds-247420.ds-247420 .ca-rail-channels a .glyph { color: #80848e; }
+.ds-247420.ds-247420 .ca-rail-channels a .glyph { color: #80848e; font-size: 15px; font-weight: 500; width: 20px; text-align: center; }
 .ds-247420.ds-247420 .ca-rail-channels a:hover { background: #35373c; color: #dbdee1; }
 .ds-247420.ds-247420 .ca-rail-channels a:hover .glyph,
 .ds-247420.ds-247420 .ca-rail-channels a.active .glyph { color: #dbdee1; }
@@ -13805,7 +13805,7 @@
 
 .ds-247420.ds-247420 .ca-right-body .chat-thread { padding-left: 0; padding-right: 0; }
 
-.ds-247420.ds-247420 .ds-g3-rail-lv { margin-left: auto; font-size: 12px; color: #f0b232; }
+.ds-247420.ds-247420 .ds-g3-rail-lv { margin-left: auto; font-size: 12px; line-height: 18px; color: #f0b232; }
 
 .ds-247420.ds-247420 .ds-g3-srch { width: 144px; height: 24px; background: #1e1f22; border-radius: var(--r-0); display: flex; align-items: center; gap: 6px; padding: 0 6px; color: #949ba4; flex-shrink: 0; box-sizing: border-box; }
 .ds-247420.ds-247420 .ds-g3-srch input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: #dbdee1; font: inherit; font-size: 14px; }
@@ -13992,6 +13992,10 @@
 .ds-247420.ds-247420 .ds-g3-welcome-big { width: 68px; height: 68px; border-radius: 50%; background: #41434a; display: flex; align-items: center; justify-content: center; color: #fff; margin-bottom: var(--space-2); font-size: 34px; }
 .ds-247420.ds-247420 .ds-g3-welcome h1 { font-size: 32px; font-weight: 700; color: #f2f3f5; margin: var(--space-2) 0; line-height: 40px; }
 .ds-247420.ds-247420 .ds-g3-welcome p { color: #b5bac1; }
+
+.ds-247420.ds-247420 .ds-g3-day { display: flex; align-items: center; margin: var(--space-4) var(--space-3) var(--space-2); color: #949ba4; font-size: var(--fs-micro); font-weight: 600; }
+.ds-247420.ds-247420 .ds-g3-day::before, .ds-247420.ds-247420 .ds-g3-day::after { content: ""; flex: 1; height: 1px; background: #3f4147; }
+.ds-247420.ds-247420 .ds-g3-day span { padding: 0 var(--space-1); }
 
 /* app-surfaces.css */
 
