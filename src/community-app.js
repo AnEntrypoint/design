@@ -122,6 +122,8 @@ export function mountCommunityApp(root, adapter = {}) {
     const railSurfaceRows = (s) => [
         h('a', { key: 'events', href: '#', class: s.gameSurface === 'events' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('events'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-events', { size: 20 })), h('span', {}, s.eventCount ? s.eventCount + (s.eventCount === 1 ? ' Event' : ' Events') : 'Events'), s.eventLive ? h('span', { class: 'ds-g3-live' }, 'LIVE') : null),
         h('a', { key: 'leaderboard', href: '#', class: s.gameSurface === 'leaderboard' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('leaderboard'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-leaderboard', { size: 20 })), h('span', {}, 'Leaderboard'), s.myLevel != null ? h('span', { class: 'ds-g3-rail-lv' }, 'lv ' + s.myLevel) : null),
+        h('a', { key: 'rules', href: '#', class: s.gameSurface === 'rules' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('rules'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('file', { size: 15 })), h('span', {}, 'rules')),
+        h('a', { key: 'pick-roles', href: '#', class: s.gameSurface === 'pick-roles' ? 'active' : '', onclick: (e) => { e.preventDefault(); if (A.openSurface) A.openSurface('pick-roles'); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('shield', { size: 15 })), h('span', {}, 'pick-roles')),
     ];
     const railChannelsView = (s, bottom = []) => {
         if (s.homeMode) return dmRailView(s);
