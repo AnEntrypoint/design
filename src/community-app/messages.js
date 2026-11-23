@@ -1,3 +1,4 @@
+import * as webjsx from '../../vendor/webjsx/index.js';
 import { messageKindFor, messageProps } from '../modules/index.js';
 import { Game3Message, isJumbo } from '../components/game3-message.js';
 import { game3AvatarBg, game3AvInitial } from '../components/game3-hue.js';
@@ -6,6 +7,8 @@ import { Game3SystemLine } from '../components/game3-system.js';
 import { Game3NewDivider } from '../components/game3-newdiv.js';
 import { Game3NewBar } from '../components/game3-newbar.js';
 import { Game3SearchBar } from '../components/game3-search.js';
+
+const h = webjsx.createElement;
 
 export function createMessages(app) {
     const { root, get, A, initial, formatTime, st } = app;
