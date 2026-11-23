@@ -93,6 +93,7 @@ export function createMessages(app) {
     const escapeRe = (x) => String(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const mentionsMe = (text, name) => !!name && new RegExp('(^|\\s)@' + escapeRe(name) + '(?![\\w.-])', 'i').test(String(text || ''));
     const clockOf = (ts, h24) => new Date(ts).toLocaleTimeString([], h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' });
+    const fullStamp = (ts, h24) => new Date(ts).toLocaleString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: !h24 });
     const headStamp = (ts, h24) => {
         const d = new Date(ts);
         const t = clockOf(ts, h24);
@@ -132,7 +133,7 @@ export function createMessages(app) {
         const selfId = s.userId;
         const fresh = s.newAt ? msgs.filter((m) => m.type !== 'system' && String(m.userId) !== String(selfId) && m.timestamp / 1000 > s.newAt) : [];
         if (!fresh.length || s.chatSearch || s.homeMode) return null;
-        return Game3NewBar({ key: 'newbar', count: fresh.length, since: new Date(s.newAt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), onJump: () => { const el = root.querySelector('#newline'); if (el) el.scrollIntoView({ block: 'center' }); }, onRead: A.markChannelRead ? () => A.markChannelRead() : null });
+        return Game3NewBar({ key: 'newbar', count: fresh.length, since: clockOf(s.newAt * 1000, s.h24), onJump: () => { const el = root.querySelector('#newline'); if (el) el.scrollIntoView({ block: 'center' }); }, onRead: A.markChannelRead ? () => A.markChannelRead() : null });
     };
     const game3Rows = (s) => {
         const msgs = s.messages || [];
@@ -143,15 +144,15 @@ export function createMessages(app) {
         const rows = msgs.map((m, i) => {
             if (m.type === 'system') {
                 if (!m.sys) return null;
-                const stamp = m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
-                return Game3SystemLine({ key: m.id || ('m' + i), name: m.sys.name, text: m.sys.text, time: stamp, fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '', onWave: m.sys.canWave && A.wave ? () => A.wave(m.sys.userId) : null });
+                const stamp = m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + clockOf(m.timestamp, s.h24) : '';
+                return Game3SystemLine({ key: m.id || ('m' + i), name: m.sys.name, text: m.sys.text, time: stamp, fullTime: m.timestamp ? fullStamp(m.timestamp, s.h24) : '', onWave: m.sys.canWave && A.wave ? () => A.wave(m.sys.userId) : null });
             }
             const kindModule = messageKindFor(m);
             if (kindModule) return kindModule.mount({ m, s, A, h, render, key: m.id || ('m' + i) });
             const username = (A.resolveProfile && A.resolveProfile(m.userId)) || m.username || 'User';
             const isYou = !!selfId && String(m.userId) === String(selfId);
             const prev = msgs[i - 1];
-            const continuation = !!prev && prev.type !== 'system' && String(prev.userId) === String(m.userId);
+            const continuation = !!prev && prev.type !== 'system' && String(prev.userId) === String(m.userId) && !(m.timestamp && prev.timestamp && m.timestamp - prev.timestamp >= 7 * 60e3);
             const nameFor = (u) => (String(u) === String(selfId) ? 'You' : ((A.resolveProfile && A.resolveProfile(u)) || 'someone'));
             const reactions = Array.isArray(m.reactions) ? m.reactions.map(r => ({ emoji: r.emoji, count: r.count != null ? r.count : (r.users ? r.users.length : 1), you: !!(r.you || (r.users && selfId && r.users.includes(selfId))), who: r.users ? r.users.map(nameFor) : null })) : [];
             const remember = (emoji) => { if (EMOJI.includes(emoji)) st.recentEmoji = [emoji, ...(st.recentEmoji || []).filter((x) => x !== emoji)].slice(0, 3); };
@@ -170,7 +171,7 @@ export function createMessages(app) {
                 quick, mention: !isYou && mentionsMe(m.content, myName),
                 onOpenProfile: () => openProfileFor(app, s, m.userId, username),
                 onMention: A.setInput ? () => A.setInput((s.chatInputValue || '') + '@' + username + ' ') : null,
-                time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
+                time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? fullStamp(m.timestamp, s.h24) : '',
                 continuation: !s.gamePrefCompact && continuation, compact: !!s.gamePrefCompact, previews: s.previews !== false, embeds: s.embeds !== false, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId, jumbo: !!s.jumbo && isJumbo(m.content),
                 onReact: A.reactToMessage ? react : null,
                 onAddReaction: A.reactToMessage ? openPicker : null,

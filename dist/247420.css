@@ -14132,6 +14132,7 @@
 .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-me, .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-vbar { background: #ebedef }
 .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-box { background: #ebedef }
 .ds-247420.ds-247420[data-g3-theme="light"] .ca-rail-channels a.active { background: #d7d9dc }
+.ds-247420.ds-247420[data-g3-theme="light"] .ca-rail-channels a.active .glyph { color: #060607 }
 .ds-247420.ds-247420[data-g3-theme="onyx"] .ds-g3-msg:hover { background: #17171a; }
 .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-tx, .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-typ { color: #313338 }
 .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-who, .ds-247420.ds-247420[data-g3-theme="light"] .shead, .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-header-name, .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-welcome h1, .ds-247420.ds-247420[data-g3-theme="light"] .ds-g3-me .ds-g3-men, .ds-247420.ds-247420[data-g3-theme="light"] .ca-rail-channels a.active, .ds-247420.ds-247420[data-g3-theme="light"] .ca-rail-channels a.unread { color: #060607 }

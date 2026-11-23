@@ -33,7 +33,7 @@ const pane = ({ serverSettings: d, acts }) => {
         h('h6', { key: 'mb' }, 'Members · ' + d.members.length),
         h('p', { key: 'ml', class: 'ds-g3-hint' }, d.members.join(', ')),
         h('h6', { key: 'dz' }, 'Danger Zone'),
-        pressAgain('Delete Server', 'press again: delete ' + d.name + ' for everyone', () => acts.deleteServer && acts.deleteServer(), 'delsrv'),
+        pressAgain('Delete Server', 'press again: remove ' + d.name + ' from this device', () => acts.deleteServer && acts.deleteServer(), 'delsrv'),
     ].filter(Boolean);
 };
 

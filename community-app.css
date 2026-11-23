@@ -1666,6 +1666,7 @@ html.ds-247420[data-g3-theme="light"] .ca-right:has(> .ds-g3-header) { backgroun
 html.ds-247420[data-g3-theme="light"] .ds-g3-me, html.ds-247420[data-g3-theme="light"] .ds-g3-vbar { background: #ebedef }
 html.ds-247420[data-g3-theme="light"] .ds-g3-box { background: #ebedef }
 html.ds-247420[data-g3-theme="light"] .ca-rail-channels a.active { background: #d7d9dc }
+html.ds-247420[data-g3-theme="light"] .ca-rail-channels a.active .glyph { color: #060607 }
 html.ds-247420[data-g3-theme="onyx"] .ds-g3-msg:hover { background: #17171a; }
 html.ds-247420[data-g3-theme="light"] .ds-g3-tx, html.ds-247420[data-g3-theme="light"] .ds-g3-typ { color: #313338 }
 html.ds-247420[data-g3-theme="light"] .ds-g3-who, html.ds-247420[data-g3-theme="light"] .shead, html.ds-247420[data-g3-theme="light"] .ds-g3-header-name, html.ds-247420[data-g3-theme="light"] .ds-g3-welcome h1, html.ds-247420[data-g3-theme="light"] .ds-g3-me .ds-g3-men, html.ds-247420[data-g3-theme="light"] .ca-rail-channels a.active, html.ds-247420[data-g3-theme="light"] .ca-rail-channels a.unread { color: #060607 }
