@@ -2,10 +2,10 @@ import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
 const h = webjsx.createElement;
 
-export function GameHeader({ dm = false, onBurger, channelName = '', channelType = 'text', topic = '', memberListOpen = false, onMembers, pinsOpen = false, onPins, buttons = [], trailing = [], key } = {}) {
+export function GameHeader({ dm = false, onBurger, channelName = '', channelIcon = 'ref-hash', topic = '', memberListOpen = false, onMembers, pinsOpen = false, onPins, buttons = [], trailing = [], key } = {}) {
     return h('header', { key, class: 'ds-g3-header' },
         h('span', { key: 'bg', class: 'ds-g3-burger', role: 'button', tabindex: '0', 'aria-label': 'Open menu', onclick: onBurger }, '☰'),
-        dm ? h('span', { key: 'g', class: 'ds-g3-header-glyph ds-g3-header-at', 'aria-hidden': 'true' }, '@') : h('span', { key: 'g', class: 'ds-g3-header-glyph', 'aria-hidden': 'true' }, Icon(channelType === 'voice' ? 'speaker' : 'ref-hash', { size: 24 })),
+        dm ? h('span', { key: 'g', class: 'ds-g3-header-glyph ds-g3-header-at', 'aria-hidden': 'true' }, '@') : h('span', { key: 'g', class: 'ds-g3-header-glyph', 'aria-hidden': 'true' }, Icon(channelIcon, { size: 24 })),
         h('h2', { key: 'n', class: 'ds-g3-header-name' }, channelName),
         topic ? h('span', { key: 't', class: 'ds-g3-header-topic' }, topic) : null,
         dm ? null : h('div', { key: 'a', class: 'ds-g3-header-actions' },

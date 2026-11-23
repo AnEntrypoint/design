@@ -3944,8 +3944,8 @@ export interface GameHeaderProps {
     onBurger?: (...args: any[]) => any;
     /** @default '' */
     channelName?: string;
-    /** @default 'text' */
-    channelType?: 'text' | 'voice' | (string & {});
+    /** @default 'ref-hash' */
+    channelIcon?: string;
     /** @default '' */
     topic?: string;
     /** @default false */

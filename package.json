@@ -9,6 +9,7 @@
   "sideEffects": [
     "*.css",
     "./src/index.js",
+    "./src/modules/**/*.js",
     "./src/styles.js",
     "./src/markdown-cache.js",
     "./src/theme.js",

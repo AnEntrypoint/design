@@ -8,6 +8,7 @@ import {
 } from './components/community.js';
 import { DiscoverList, PinList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
+import { channelType, railGroups, groupOf, surfaceForChannel } from './modules/index.js';
 import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
@@ -36,8 +37,6 @@ import { Game3ProfileCard } from './components/game3-profile.js';
 import { Game3DmWelcome } from './components/game3-welcome.js';
 import { STICKERS, STICKER_RE, stickerText } from './game3-data.js';
 import { Game3ServerMenu } from './components/game3-server-menu.js';
-import { Game3RolesPanel } from './components/game3-roles.js';
-import { Game3RulesPanel } from './components/game3-rules.js';
 import { Game3SplitColumn, Game3SplitSelect } from './components/game3-split.js';
 import { Game3Composer } from './components/game3-composer.js';
 import { VoiceControls, VoiceSettingsModal, AudioQueue, PttButton, VadMeter, WebcamPreview } from './components/voice.js';
@@ -47,8 +46,7 @@ import { attempt } from './best-effort.js';
 
 const h = webjsx.createElement;
 
-const CHANNEL_ICON = { voice: 'ref-speaker', forum: 'ref-forum', threaded: 'ref-thread', announcement: 'ref-mega', page: 'ref-rules', text: 'ref-hash' };
-const CHANNEL_NAME_ICON = { rules: 'ref-rules', 'pick-roles': 'ref-roles', announcements: 'ref-mega' };
+const channelIcon = (c) => ((surfaceForChannel(c) || {}).icon) || channelType(c.type).icon;
 
 
 function DropAnywhereOverlay({ active, fileCount } = {}) {
@@ -142,18 +140,14 @@ export function mountCommunityApp(root, adapter = {}) {
         if (s.homeMode) return dmRailView(s, bottom);
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
         const cur = s.currentChannel || {};
-        const info = channels.filter(c => c.type === 'announcement' || c.type === 'page');
-        const voice = channels.filter(c => c.type === 'voice' || c.type === 'threaded');
-        const text = channels.filter(c => !info.includes(c) && !voice.includes(c));
+        const groupRows = railGroups().flatMap((g) => { const list = channels.filter((c) => groupOf(c) === g.id); return list.length || g.always ? railGroup(g.label, s, list, cur, g.voice, g.createType) : []; });
         return h('div', { class: 'ca-rail-channels' },
             railServerHead(s),
             serverMenuOpen ? Game3ServerMenu({ items: serverMenuItems(s), onPick: () => { serverMenuOpen = false; } }) : null,
             h('div', { class: 'chans' },
                 ...railSurfaceRows(s),
                 h('div', { class: 'ds-g3-sep2', 'aria-hidden': 'true' }),
-                ...railGroup('Information', s, info, cur, false, null),
-                ...railGroup('Text Channels', s, text, cur, false, 'text'),
-                ...railGroup('Voice Channels', s, voice, cur, true, 'voice')),
+                ...groupRows),
             ...bottom.filter(Boolean));
     };
 
@@ -185,8 +179,9 @@ export function mountCommunityApp(root, adapter = {}) {
     const railPill = (c, cur, isVoice, s) => {
         const active = cur.id === c.id;
         const inVoice = isVoice && s.voiceConnected && s.voiceChannelName === c.name;
-        const glyph = c.type === 'threaded' ? h('span', { class: 'glyph glyph-threaded', 'aria-hidden': 'true' }, Icon('circle-dot', { size: 20 }))
-            : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(CHANNEL_NAME_ICON[c.name] || CHANNEL_ICON[c.type] || 'ref-hash', { size: isVoice ? 20 : 24 }));
+        const ct = channelType(c.type);
+        const glyph = ct.railIcon ? h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(ct.railIcon, { size: 20 }))
+            : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(channelIcon(c), { size: isVoice ? 20 : 24 }));
         const canReorder = !!s.canManage && !!A.reorderChannel;
         const dropAllowed = () => !!railDragId && railDragId !== c.id;
         return h('a', {
@@ -338,8 +333,8 @@ export function mountCommunityApp(root, adapter = {}) {
             if (c.serverId && c.serverId !== s.currentServerId && A.switchServer) { A.switchServer(c.serverId); setTimeout(() => A.switchChannel && A.switchChannel(c), 900); } else if (A.switchChannel) A.switchChannel(c);
         };
         const items = [
-            ...channels.filter((c) => c.type !== 'voice').map((c) => ({ label: '#' + c.name, hint: serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
-            ...channels.filter((c) => c.type === 'voice').map((c) => ({ label: '\u{1F50A} ' + c.name, hint: 'voice \u00b7 ' + serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
+            ...channels.filter((c) => !channelType(c.type).traits.voice).map((c) => ({ label: '#' + c.name, hint: serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
+            ...channels.filter((c) => channelType(c.type).traits.voice).map((c) => ({ label: '\u{1F50A} ' + c.name, hint: 'voice \u00b7 ' + serverName(c), key: c.name + ' ' + serverName(c), go: openChannel(c) })),
             ...(s.servers || []).filter((sv) => !sv._home).map((sv) => ({ label: sv.name, hint: 'server', key: sv.name, go: () => A.switchServer && A.switchServer(sv.id) })),
             ...(s.memberCategories || []).flatMap((c) => c.members || []).filter((m) => String(m.identity) !== String(s.userId)).map((m) => ({ label: '@ ' + m.name, hint: 'dm', key: m.name, go: () => { if (A.goHome) A.goHome(); if (A.selectDm) A.selectDm(m.identity); } })),
         ];
@@ -460,9 +455,7 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const railOrder = (s) => {
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
-        const info = channels.filter(c => c.type === 'announcement' || c.type === 'page');
-        const voice = channels.filter(c => c.type === 'voice' || c.type === 'threaded');
-        return [...info, ...channels.filter(c => !info.includes(c) && !voice.includes(c)), ...voice];
+        return railGroups().flatMap((g) => channels.filter((c) => groupOf(c) === g.id));
     };
 
     const composerKey = (e, ta, s, ch) => {
@@ -482,7 +475,7 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const chatView = (s) => {
         const ch = s.currentChannel || {};
-        const sub = s.homeMode ? 'encrypted' : ch.type === 'voice' ? 'voice' : ch.type === 'forum' ? 'forum' : ch.type === 'page' ? 'page' : ch.type === 'announcement' ? 'announcement' : 'public';
+        const sub = s.homeMode ? 'encrypted' : channelType(ch.type).headerSub;
         const rt = s.replyTarget;
         const replyPreview = rt ? ReplyBar({
             quotedAuthor: rt.username || 'User', quotedMessage: rt.content || '',
@@ -495,7 +488,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const typingUsers = s.typingUsers || [];
         const typingText = typingUsers.length === 0 ? '' : typingUsers.length === 1 ? typingUsers[0] + ' is typing\u2026' : typingUsers.length === 2 ? typingUsers[0] + ' and ' + typingUsers[1] + ' are typing\u2026' : 'Several people are typing\u2026';
         return Chat({
-            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: [game3NewBar(s)].filter(Boolean).concat((s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: ch.type === 'announcement' ? 'megaphone' : 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s)))), header: null,
+            title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: [game3NewBar(s)].filter(Boolean).concat((s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: channelType(ch.type).welcomeGlyph || 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s)))), header: null,
             composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { stickersOpen = !stickersOpen; emojisOpen = false; render(); }, onStickerPick: (id) => { stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingText,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
@@ -529,7 +522,7 @@ export function mountCommunityApp(root, adapter = {}) {
 
     const voiceView = (s) => {
         const participants = s.voiceParticipants || [];
-        const textChannel = railOrder(s).find(c => c.type !== 'voice' && c.type !== 'threaded' && c.type !== 'announcement' && c.type !== 'page');
+        const textChannel = railOrder(s).find(c => groupOf(c) === 'text');
         return h('div', { class: 'vx-view' },
             Game3VoiceView({
                 participants: participants.map((p, i) => ({ id: p.identity || p.id || String(i), name: p.name || p.identity || 'user', speaking: !!p.speaking, muted: !!p.muted, videoKey: p.videoKey || null, isLocal: !!p.isLocal })),
@@ -583,12 +576,13 @@ export function mountCommunityApp(root, adapter = {}) {
         const s = get();
         game3SetAvatars(s.avatars, Object.fromEntries(Object.entries(s.profileMeta || {}).filter(([, m]) => m.accent).map(([k, m]) => [k, m.accent])));
         const ch = s.currentChannel || {};
-        const inVoiceChannel = ch.type === 'voice';
+        const chType = channelType(ch.type);
+        const inVoiceChannel = !!chType.traits.voice;
+        const chSurface = surfaceForChannel(ch);
+        const bodyCtx = { s, A, ch, views: { voice: voiceView, chat: chatView } };
         const bodyMain = s.homeMode && !s.activeDmPeer ? Game3PeopleHere({ serverName: s.homeServerName || 'Zellous Public', people: s.peopleHere || [], onMessage: (id) => A.selectDm && A.selectDm(id) })
-            : inVoiceChannel ? voiceView(s)
-            : ch.type === 'forum' ? ForumView({ posts: s.forumPosts || [], onSelect: (id) => A.openThread && A.openThread(id), onNewPost: () => A.newForumPost && A.newForumPost(), resolveAuthor: A.resolveAuthor })
-            : ch.type === 'page' && (ch.name === 'rules' || ch.name === 'pick-roles') ? surfaceBody(ch.name, s)
-            : ch.type === 'page' ? PageView({ title: ch.name, html: s.pageHtml || '', author: s.pageAuthor || '', updatedAt: s.pageUpdatedAt || 0, isAdmin: !!s.canManage, onEdit: () => A.editPage && A.editPage() })
+            : chSurface && chSurface.body ? chSurface.body(bodyCtx)
+            : chType.body ? chType.body(bodyCtx)
             : chatView(s);
         return h('div', {
             class: 'ca-app',
@@ -641,7 +635,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 dm: !!(s.homeMode && s.activeDmPeer),
                 onBurger: () => (s.mobileMenuOpen ? A.closeMobileMenu && A.closeMobileMenu() : A.openMobileMenu && A.openMobileMenu()),
                 channelName: ch.name || 'general',
-                channelType: ch.type || 'text',
+                channelIcon: channelIcon(ch),
                 topic: ch.topic || '',
                 memberListOpen: !!s.memberListOpen,
                 onMembers: A.toggleMembers ? () => A.toggleMembers() : null,
@@ -692,8 +686,6 @@ export function mountCommunityApp(root, adapter = {}) {
     const MODAL_SURFACES = ['events', 'leaderboard', 'discover'];
     const surfaceBody = (name, s) => {
         if (name === 'roles') return RoleList({ roles: s.roles || [], emptyText: 'No roles in this server.' });
-        if (name === 'pick-roles') return Game3RolesPanel({ roles: s.selfRoles || [], onToggle: (id) => A.toggleSelfRole && A.toggleSelfRole(id), onDone: () => A.goToGeneral && A.goToGeneral() });
-        if (name === 'rules') return Game3RulesPanel({ serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), online: (s.rulesStats || {}).online || 0, members: (s.rulesStats || {}).members || 0, onDone: () => A.goToGeneral && A.goToGeneral() });
         if (name === 'announcements') return AnnouncementList({ items: s.announcements || [], emptyText: 'No announcements in this channel yet.' });
         if (name === 'pins') return PinList({ pins: s.pins || [], emptyText: "This channel doesn't have any pinned messages... yet.", onJump: (id) => A.jumpToMessage && A.jumpToMessage(id) });
         if (name === 'recap') return Game3RecapPanel({ items: s.recap || [], emptyText: "nothing new from anyone since you got here. you're all caught up." });
