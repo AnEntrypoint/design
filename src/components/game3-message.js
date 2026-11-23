@@ -62,8 +62,8 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         h('span', { key: 'reply', role: 'button', tabindex: '0', title: 'Reply', onclick: () => onReply && onReply() }, Icon('ref-reply', { size: 20 })),
         onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: pinned ? 'Unpin Message' : 'Pin Message', style: pinned ? 'color:#f0b232' : null, onclick: () => onPin() }, Icon('ref-pins', { size: 24 })) : null,
         onSave ? h('span', { key: 'save', role: 'button', tabindex: '0', title: saved ? 'Remove from Saved' : 'Save for Later', style: saved ? 'color:#5865f2' : null, onclick: () => onSave() }, '🔖') : null,
-        mine ? h('span', { key: 'del', role: 'button', tabindex: '0', title: 'Delete', onclick: () => onDelete && onDelete() }, Icon('trash', { size: 18 })) : null,
-        devMode ? h('span', { key: 'cid', role: 'button', tabindex: '0', title: 'Copy Message ID', onclick: () => copyText(messageId) }, Icon('copy', { size: 18 })) : null,
+        mine ? h('span', { key: 'del', role: 'button', tabindex: '0', title: 'Delete', onclick: () => onDelete && onDelete() }, Icon('ref-trash', { size: 18 })) : null,
+        devMode ? h('span', { key: 'cid', role: 'button', tabindex: '0', title: 'Copy Message ID', onclick: () => copyText(messageId) }, Icon('ref-copy', { size: 18 })) : null,
         devMode ? h('span', { key: 'cuid', role: 'button', tabindex: '0', title: 'Copy User ID', onclick: () => copyText(userId) }, Icon('clipboard', { size: 18 })) : null,
         onJump ? h('span', { key: 'jump', role: 'button', tabindex: '0', title: 'Jump', onclick: () => onJump() }, '↪') : null,
         onMore ? h('span', { key: 'more', role: 'button', tabindex: '0', title: 'More', onclick: () => onMore() }, '⋯') : null

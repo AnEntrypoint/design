@@ -8,7 +8,7 @@ const DOT = { online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#808
 export function Game3PeopleHere({ serverName = '', people = [], onMessage } = {}) {
     return h('div', { class: 'ds-g3-people' },
         h('div', { class: 'ds-g3-people-head' },
-            h('span', { class: 'ds-g3-people-ic', 'aria-hidden': 'true' }, Icon('user', { size: 20 })),
+            h('span', { class: 'ds-g3-people-ic', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })),
             h('span', { class: 'ds-g3-people-t' }, 'People here'),
             h('span', { class: 'ds-g3-people-tp' }, 'everyone in ' + serverName + ' right now')),
         h('div', { class: 'ds-g3-people-body' },

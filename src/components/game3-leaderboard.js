@@ -26,7 +26,7 @@ function LeaderboardRow({ key, row, rank }) {
 export function Game3LeaderboardPanel({ rows = [], emptyText = '', onClose } = {}) {
     return h('div', { class: 'ds-g3-evm' },
         h('div', { class: 'ds-g3-evh' },
-            h('b', { class: 'ds-g3-evt2' }, Icon('trophy', { size: 18 }), 'Leaderboard'),
+            h('b', { class: 'ds-g3-evt2' }, Icon('ref-leaderboard', { size: 18 }), 'Leaderboard'),
             onClose ? h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close leaderboard', onclick: onClose }, Icon('x', { size: 14 })) : null),
         h('div', { class: 'ds-g3-evl' },
             rows.length

@@ -47,7 +47,7 @@ import { attempt } from './best-effort.js';
 
 const h = webjsx.createElement;
 
-const CHANNEL_ICON = { voice: 'ref-speaker', forum: 'forum', threaded: 'thread', announcement: 'ref-mega', page: 'ref-rules', text: 'ref-hash' };
+const CHANNEL_ICON = { voice: 'ref-speaker', forum: 'ref-forum', threaded: 'ref-thread', announcement: 'ref-mega', page: 'ref-rules', text: 'ref-hash' };
 const CHANNEL_NAME_ICON = { rules: 'ref-rules', 'pick-roles': 'ref-roles', announcements: 'ref-mega' };
 
 
@@ -129,7 +129,7 @@ export function mountCommunityApp(root, adapter = {}) {
         const head = h('div', { class: 'group group-header' },
             h('span', {}, Icon('chevron-down-fill', { size: 12 }), label),
             (s.canManage && A.createChannel && createType)
-                ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label, title: 'Create ' + label, onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType); } }, Icon('plus', { size: 13 }))
+                ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label, title: 'Create ' + label, onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType); } }, Icon('ref-plus', { size: 13 }))
                 : null);
         const vuRows = (c) => (isVoice && s.voiceConnected && s.voiceChannelName === c.name ? (s.voiceParticipants || []) : []).map((p, i) => h('div', { key: 'vu' + c.id + i, class: 'vu' + (p.speaking ? ' talk' : '') }, h('span', { class: 'ds-g3-vu-av', 'aria-hidden': 'true' }, String(p.name || p.identity || '?').trim().slice(0, 1).toUpperCase()), p.name || p.identity || ''));
         return [head, ...(list.length ? list.flatMap(c => [railPill(c, cur, isVoice, s), ...vuRows(c)]) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
@@ -178,7 +178,7 @@ export function mountCommunityApp(root, adapter = {}) {
             ? h('button', {
                 type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label + ' channel', title: 'Create ' + label + ' channel',
                 onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType || null); },
-            }, Icon('plus', { size: 13 }))
+            }, Icon('ref-plus', { size: 13 }))
             : null);
 
     let railDragId = null;
@@ -515,7 +515,7 @@ export function mountCommunityApp(root, adapter = {}) {
     };
 
     const voiceEmpty = (s) => h('div', { class: 'vx-grid-empty', role: 'status' },
-        Icon('speaker', { size: 28 }),
+        Icon('ref-speaker', { size: 28 }),
         h('p', { class: 'vx-grid-empty-title' }, 'quiet in here'),
         h('p', { class: 'vx-grid-empty-sub' }, 'no one else is connected to ' + (s.currentChannel && s.currentChannel.name || 'this channel') + ' right now.'));
 
@@ -653,7 +653,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 ],
                 buttons: [
                     s.splitOptions && s.splitOptions.length ? Game3SplitSelect({ key: 'split', options: s.splitOptions, current: s.splitChannel ? s.splitChannel.id : null, onChange: (id) => A.splitTo && A.splitTo(id) }) : null,
-                    h('button', { key: 'mute', type: 'button', class: 'ds-g3-ibtn' + (s.mutedChannel ? ' on' : ''), title: 'Mute Channel', 'aria-label': 'Mute Channel', 'aria-pressed': s.mutedChannel ? 'true' : 'false', onclick: () => A.toggleMuteChannel && A.toggleMuteChannel() }, Icon('ref-bell', { size: 24 })),
+                    h('button', { key: 'mute', type: 'button', class: 'ds-g3-ibtn' + (s.mutedChannel ? ' on' : ''), title: 'Mute Channel', 'aria-label': 'Mute Channel', 'aria-pressed': s.mutedChannel ? 'true' : 'false', onclick: () => A.toggleMuteChannel && A.toggleMuteChannel() }, Icon(s.mutedChannel ? 'ref-belloff' : 'ref-bell', { size: 24 })),
                 ].filter(Boolean),
             }),
                     h('div', { class: 'ca-right-body' },

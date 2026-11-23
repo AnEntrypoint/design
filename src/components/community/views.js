@@ -60,7 +60,7 @@ export function ThreadPanel({ threads = [], activeId = null, title = 'Threads', 
                     )
                 ))
                 : h('div', { class: 'cm-tp-empty', role: 'status' },
-                    Icon('thread', { size: 20 }),
+                    Icon('ref-thread', { size: 20 }),
                     h('span', { class: 'cm-tp-empty-text' }, onCreate ? 'no threads yet: start one' : 'no threads yet'))
         ),
         onReply ? h('form', {
@@ -112,7 +112,7 @@ export function ForumView({ posts = [], onSearch, onSort, onSelect, onNewPost, l
             const emptyText = needle ? 'no posts match your search'
                 : (onNewPost ? 'no posts yet: start the discussion' : 'no posts yet');
             return [h('div', { class: 'cm-forum-empty', role: 'status' },
-                Icon('forum', { size: 20 }),
+                Icon('ref-forum', { size: 20 }),
                 h('span', { class: 'cm-forum-empty-text' }, emptyText))];
         }
         return rows.map(p => {

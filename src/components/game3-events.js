@@ -46,7 +46,7 @@ export function Game3EventsPanel({ events = [], now = Date.now(), emptyText = 'n
     const sorted = [...events].sort((a, b) => a.at - b.at);
     return h('div', { class: 'ds-g3-evm' },
         h('div', { class: 'ds-g3-evh' },
-            h('b', { class: 'ds-g3-evt2' }, Icon('calendar', { size: 18 }), 'Events'),
+            h('b', { class: 'ds-g3-evt2' }, Icon('ref-events', { size: 18 }), 'Events'),
             onClose ? h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close events', onclick: onClose }, Icon('x', { size: 14 })) : null),
         h('div', { class: 'ds-g3-evl' },
             sorted.length
