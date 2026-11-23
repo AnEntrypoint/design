@@ -41,10 +41,10 @@ export function registerModule(m) {
     } else if (m.kind === 'settingsPane') {
         const x = m.settingsPane;
         need(x && x.id && x.label && typeof x.mount === 'function', m.id, 'settingsPane needs id, label and mount(ctx)');
-        panes.set(x.id, { module: m.id, order: 100, ...x });
+        panes.set(x.id, { module: m.id, order: 100, group: 'App Settings', ...x });
     } else if (m.kind === 'messageKind') {
         const x = m.messageKind;
-        need(x && x.id && typeof x.match === 'function' && typeof x.mount === 'function', m.id, 'messageKind needs id, match(message) and mount(ctx)');
+        need(x && x.id && typeof x.match === 'function' && (typeof x.mount === 'function' || typeof x.props === 'function'), m.id, 'messageKind needs id, match(message) and mount(ctx) or props(ctx)');
         messageKinds.set(x.id, { module: m.id, ...x });
     } else if (m.kind === 'railSection') {
         const x = m.railSection;
@@ -66,10 +66,12 @@ export const channelTypeList = () => [...channelTypes.values()];
 export const railGroups = () => [...groups.values()].sort((a, b) => a.order - b.order);
 export const groupOf = (channel) => channelType(channel.type).railGroup;
 export const surfaceFor = (id) => surfaces.get(id) || null;
+export const railSurfaces = () => [...surfaces.values()].filter((x) => x.rail && typeof x.rail.row === 'function').sort((a, b) => (a.rail.order || 100) - (b.rail.order || 100));
 export const surfaceForChannel = (channel) => [...surfaces.values()].find((x) => x.channelName && x.channelName === channel.name && (!x.channelType || x.channelType === channel.type)) || null;
 export const settingsPanes = () => [...panes.values()].sort((a, b) => a.order - b.order);
 export const railSections = () => [...sections.values()].sort((a, b) => a.order - b.order);
-export const messageKindFor = (m) => [...messageKinds.values()].find((k) => typeof k.match === 'function' && k.match(m)) || null;
+export const messageKindFor = (m) => [...messageKinds.values()].find((k) => typeof k.mount === 'function' && k.match(m)) || null;
+export const messageProps = (m, ctx) => Object.assign({}, ...[...messageKinds.values()].filter((k) => typeof k.props === 'function' && k.match(m)).map((k) => k.props({ m, ...ctx })));
 export const messageKindList = () => [...messageKinds.values()];
 export const popoverList = () => [...popovers.values()];
 export const moduleList = () => [...modules.keys()];

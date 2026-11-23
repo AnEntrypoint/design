@@ -14387,6 +14387,11 @@
 .ds-247420.ds-247420 .ds-g3-shname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ds-247420.ds-247420 .ds-g3-shleavebtn { opacity: 0; padding: 0 var(--space-1); }
 .ds-247420.ds-247420 .ds-g3-shrow:hover .ds-g3-shleavebtn, .ds-247420.ds-247420 .ds-g3-shrow:focus-within .ds-g3-shleavebtn { opacity: 1; }
+.ds-247420.ds-247420 .ds-g3-shpage { position: fixed; inset-block: 0; inset-inline-end: 0; width: min(640px, 100vw); z-index: var(--z-modal, 40); background: #111214; display: flex; flex-direction: column; box-shadow: 0 0 24px rgba(0, 0, 0, 0.6); }
+.ds-247420.ds-247420 .ds-g3-shpage .ds-g3-shhead { flex-wrap: wrap; }
+.ds-247420.ds-247420 .ds-g3-shframe { flex: 1; min-height: 0; border: 0; background: #fff; width: 100%; }
+.ds-247420.ds-247420 .ds-g3-vtvideos { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.ds-247420.ds-247420 .ds-g3-vtvideo { width: min(100%, calc(var(--space-6) * 10)); background: #000; border-radius: var(--r-1); }
 
 /* app-surfaces.css */
 

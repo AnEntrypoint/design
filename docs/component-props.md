@@ -2266,5 +2266,5 @@ Create a damage numbers manager.
 
 **Kind:** component
 
-**Signature:** `dm` = `false`, `onBurger`, `channelName` = `''`, `channelType` = `'text'`, `topic` = `''`, `memberListOpen` = `false`, `onMembers`, `pinsOpen` = `false`, `onPins`, `buttons` = `[]`, `trailing` = `[]`, `key`
+**Signature:** `dm` = `false`, `onBurger`, `channelName` = `''`, `channelIcon` = `'ref-hash'`, `topic` = `''`, `memberListOpen` = `false`, `onMembers`, `pinsOpen` = `false`, `onPins`, `buttons` = `[]`, `trailing` = `[]`, `key`
 

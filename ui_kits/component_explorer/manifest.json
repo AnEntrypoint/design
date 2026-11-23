@@ -10279,8 +10279,8 @@
           "alias": null
         },
         {
-          "name": "channelType",
-          "default": "'text'",
+          "name": "channelIcon",
+          "default": "'ref-hash'",
           "alias": null
         },
         {

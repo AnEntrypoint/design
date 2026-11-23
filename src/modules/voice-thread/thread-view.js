@@ -47,5 +47,6 @@ export function Game3VoiceThread({ thread, acts } = {}) {
                         h('span', { ...press(() => acts.onPause()), class: 'ds-g3-vtbtn', title: t.paused ? 'Resume' : 'Pause', 'aria-label': t.paused ? 'resume' : 'pause' }, t.paused ? '▶' : '❙❙'),
                         h('span', { ...press(() => acts.onSkip()), class: 'ds-g3-vtbtn', title: 'Skip', 'aria-label': 'skip' }, '⏭')) : null))
                 : [h('div', { key: 'empty', class: 'ds-g3-hint' }, 'the stack is empty')])),
+        ...(t.videos && t.videos.length ? [h('div', { key: 'vids', class: 'ds-g3-vtvideos' }, ...t.videos.map((k) => h('video', { key: 'v' + k, 'data-video-peer': k, autoplay: true, playsinline: true, muted: k === 'local', class: 'ds-g3-vtvideo', 'aria-label': 'shared screen' })))] : []),
         h('div', { key: 'lanes', class: 'ds-g3-vtlanes' }, ...(t.lanes.length ? t.lanes.map((l) => lane(l, acts)) : [h('div', { key: 'none', class: 'ds-g3-hint' }, t.connected ? 'nobody has spoken yet' : 'join the thread to hear and be heard')])));
 }
