@@ -1,8 +1,9 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
+import { Game3AccountPane, ACCOUNT_TABS } from './game3-account.js';
 const h = webjsx.createElement;
 
 const TABS = [
-    ['User Settings', [['account', 'My Account'], ['profile', 'Profiles']]],
+    ['User Settings', ACCOUNT_TABS],
     ['App Settings', [['appearance', 'Appearance'], ['access', 'Accessibility'], ['voice', 'Voice & Audio'], ['notif', 'Notifications'], ['media', 'Chat & Media'], ['lang', 'Language & Time'], ['keys', 'Keybinds'], ['adv', 'Advanced']]],
 ];
 
@@ -75,33 +76,10 @@ const devRows = (d, onDevReset, onDevFilter, toggles, onDevRefresh) => [
     devReset(onDevReset),
 ];
 
-export function Game3SettingsPanel({ tab = 'account', onTab, name = 'You', color = '', presenceStatus = 'online', presenceCustom = '', onPresence, onCustom, devInfo = null, onDevReset, onDevFilter, onDevRefresh, initial = 'Y', level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, banner = '', onCompact, onKeywords, onBanner, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
+export function Game3SettingsPanel({ tab = 'account', onTab, account = null, acts = null, onRender = null, devInfo = null, onDevReset, onDevFilter, onDevRefresh, level = 0, xp = 0, servers = 0, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, onCompact, onKeywords, theme = 'ink', onTheme, onToggle, onReset, onClose } = {}) {
     const group = (g) => GROUPS[g].map((k) => toggleRow(k, !!toggles[k], onToggle));
     const pane = {
-        account: () => [
-            h('h2', { key: 'h' }, 'My Account'),
-            h('div', { key: 'acct', class: 'ds-g3-acct' },
-                h('div', { class: 'ds-g3-acct-ban', style: 'background:' + (banner || '#c4602f') }),
-                h('div', { class: 'ds-g3-acct-row' },
-                    h('div', { class: 'ds-g3-acct-av', style: 'background:' + (color || 'var(--accent)') }, initial),
-                    h('div', null, h('h3', null, name))),
-                h('div', { class: 'ds-g3-acct-note' }, 'your name and picture are your profile: change them there and they change here.')),
-            h('div', { key: 'stat', class: 'ds-g3-stat' },
-                h('div', null, h('b', null, String(level)), h('span', null, 'level')),
-                h('div', null, h('b', null, String(xp)), h('span', null, 'xp')),
-                h('div', null, h('b', null, String(servers)), h('span', null, 'servers')),
-                h('div', null, h('b', null, '0'), h('span', null, 'saved')),
-                h('div', null, h('b', null, '0'), h('span', null, 'reminders'))),
-            h('h6', { key: 'st' }, 'Status'),
-            ...PRESENCE.map(([k, n, c]) => h('div', { key: k, class: 'ds-g3-radio' + (presenceStatus === k ? ' on' : ''), role: 'radio', tabindex: '0', 'aria-checked': presenceStatus === k ? 'true' : 'false', onclick: () => onPresence && onPresence(k) }, h('i', { 'aria-hidden': 'true' }), h('span', { style: 'color:' + c }, '●'), ' ' + n)),
-            h('h6', { key: 'cs' }, 'Custom Status'),
-            h('input', { key: 'cs-i', class: 'ds-g3-fi', maxlength: '60', placeholder: '😀 what are you up to?', value: presenceCustom, onchange: (e) => onCustom && onCustom(e.target.value) }),
-        ],
-        profile: () => [
-            h('h2', { key: 'h' }, 'Profiles'),
-            h('h6', { key: 'bc' }, 'Banner Colour'),
-            h('div', { key: 'sw', class: 'ds-g3-swatches' }, ['', ...SWATCHES].map((c) => h('i', { key: 'c' + c, title: c || 'automatic', class: (banner || '') === c ? 'on' : '', style: 'background:' + (c || '#80848e'), role: 'button', tabindex: '0', onclick: () => onBanner && onBanner(c) }))),
-        ],
+        ...Object.fromEntries(ACCOUNT_TABS.map(([k]) => [k, () => Game3AccountPane(k, { account, acts, onRender, extra: { level, xp, servers } })])),
         appearance: () => [
             h('h2', { key: 'h' }, 'Appearance'),
             h('h6', { key: 'th' }, 'Theme'),

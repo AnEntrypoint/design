@@ -4,8 +4,8 @@ import { STATUS } from '../game3-data.js';
 
 const h = webjsx.createElement;
 
-export function Game3UserPanel({ name = 'You', color = 'var(--accent)', statusLabel = '', statusColor = '#23a55a', muted = false, onProfile, onMute, onSettings, menu = null } = {}) {
-    const initial = String(name || '?').trim().slice(0, 1).toUpperCase();
+export function Game3UserPanel({ name = 'You', color = 'var(--accent)', statusLabel = '', statusColor = '#23a55a', muted = false, onProfile, onMute, onSettings, menu = null, hideInitial = false } = {}) {
+    const initial = hideInitial ? '' : String(name || '?').trim().slice(0, 1).toUpperCase();
     return h('div', { class: 'ds-g3-me' },
         ...(menu ? [menu] : []),
         h('div', { class: 'ds-g3-mebtn', role: 'button', tabindex: '0', 'aria-haspopup': 'menu', onclick: onProfile || null },
