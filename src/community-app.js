@@ -8,7 +8,7 @@ import {
 } from './components/community.js';
 import { DiscoverList, PinList, AnnouncementList, RoleList } from './components/game3-social.js';
 import { GameHeader } from './components/game3-header.js';
-import { channelType, railGroups, groupOf, surfaceForChannel } from './modules/index.js';
+import { channelType, railGroups, groupOf, surfaceForChannel, railSections, messageKindFor, popoverList } from './modules/index.js';
 import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
@@ -147,7 +147,8 @@ export function mountCommunityApp(root, adapter = {}) {
             h('div', { class: 'chans' },
                 ...railSurfaceRows(s),
                 h('div', { class: 'ds-g3-sep2', 'aria-hidden': 'true' }),
-                ...groupRows),
+                ...groupRows,
+                ...railSections().map((r) => r.mount({ s, A, render, h })).flat().filter(Boolean)),
             ...bottom.filter(Boolean));
     };
 
@@ -370,7 +371,7 @@ export function mountCommunityApp(root, adapter = {}) {
             return;
         }
         if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw, .ds-g3-statusmenu, .ds-g3-rename')))) { closeOverlays(); return; }
-        if (typing || (a && a.closest && a.closest('.ds-g3-statusmenu, .ds-g3-scrim, .ds-g3-me'))) return;
+        if (typing || (a && a.closest && a.closest('.ds-g3-statusmenu, .ds-g3-scrim, .ds-g3-me, .ds-g3-shpanel'))) return;
         const thread = root.querySelector('.chat-thread');
         if (k === 'End' && thread) { e.preventDefault(); thread.scrollTop = thread.scrollHeight; return; }
         if ((k === 'PageUp' || k === 'PageDown') && thread) { e.preventDefault(); thread.scrollBy(0, (k === 'PageUp' ? -1 : 1) * thread.clientHeight * 0.85); return; }
@@ -407,6 +408,8 @@ export function mountCommunityApp(root, adapter = {}) {
                 const stamp = m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
                 return Game3SystemLine({ key: m.id || ('m' + i), name: m.sys.name, text: m.sys.text, time: stamp, fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '', onWave: m.sys.canWave && A.wave ? () => A.wave(m.sys.userId) : null });
             }
+            const kindModule = messageKindFor(m);
+            if (kindModule) return kindModule.mount({ m, s, A, h, render, key: m.id || ('m' + i) });
             const username = (A.resolveProfile && A.resolveProfile(m.userId)) || m.username || 'User';
             const isYou = !!selfId && String(m.userId) === String(selfId);
             const prev = msgs[i - 1];
@@ -677,6 +680,7 @@ export function mountCommunityApp(root, adapter = {}) {
             switcher.open ? Game3Switcher({ query: switcher.q, items: switcherItems(s), onQuery: (q) => { switcher = { open: true, q }; render(); }, onPick: (it) => { switcher = { open: false, q: '' }; it.go(); render(); }, onClose: () => { switcher = { open: false, q: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Game3ServerCreate({ homeName: s.homeServerName || 'Zellous Public', userName: s.gamePrefName || 'You', onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onClose: () => A.closeServerCreate && A.closeServerCreate(), onDiscover: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) : null,
             s.account && s.account.signedIn && s.account.setup && s.account.setup.open ? h('div', { key: 'setup', class: 'ds-g3-scrim', role: 'presentation', onclick: (e) => { if (e.target === e.currentTarget && A.setupClose) A.setupClose(); } }, Game3SetupPanel({ account: s.account, setup: s.account.setup, acts: A, onRender: render, onClose: () => A.setupClose && A.setupClose() })) : null,
+            ...popoverList().map((o) => o.mount({ s, A, render, h })).filter(Boolean),
             MODAL_SURFACES.includes(s.gameSurface) ? h('div', { key: 'surface', class: 'ds-g3-scrim', role: 'presentation', onclick: (e) => { if (e.target === e.currentTarget && A.closeSurface) A.closeSurface(); } }, surfaceBody(s.gameSurface, s)) : null,
             s.gamePrefOpen ? Game3SettingsPanel({ tab: s.gamePrefTab || 'account', onTab: (t) => A.setGamePrefTab && A.setGamePrefTab(t), account: s.account, acts: A, onRender: render, devInfo: s.devInfo || null, onDevReset: () => A.resetLocalState && A.resetLocalState(), onDevFilter: (q) => A.setDevFilter && A.setDevFilter(q), onDevRefresh: () => A.refreshDev && A.refreshDev(), level: s.myLevel || 0, xp: s.myXp || 0, servers: s.gamePrefServers || 0, toggles: Object.fromEntries((s.gamePrefToggles || []).map((t) => [t.key, !!t.checked])), micOn: !s.micMuted, onMic: () => A.toggleMic && A.toggleMic(), keywords: s.gamePrefKeywords || '', mutedChannels: s.gamePrefMuted || [], onUnmute: (id) => A.toggleMuteId && A.toggleMuteId(id), compact: !!s.gamePrefCompact, theme: s.themePref || 'ink', onTheme: (t) => A.setTheme && A.setTheme(t), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val), onKeywords: (val) => A.setGamePref && A.setGamePref('kw', val), onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onReset: () => A.setGamePref && A.setGamePref('reset', true), onClose: () => A.closeGamePrefs && A.closeGamePrefs() }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,

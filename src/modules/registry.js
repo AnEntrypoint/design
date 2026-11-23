@@ -8,7 +8,8 @@ const modules = new Map();
 
 const need = (cond, id, message) => { if (!cond) throw new Error('module ' + id + ': ' + message); };
 
-const KINDS = ['channelType', 'serverType', 'settingsPane', 'surface', 'messageKind', 'popover'];
+const KINDS = ['channelType', 'serverType', 'settingsPane', 'surface', 'messageKind', 'popover', 'railSection'];
+const sections = new Map();
 
 const addGroup = (id, g) => {
     const group = { id: g.id || g, label: g.label, order: g.order, voice: !!g.voice, createType: g.createType === undefined ? null : g.createType, always: !!g.always };
@@ -43,8 +44,12 @@ export function registerModule(m) {
         panes.set(x.id, { module: m.id, order: 100, ...x });
     } else if (m.kind === 'messageKind') {
         const x = m.messageKind;
-        need(x && x.id && typeof x.mount === 'function', m.id, 'messageKind needs id and mount(ctx)');
+        need(x && x.id && typeof x.match === 'function' && typeof x.mount === 'function', m.id, 'messageKind needs id, match(message) and mount(ctx)');
         messageKinds.set(x.id, { module: m.id, ...x });
+    } else if (m.kind === 'railSection') {
+        const x = m.railSection;
+        need(x && x.id && typeof x.mount === 'function', m.id, 'railSection needs id and mount(ctx)');
+        sections.set(x.id, { module: m.id, order: 100, ...x });
     } else if (m.kind === 'popover') {
         const x = m.popover;
         need(x && x.id && typeof x.mount === 'function', m.id, 'popover needs id and mount(ctx)');
@@ -63,6 +68,8 @@ export const groupOf = (channel) => channelType(channel.type).railGroup;
 export const surfaceFor = (id) => surfaces.get(id) || null;
 export const surfaceForChannel = (channel) => [...surfaces.values()].find((x) => x.channelName && x.channelName === channel.name && (!x.channelType || x.channelType === channel.type)) || null;
 export const settingsPanes = () => [...panes.values()].sort((a, b) => a.order - b.order);
+export const railSections = () => [...sections.values()].sort((a, b) => a.order - b.order);
+export const messageKindFor = (m) => [...messageKinds.values()].find((k) => typeof k.match === 'function' && k.match(m)) || null;
 export const messageKindList = () => [...messageKinds.values()];
 export const popoverList = () => [...popovers.values()];
 export const moduleList = () => [...modules.keys()];
