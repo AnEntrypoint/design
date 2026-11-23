@@ -2,6 +2,7 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../shell.js';
 import { SettingsSection, SettingsRow, SettingsRowToggle, SettingsRowSelect } from './settings-row.js';
+import { VadProfileControl } from './vad-profile.js';
 import { FOCUSABLE_SEL, trapTabKey } from '../editor-primitives/shared.js';
 const h = webjsx.createElement;
 
@@ -27,7 +28,7 @@ function sliderRow({ icon, label, min, max, step, value, format, onInput, ariaLa
     });
 }
 
-export function VoiceSettingsModal({ open = false, mode = 'ptt', inputId, outputId, inputDevices = [], outputDevices = [], vadThreshold = 0.5, rnnoise = false, autoGain = false, forceTurn = false, bitrate = 64, volume, onChange, onSave, onCancel, onClose } = {}) {
+export function VoiceSettingsModal({ open = false, mode = 'ptt', inputId, outputId, inputDevices = [], outputDevices = [], vadThreshold = 0.5, rnnoise = false, autoGain = false, forceTurn = false, bitrate = 64, volume, vadProfile, vadProfiles = [], onVadProfile, onChange, onSave, onCancel, onClose } = {}) {
     if (!open) return null;
     const patch = (p) => onChange && onChange(p);
     const modes = ['ptt', 'vad'];
@@ -101,6 +102,7 @@ export function VoiceSettingsModal({ open = false, mode = 'ptt', inputId, output
                         onInput: (v) => patch({ vadThreshold: v }), ariaLabel: 'VAD threshold'
                     })
                 }) : null,
+                vadProfiles.length ? SettingsSection({ title: 'Voice thread clip filter', children: VadProfileControl({ value: vadProfile, profiles: vadProfiles, variant: 'vx', onChange: onVadProfile }) }) : null,
                 SettingsSection({ title: 'Processing', children: [
                     SettingsRowToggle({ icon: 'blank', label: 'RNNoise', checked: rnnoise, onToggle: (v) => patch({ rnnoise: v }) }),
                     SettingsRowToggle({ icon: 'blank', label: 'Auto gain', checked: autoGain, onToggle: (v) => patch({ autoGain: v }) }),

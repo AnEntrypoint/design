@@ -67,7 +67,7 @@ export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], row
         jumpEl.hidden = !show;
         if (!show) return;
         const label = jumpEl.querySelector('.chat-jump-label');
-        const text = pending > 0 ? (pending === 1 ? '1 new message' : pending + ' new messages') : 'jump to latest';
+        const text = pending > 0 ? (pending === 1 ? '1 new message' : pending + ' new messages') : "You're viewing older messages";
         if (label) label.textContent = text;
         jumpEl.setAttribute('aria-label', text);
     };
@@ -82,8 +82,8 @@ export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], row
             syncJump();
         },
     },
-        h('span', { class: 'chat-jump-label', key: 'jl' }, 'jump to latest'),
-        h('span', { class: 'chat-jump-arrow', key: 'ja', 'aria-hidden': 'true' }, Icon('arrow-down', { size: 14 })));
+        h('span', { class: 'chat-jump-label', key: 'jl' }, "You're viewing older messages"),
+        h('b', { class: 'chat-jump-go', key: 'jg' }, 'Jump To Present ', Icon('arrow-down', { size: 14 })));
     return h('div', { class: 'chat' },
         header || h('div', { class: 'chat-head', role: 'banner' },
             h('h2', { class: 'ds-chat-title' }, title),
@@ -95,7 +95,7 @@ export function Chat({ title = 'chat', sub, emptySub, locked, messages = [], row
         ),
         h('div', { class: 'chat-thread-wrap' },
             h('div', { class: 'chat-thread', role: 'log', 'aria-label': 'chat messages', 'aria-live': 'polite', 'aria-relevant': 'additions', ref: (el) => { threadRef(el); threadEl = el; syncJump(); } },
-                messages.length === 0
+                messages.length === 0 && !(rows && rows.length)
                     ? h('div', { key: '_empty', class: 'chat-empty', role: 'status' },
                         locked ? null : h('p', { class: 'chat-empty-title' }, t('chat.startConversation', 'start a conversation')),
                         h('p', { class: 'chat-empty-sub' }, emptySub || sub || t('chat.emptySub', 'Send a message to start the conversation')),

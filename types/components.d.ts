@@ -2536,6 +2536,10 @@ export interface VoiceSettingsModalProps {
     /** @default 64 */
     bitrate?: number;
     volume?: any;
+    vadProfile?: any;
+    /** @default [] */
+    vadProfiles?: any[];
+    onVadProfile?: (...args: any[]) => any;
     onChange?: (...args: any[]) => any;
     onSave?: (...args: any[]) => any;
     onCancel?: (...args: any[]) => any;
@@ -3941,6 +3945,8 @@ export declare function createDamageNumbers(scene?: any, camera?: any, config?: 
 export interface GameHeaderProps {
     /** @default false */
     dm?: boolean;
+    /** @default false */
+    bare?: boolean;
     onBurger?: (...args: any[]) => any;
     /** @default '' */
     channelName?: string;

@@ -21,8 +21,10 @@ export function createKeys(app, { closeOverlays, overlayOpen }) {
             }
             return;
         }
+        if (k === 'Escape' && st.stage && st.stageCancel && !overlayOpen() && (!typing || (a.closest && a.closest('.ds-g3-comp')))) { e.preventDefault(); st.stageCancel(); return; }
         if (k === 'Escape' && A.startReply && (get() || {}).replyTarget && !overlayOpen() && (!typing || (a.closest && a.closest('.ds-g3-comp')))) { A.startReply(null); return; }
-        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw, .ds-g3-statusmenu, .ds-g3-rename, .ds-g3-set, .ds-g3-pop-wrap, [role=dialog]')))) { if (overlayOpen()) e.preventDefault(); closeOverlays(); return; }
+        if (k === 'Escape' && A.toggleMembers && (get() || {}).memberListOpen && !overlayOpen() && window.matchMedia('(max-width: 900px)').matches) { e.preventDefault(); A.toggleMembers(); return; }
+        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw, .ds-g3-statusmenu, .ds-g3-rename, .ds-g3-set, .ds-g3-pop-wrap, .ds-g3-comp, [role=dialog]')))) { const wasOpen = overlayOpen(); if (wasOpen) e.preventDefault(); closeOverlays(); const cur = get() || {}; if (!wasOpen && !cur.homeMode && cur.currentChannel && A.markChannelRead) A.markChannelRead(); return; }
         if (typing || (a && a.closest && a.closest('.ds-g3-statusmenu, .ds-g3-scrim, .ds-g3-me, .ds-g3-shpanel'))) return;
         const thread = root.querySelector('.chat-thread');
         if (k === 'End' && thread) { e.preventDefault(); thread.scrollTop = thread.scrollHeight; return; }
@@ -65,7 +67,7 @@ export function createKeys(app, { closeOverlays, overlayOpen }) {
                 if (!A.attachFiles) return;
                 e.preventDefault();
                 st.dropAnywhere = { active: false, count: 0, fileCount: 0 };
-                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) A.attachFiles(e.dataTransfer.files);
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) (st.stageFiles || A.attachFiles)(e.dataTransfer.files);
                 render();
             },
             onclick: (e) => {

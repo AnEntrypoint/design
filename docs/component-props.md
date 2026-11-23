@@ -1246,7 +1246,7 @@ The directory listing.  `loading` and `busy` are NOT two spellings of one state:
 
 **Kind:** component
 
-**Signature:** `open` = `false`, `mode` = `'ptt'`, `inputId`, `outputId`, `inputDevices` = `[]`, `outputDevices` = `[]`, `vadThreshold` = `0.5`, `rnnoise` = `false`, `autoGain` = `false`, `forceTurn` = `false`, `bitrate` = `64`, `volume`, `onChange`, `onSave`, `onCancel`, `onClose`
+**Signature:** `open` = `false`, `mode` = `'ptt'`, `inputId`, `outputId`, `inputDevices` = `[]`, `outputDevices` = `[]`, `vadThreshold` = `0.5`, `rnnoise` = `false`, `autoGain` = `false`, `forceTurn` = `false`, `bitrate` = `64`, `volume`, `vadProfile`, `vadProfiles` = `[]`, `onVadProfile`, `onChange`, `onSave`, `onCancel`, `onClose`
 
 ### AudioQueue
 
@@ -2266,5 +2266,5 @@ Create a damage numbers manager.
 
 **Kind:** component
 
-**Signature:** `dm` = `false`, `onBurger`, `channelName` = `''`, `channelIcon` = `'ref-hash'`, `topic` = `''`, `memberListOpen` = `false`, `onMembers`, `pinsOpen` = `false`, `onPins`, `buttons` = `[]`, `trailing` = `[]`, `key`
+**Signature:** `dm` = `false`, `bare` = `false`, `onBurger`, `channelName` = `''`, `channelIcon` = `'ref-hash'`, `topic` = `''`, `memberListOpen` = `false`, `onMembers`, `pinsOpen` = `false`, `onPins`, `buttons` = `[]`, `trailing` = `[]`, `key`
 

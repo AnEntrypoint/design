@@ -9,5 +9,5 @@ export function Game3ServerMenu({ items = [], onPick, key } = {}) {
             ? h('hr', { key: 'hr' + i })
             : h('div', { key: 'it' + i, role: 'menuitem', tabindex: '0', style: it.color ? 'color:' + it.color : null, onclick: () => { if (onPick) onPick(); if (it.onClick) it.onClick(); } },
                 h('span', { class: 'ds-g3-smenu-l' }, it.label),
-                it.icon ? h('span', { class: 'ds-g3-smenu-i' }, Icon(it.icon, { size: 18 })) : null)));
+                it.icon ? h('span', { class: 'ds-g3-smenu-i' }, Icon(it.icon, { size: 18 })) : (it.hint ? h('span', { class: 'ds-g3-smenu-h' }, it.hint) : null))));
 }

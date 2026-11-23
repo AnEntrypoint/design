@@ -7,6 +7,8 @@ import { Game3SystemLine } from '../components/game3-system.js';
 import { Game3NewDivider } from '../components/game3-newdiv.js';
 import { Game3NewBar } from '../components/game3-newbar.js';
 import { Game3SearchBar } from '../components/game3-search.js';
+import { EMOJI } from '../game3-data.js';
+import { openProfileFor } from './profile-open.js';
 
 const h = webjsx.createElement;
 
@@ -88,6 +90,16 @@ export function createMessages(app) {
         });
     };
 
+    const escapeRe = (x) => String(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const mentionsMe = (text, name) => !!name && new RegExp('(^|\\s)@' + escapeRe(name) + '(?![\\w.-])', 'i').test(String(text || ''));
+    const clockOf = (ts, h24) => new Date(ts).toLocaleTimeString([], h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' });
+    const headStamp = (ts, h24) => {
+        const d = new Date(ts);
+        const t = clockOf(ts, h24);
+        if (d.toDateString() === new Date().toDateString()) return 'Today at ' + t;
+        if (d.toDateString() === new Date(Date.now() - 864e5).toDateString()) return 'Yesterday at ' + t;
+        return d.toLocaleDateString() + ' ' + t;
+    };
     const dayLabel = (ts) => (ts ? new Date(ts).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' }) : '');
     const withDividers = (s, rows) => {
         const msgs = s.messages || [];
@@ -107,10 +119,10 @@ export function createMessages(app) {
             A.reactToMessage ? { key: 'react', label: 'Add Reaction', glyph: '😀', onClick: (e) => { st.moreFor = null; openPicker(e); } } : null,
             { key: 'reply', label: 'Reply', glyph: '↩', onClick: () => { close(); if (A.startReply) A.startReply({ id: m.id, username, text: m.content }); } },
             { key: 'mention', label: 'Mention @' + username, glyph: '@', onClick: () => { close(); if (A.setInput) A.setInput((s.chatInputValue || '') + '@' + username + ' '); } },
-            { key: 'copy', label: 'Copy Text', glyph: '📋', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(m.content || ''); } },
+            { key: 'copy', label: 'Copy Text', glyph: '📋', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(m.content || '').catch(() => {}); } },
             A.markUnread ? { key: 'unread', label: 'Mark Unread', glyph: '🔵', onClick: () => { st.moreFor = null; A.markUnread(m.id); render(); } } : null,
             A.toggleSave ? { key: 'save', label: saved ? 'Remove from Saved' : 'Save for Later', glyph: '🔖', onClick: () => { close(); A.toggleSave({ id: m.id, who: username, text: m.content || '' }); } } : null,
-            s.devMode ? { key: 'cid', label: 'Copy Message ID', glyph: '🆔', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(String(m.id)); } } : null,
+            s.devMode ? { key: 'cid', label: 'Copy Message ID', glyph: '🆔', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(String(m.id)).catch(() => {}); } } : null,
         ].filter(Boolean);
         return items;
     };
@@ -126,6 +138,8 @@ export function createMessages(app) {
         const msgs = s.messages || [];
         const selfId = s.userId;
         const newIndex = s.newAt ? msgs.findIndex((m) => m.type !== 'system' && String(m.userId) !== String(selfId) && m.timestamp / 1000 > s.newAt) : -1;
+        const quick = [...new Set([...(st.recentEmoji || []), '\u{1F44D}', '\u{2764}\u{FE0F}', '\u{1F602}'])].slice(0, 3);
+        const myName = s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name);
         const rows = msgs.map((m, i) => {
             if (m.type === 'system') {
                 if (!m.sys) return null;
@@ -138,8 +152,10 @@ export function createMessages(app) {
             const isYou = !!selfId && String(m.userId) === String(selfId);
             const prev = msgs[i - 1];
             const continuation = !!prev && prev.type !== 'system' && String(prev.userId) === String(m.userId);
-            const reactions = Array.isArray(m.reactions) ? m.reactions.map(r => ({ emoji: r.emoji, count: r.count != null ? r.count : (r.users ? r.users.length : 1), you: !!(r.you || (r.users && selfId && r.users.includes(selfId))) })) : [];
-            const react = (emoji) => A.reactToMessage && A.reactToMessage(m.id, m.userId, emoji);
+            const nameFor = (u) => (String(u) === String(selfId) ? 'You' : ((A.resolveProfile && A.resolveProfile(u)) || 'someone'));
+            const reactions = Array.isArray(m.reactions) ? m.reactions.map(r => ({ emoji: r.emoji, count: r.count != null ? r.count : (r.users ? r.users.length : 1), you: !!(r.you || (r.users && selfId && r.users.includes(selfId))), who: r.users ? r.users.map(nameFor) : null })) : [];
+            const remember = (emoji) => { if (EMOJI.includes(emoji)) st.recentEmoji = [emoji, ...(st.recentEmoji || []).filter((x) => x !== emoji)].slice(0, 3); };
+            const react = (emoji) => { remember(emoji); if (A.reactToMessage) A.reactToMessage(m.id, m.userId, emoji); };
             const openPicker = () => {
                 if (!A.reactToMessage) return;
                 st.reactPickFor = st.reactPickFor === m.id ? null : m.id;
@@ -150,7 +166,10 @@ export function createMessages(app) {
                 ...messageProps(m, { s, A }),
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: game3AvInitial(initial(username), m.userId), avatarColor: game3AvatarBg(username, m.userId),
-                headTime: m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US') + ' ' + new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp),
+                headTime: m.timestamp ? headStamp(m.timestamp, s.h24) : formatTime(m.timestamp),
+                quick, mention: !isYou && mentionsMe(m.content, myName),
+                onOpenProfile: () => openProfileFor(app, s, m.userId, username),
+                onMention: A.setInput ? () => A.setInput((s.chatInputValue || '') + '@' + username + ' ') : null,
                 time: m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], s.h24 ? { hour: '2-digit', minute: '2-digit', hour12: false } : { hour: 'numeric', minute: '2-digit' }) : formatTime(m.timestamp), fullTime: m.timestamp ? new Date(m.timestamp).toLocaleString() : '',
                 continuation: !s.gamePrefCompact && continuation, compact: !!s.gamePrefCompact, previews: s.previews !== false, embeds: s.embeds !== false, text: m.content || '', reactions, mine: isYou, devMode: !!s.devMode, messageId: m.id, userId: m.userId, jumbo: !!s.jumbo && isJumbo(m.content),
                 onReact: A.reactToMessage ? react : null,
@@ -162,7 +181,7 @@ export function createMessages(app) {
                 saved: (s.savedIds || []).includes(m.id),
                 onSave: A.toggleSave ? () => A.toggleSave({ id: m.id, who: username, text: m.content || '' }) : null,
                 pickerOpen: st.reactPickFor === m.id,
-                onPick: (em) => { st.reactPickFor = null; if (A.reactToMessage) A.reactToMessage(m.id, m.userId, em); render(); },
+                onPick: (em) => { st.reactPickFor = null; react(em); render(); },
                 sendState: m.send || null, seen: !!m.seen, accountName: (s.accountNames || {})[m.userId] || '',
                 onRetry: () => A.retrySend && A.retrySend(m.id),
                 onJump: s.chatSearch ? () => { if (A.setChatSearch) A.setChatSearch(''); setTimeout(() => { const el = root.querySelector('#m-' + m.id); if (el) el.scrollIntoView({ block: 'center' }); }, 600); } : null,
@@ -170,7 +189,7 @@ export function createMessages(app) {
                 moreOpen: st.moreFor === m.id,
                 moreItems: moreItemsFor(m, s, username, openPicker),
                 remind: A.remindMe ? [[20, '20m'], [60, '1h'], [180, '3h'], [1440, '1d']] : [],
-                onRemind: (mn) => { st.moreFor = null; if (A.remindMe) A.remindMe(mn, { who: username, text: m.content || '' }); render(); },
+                onRemind: (mn) => { st.moreFor = null; if (A.remindMe) A.remindMe(mn, { who: username, text: m.content || '', messageId: m.id }); render(); },
             });
         });
         const all = rows.flatMap((row, i) => (i === newIndex ? [Game3NewDivider({ key: 'newdiv' }), row] : [row])).filter(Boolean);

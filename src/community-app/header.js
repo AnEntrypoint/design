@@ -10,6 +10,10 @@ export function createHeader(app) {
     const { A } = app;
 
     const headerView = (s, ch) => {
+        if (s.homeMode && !s.activeDmPeer) {
+            const serverName = s.homeServerName || 'Zellous Public';
+            return GameHeader({ bare: true, onBurger: () => (s.mobileMenuOpen ? A.closeMobileMenu && A.closeMobileMenu() : A.openMobileMenu && A.openMobileMenu()), channelName: 'People here', channelIcon: 'ref-members', topic: 'everyone in ' + serverName + ' right now' });
+        }
         return GameHeader({
             dm: !!(s.homeMode && s.activeDmPeer),
             onBurger: () => (s.mobileMenuOpen ? A.closeMobileMenu && A.closeMobileMenu() : A.openMobileMenu && A.openMobileMenu()),

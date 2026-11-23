@@ -41,11 +41,16 @@ export function createRail(app) {
     const serverMenuItems = (s) => {
         const owner = !!s.canManage;
         const out = [];
-        if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'plus', onClick: () => A.createChannel('text') }, { divider: true });
+        const settingsTab = s.serverSettings ? 'general' : (s.discovery && s.canManage ? 'discovery' : null);
+        if (settingsTab && s.currentServerId && A.openGamePrefs) out.push({ label: 'Server Settings', icon: 'settings', onClick: () => { if (A.setGamePrefTab) A.setGamePrefTab(settingsTab); A.openGamePrefs(); } });
+        if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'plus', onClick: () => A.createChannel('text') });
+        if (out.length) out.push({ divider: true });
         if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'members', color: '#949cf7', onClick: () => A.inviteToServer() });
+        if (A.openSurface && s.currentServerId) out.push({ label: 'Recap What I Missed', icon: 'ref-spark', onClick: () => A.openSurface('recap') });
+        if (A.markAllRead && s.currentServerId) out.push({ label: 'Mark As Read', icon: 'check', onClick: () => A.markAllRead() });
+        out.push({ label: 'Quick Switcher', hint: 'Ctrl P', onClick: () => { st.switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } });
         if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), onClick: () => A.toggleMuteChannel() });
         if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => out.push({ label: x.menu.label, icon: x.menu.icon, onClick: () => A.openSurface(x.id) }));
-        if (s.discovery && s.currentServerId && A.openGamePrefs) out.push({ label: 'Server Settings', icon: 'settings', onClick: () => { if (A.setGamePrefTab) A.setGamePrefTab('discovery'); A.openGamePrefs(); } });
         if (A.explore) out.push({ label: 'Discover Servers', icon: 'compass', onClick: () => A.explore() });
         out.push({ divider: true });
         if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'settings', onClick: () => A.openGamePrefs() });
@@ -58,7 +63,12 @@ export function createRail(app) {
             (s.canManage && A.createChannel && createType)
                 ? h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'create ' + label, title: 'Create ' + label, onclick: (e) => { e.preventDefault(); e.stopPropagation(); A.createChannel(createType); } }, Icon('ref-plus', { size: 13 }))
                 : null);
-        const vuRows = (c) => (isVoice && s.voiceConnected && s.voiceChannelName === c.name ? (s.voiceParticipants || []) : []).map((p, i) => h('div', { key: 'vu' + c.id + i, class: 'vu' + (p.speaking ? ' talk' : '') }, h('span', { class: 'ds-g3-vu-av', 'aria-hidden': 'true' }, String(p.name || p.identity || '?').trim().slice(0, 1).toUpperCase()), p.name || p.identity || ''));
+        const occupantsOf = (c) => {
+            if (!isVoice) return [];
+            if (s.voiceConnected && s.voiceChannelName === c.name) return (s.voiceParticipants || []).map((p) => ({ name: p.name || p.identity || '', speaking: !!p.speaking, muted: !!p.muted }));
+            return ((s.voiceOccupants || {})[c.id] || []).map((p) => ({ name: p.name, speaking: false, muted: !!p.muted }));
+        };
+        const vuRows = (c) => occupantsOf(c).map((p, i) => h('div', { key: 'vu' + c.id + i, class: 'vu' + (p.speaking ? ' talk' : '') }, h('span', { class: 'ds-g3-vu-av', 'aria-hidden': 'true' }, String(p.name || '?').trim().slice(0, 1).toUpperCase()), p.name, p.muted ? h('span', { class: 'mo', 'aria-label': 'muted' }, Icon('g3-micoff', { size: 14 })) : null));
         return [head, ...(list.length ? list.flatMap(c => [railPill(c, cur, isVoice, s), ...vuRows(c)]) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
     };
     const railSurfaceRows = (s) => railSurfaces().map((x) => x.rail.row({ s, A, h }));
@@ -101,8 +111,10 @@ export function createRail(app) {
             : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(channelIcon(c), { size: isVoice ? 20 : 24 }));
         const canReorder = !!s.canManage && !!A.reorderChannel;
         const dropAllowed = () => !!st.railDragId && st.railDragId !== c.id;
+        const muted = !!c.muted && !inVoice;
+        const pings = muted ? 0 : (c.pingCount || 0);
         return h('a', {
-            href: '#', class: [active ? 'active' : '', c.unreadCount ? 'unread' : ''].filter(Boolean).join(' '), 'aria-label': (c.name || c.id) + (inVoice ? ' (in voice)' : ''),
+            href: '#', class: [active ? 'active' : '', c.unreadCount && !muted ? 'unread' : '', c.muted ? 'muted' : ''].filter(Boolean).join(' '), 'aria-label': (c.name || c.id) + (inVoice ? ' (in voice)' : ''),
             title: canReorder ? ((c.name || c.id) + ': drag, or hold Alt and press the arrow keys, to reorder') : (c.name || c.id),
             'aria-keyshortcuts': canReorder ? 'Alt+ArrowUp Alt+ArrowDown' : null,
             onclick: (e) => { e.preventDefault(); A.switchChannel && A.switchChannel(c); },
@@ -124,7 +136,8 @@ export function createRail(app) {
                 e.preventDefault();
                 A.reorderChannel(c.id, e.key === 'ArrowUp' ? -1 : 1);
             } : null,
-        }, glyph, h('span', {}, c.name || c.id));
+        }, glyph, h('span', {}, c.name || c.id),
+            c.pingCount && !c.muted ? h('span', { class: 'ds-g3-ping', 'aria-label': c.pingCount + ' mentions' }, String(c.pingCount)) : (c.muted ? h('span', { class: 'ds-g3-mi', 'aria-label': 'muted' }, '\u{1F515}') : null));
     };
 
     const railServerPill = (sv, s) => {

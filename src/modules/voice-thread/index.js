@@ -8,7 +8,7 @@ const acts = (A) => ({
     onReplay: (seq) => A.voiceThreadReplay && A.voiceThreadReplay(seq),
     onSkip: () => A.voiceThreadSkip && A.voiceThreadSkip(),
     onPause: () => A.voiceThreadPause && A.voiceThreadPause(),
-    onSensitivity: (v) => A.voiceThreadSensitivity && A.voiceThreadSensitivity(v),
+    onVadProfile: (id) => A.voiceThreadVadProfile && A.voiceThreadVadProfile(id),
     onKeep: (on) => A.voiceThreadKeep && A.voiceThreadKeep(on),
 });
 

@@ -7,6 +7,7 @@ import { Icon } from './shell.js';
 
 const h = webjsx.createElement;
 const QUICK = ['\u{1F44D}', '\u{2764}\u{FE0F}', '\u{1F602}'];
+const copyToClipboard = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')).catch(() => {}); };
 
 export function isJumbo(text) {
     const x = String(text || '').trim();
@@ -40,9 +41,10 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => renderMarkdown(text);
 
-export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, seen = false, accountName = '', onRetry, onJump, onMore, pinned = false, saved = false, onSave, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+export function Game3Message({ quick = QUICK, mention = false, onMention, pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, seen = false, accountName = '', onRetry, onJump, onMore, pinned = false, saved = false, onSave, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : sticker ? [h('img', { key: 'stk', class: 'ds-g3-stk', src: sticker.url, title: sticker.name, alt: sticker.name })] : null;
-    const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
+    const copyText = copyToClipboard;
+    const openWho = (e) => { if (e && e.shiftKey && onMention) onMention(); else if (onOpenProfile) onOpenProfile(); };
     const sendLine = sendState && sendState.state === 'pending'
         ? h('div', { key: 'sendst', class: 'ds-g3-sendst' }, 'Sending…')
         : sendState && sendState.state === 'failed'
@@ -51,13 +53,13 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
             : null;
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
-            reactions.map((r, i) => h('span', { key: 'r' + i, class: r.you ? 'ds-g3-mine' : '', role: 'button', tabindex: '0', 'aria-pressed': r.you ? 'true' : 'false', onclick: () => onReact && onReact(r.emoji) }, r.emoji, ' ', String(r.count))))
+            reactions.map((r, i) => h('span', { key: 'r' + i, class: r.you ? 'ds-g3-mine' : '', role: 'button', tabindex: '0', title: r.who && r.who.length ? r.who.join(', ') + ' reacted with ' + r.emoji : null, 'aria-pressed': r.you ? 'true' : 'false', onclick: () => onReact && onReact(r.emoji) }, r.emoji, ' ', String(r.count))))
         : null;
     const replyLine = reply
         ? h('div', { class: 'ds-g3-rep', key: 'rep' }, h('b', {}, '@' + (reply.name || 'someone')), h('span', {}, String(reply.text || '').slice(0, 90)))
         : null;
     const bar = h('div', { class: 'ds-g3-bar', key: 'bar', role: 'group', 'aria-label': 'message actions' },
-        QUICK.map((e) => h('span', { key: 'q' + e, role: 'button', tabindex: '0', title: 'react ' + e, onclick: () => onReact && onReact(e) }, e)),
+        quick.map((e) => h('span', { key: 'q' + e, role: 'button', tabindex: '0', title: 'react ' + e, onclick: () => onReact && onReact(e) }, e)),
         h('span', { key: 'add', role: 'button', tabindex: '0', title: 'Add Reaction', onclick: (e) => onAddReaction && onAddReaction(e) }, Icon('ref-smile', { size: 20 })),
         h('span', { key: 'reply', role: 'button', tabindex: '0', title: 'Reply', onclick: () => onReply && onReply() }, Icon('ref-reply', { size: 20 })),
         onPin ? h('span', { key: 'pin', role: 'button', tabindex: '0', title: pinned ? 'Unpin Message' : 'Pin Message', style: pinned ? 'color:#f0b232' : null, onclick: () => onPin() }, Icon('ref-pins', { size: 24 })) : null,
@@ -80,6 +82,13 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         onReply();
         setTimeout(() => { const box = document.querySelector('.ds-g3-comp textarea'); if (box) box.focus(); }, 0);
     } : null;
+    const onTap = (e) => {
+        if (!window.matchMedia || !window.matchMedia('(hover: none)').matches) return;
+        const row = e.currentTarget;
+        if (e.target.closest && e.target.closest('a,button,.ds-g3-rx,.ds-g3-bar,.ds-g3-pollo,.ds-g3-who,img')) return;
+        document.querySelectorAll('.ds-g3-msg.ds-g3-tapped').forEach((x) => { if (x !== row) x.classList.remove('ds-g3-tapped'); });
+        row.classList.add('ds-g3-tapped');
+    };
     const stamp = continuation ? h('span', { key: 'stamp', class: 'ds-g3-stamp', style: 'left:8px', title: fullTime }, time) : null;
     const body = continuation ? h('div', { key: 'body', class: 'ds-g3-tx-wrap' },
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
@@ -87,7 +96,7 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         ...embedNodes(text, embeds),
         reactionChips, sendLine) : h('div', { key: 'body', class: 'ds-g3-col' },
             h('div', { key: 'head', class: 'ds-g3-head' },
-                h('span', { key: 'who', class: 'ds-g3-who', title: accountName ? 'Account name: ' + accountName : null, role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
+                h('span', { key: 'who', class: 'ds-g3-who', title: accountName ? 'Account name: ' + accountName : null, role: 'button', tabindex: '0', title: 'click: profile \u00b7 shift-click: mention', onclick: openWho }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, headTime || time)),
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
         ...cardNodes(text, previews, unfurls),
@@ -95,16 +104,16 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         reactionChips, sendLine
     );
     const avatar = continuation ? null : h('div', { key: 'av', class: 'ds-g3-av', role: 'button', tabindex: '0', style: '--ds-g3-av-color:' + avatarColor, onclick: () => onOpenProfile && onOpenProfile() }, initial);
-    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' + (mine ? ' ds-g3-selfmsg' : ''), ondblclick: onDouble },
+    if (compact) return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln ds-g3-crow' + (mention ? ' ds-g3-me-mention' : '') + (mine ? ' ds-g3-selfmsg' : ''), ondblclick: onDouble, onclick: onTap },
         replyLine,
         h('span', { key: 'ct', class: 'ds-g3-ctime', title: fullTime }, time),
         h('div', { key: 'cb', class: 'ds-g3-col' },
-            h('span', { key: 'cw', class: 'ds-g3-who' }, name + ' '),
+            h('span', { key: 'cw', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: openWho }, name + ' '),
             h('span', { key: 'ctx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
             ...cardNodes(text, previews, unfurls),
             ...embedNodes(text, embeds)),
         bar, menu, picker);
-    return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mine ? ' ds-g3-selfmsg' : ''), ondblclick: onDouble },
+    return h('div', { key, id, class: 'ds-g3-msg ds-g3-ln' + (continuation ? ' ds-g3-cont' : '') + (mention ? ' ds-g3-me-mention' : '') + (mine ? ' ds-g3-selfmsg' : ''), ondblclick: onDouble, onclick: onTap },
         replyLine,
         stamp,
         avatar,

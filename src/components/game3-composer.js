@@ -22,7 +22,7 @@ const acOptions = (value, mentions) => {
     return f.length ? { head: 'Members', items: f.map((n) => ({ key: n, label: n, insert: '@' + n })) } : null;
 };
 
-export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, nope = '', emojiPop = false, onEmojiPick, stickerPop = false, stickerBase = '', stickerTitle = '', onStickerPick, key } = {}) {
+export function Game3Composer({ mentions = [], typing = null, value = '', placeholder = '', maxLength = 190, disabled = false, disabledReason, replyTo = null, onCancelReply, onInput, onSend, onKeyDown, onAttach, onEmoji, onStickers, stickersAvailable = false, nope = '', emojiPop = false, onEmojiPick, stickerPop = false, stickerBase = '', stickerTitle = '', onStickerPick, stage = null, onStageSend, onStageCancel, onPasteFiles, key } = {}) {
     const count = maxLength && value && value.length > 150 ? String(maxLength - value.length) : null;
     const submit = (ta) => {
         const v = ta.value;
@@ -45,6 +45,15 @@ export function Game3Composer({ mentions = [], typing = null, value = '', placeh
         stickerPop ? h('div', { key: 'stkpop', class: 'ds-g3-stkpop' },
             h('div', { class: 'ds-g3-stk-h' }, 'Stickers · ' + stickerTitle),
             h('div', { class: 'ds-g3-stkgrid' }, STICKERS.map((x) => h('img', { key: x.id, src: stickerBase + x.id + '.webp', title: x.name, alt: x.name, loading: 'lazy', onclick: () => onStickerPick && onStickerPick(x.id) })))) : null,
+        stage
+            ? h('div', { key: 'pstage', class: 'ds-g3-pstage', role: 'group', 'aria-label': 'picture ready to send' },
+                stage.url ? h('img', { src: stage.url, alt: '' }) : null,
+                h('div', { class: 'ds-g3-pstage-i' },
+                    h('b', {}, stage.name || 'pasted picture'),
+                    h('span', {}, stage.size + ' · Enter to send · Esc to cancel')),
+                h('button', { type: 'button', class: 'ds-g3-pstage-s', disabled: !!stage.busy, onclick: () => onStageSend && onStageSend() }, stage.busy ? 'Sending\u2026' : 'Send'),
+                h('span', { class: 'ds-g3-pstage-x', role: 'button', tabindex: '0', title: 'remove', 'aria-label': 'remove picture', onclick: (e) => { const ta = e.currentTarget.closest('.ds-g3-comp').querySelector('textarea'); if (onStageCancel) onStageCancel(); setTimeout(() => ta && ta.focus(), 0); } }, Icon('x', { size: 14 })))
+            : null,
         replyTo
             ? h('div', { key: 'rb', class: 'ds-g3-replybar' },
                 h('span', {}, 'Replying to ', h('b', {}, replyTo.username || 'someone')),
@@ -60,7 +69,14 @@ export function Game3Composer({ mentions = [], typing = null, value = '', placeh
                 key: 'ta', rows: 1, maxLength, placeholder, value, disabled: !!disabled, autocomplete: 'off',
                 'aria-label': disabled && disabledReason ? 'message input: ' + disabledReason : 'message input',
                 oninput: (e) => { if (onInput) onInput(e.target.value); },
+                onpaste: onPasteFiles ? (e) => {
+                    const it = Array.from((e.clipboardData && e.clipboardData.items) || []).find((x) => x.type.indexOf('image/') === 0);
+                    const f = it && it.getAsFile();
+                    if (f) { e.preventDefault(); onPasteFiles([f]); }
+                } : null,
                 onkeydown: (e) => {
+                    if (stage && e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (onStageCancel) onStageCancel(); return; }
+                    if (stage && e.key === 'Enter' && !e.shiftKey && !e.target.value.trim()) { e.preventDefault(); if (!stage.busy && onStageSend) onStageSend(); return; }
                     if (onKeyDown) onKeyDown(e, e.target);
                     if (e.defaultPrevented) return;
                     if (e.key === 'Tab' && ac && !e.shiftKey) { e.preventDefault(); apply(ac.items[0].insert, e.target.closest('.ds-g3-comp')); return; }

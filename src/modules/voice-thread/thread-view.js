@@ -1,5 +1,6 @@
 import * as webjsx from '../../../vendor/webjsx/index.js';
 import { Icon } from '../../components/shell.js';
+import { VadProfileControl } from '../../components/voice/vad-profile.js';
 import { game3AvatarBg, game3AvInitial } from '../../components/game3-hue.js';
 
 const h = webjsx.createElement;
@@ -33,8 +34,7 @@ export function Game3VoiceThread({ thread, acts } = {}) {
             h('span', { class: 'ds-g3-vtstate' + (t.ownTalk ? ' own' : t.connected ? ' live' : ''), role: 'status', 'aria-live': 'polite' },
                 h('i', { class: 'ds-g3-vtdot', 'aria-hidden': 'true' }), status)),
         h('div', { key: 'tools', class: 'ds-g3-vttools' },
-            h('label', { class: 'ds-g3-vtfield' }, h('span', null, 'Mic sensitivity'),
-                h('input', { type: 'range', min: '0', max: '100', value: String(Math.round((t.settings.sensitivity === undefined ? 0.5 : t.settings.sensitivity) * 100)), class: 'ds-g3-range', 'aria-label': 'mic sensitivity', onchange: (e) => acts.onSensitivity(Number(e.target.value) / 100) })),
+            h('div', { class: 'ds-g3-vtfield' }, h('span', null, 'Mic filter'), VadProfileControl({ value: t.vadProfile, profiles: t.vadProfiles || [], variant: 'g3', onChange: acts.onVadProfile })),
             h('div', { class: 'ds-g3-vtmeter', role: 'meter', 'aria-label': 'voice level', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.round((t.vad.level || 0) * 100)) }, h('i', { style: '--ds-g3-vt-level:' + Math.round((t.vad.level || 0) * 100) + '%' + (t.vad.voiced ? ';--ds-g3-vt-on:1' : '') })),
             h('span', { class: 'ds-g3-hint', title: 'Clips that were not speech (hot mic, breathing, keyboard) and were dropped' }, (t.filtered || 0) + ' filtered'),
             h('div', { ...press(() => acts.onKeep(!t.settings.keep)), class: 'ds-g3-tgl' + (t.settings.keep ? ' on' : ''), 'aria-label': 'keep clips', 'aria-pressed': t.settings.keep ? 'true' : 'false' }, h('div', null, h('div', { class: 'ds-g3-tgl-label' }, 'Keep clips'), h('div', { class: 'ds-g3-hint' }, 'uploads each clip so people who join later can hear it')), h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }))),

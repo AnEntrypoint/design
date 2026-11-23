@@ -16,6 +16,7 @@ export function createApp(root, adapter) {
             palette: { open: false, items: [], onSelect: null },
             card: { open: false, member: null },
             serverMenuOpen: false,
+            stage: null,
             dropAnywhere: { active: false, count: 0, fileCount: 0 },
             imageLightbox: { open: false, src: null, alt: '' },
             switcher: { open: false, q: '' },

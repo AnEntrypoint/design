@@ -30,6 +30,25 @@ export function createChatView(app, { messages, rail }) {
         }
     };
 
+    const dropStage = () => { if (st.stage && st.stage.url) URL.revokeObjectURL(st.stage.url); st.stage = null; };
+    const stageFiles = (files) => {
+        const f = files && files[0];
+        if (!f) return;
+        dropStage();
+        const kb = Math.max(1, Math.round(f.size / 1024));
+        st.stage = { file: f, name: f.name, size: kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : kb + ' KB', url: f.type.indexOf('image/') === 0 ? URL.createObjectURL(f) : '', busy: false };
+        render();
+    };
+    st.stageFiles = stageFiles;
+    st.stageCancel = () => { dropStage(); render(); };
+    const sendStage = () => {
+        const g = st.stage;
+        if (!g || g.busy || !A.attachFiles) return;
+        g.busy = true;
+        render();
+        Promise.resolve(A.attachFiles([g.file])).then(() => { if (st.stage === g) dropStage(); render(); }, () => { if (st.stage === g) { g.busy = false; render(); } });
+    };
+
     const chatView = (s) => {
         const ch = s.currentChannel || {};
         const sub = s.homeMode ? 'encrypted' : channelType(ch.type).headerSub;
@@ -55,7 +74,11 @@ export function createChatView(app, { messages, rail }) {
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
                 maxLength: 190,
                 onKeyDown: (e, ta) => composerKey(e, ta, s, ch),
-                onAttach: (!s.composerLockedReason && A.attachFiles) ? (files) => A.attachFiles(files) : null,
+                onAttach: (!s.composerLockedReason && A.attachFiles) ? stageFiles : null,
+                onPasteFiles: (!s.composerLockedReason && A.attachFiles) ? stageFiles : null,
+                stage: st.stage || null,
+                onStageSend: sendStage,
+                onStageCancel: () => { dropStage(); render(); },
                 onEmoji: () => { st.emojisOpen = !st.emojisOpen; st.stickersOpen = false; render(); },
                 emojiPop: st.emojisOpen,
                 onEmojiPick: (em) => { if (A.setInput) A.setInput((s.chatInputValue || '') + em); },

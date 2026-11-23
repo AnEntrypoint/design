@@ -5,7 +5,7 @@ registerModule({
     id: 'servers-discovery', kind: 'settingsPane',
     settingsPane: {
         id: 'discovery', label: 'Discovery', group: 'Server Settings', order: 5,
-        when: (s) => !!s.discovery,
+        when: (s) => !!s.discovery && !!s.canManage,
         mount: ({ discovery, acts }) => Game3DiscoveryPane({ discovery, acts }),
     },
 });

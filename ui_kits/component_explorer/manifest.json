@@ -6400,6 +6400,21 @@
           "alias": null
         },
         {
+          "name": "vadProfile",
+          "default": null,
+          "alias": null
+        },
+        {
+          "name": "vadProfiles",
+          "default": "[]",
+          "alias": null
+        },
+        {
+          "name": "onVadProfile",
+          "default": null,
+          "alias": null
+        },
+        {
           "name": "onChange",
           "default": null,
           "alias": null
@@ -10265,6 +10280,11 @@
       "props": [
         {
           "name": "dm",
+          "default": "false",
+          "alias": null
+        },
+        {
+          "name": "bare",
           "default": "false",
           "alias": null
         },

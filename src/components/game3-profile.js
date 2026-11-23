@@ -48,7 +48,8 @@ export function Game3ProfileBody({ member, isSelf = false, devMode = false, onMe
                     ...(site ? [h('a', { key: 'site', class: 'ds-g3-pc-link', href: site, target: '_blank', rel: 'noopener noreferrer nofollow' }, site.replace(/^https?:\/\//, ''))] : []),
                     ...links.map((l, i) => h('a', { key: 'k' + i, class: 'ds-g3-pc-link', href: l.href, target: '_blank', rel: 'noopener noreferrer nofollow' }, l.label)))] : []),
                 ...(member.nip05 ? lbl('NIP-05', (member.nip05Verified ? '✓ ' : '') + member.nip05 + (member.nip05Verified ? '' : member.nip05Verified === false ? ' (not verified)' : ' (not checked)'), 'n5') : []),
-                ...(member.joinedAt ? lbl('Member Since', new Date(member.joinedAt).toLocaleDateString(), 'm') : []),
+                ...(preview ? [] : lbl('Member Since', member.joinedAt || (member.stats && member.stats.firstSeen) ? new Date(member.joinedAt || member.stats.firstSeen).toLocaleDateString() : 'today', 'm')),
+                ...(preview ? [] : lbl('Level', '⭐ level ' + ((member.stats && member.stats.level) || 0) + ' · ' + ((member.stats && member.stats.xp) || 0) + ' XP', 'lv')),
                 h('div', { key: 'lr', class: 'ds-g3-pc-lbl' }, 'Roles'),
                 h('div', { key: 'rr' }, ...roles.map((r, i) => h('span', { key: 'r' + i, class: 'ds-g3-role' }, h('i', { style: 'background:' + (r.color || '#949ba4') }), r.name)), h('span', { class: 'ds-g3-role' }, h('i', { style: 'background:#949ba4' }), 'member')),
                 preview ? null : isSelf

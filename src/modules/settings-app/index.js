@@ -12,6 +12,7 @@ const COPY = {
     motion: ['Reduced motion', 'stops animations: typing dots, the radio bars, flashes'],
     ulinks: ['Always underline links', 'easier to tell links from text'],
     rolecolors: ['Show role colours on names', 'off: every name in the chat is plain'],
+    previews: ['Link previews', 'a card under links, with YouTube thumbnails'],
     embeds: ['Show pictures from links', 'image links show the picture itself'],
     jumbo: ['Big emoji', 'a message of only emoji shows them large'],
     spoilers: ['Always reveal spoilers', 'no click needed on ||hidden|| text'],
@@ -26,7 +27,7 @@ const GROUPS = {
     access: ['motion', 'ulinks', 'rolecolors'],
     voice: ['vcsounds', 'sbsounds'],
     notif: ['sound', 'mentionsonly'],
-    media: ['embeds', 'jumbo', 'spoilers'],
+    media: ['previews', 'embeds', 'jumbo', 'spoilers'],
     lang: ['h24'],
     adv: ['devmode', 'devevents', 'devinspect', 'devtraffic'],
 };
@@ -68,7 +69,18 @@ const devRows = (d, onDevReset, onDevFilter, toggles, onDevRefresh) => [
     devReset(onDevReset),
 ];
 
-const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, onCompact, onKeywords, theme = 'ink', onTheme, onToggle, onReset }) => {
+const dndRow = (account, acts) => {
+    const st = account && account.status;
+    if (!st || !acts.accountSetStatus) return null;
+    const on = st.status === 'dnd';
+    return h('div', { key: 'dnd', class: 'ds-g3-tgl' + (on ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': on ? 'true' : 'false', 'aria-label': 'Do Not Disturb', onclick: () => acts.accountSetStatus({ status: on ? 'online' : 'dnd', text: st.text, emoji: st.emoji, durationSec: -1 }) },
+        h('div', null,
+            h('div', { class: 'ds-g3-tgl-label' }, 'Do Not Disturb'),
+            h('div', { class: 'ds-g3-hint' }, 'silences every ping, shows red to everyone')),
+        h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }));
+};
+
+const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, onCompact, onKeywords, theme = 'ink', onTheme, onToggle, onReset, account = null, acts = {} }) => {
     const group = (g) => GROUPS[g].map((k) => toggleRow(k, !!toggles[k], onToggle));
     return {
         appearance: () => [
@@ -90,6 +102,7 @@ const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggle
         notif: () => [
             h('h2', { key: 'h' }, 'Notifications'),
             ...group('notif'),
+            dndRow(account, acts),
             h('h6', { key: 'ka' }, 'Keyword Alerts'),
             h('input', { key: 'kw', class: 'ds-g3-fi', maxlength: '200', placeholder: 'tournament, pizza, my nickname', value: keywords, onchange: (e) => onKeywords && onKeywords(e.target.value) }),
             h('p', { key: 'kh', class: 'ds-g3-hint' }, 'words that ping you, light up and land in your Inbox like an @mention, even in muted channels'),

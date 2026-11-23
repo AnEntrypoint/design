@@ -6,7 +6,7 @@ const INLINE = /(`[^`\n]+`|\*\*.+?\*\*|__.+?__|\*.+?\*|(?<=^|\s)_.+?_(?=\s|$)|~~
 
 const copyBlock = (e) => {
     const el = e.currentTarget;
-    if (navigator.clipboard) navigator.clipboard.writeText(el.innerText);
+    if (navigator.clipboard) navigator.clipboard.writeText(el.innerText).catch(() => {});
     el.classList.add('copied');
     setTimeout(() => el.classList.remove('copied'), 900);
 };

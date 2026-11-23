@@ -2,6 +2,7 @@ import './builtin/channel-types.js';
 import './events/index.js';
 import './leaderboard/index.js';
 import './discover/index.js';
+import './server-general/index.js';
 import './servers-discovery/index.js';
 import './roles/index.js';
 import './inbox/index.js';
