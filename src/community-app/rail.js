@@ -1,6 +1,6 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from '../components/shell.js';
-import { channelType, railGroups, groupOf, surfaceForChannel, railSections, railSurfaces } from '../modules/index.js';
+import { channelType, railGroups, groupOf, surfaceForChannel, railSections, railSurfaces, menuSurfaces } from '../modules/index.js';
 import { game3AvatarBg, game3AvInitial } from '../components/game3-hue.js';
 import { Game3ServerMenu } from '../components/game3-server-menu.js';
 
@@ -44,6 +44,7 @@ export function createRail(app) {
         if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'plus', onClick: () => A.createChannel('text') }, { divider: true });
         if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'members', color: '#949cf7', onClick: () => A.inviteToServer() });
         if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), onClick: () => A.toggleMuteChannel() });
+        if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => out.push({ label: x.menu.label, icon: x.menu.icon, onClick: () => A.openSurface(x.id) }));
         if (A.explore) out.push({ label: 'Discover Servers', icon: 'compass', onClick: () => A.explore() });
         out.push({ divider: true });
         if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'settings', onClick: () => A.openGamePrefs() });

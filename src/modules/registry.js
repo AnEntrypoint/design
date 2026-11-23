@@ -67,6 +67,7 @@ export const railGroups = () => [...groups.values()].sort((a, b) => a.order - b.
 export const groupOf = (channel) => channelType(channel.type).railGroup;
 export const surfaceFor = (id) => surfaces.get(id) || null;
 export const railSurfaces = () => [...surfaces.values()].filter((x) => x.rail && typeof x.rail.row === 'function').sort((a, b) => (a.rail.order || 100) - (b.rail.order || 100));
+export const menuSurfaces = () => [...surfaces.values()].filter((x) => x.menu && x.menu.label && x.placement).sort((a, b) => (a.menu.order || 100) - (b.menu.order || 100));
 export const surfaceForChannel = (channel) => [...surfaces.values()].find((x) => x.channelName && x.channelName === channel.name && (!x.channelType || x.channelType === channel.type)) || null;
 export const settingsPanes = () => [...panes.values()].sort((a, b) => a.order - b.order);
 export const railSections = () => [...sections.values()].sort((a, b) => a.order - b.order);
