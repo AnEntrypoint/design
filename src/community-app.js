@@ -11,7 +11,8 @@ import { GameHeader } from './components/game3-header.js';
 import { Game3Message, isJumbo } from './components/game3-message.js';
 import { Game3MemberList } from './components/game3-members.js';
 import { Game3VoiceView } from './components/game3-voice.js';
-import { Game3UserPanel, Game3StatusMenu } from './components/game3-user.js';
+import { Game3UserPanel, Game3StatusMenu, statusPresetSeconds, statusDraftReset } from './components/game3-user.js';
+import { Game3AvatarMenu, Game3UserMenu, Game3SetupPanel, setupProgress } from './components/game3-usermenus.js';
 import { STATUS } from './game3-data.js';
 import { Game3EventsPanel } from './components/game3-events.js';
 import { Game3LeaderboardPanel } from './components/game3-leaderboard.js';
@@ -345,11 +346,12 @@ export function mountCommunityApp(root, adapter = {}) {
         return items.filter((x) => !q || x.key.toLowerCase().includes(q)).slice(0, 12);
     };
     const closeOverlays = () => {
-        moreFor = null; reactPickFor = null; stickersOpen = false; emojisOpen = false; statusMenuOpen = false;
+        moreFor = null; reactPickFor = null; stickersOpen = false; emojisOpen = false; statusMenuOpen = false; avatarMenuOpen = false; userMenu = { open: false, sub: '' }; renaming = null;
         switcher = { open: false, q: '' }; imageLightbox = { open: false, src: null, alt: '' };
         serverMenuOpen = false; card = { ...card, open: false }; ctx = { ...ctx, open: false }; emoji = { ...emoji, open: false }; palette = { ...palette, open: false };
         const open = get() || {};
         if (open.gameSurface && A.closeSurface) A.closeSurface();
+        if (open.account && open.account.setup && open.account.setup.open && A.setupClose) A.setupClose();
         if (open.gameServerCreateOpen && A.closeServerCreate) A.closeServerCreate();
         if (open.gamePrefOpen && A.closeGamePrefs) A.closeGamePrefs();
         render();
@@ -372,8 +374,8 @@ export function mountCommunityApp(root, adapter = {}) {
             }
             return;
         }
-        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw')))) { closeOverlays(); return; }
-        if (typing) return;
+        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw, .ds-g3-statusmenu, .ds-g3-rename')))) { closeOverlays(); return; }
+        if (typing || (a && a.closest && a.closest('.ds-g3-statusmenu, .ds-g3-scrim, .ds-g3-me'))) return;
         const thread = root.querySelector('.chat-thread');
         if (k === 'End' && thread) { e.preventDefault(); thread.scrollTop = thread.scrollHeight; return; }
         if ((k === 'PageUp' || k === 'PageDown') && thread) { e.preventDefault(); thread.scrollBy(0, (k === 'PageUp' ? -1 : 1) * thread.clientHeight * 0.85); return; }
@@ -386,6 +388,10 @@ export function mountCommunityApp(root, adapter = {}) {
     let stickersOpen = false;
     let emojisOpen = false;
     let statusMenuOpen = false;
+    let avatarMenuOpen = false;
+    let userMenu = { open: false, sub: '' };
+    let renaming = null;
+    let statusPreset = 'never';
     let reactPickFor = null;
     let soundToast = null;
     const mentionNames = (s) => [...(s.memberCategories || []).flatMap((c) => (c.members || []).map((m) => m.name)), ...(s.memberApps || []).map((a) => a.name)].filter(Boolean);
@@ -542,6 +548,37 @@ export function mountCommunityApp(root, adapter = {}) {
         );
     };
 
+    const closeMenus = () => { statusDraftReset(); statusMenuOpen = false; avatarMenuOpen = false; userMenu = { open: false, sub: '' }; };
+    const expiryLabel = (sec) => (sec ? new Date(sec * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '');
+    const userPanel = (s) => {
+        const acc = s.account && s.account.signedIn ? s.account : null;
+        const stt = STATUS[s.presenceStatus || 'online'] || STATUS.online;
+        const name = (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You';
+        const cur = acc ? acc.status : { status: s.presenceStatus || 'online', text: '', emoji: '', expiresAt: 0 };
+        const setStatus = (status, text, emojiValue, presetKey, keep) => A.accountSetStatus && A.accountSetStatus({ status, text, emoji: emojiValue, durationSec: keep ? -1 : statusPresetSeconds(presetKey) });
+        const goSettings = (tab) => { closeMenus(); if (A.setGamePrefTab) A.setGamePrefTab(tab); if (A.openGamePrefs) A.openGamePrefs(); render(); };
+        let menu = null;
+        if (!statusMenuOpen) statusDraftReset();
+        if (statusMenuOpen) {
+            menu = Game3StatusMenu({ status: cur.status, custom: cur.text, emoji: cur.emoji, preset: statusPreset, expiresLabel: expiryLabel(cur.expiresAt), onStatus: (k) => { statusDraftReset(); statusMenuOpen = false; setStatus(k, cur.text, cur.emoji, null, true); render(); }, onCustom: (text, em, preset) => { statusDraftReset(); statusMenuOpen = false; statusPreset = 'never'; setStatus(cur.status, text, em, preset); render(); }, onPreset: (k) => { statusPreset = k; render(); } });
+        } else if (avatarMenuOpen && acc) {
+            menu = Game3AvatarMenu({ hasPicture: !!acc.pub.picture, note: acc.note, onGenerate: () => A.accountGenerateAvatar && A.accountGenerateAvatar(), onUpload: (f) => A.accountUploadAvatar && A.accountUploadAvatar(f), onUrl: (u) => A.accountSavePublic && A.accountSavePublic('avatar', { picture: u }, 'Picture saved'), onRemove: () => A.accountClearAvatar && A.accountClearAvatar() });
+        } else if (userMenu.open && acc) {
+            const prog = setupProgress(acc, acc.setup || {});
+            menu = Game3UserMenu({ npub: acc.npub, identities: acc.identities || [], sub: userMenu.sub, note: acc.note, setupLeft: prog.total - prog.done, onSub: (v) => { userMenu = { open: true, sub: v }; render(); }, onEdit: () => goSettings('profile'), onSettings: () => goSettings('account'), onCopyNpub: () => { A.accountCopyText(acc.npub, 'npub copied'); }, onCopyLink: () => { A.accountCopyText(A.accountProfileLink(), 'Profile link copied'); }, onSwitch: (pk) => A.accountSwitchIdentity(pk), onForget: (pk) => A.accountForgetIdentity(pk), onImport: (v) => A.accountImportNew(v), onNew: () => A.accountNewThrowaway(), onBackup: () => { closeMenus(); A.setupOpen('backup'); render(); }, onSetup: () => { closeMenus(); A.setupOpen(''); render(); }, onSignOut: () => { closeMenus(); A.accountSignOut(); render(); } });
+        }
+        const validate = (v) => (!String(v).trim() ? 'Name cannot be empty' : /[\u0000-\u001f\u007f]/.test(v) ? 'Name has characters that cannot be used' : '');
+        const rename = renaming ? { value: renaming.value, error: renaming.error, onInput: (v) => { renaming.value = v; }, onCancel: () => { renaming = null; render(); }, onCommit: async (v) => { const err = validate(v); renaming = { value: v, error: err, focused: true }; if (err) { render(); return; } const done = await A.accountRename(v); if (done) renaming = null; else renaming = { value: v, error: ((get().account || {}).note || {}).text || 'Could not save that name', focused: true }; render(); } } : null;
+        return Game3UserPanel({
+            statusLabel: (cur.emoji ? cur.emoji + ' ' : '') + (cur.text || stt[0]), statusColor: stt[1], menu, rename,
+            onProfile: () => { const was = statusMenuOpen; closeMenus(); statusMenuOpen = !was; render(); },
+            onAvatar: () => { const was = avatarMenuOpen; closeMenus(); avatarMenuOpen = !was && !!acc; render(); },
+            onContext: () => { closeMenus(); userMenu = { open: true, sub: '' }; render(); },
+            onRenameStart: () => { if (!acc) return; closeMenus(); renaming = { value: name, error: '', focused: false }; render(); },
+            name, color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You', s.userId), hideInitial: !!(s.avatars && s.avatars[s.userId]),
+            muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs(),
+        });
+    };
     const view = () => {
         const s = get();
         game3SetAvatars(s.avatars, Object.fromEntries(Object.entries(s.profileMeta || {}).filter(([, m]) => m.accent).map(([k, m]) => [k, m.accent])));
@@ -580,6 +617,7 @@ export function mountCommunityApp(root, adapter = {}) {
                 if (serverMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-smenu, .shead'))) { serverMenuOpen = false; render(); }
                 if (stickersOpen && !(e.target.closest && e.target.closest('.ds-g3-stkpop, .ds-g3-compbtn'))) { stickersOpen = false; render(); }
                 if (statusMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-mebtn'))) { statusMenuOpen = false; render(); }
+                if ((avatarMenuOpen || userMenu.open) && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-me'))) { avatarMenuOpen = false; userMenu = { open: false, sub: '' }; render(); }
                 if (emojisOpen && !(e.target.closest && e.target.closest('.ds-g3-cpick, .ds-g3-compbtn'))) { emojisOpen = false; render(); }
                 if (reactPickFor && !(e.target.closest && e.target.closest('.ds-g3-rxpick, .ds-g3-bar, .ds-g3-mmenu'))) { reactPickFor = null; render(); }
                 const pic = e.target.closest && e.target.closest('.ds-g3-pic');
@@ -597,7 +635,7 @@ export function mountCommunityApp(root, adapter = {}) {
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, Game3UserPanel({ statusLabel: s.presenceCustom || (STATUS[s.presenceStatus || 'online'] || STATUS.online)[0], statusColor: (STATUS[s.presenceStatus || 'online'] || STATUS.online)[1], onProfile: () => { statusMenuOpen = !statusMenuOpen; render(); }, menu: statusMenuOpen ? Game3StatusMenu({ status: s.presenceStatus || 'online', custom: s.presenceCustom || '', onStatus: (k) => { statusMenuOpen = false; if (A.setPresence) A.setPresence(k, s.presenceCustom || ''); render(); }, onCustom: (t) => { statusMenuOpen = false; if (A.setPresence) A.setPresence(s.presenceStatus || 'online', t); render(); } }) : null, name: (s.currentUser && (s.currentUser.displayName || s.currentUser.username || s.currentUser.name)) || 'You', color: game3AvatarBg(s.gamePrefName || (s.currentUser && (s.currentUser.username || s.currentUser.name)) || 'You', s.userId), hideInitial: !!(s.avatars && s.avatars[s.userId]), muted: !!s.micMuted, onMute: () => A.toggleMic && A.toggleMic(), onSettings: () => A.openGamePrefs && A.openGamePrefs() }) ].filter(Boolean))),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, userPanel(s) ].filter(Boolean))),
                 h('div', { class: 'ca-right' },
             GameHeader({
                 dm: !!(s.homeMode && s.activeDmPeer),
@@ -644,6 +682,7 @@ export function mountCommunityApp(root, adapter = {}) {
             imageLightbox.open ? Game3Lightbox({ src: imageLightbox.src, onClose: () => { imageLightbox = { open: false, src: null, alt: '' }; render(); } }) : null,
             switcher.open ? Game3Switcher({ query: switcher.q, items: switcherItems(s), onQuery: (q) => { switcher = { open: true, q }; render(); }, onPick: (it) => { switcher = { open: false, q: '' }; it.go(); render(); }, onClose: () => { switcher = { open: false, q: '' }; render(); } }) : null,
             s.gameServerCreateOpen ? Game3ServerCreate({ homeName: s.homeServerName || 'Zellous Public', userName: s.gamePrefName || 'You', onCreate: (v) => A.createServer && A.createServer(v.name, v.color), onClose: () => A.closeServerCreate && A.closeServerCreate(), onDiscover: A.explore ? () => { A.closeServerCreate && A.closeServerCreate(); A.explore(); } : null }) : null,
+            s.account && s.account.signedIn && s.account.setup && s.account.setup.open ? h('div', { key: 'setup', class: 'ds-g3-scrim', role: 'presentation', onclick: (e) => { if (e.target === e.currentTarget && A.setupClose) A.setupClose(); } }, Game3SetupPanel({ account: s.account, setup: s.account.setup, acts: A, onRender: render, onClose: () => A.setupClose && A.setupClose() })) : null,
             MODAL_SURFACES.includes(s.gameSurface) ? h('div', { key: 'surface', class: 'ds-g3-scrim', role: 'presentation', onclick: (e) => { if (e.target === e.currentTarget && A.closeSurface) A.closeSurface(); } }, surfaceBody(s.gameSurface, s)) : null,
             s.gamePrefOpen ? Game3SettingsPanel({ tab: s.gamePrefTab || 'account', onTab: (t) => A.setGamePrefTab && A.setGamePrefTab(t), account: s.account, acts: A, onRender: render, devInfo: s.devInfo || null, onDevReset: () => A.resetLocalState && A.resetLocalState(), onDevFilter: (q) => A.setDevFilter && A.setDevFilter(q), onDevRefresh: () => A.refreshDev && A.refreshDev(), level: s.myLevel || 0, xp: s.myXp || 0, servers: s.gamePrefServers || 0, toggles: Object.fromEntries((s.gamePrefToggles || []).map((t) => [t.key, !!t.checked])), micOn: !s.micMuted, onMic: () => A.toggleMic && A.toggleMic(), keywords: s.gamePrefKeywords || '', mutedChannels: s.gamePrefMuted || [], onUnmute: (id) => A.toggleMuteId && A.toggleMuteId(id), compact: !!s.gamePrefCompact, theme: s.themePref || 'ink', onTheme: (t) => A.setTheme && A.setTheme(t), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val), onKeywords: (val) => A.setGamePref && A.setGamePref('kw', val), onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onReset: () => A.setGamePref && A.setGamePref('reset', true), onClose: () => A.closeGamePrefs && A.closeGamePrefs() }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
@@ -670,6 +709,11 @@ export function mountCommunityApp(root, adapter = {}) {
         const active = document.activeElement;
         const focusedSwitch = active && active.getAttribute && active.getAttribute('role') === 'switch' && root.contains(active) ? active.getAttribute('aria-label') : null;
         webjsx.applyDiff(root, view());
+        if (renaming && !renaming.focused) { const inp = root.querySelector('.ds-g3-rename'); if (inp) { renaming.focused = true; inp.focus(); inp.select(); } }
+        const pop = root.querySelector('.ds-g3-statusmenu');
+        if (pop && !pop.contains(document.activeElement)) { const first = pop.querySelector('[role=menuitem], input'); if (first) setTimeout(() => first.focus(), 0); }
+        const link = (get().account || {}).profileLink;
+        if (link && !card.open) { card = { open: true, member: link }; if (A.clearProfileLink) A.clearProfileLink(); render(); }
         if (focusedSwitch) {
             const again = root.querySelector('.ds-g3-prefs [role=switch][aria-label="' + focusedSwitch + '"]');
             if (again && again !== document.activeElement) again.focus();
