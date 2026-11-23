@@ -5,11 +5,11 @@ const h = webjsx.createElement;
 const CROWN = '<svg width="14" height="14" viewBox="0 0 24 24"><path fill="#f0b232" d="M5 18a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H5ZM3.04 7.76a1 1 0 0 0-1.52 1.15l2.25 6.42a1 1 0 0 0 .94.67h14.55a1 1 0 0 0 .95-.71l1.94-6.45a1 1 0 0 0-1.55-1.1l-4.11 3-3.55-5.33.82-.82a.83.83 0 0 0 0-1.18l-1.17-1.17a.83.83 0 0 0-1.18 0l-1.17 1.17a.83.83 0 0 0 0 1.18l.82.82-3.61 5.42-4.41-3.07Z"/></svg>';
 const DOT = { online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' };
 
-export function Game3MemberRow({ identity, name, color, nameColor, status = 'online', suffix, activity, offline = false, onClick, key } = {}) {
+export function Game3MemberRow({ identity, name, accountName, color, nameColor, status = 'online', suffix, activity, offline = false, onClick, key } = {}) {
     const initial = String(name || identity || '?').trim().slice(0, 1).toUpperCase();
     const dot = DOT[status] || DOT.online;
     return h('div', {
-        key, class: 'ds-g3-mrow' + (offline ? ' ds-g3-off' : ''),
+        key, class: 'ds-g3-mrow' + (offline ? ' ds-g3-off' : ''), title: accountName ? 'Account name: ' + accountName : null,
         role: onClick ? 'button' : null, tabindex: onClick ? '0' : null,
         onclick: onClick || null,
         onkeydown: onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e); } } : null,

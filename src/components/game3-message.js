@@ -40,13 +40,14 @@ const embedNodes = (value, on) => on === false ? [] : [...new Set(String(value |
 
 const spoilerNodes = (text) => renderMarkdown(text);
 
-export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, onRetry, onJump, onMore, pinned = false, saved = false, onSave, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
+export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker = null, sendState = null, seen = false, accountName = '', onRetry, onJump, onMore, pinned = false, saved = false, onSave, moreOpen = false, moreItems = [], remind = [], onRemind, poll = null, invite = null, key, id, name = '', initial = '?', avatarColor = 'var(--accent)', time = '', headTime = '', fullTime = '', continuation = false, text = '', reply = null, reactions = [], mine = false, onReact, onAddReaction, onReply, onDelete, onPin, onOpenProfile, devMode = false, messageId = '', userId = '', jumbo = false, compact = false, previews = true, embeds = true } = {}) {
     const bodyNodes = poll ? [Game3PollCard(poll)] : invite ? [Game3InviteCard(invite)] : sticker ? [h('img', { key: 'stk', class: 'ds-g3-stk', src: sticker.url, title: sticker.name, alt: sticker.name })] : null;
     const copyText = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')); };
     const sendLine = sendState && sendState.state === 'pending'
         ? h('div', { key: 'sendst', class: 'ds-g3-sendst' }, 'Sending…')
         : sendState && sendState.state === 'failed'
             ? h('div', { key: 'sendst', class: 'ds-g3-sendst ds-g3-failed' }, 'Not sent. ', h('span', { class: 'ds-g3-retry', role: 'button', tabindex: '0', onclick: () => onRetry && onRetry() }, 'Retry'))
+            : seen ? h('div', { key: 'sendst', class: 'ds-g3-sendst ds-g3-seen' }, 'Seen')
             : null;
     const reactionChips = reactions && reactions.length
         ? h('div', { class: 'ds-g3-rx', key: 'rx' },
@@ -86,7 +87,7 @@ export function Game3Message({ pickerOpen = false, onPick, unfurls = [], sticker
         ...embedNodes(text, embeds),
         reactionChips, sendLine) : h('div', { key: 'body', class: 'ds-g3-col' },
             h('div', { key: 'head', class: 'ds-g3-head' },
-                h('span', { key: 'who', class: 'ds-g3-who', role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
+                h('span', { key: 'who', class: 'ds-g3-who', title: accountName ? 'Account name: ' + accountName : null, role: 'button', tabindex: '0', onclick: () => onOpenProfile && onOpenProfile() }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, headTime || time)),
         h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
         ...cardNodes(text, previews, unfurls),

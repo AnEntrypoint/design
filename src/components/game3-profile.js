@@ -36,6 +36,7 @@ export function Game3ProfileBody({ member, isSelf = false, devMode = false, onMe
                 h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + dot, 'aria-label': status })),
             h('div', { class: 'ds-g3-pc-inner' },
                 h('h2', {}, name),
+                member.accountName ? h('div', { class: 'ds-g3-pc-user' }, 'Account name: ' + member.accountName) : null,
                 member.username ? h('div', { class: 'ds-g3-pc-user' }, '@' + member.username) : null,
                 h('div', { class: 'ds-g3-pc-status' }, statusName + (member.activity ? ' · ' + member.activity : '')),
                 member.pronouns ? h('div', { class: 'ds-g3-pc-pron' }, member.pronouns) : null,

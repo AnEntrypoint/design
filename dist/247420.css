@@ -13912,7 +13912,7 @@
 .ds-247420.ds-247420 .ds-g3-acct { background: #1e1f22; border-radius: var(--r-1); overflow: hidden; }
 .ds-247420.ds-247420 .ds-g3-acct-ban { height: 100px; }
 .ds-247420.ds-247420 .ds-g3-acct-row { display: flex; align-items: flex-end; gap: var(--space-3); padding: 0 var(--space-3) var(--space-3); margin-top: -38px; }
-.ds-247420.ds-247420 .ds-g3-acct-av { width: 80px; height: 80px; box-sizing: border-box; border-radius: 50%; border: 6px solid #1e1f22; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; color: #fff; box-shadow: 0 0 0 2px #2b2d31; }
+.ds-247420.ds-247420 .ds-g3-acct-av { width: 80px; height: 80px; box-sizing: border-box; border-radius: 50%; border: 6px solid #1e1f22; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 600; color: #fff; box-shadow: 0 0 0 2px #2b2d31; }
 .ds-247420.ds-247420 .ds-g3-acct h3 { font-size: var(--fs-body); font-weight: 400; line-height: 24px; color: #f2f3f5; margin: 0 0 var(--space-2); }
 .ds-247420.ds-247420 .ds-g3-acct-note { padding: 0 var(--space-3) var(--space-3); font-size: var(--fs-xs); color: #b5bac1; }
 .ds-247420.ds-247420 .ds-g3-stat { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-2); margin-top: var(--space-2-75); }
@@ -14073,7 +14073,7 @@
 .ds-247420.ds-247420 .ds-g3-dmcat { font-size: var(--fs-micro); font-weight: 600; color: #949ba4; text-transform: uppercase; padding: var(--space-4) var(--space-2) var(--space-1); cursor: default; }
 .ds-247420.ds-247420 .ca-rail-channels a.ds-g3-dmrow { height: 42px; }
 .ds-247420.ds-247420 .ds-g3-dmav { width: 32px; height: 32px; border-radius: 50%; background: var(--ds-g3-av-color, var(--accent)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: var(--fs-micro); font-weight: 700; flex-shrink: 0; }
-.ds-247420.ds-247420 .ds-g3-dmav-big { width: 80px; height: 80px; font-size: calc(var(--fs-body) * 2); margin-bottom: var(--space-2); }
+.ds-247420.ds-247420 .ds-g3-dmav-big { width: 80px; height: 80px; font-size: calc(var(--fs-body) * 2.125); font-weight: 600; margin-bottom: var(--space-2); }
 .ds-247420.ds-247420 .ds-g3-dmname { margin-inline-start: var(--space-1-75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-247420.ds-247420 .ds-g3-badge { margin-inline-start: auto; background: #f23f43; color: #fff; font-size: var(--fs-micro); font-weight: 700; border-radius: 8px; min-width: 16px; height: 16px; padding: 0 var(--space-1-5); display: flex; align-items: center; justify-content: center; }
 .ds-247420.ds-247420 .ds-g3-dmempty { padding: var(--space-2); font-size: var(--fs-tiny); color: #949ba4; }
@@ -14267,8 +14267,18 @@
 .ds-247420.ds-247420 .ds-g3-pc-moved { font-size: var(--fs-xs); color: #f0b232; margin-top: var(--space-1); }
 .ds-247420.ds-247420 .ds-g3-pc-link { display: block; color: #00a8fc; text-decoration: none; overflow-wrap: anywhere; }
 .ds-247420.ds-247420 .ds-g3-pc-link:hover { text-decoration: underline; }
-.ds-247420.ds-247420 .ds-g3-pcard.ds-g3-pcard-prev { width: auto; max-width: calc(var(--space-6) * 14); box-shadow: none; margin-top: var(--space-2); }
+.ds-247420.ds-247420 .ds-g3-pcard.ds-g3-pcard-prev { box-shadow: none; max-width: 100%; }
+.ds-247420.ds-247420 .ds-g3-pcard-prev h2 { margin-bottom: var(--space-3); }
 .ds-247420.ds-247420 .ds-g3-pre .ds-g3-li { display: inline; }
+.ds-247420.ds-247420 .ds-g3-qr { background: #fff; border-radius: var(--r-1); padding: var(--space-2); align-self: flex-start; width: calc(var(--space-6) * 5); max-width: 100%; }
+.ds-247420.ds-247420 .ds-g3-qr svg { display: block; width: 100%; height: auto; }
+.ds-247420.ds-247420 .ds-g3-method.ds-g3-method-col { flex-direction: column; align-items: stretch; }
+.ds-247420.ds-247420 .ds-g3-nickwarn:empty { display: none; }
+.ds-247420.ds-247420 .ds-g3-nickwarn { font-size: var(--fs-xs); margin-top: var(--space-1); }
+.ds-247420.ds-247420 .ds-g3-seen { color: #949ba4; }
+.ds-247420.ds-247420 select.ds-g3-setm { height: 40px; box-sizing: border-box; }
+.ds-247420.ds-247420 textarea.ds-g3-fi { line-height: 1.5; }
+.ds-247420.ds-247420 .ds-g3-pcard-prev h2 { margin-bottom: calc(var(--space-3) + var(--space-1)); }
 
 /* app-surfaces.css */
 
