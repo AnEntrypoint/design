@@ -17,7 +17,7 @@ import { createHeader } from './community-app/header.js';
 import { createUserPanel } from './community-app/user-panel.js';
 import { createSurfaces } from './community-app/surfaces.js';
 import { createOverlays, DropAnywhereOverlay } from './community-app/overlays.js';
-import { closeOverlays, createOverlayApi } from './community-app/overlay-state.js';
+import { closeOverlays, createOverlayApi, OVERLAY_OPEN } from './community-app/overlay-state.js';
 import { createKeys } from './community-app/keys.js';
 
 const h = webjsx.createElement;
@@ -36,7 +36,7 @@ export function mountCommunityApp(root, adapter = {}) {
     const userPanel = createUserPanel(app);
     const surfaces = createSurfaces(app);
     const overlays = createOverlays(app, { surfaces });
-    const keys = createKeys(app, { closeOverlays: () => closeOverlays(app) });
+    const keys = createKeys(app, { closeOverlays: () => closeOverlays(app), overlayOpen: () => !!root.querySelector(OVERLAY_OPEN) });
     const { chatView } = chat;
     const { voiceView } = voice;
     const { railServersView, railChannelsView } = rail;
@@ -78,10 +78,42 @@ export function mountCommunityApp(root, adapter = {}) {
         );
     };
 
+    const SKIP_FOCUS_KEEP = /^(INPUT|TEXTAREA|SELECT)$/;
+    const focusRef = (el) => {
+        if (!el || el === document.body || el === root || !root.contains(el)) return null;
+        const cls = String(el.className || '').split(/\s+/).filter(Boolean);
+        const label = el.getAttribute('aria-label');
+        const sel = el.tagName.toLowerCase() + cls.map((c) => '.' + CSS.escape(c)).join('') + (label ? '[aria-label="' + CSS.escape(label) + '"]' : '');
+        const same = [...root.querySelectorAll(sel)];
+        return { el, sel, text: (el.textContent || '').trim().slice(0, 60), index: Math.max(0, same.indexOf(el)) };
+    };
+    const refind = (ref) => {
+        if (ref.el.isConnected) return ref.el;
+        const same = [...root.querySelectorAll(ref.sel)].filter((e) => e.getClientRects().length);
+        return same.find((e) => (e.textContent || '').trim().slice(0, 60) === ref.text) || same[ref.index] || same[0] || null;
+    };
+    const refocus = (ref) => {
+        const t = ref && refind(ref);
+        if (t && typeof t.focus === 'function' && t !== document.activeElement) t.focus({ preventScroll: true });
+    };
+    const restoreOpener = (ref) => setTimeout(() => {
+        if (root.querySelector(OVERLAY_OPEN)) return;
+        const now = document.activeElement;
+        if (now && now !== document.body && root.contains(now)) return;
+        refocus(ref);
+    }, 0);
+
     const renderNow = () => {
         const active = document.activeElement;
+        const hadOverlay = !!root.querySelector(OVERLAY_OPEN);
+        const openerBefore = hadOverlay ? null : (focusRef(active) || focusRef(st.lastActivator) || (st.lastOverlayOpener && Date.now() - st.lastOverlayOpener.at < 1500 ? st.lastOverlayOpener.ref : null));
+        const keepFocus = active && !SKIP_FOCUS_KEEP.test(active.tagName) ? focusRef(active) : null;
         const focusedSwitch = active && active.getAttribute && active.getAttribute('role') === 'switch' && root.contains(active) ? active.getAttribute('aria-label') : null;
         webjsx.applyDiff(root, view());
+        if (keepFocus && !keepFocus.el.isConnected && (document.activeElement === document.body || !document.activeElement)) refocus(keepFocus);
+        const hasOverlay = !!root.querySelector(OVERLAY_OPEN);
+        if (!hadOverlay && hasOverlay) st.overlayOpener = openerBefore;
+        else if (hadOverlay && !hasOverlay && st.overlayOpener) { restoreOpener(st.overlayOpener); st.lastOverlayOpener = { ref: st.overlayOpener, at: Date.now() }; st.overlayOpener = null; }
         if (st.renaming && !st.renaming.focused) { const inp = root.querySelector('.ds-g3-rename'); if (inp) { st.renaming.focused = true; inp.focus(); inp.select(); } }
         const pop = root.querySelector('.ds-g3-statusmenu');
         if (pop && !pop.contains(document.activeElement)) { const first = pop.querySelector('[role=menuitem], input'); if (first) setTimeout(() => first.focus(), 0); }

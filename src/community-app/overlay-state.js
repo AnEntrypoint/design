@@ -1,4 +1,6 @@
+import { popoverList } from '../modules/index.js';
 
+export const OVERLAY_OPEN = '.ds-g3-scrim,.ds-g3-pop-wrap,[role=dialog],[role=menu],.ds-g3-sw,.ds-g3-cpick,.ds-g3-stkpop,.ds-g3-rxpick,.ds-ep-ctxmenu-backdrop,.ds-g3-rename';
 
 export function closeOverlays(app) {
     const { A, get, st } = app;
@@ -10,6 +12,12 @@ export function closeOverlays(app) {
     if (open.account && open.account.setup && open.account.setup.open && A.setupClose) A.setupClose();
     if (open.gameServerCreateOpen && A.closeServerCreate) A.closeServerCreate();
     if (open.gamePrefOpen && A.closeGamePrefs) A.closeGamePrefs();
+    if (open.voiceSettingsOpen && A.voiceSettingsClose) A.voiceSettingsClose();
+    if (open.showAuthModal && A.closeAuth) A.closeAuth();
+    if (open.settingsOpen && A.openSettings) A.openSettings();
+    if (open.videoLightbox && open.videoLightbox.open && A.closeVideoLightbox) A.closeVideoLightbox();
+    if (open.threadPanelOpen && A.closeThreadPanel) A.closeThreadPanel();
+    popoverList().forEach((x) => { if (x.close) x.close({ s: open, A }); });
     app.render();
 }
 

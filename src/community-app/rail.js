@@ -27,7 +27,7 @@ export function createRail(app) {
     const railServersView = (s) => {
         const servers = s.servers || [];
         if (!servers.length && !A.createOrJoinServer) return null;
-        return h('div', { class: 'ca-rail-servers' },
+        return h('div', { key: 'servers', class: 'ca-rail-servers' },
             railServerPill({ name: 'home', _home: true }, s),
             h('div', { class: 'ca-rail-sep', 'aria-hidden': 'true' }),
             ...servers.map(sv => railServerPill(sv, s)),
@@ -45,6 +45,7 @@ export function createRail(app) {
         if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'members', color: '#949cf7', onClick: () => A.inviteToServer() });
         if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), onClick: () => A.toggleMuteChannel() });
         if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => out.push({ label: x.menu.label, icon: x.menu.icon, onClick: () => A.openSurface(x.id) }));
+        if (s.discovery && s.currentServerId && A.openGamePrefs) out.push({ label: 'Server Settings', icon: 'settings', onClick: () => { if (A.setGamePrefTab) A.setGamePrefTab('discovery'); A.openGamePrefs(); } });
         if (A.explore) out.push({ label: 'Discover Servers', icon: 'compass', onClick: () => A.explore() });
         out.push({ divider: true });
         if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'settings', onClick: () => A.openGamePrefs() });
@@ -66,9 +67,9 @@ export function createRail(app) {
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
         const cur = s.currentChannel || {};
         const groupRows = railGroups().flatMap((g) => { const list = channels.filter((c) => groupOf(c) === g.id); return list.length || g.always ? railGroup(g.label, s, list, cur, g.voice, g.createType) : []; });
-        return h('div', { class: 'ca-rail-channels' },
+        return h('div', { key: 'channels', class: 'ca-rail-channels' },
             railServerHead(s),
-            st.serverMenuOpen ? Game3ServerMenu({ items: serverMenuItems(s), onPick: () => { st.serverMenuOpen = false; } }) : null,
+            st.serverMenuOpen ? Game3ServerMenu({ items: serverMenuItems(s), onPick: () => { st.serverMenuOpen = false; render(); const head = root.querySelector('.shead'); if (head) head.focus(); } }) : null,
             h('div', { class: 'chans' },
                 ...railSurfaceRows(s),
                 h('div', { class: 'ds-g3-sep2', 'aria-hidden': 'true' }),
@@ -83,7 +84,7 @@ export function createRail(app) {
             key: 'dm' + c.id, href: '#', class: 'ds-g3-dmrow' + (s.activeDmPeer === c.id ? ' active' : '') + (c.unread ? ' unread' : ''), 'aria-label': 'conversation with ' + c.name,
             onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); if (A.closeMobileMenu) A.closeMobileMenu(); },
         }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name, c.id) }, game3AvInitial(initial(c.name), c.id), h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + ({ online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' }[c.status] || '#23a55a'), 'aria-label': c.status || 'online' })), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
-        return h('div', { class: 'ca-rail-channels' },
+        return h('div', { key: 'channels', class: 'ca-rail-channels' },
             h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => { st.switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } }, h('span', {}, 'Find or start a conversation')),
             h('div', { class: 'chans' },
                 h('a', { href: '#', class: s.activeDmPeer ? '' : 'active', onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(null); if (A.closeMobileMenu) A.closeMobileMenu(); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })), h('span', {}, 'People here')),

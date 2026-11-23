@@ -14393,6 +14393,29 @@
 .ds-247420.ds-247420 .ds-g3-vtvideos { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 .ds-247420.ds-247420 .ds-g3-vtvideo { width: min(100%, calc(var(--space-6) * 10)); background: #000; border-radius: var(--r-1); }
 
+.ds-247420.ds-247420 .ds-g3-dsc-status { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3); border-radius: var(--r-1); background: var(--bg-2); border-inline-start: 3px solid var(--fg-2); }
+.ds-247420.ds-247420 .ds-g3-dsc-status.on { border-inline-start-color: var(--green, #23a55a); }
+.ds-247420.ds-247420 .ds-g3-dsc-status span { font-size: var(--fs-sm); color: var(--fg-2); }
+.ds-247420.ds-247420 .ds-g3-dsc-reqs { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); }
+.ds-247420.ds-247420 .ds-g3-dsc-reqs li { display: flex; align-items: center; gap: var(--space-2); font-size: var(--fs-sm); }
+.ds-247420.ds-247420 .ds-g3-dsc-reqs li.ok .ds-g3-dsc-mark { color: var(--green, #23a55a); }
+.ds-247420.ds-247420 .ds-g3-dsc-reqs li.miss .ds-g3-dsc-mark { color: var(--red, #f23f43); }
+.ds-247420.ds-247420 .ds-g3-dsc-mark { inline-size: var(--space-4); text-align: center; font-weight: 700; }
+.ds-247420.ds-247420 .ds-g3-dsc-sr { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+.ds-247420.ds-247420 .ds-g3-dsc-name { margin: 0; font-weight: 600; }
+.ds-247420.ds-247420 .ds-g3-dsc-act { margin-block-start: var(--space-3); }
+.ds-247420.ds-247420 .ds-g3-dsc-off { opacity: 0.5; cursor: default; }
+.ds-247420.ds-247420 .ds-g3-dsc-log { padding-block: var(--space-1); font-size: var(--fs-sm); overflow-wrap: anywhere; }
+.ds-247420.ds-247420 .ds-g3-dsc-bad { color: var(--red, #f23f43); }
+.ds-247420.ds-247420 .ds-g3-dsc-find { display: flex; flex-direction: column; gap: var(--space-2); margin-block-end: var(--space-3); }
+.ds-247420.ds-247420 .ds-g3-dsc-tags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ds-247420.ds-247420 .ds-g3-dsc-tag { padding: var(--space-1) var(--space-2); border-radius: var(--r-1); background: var(--bg-2); font-size: var(--fs-xs); cursor: pointer; }
+.ds-247420.ds-247420 .ds-g3-dsc-tag.on { background: var(--accent); color: var(--on-accent, #fff); }
+.ds-247420.ds-247420 .ds-g3-dsc-ico { position: relative; overflow: hidden; }
+.ds-247420.ds-247420 .ds-g3-dsc-img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.ds-247420.ds-247420 .ds-g3-dsc-meta { font-size: var(--fs-xs); color: var(--fg-2); overflow-wrap: anywhere; }
+.ds-247420.ds-247420 .ds-g3-dsc-sec { margin-block: var(--space-3) var(--space-2); }
+
 /* app-surfaces.css */
 
 .ds-247420 .sr-only {

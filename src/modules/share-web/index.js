@@ -7,6 +7,7 @@ registerModule({
     id: 'share-web-panel', kind: 'popover',
     popover: {
         id: 'share-web-panel',
+        close: ({ s, A }) => { if (state(s).dialog) A.sharePageClose(); },
         mount: ({ s, A }) => {
             const sw = state(s);
             if (sw.dialog) return SharePageDialog({ onClose: () => A.sharePageClose(), onStart: (url) => A.sharePageStart(url) });

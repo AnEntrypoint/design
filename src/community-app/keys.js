@@ -1,7 +1,7 @@
 
 
-export function createKeys(app, { closeOverlays }) {
-    const { root, A, st } = app;
+export function createKeys(app, { closeOverlays, overlayOpen }) {
+    const { root, get, A, st } = app;
     const render = () => app.render();
 
     const onGlobalKeys = (e) => {
@@ -21,7 +21,8 @@ export function createKeys(app, { closeOverlays }) {
             }
             return;
         }
-        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw, .ds-g3-statusmenu, .ds-g3-rename')))) { closeOverlays(); return; }
+        if (k === 'Escape' && A.startReply && (get() || {}).replyTarget && !overlayOpen() && (!typing || (a.closest && a.closest('.ds-g3-comp')))) { A.startReply(null); return; }
+        if (k === 'Escape' && (!typing || (a.closest && a.closest('.ds-g3-scrim, .ds-g3-sw, .ds-g3-statusmenu, .ds-g3-rename, .ds-g3-set, .ds-g3-pop-wrap, [role=dialog]')))) { if (overlayOpen()) e.preventDefault(); closeOverlays(); return; }
         if (typing || (a && a.closest && a.closest('.ds-g3-statusmenu, .ds-g3-scrim, .ds-g3-me, .ds-g3-shpanel'))) return;
         const thread = root.querySelector('.chat-thread');
         if (k === 'End' && thread) { e.preventDefault(); thread.scrollTop = thread.scrollHeight; return; }
@@ -32,8 +33,21 @@ export function createKeys(app, { closeOverlays }) {
         else if ((e.ctrlKey || e.metaKey) && k === 'v') input.focus();
     };
 
+    const within = (e, sel) => e.composedPath().some((n) => n.matches && n.matches(sel));
+    const ACTIVATABLE = '[role=button],[role=menuitem],[role=radio],[role=tab],[role=option]';
+    const NATIVE = /^(BUTTON|A|INPUT|TEXTAREA|SELECT|SUMMARY)$/;
+    const onActivateKey = (e) => {
+        if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || (e.key !== 'Enter' && e.key !== ' ')) return;
+        const t = e.target;
+        if (!t || !t.matches || NATIVE.test(t.tagName) || !t.matches(ACTIVATABLE)) return;
+        e.preventDefault();
+        t.click();
+    };
+
     const rootProps = (s) => ({
         class: 'ca-app',
+        onkeydown: onActivateKey,
+        onpointerdown: (e) => { const a = e.target.closest && e.target.closest('button,[role=button],[role=menuitem],a[href],[tabindex]'); if (a) st.lastActivator = a; },
             ondragenter: (e) => {
                 if (!A.attachFiles) return;
                 e.preventDefault();
@@ -55,13 +69,14 @@ export function createKeys(app, { closeOverlays }) {
                 render();
             },
             onclick: (e) => {
-                if (st.moreFor && !(e.target.closest && e.target.closest('.ds-g3-mmenu, .ds-g3-bar'))) { st.moreFor = null; render(); }
-                if (st.serverMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-smenu, .shead'))) { st.serverMenuOpen = false; render(); }
-                if (st.stickersOpen && !(e.target.closest && e.target.closest('.ds-g3-stkpop, .ds-g3-compbtn'))) { st.stickersOpen = false; render(); }
-                if (st.statusMenuOpen && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-mebtn'))) { st.statusMenuOpen = false; render(); }
-                if ((st.avatarMenuOpen || st.userMenu.open) && !(e.target.closest && e.target.closest('.ds-g3-statusmenu, .ds-g3-me'))) { st.avatarMenuOpen = false; st.userMenu = { open: false, sub: '' }; render(); }
-                if (st.emojisOpen && !(e.target.closest && e.target.closest('.ds-g3-cpick, .ds-g3-compbtn'))) { st.emojisOpen = false; render(); }
-                if (st.reactPickFor && !(e.target.closest && e.target.closest('.ds-g3-rxpick, .ds-g3-bar, .ds-g3-mmenu'))) { st.reactPickFor = null; render(); }
+                if (st.renaming && !(within(e, '.ds-g3-rename, .ds-g3-men'))) { st.renaming = null; render(); }
+                if (st.moreFor && !(within(e, '.ds-g3-mmenu, .ds-g3-bar'))) { st.moreFor = null; render(); }
+                if (st.serverMenuOpen && !(within(e, '.ds-g3-smenu, .shead'))) { st.serverMenuOpen = false; render(); }
+                if (st.stickersOpen && !(within(e, '.ds-g3-stkpop, .ds-g3-compbtn'))) { st.stickersOpen = false; render(); }
+                if (st.statusMenuOpen && !(within(e, '.ds-g3-statusmenu, .ds-g3-mebtn'))) { st.statusMenuOpen = false; render(); }
+                if ((st.avatarMenuOpen || st.userMenu.open) && !(within(e, '.ds-g3-statusmenu, .ds-g3-me'))) { st.avatarMenuOpen = false; st.userMenu = { open: false, sub: '' }; render(); }
+                if (st.emojisOpen && !(within(e, '.ds-g3-cpick, .ds-g3-compbtn'))) { st.emojisOpen = false; render(); }
+                if (st.reactPickFor && !(within(e, '.ds-g3-rxpick, .ds-g3-bar, .ds-g3-mmenu'))) { st.reactPickFor = null; render(); }
                 const pic = e.target.closest && e.target.closest('.ds-g3-pic');
                 if (pic && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { st.imageLightbox = { open: true, src: pic.getAttribute('src'), alt: '' }; render(); return; }
                 const a = e.target.closest && e.target.closest('.chat-image');

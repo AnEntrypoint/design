@@ -21,7 +21,7 @@ export function createHeader(app) {
             pinsOpen: s.gameSurface === 'pins',
             onPins: A.openSurface ? () => A.openSurface('pins') : null,
             trailing: [
-                h('label', { key: 'srch', class: 'ds-g3-srch' }, h('input', { type: 'text', placeholder: 'Search', value: s.chatSearch || '', onkeydown: (e) => { if (e.key === 'Enter' && A.setChatSearch) A.setChatSearch(e.currentTarget.value); } }), Icon('ref-search', { size: 16 })),
+                h('label', { key: 'srch', class: 'ds-g3-srch' }, h('input', { type: 'text', placeholder: 'Search', value: s.chatSearch || '', onkeydown: (e) => { if (e.key === 'Enter' && A.setChatSearch) A.setChatSearch(e.currentTarget.value); else if (e.key === 'Escape') { e.currentTarget.value = ''; if (s.chatSearch && A.setChatSearch) A.setChatSearch(''); } } }), Icon('ref-search', { size: 16 })),
                 h('button', { key: 'inbox', type: 'button', class: 'ds-g3-ibtn' + (s.gameSurface === 'inbox' ? ' on' : ''), title: 'Inbox', 'aria-label': 'Inbox', onclick: () => A.openSurface && A.openSurface('inbox') }, Icon('ref-inbox', { size: 24 })),
             ],
             buttons: [

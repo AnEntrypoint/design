@@ -24,6 +24,7 @@ registerModule({
     id: 'sharesies-panel', kind: 'popover',
     popover: {
         id: 'sharesies-panel',
+        close: ({ s, A }) => { if (state(s).activeId) A.sharesiesClosePanel(); },
         mount: ({ s, A }) => {
             const sh = state(s);
             const session = sh.sessions.find((x) => x.id === sh.activeId);
@@ -36,6 +37,7 @@ registerModule({
     id: 'sharesies-share', kind: 'popover',
     popover: {
         id: 'sharesies-share',
+        close: ({ s, A }) => { if (state(s).share) A.sharesiesShareClose(); },
         mount: ({ s, A, render }) => {
             const sh = state(s);
             if (!sh.share) return null;
