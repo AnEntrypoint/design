@@ -119,6 +119,12 @@ export function VoiceSettingsModal({ open = false, mode = 'ptt', inputId, output
                         format: (v) => Math.round(v * 100) + '%',
                         onInput: (v) => patch({ volume: v }), ariaLabel: 'master volume'
                     })
+                ]}),
+                SettingsSection({ title: 'How voice rooms connect', children: [
+                    SettingsRow({
+                        icon: 'blank', label: 'One relay hub per room',
+                        description: 'One browser acts as the hub: the first one in the room keeps the role, and if it drops the others agree on a replacement (best measured uplink first) within about 5 seconds. Everyone else sends one stream to the hub (about 70 kbps) and hears the others through it. The hub sends every listener its own voice plus a relayed copy of each other speaker. Measured with everyone talking at once, the hub uploads about 0.07 Mbps with 2 people, 0.23 with 3, 0.5 with 4 and 0.8 to 1.0 with 5; 1.3 with 6 is an estimate. A hub on a 1 Mbps uplink saturates at 5 to 6 people all talking together. With one person talking at a time the hub needs only about 0.05 Mbps per extra listener.'
+                    })
                 ]})
             ),
             h('div', { class: 'vx-modal-foot' },
