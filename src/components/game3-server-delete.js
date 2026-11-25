@@ -39,7 +39,7 @@ export function Game3ServerDelete({ name = '', onDelete, onClose } = {}) {
                 h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close', onclick: close, onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); close(); } } }, Icon('x', { size: 14 }))),
             h('div', { class: 'ds-g3-evl ds-g3-sform' },
                 h('p', { class: 'ds-g3-sub' }, 'This deletes the server for everyone. Every member loses it on their next sync, it can no longer be posted to or joined, and its Discover listing and invites stop working. Your own messages and settings in it are retracted.'),
-                h('p', { class: 'ds-g3-sub' }, 'Relays are independent servers. Some may keep old messages and this cannot be undone or forced.'),
+                h('p', { class: 'ds-g3-sub' }, 'The deletion itself is honoured by this app everywhere. Retracting your messages is only a request (NIP-09): relay.damus.io, relay.primal.net, nos.lol, relay.snort.social, nostr.wine and offchain.pub advertise support for it, but any relay may still keep old messages, and this cannot be undone or forced.'),
                 h('div', { class: 'ds-g3-lbl' }, 'Type the server name to confirm'),
                 h('input', {
                     placeholder: name, maxlength: '32', autocomplete: 'off', 'aria-label': 'type ' + name + ' to confirm',
