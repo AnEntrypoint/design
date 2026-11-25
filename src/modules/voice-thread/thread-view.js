@@ -16,16 +16,20 @@ const clipChip = (c, onPlay, onReplay) => h('div', { key: 'c' + c.seq, class: 'd
         : c.state === 'playing' ? h('span', { class: 'ds-g3-vtbars', 'aria-label': 'playing' }, h('i'), h('i'), h('i'))
             : h('span', { ...press(() => (c.state === 'queued' ? onPlay(c.seq) : onReplay(c.seq))), class: 'ds-g3-vtbtn', 'aria-label': c.state === 'queued' ? 'play clip ' + c.seq : 'replay clip ' + c.seq, title: c.state === 'queued' ? 'Play now' : 'Replay' }, c.state === 'queued' ? '▶' : '↺'));
 
+const lagLabel = (l) => (l.state === 'catching-up' ? 'catching up' + (l.lagSeconds >= 1 ? ' · ' + seconds(l.lagSeconds) + ' behind' : '') : l.state === 'behind' ? seconds(l.lagSeconds) + ' behind' : l.state === 'live' && l.speaking ? 'live' : '');
+
 const lane = (l, acts) => h('div', { key: 'l' + l.id, class: 'ds-g3-vtlane' + (l.speaking ? ' talk' : '') },
     h('div', { class: 'ds-g3-vthead' },
         h('span', { class: 'ds-g3-vtav', style: 'background:' + game3AvatarBg(l.name, l.id) }, game3AvInitial(String(l.name || '?').slice(0, 1).toUpperCase(), l.id)),
         h('span', { class: 'ds-g3-vtname' }, l.name),
-        l.speaking ? h('span', { class: 'ds-g3-vtlive' }, 'speaking') : null),
+        l.speaking ? h('span', { class: 'ds-g3-vtlive' }, 'speaking') : null,
+        lagLabel(l) ? h('span', { class: 'ds-g3-vtlag ds-g3-vtlag-' + l.state }, lagLabel(l)) : null),
+    l.droppedSeconds > 0 ? h('div', { class: 'ds-g3-vtdrop' }, 'Dropped ' + seconds(l.droppedSeconds) + ' of the oldest audio: the backlog was over its 5 minute limit') : null,
     h('div', { class: 'ds-g3-vtclips' }, ...(l.clips.length ? l.clips.map((c) => clipChip(c, acts.onPlay, acts.onReplay)) : [h('span', { key: 'none', class: 'ds-g3-hint' }, 'nothing queued')])));
 
 export function Game3VoiceThread({ thread, acts } = {}) {
     const t = thread || { connected: false, lanes: [], stack: [], vad: { level: 0 }, settings: {} };
-    const status = !t.connected ? 'Not connected' : t.ownTalk ? 'You are talking: incoming voice is paused and stacked' : t.liveSpeakers && t.liveSpeakers.length ? t.liveSpeakers.map((x) => x.name).join(', ') + ' talking live' : t.stack.length ? 'Playing the stack' : 'Quiet: live voice plays as it comes';
+    const status = !t.connected ? 'Not connected' : t.ownTalk ? 'You are talking: incoming voice is paused and stacked' : t.liveSpeakers && t.liveSpeakers.length ? t.liveSpeakers.map((x) => x.name).join(', ') + ' talking live' : t.catchingUp && t.catchingUp.length ? 'Catching up: ' + t.catchingUp.map((x) => x.name).join(', ') : t.stack.length ? 'Playing the stack' : 'Quiet: live voice plays as it comes';
     return h('div', { class: 'ds-g3-vt', role: 'region', 'aria-label': 'voice thread' },
         h('div', { key: 'bar', class: 'ds-g3-vtbar' },
             t.connected
@@ -41,8 +45,8 @@ export function Game3VoiceThread({ thread, acts } = {}) {
         h('div', { key: 'stack', class: 'ds-g3-vtstack' },
             h('h6', null, 'Stack'),
             ...(t.stack.length
-                ? t.stack.map((c, i) => h('div', { key: 's' + c.seq, class: 'ds-g3-vtrow' + (i === 0 && c.state === 'playing' ? ' on' : '') },
-                    h('span', { class: 'ds-g3-vtseq' }, '#' + c.seq), h('span', { class: 'ds-g3-vtname' }, c.name), h('span', { class: 'ds-g3-vtdur' }, seconds(c.seconds)),
+                ? t.stack.map((c, i) => h('div', { key: 's' + (c.key || c.seq), class: 'ds-g3-vtrow' + (i === 0 && c.state === 'playing' ? ' on' : '') },
+                    h('span', { class: 'ds-g3-vtseq' }, c.label || '#' + c.seq), h('span', { class: 'ds-g3-vtname' }, c.name), h('span', { class: 'ds-g3-vtdur' }, seconds(c.seconds)),
                     i === 0 ? h('span', { class: 'ds-g3-vtctl' },
                         h('span', { ...press(() => acts.onPause()), class: 'ds-g3-vtbtn', title: t.paused ? 'Resume' : 'Pause', 'aria-label': t.paused ? 'resume' : 'pause' }, t.paused ? '▶' : '❙❙'),
                         h('span', { ...press(() => acts.onSkip()), class: 'ds-g3-vtbtn', title: 'Skip', 'aria-label': 'skip' }, '⏭')) : null))

@@ -1,5 +1,6 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
+import { IconToggle } from './shell/icons.js';
 import { STATUS } from '../game3-data.js';
 import { menuKeys } from './game3-usermenus.js';
 
@@ -29,7 +30,7 @@ export function Game3UserPanel({ name = 'You', color = 'var(--accent)', statusLa
                     : h('div', { class: 'ds-g3-men', title: 'Rename', onclick: guard((e) => { e.stopPropagation(); onRenameStart && onRenameStart(e); }) }, name),
                 rename && rename.error ? h('div', { class: 'ds-g3-mes ds-g3-mes-err', role: 'alert' }, rename.error) : statusLabel ? h('div', { class: 'ds-g3-mes', onclick: guard((e) => { e.stopPropagation(); onProfile && onProfile(e); }) }, statusLabel) : null)),
         h('button', { type: 'button', class: 'ds-g3-ibtn' + (muted ? ' red' : ''), title: muted ? 'Unmute' : 'Mute', 'aria-label': muted ? 'unmute microphone' : 'mute microphone', 'aria-pressed': muted ? 'true' : 'false', onclick: onMute },
-            Icon(muted ? 'g3-micoff' : 'g3-mic', { size: 20 })),
+            ...IconToggle(muted, 'g3-micoff', 'g3-mic', { size: 20 })),
         h('button', { type: 'button', class: 'ds-g3-ibtn', title: 'User Settings', 'aria-label': 'user settings', onclick: onSettings },
             Icon('g3-gear', { size: 20 })));
 }

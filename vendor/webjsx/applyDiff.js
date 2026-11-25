@@ -27,16 +27,20 @@ function diffChildren(parent, newVNodes) {
     const changes = [];
     let keyedMap = null;
     const originalChildNodes = getWebJSXChildNodeCache(parent) ?? getChildNodes(parent);
-    let hasKeyedNodes = false;
     let nodeOrderUnchanged = true;
+    const unkeyedOld = [];
+    for (let j = 0; j < oldVNodes.length; j++) {
+        const old = oldVNodes[j];
+        const oldKeyed = isVElement(old) && !(old instanceof Node) && old.props.key !== undefined;
+        if (!oldKeyed) unkeyedOld.push(j);
+    }
+    let unkeyedCursor = 0;
     for (let i = 0; i < newVNodes.length; i++) {
         const newVNode = newVNodes[i];
         const oldVNode = oldVNodes[i];
-        const currentNode = originalChildNodes[i];
         const newKey = isVElement(newVNode) && !(newVNode instanceof Node) ? newVNode.props.key : undefined;
         if (newKey !== undefined) {
             if (!keyedMap) {
-                hasKeyedNodes = true;
                 keyedMap = new Map();
                 for (let j = 0; j < oldVNodes.length; j++) {
                     const matchingVNode = oldVNodes[j];
@@ -67,14 +71,17 @@ function diffChildren(parent, newVNodes) {
             }
         }
         else {
-            if (!hasKeyedNodes &&
-                canUpdateVNodes(newVNode, oldVNode) &&
-                currentNode) {
+            const oldIndex = unkeyedCursor < unkeyedOld.length ? unkeyedOld[unkeyedCursor] : -1;
+            const candidate = oldIndex >= 0 ? oldVNodes[oldIndex] : undefined;
+            const currentNode = oldIndex >= 0 ? originalChildNodes[oldIndex] : undefined;
+            if (canUpdateVNodes(newVNode, candidate) && currentNode) {
+                unkeyedCursor++;
+                if (oldIndex !== i) nodeOrderUnchanged = false;
                 changes.push({
                     type: "update",
                     node: currentNode,
                     newVNode,
-                    oldVNode,
+                    oldVNode: candidate,
                 });
             }
             else {

@@ -68,7 +68,7 @@ export function createRail(app) {
             if (s.voiceConnected && s.voiceChannelName === c.name) return (s.voiceParticipants || []).map((p) => ({ name: p.name || p.identity || '', speaking: !!p.speaking, muted: !!p.muted }));
             return ((s.voiceOccupants || {})[c.id] || []).map((p) => ({ name: p.name, speaking: false, muted: !!p.muted }));
         };
-        const vuRows = (c) => occupantsOf(c).map((p, i) => h('div', { key: 'vu' + c.id + i, class: 'vu' + (p.speaking ? ' talk' : '') }, h('span', { class: 'ds-g3-vu-av', 'aria-hidden': 'true' }, String(p.name || '?').trim().slice(0, 1).toUpperCase()), p.name, p.muted ? h('span', { class: 'mo', 'aria-label': 'muted' }, Icon('g3-micoff', { size: 14 })) : null));
+        const vuRows = (c) => occupantsOf(c).map((p, i) => h('div', { key: 'vu' + c.id + i, class: 'vu' + (p.speaking ? ' talk' : '') }, h('span', { class: 'ds-g3-vu-av', 'aria-hidden': 'true' }, String(p.name || '?').trim().slice(0, 1).toUpperCase()), p.name, h('span', { class: 'mo', 'aria-label': 'muted', style: p.muted ? null : 'display:none' }, Icon('g3-micoff', { size: 14 }))));
         return [head, ...(list.length ? list.flatMap(c => [railPill(c, cur, isVoice, s), ...vuRows(c)]) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
     };
     const railSurfaceRows = (s) => railSurfaces().map((x) => x.rail.row({ s, A, h }));

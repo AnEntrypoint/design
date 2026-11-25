@@ -21,6 +21,7 @@ export function createKeys(app, { closeOverlays, overlayOpen }) {
             }
             return;
         }
+        if (k === 'Escape' && a && a.closest && a.closest('[data-own-escape]')) return;
         if (k === 'Escape' && st.stage && st.stageCancel && !overlayOpen() && (!typing || (a.closest && a.closest('.ds-g3-comp')))) { e.preventDefault(); st.stageCancel(); return; }
         if (k === 'Escape' && A.startReply && (get() || {}).replyTarget && !overlayOpen() && (!typing || (a.closest && a.closest('.ds-g3-comp')))) { A.startReply(null); return; }
         if (k === 'Escape' && A.toggleMembers && (get() || {}).memberListOpen && !overlayOpen() && window.matchMedia('(max-width: 900px)').matches) { e.preventDefault(); A.toggleMembers(); return; }

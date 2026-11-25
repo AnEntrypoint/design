@@ -33,7 +33,8 @@ const pane = ({ serverSettings: d, acts }) => {
         h('h6', { key: 'mb' }, 'Members · ' + d.members.length),
         h('p', { key: 'ml', class: 'ds-g3-hint' }, d.members.join(', ')),
         h('h6', { key: 'dz' }, 'Danger Zone'),
-        pressAgain('Delete Server', 'press again: remove ' + d.name + ' from this device', () => acts.deleteServer && acts.deleteServer(), 'delsrv'),
+        h('p', { key: 'dzn', class: 'ds-g3-hint' }, 'Deleting a server removes it for every member. Only the owner can do this.'),
+        h('div', { key: 'delsrv', class: 'ds-g3-evb ds-g3-evb-danger', role: 'button', tabindex: '0', onclick: () => acts.openServerDelete && acts.openServerDelete(), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); acts.openServerDelete && acts.openServerDelete(); } } }, 'Delete Server'),
     ].filter(Boolean);
 };
 

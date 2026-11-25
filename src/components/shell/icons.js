@@ -172,3 +172,8 @@ export function Icon(name, { size = 16 } = {}) {
     if (!inner) return h('span', { class: 'glyph', 'aria-hidden': 'true' }, '');
     return h('svg', { ...iconAttrs(name, size), dangerouslySetInnerHTML: { __html: inner } });
 }
+
+export function IconToggle(on, onName, offName, { size = 16 } = {}) {
+    const shown = (name, visible) => { const v = Icon(name, { size }); return visible ? v : { ...v, props: { ...v.props, style: 'display:none' } }; };
+    return [shown(onName, on), shown(offName, !on)];
+}

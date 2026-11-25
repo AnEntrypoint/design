@@ -11,6 +11,7 @@ export function closeOverlays(app) {
     if (open.gameSurface && A.closeSurface) A.closeSurface();
     if (open.account && open.account.setup && open.account.setup.open && A.setupClose) A.setupClose();
     if (open.gameServerCreateOpen && A.closeServerCreate) A.closeServerCreate();
+    if (open.serverDelete && A.closeServerDelete) A.closeServerDelete();
     if (open.gamePrefOpen && A.closeGamePrefs) A.closeGamePrefs();
     if (open.voiceSettingsOpen && A.voiceSettingsClose) A.voiceSettingsClose();
     if (open.showAuthModal && A.closeAuth) A.closeAuth();

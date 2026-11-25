@@ -13924,6 +13924,8 @@
 .ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-on { background: #5865f2; }
 .ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-big { display: block; text-align: center; margin: 18px 0 0; padding: var(--space-2-5); }
 .ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-link { background: transparent; color: #b5bac1; }
+.ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-danger { background: #f23f43; color: #fff; }
+.ds-247420.ds-247420 .ds-g3-evb.ds-g3-evb-off { opacity: .4; cursor: not-allowed; }
 
 .ds-247420.ds-247420 .ds-g3-set h2 { font-weight: 400; line-height: 30px; letter-spacing: normal; }
 .ds-247420.ds-247420 .ds-g3-kb { display: flex; justify-content: space-between; padding: var(--space-2-5) 0; border-bottom: 1px solid #3f4147; font-size: var(--fs-xs); }
@@ -14393,6 +14395,11 @@
 .ds-247420.ds-247420 .ds-g3-vtav { width: calc(var(--space-4) + var(--space-1)); height: calc(var(--space-4) + var(--space-1)); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: var(--fs-micro); font-weight: 600; flex: none; }
 .ds-247420.ds-247420 .ds-g3-vtname { color: #f2f3f5; font-weight: 600; font-size: var(--fs-xs); }
 .ds-247420.ds-247420 .ds-g3-vtlive { color: #23a55a; font-size: var(--fs-micro); text-transform: uppercase; }
+.ds-247420.ds-247420 .ds-g3-vtlag { font-size: var(--fs-micro); color: #949ba4; }
+.ds-247420.ds-247420 .ds-g3-vtlag-catching-up { color: #5865f2; }
+.ds-247420.ds-247420 .ds-g3-vtlag-behind { color: #f0b232; }
+.ds-247420.ds-247420 .ds-g3-vtlag-live { color: #23a55a; text-transform: uppercase; }
+.ds-247420.ds-247420 .ds-g3-vtdrop { font-size: var(--fs-micro); color: #f0b232; margin-block-end: var(--space-2); }
 .ds-247420.ds-247420 .ds-g3-vtclips { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 .ds-247420.ds-247420 .ds-g3-vtclip { display: inline-flex; align-items: center; gap: var(--space-2); background: #1e1f22; border-radius: var(--r-0); padding: var(--space-1) var(--space-2); font-size: var(--fs-micro); }
 .ds-247420.ds-247420 .ds-g3-vtclip-played { opacity: 0.6; }
@@ -14470,6 +14477,8 @@
 @media (max-width: 640px) {
   .ds-247420.ds-247420 .ds-g3-set-close { inset-block-start: 72px; inset-inline-end: 16px; }
 }
+
+.ds-247420.ds-247420 .ca-rail svg *, .ds-247420.ds-247420 .ds-g3-ibtn svg *, .ds-247420.ds-247420 .ds-g3-vbar svg * { pointer-events: none; }
 
 /* app-surfaces.css */
 

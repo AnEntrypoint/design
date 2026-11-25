@@ -4,13 +4,20 @@ const h = webjsx.createElement;
 
 const ini = (nm) => String(nm || '').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 3).toUpperCase();
 
-export function Game3InviteCard({ name = '', color = '#5865f2', valid = true, online = null, members = null, joined = false, onJoin, key } = {}) {
+export function Game3InviteCard({ name = '', color = '#5865f2', valid = true, deleted = false, online = null, members = null, joined = false, onJoin, key } = {}) {
     if (!valid) {
         return h('div', { key, class: 'ds-g3-inv ds-g3-inv-dead' },
             h('div', { class: 'ds-g3-inv-ih' }, 'An invite to a server'),
             h('div', { class: 'ds-g3-inv-ib' },
                 h('div', { class: 'ds-g3-inv-dico', style: 'background:#4e5058' }, '✕'),
                 h('div', {}, h('h3', {}, 'Invite expired'), h('p', {}, "this server isn't here anymore"))));
+    }
+    if (deleted) {
+        return h('div', { key, class: 'ds-g3-inv ds-g3-inv-dead ds-g3-inv-deleted' },
+            h('div', { class: 'ds-g3-inv-ih' }, 'An invite to a server'),
+            h('div', { class: 'ds-g3-inv-ib' },
+                h('div', { class: 'ds-g3-inv-dico', style: 'background:#4e5058' }, '✕'),
+                h('div', {}, h('h3', {}, 'Server deleted'), h('p', {}, (name ? name + ' was' : 'This server was') + ' deleted by its owner'))));
     }
     const counts = members == null ? null : [
         h('i', { key: 'd1', class: 'ds-g3-inv-dot ds-g3-inv-dot-g' }), (online || 0) + ' Online ',
