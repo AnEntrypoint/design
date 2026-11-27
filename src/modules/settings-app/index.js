@@ -4,7 +4,7 @@ import { registerModule } from '../registry.js';
 const h = webjsx.createElement;
 
 const COPY = {
-    mic: ['Mic open to the room', 'muting here silences you for everyone; switch your mic on and pick push to talk from the mic in the voice controls'],
+    mic: ['Mic open to the room', 'muting here silences you for everyone; switch your mic on and pick push to talk from the mic in the voice room'],
     vcsounds: ['Join and leave sounds', 'the bloop when someone enters or leaves your voice room'],
     sbsounds: ['Hear the soundboard', 'off: airhorns and rimshots skip you'],
     sound: ['Message sounds', 'a soft ping when someone posts where you can hear it'],
@@ -97,7 +97,7 @@ const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggle
             h('h2', { key: 'h' }, 'Voice & Audio'),
             toggleRow('mic', micOn, () => onMic && onMic()),
             ...group('voice'),
-            h('p', { key: 'hint', class: 'ds-g3-hint' }, 'master volume and devices are in the voice settings next to your mic'),
+            h('p', { key: 'hint', class: 'ds-g3-hint' }, 'volume lives in the voice settings by your mic'),
         ],
         notif: () => [
             h('h2', { key: 'h' }, 'Notifications'),

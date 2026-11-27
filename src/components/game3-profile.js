@@ -38,7 +38,7 @@ export function Game3ProfileBody({ member, isSelf = false, devMode = false, onMe
                 h('h2', {}, name),
                 member.accountName ? h('div', { class: 'ds-g3-pc-user' }, 'Account name: ' + member.accountName) : null,
                 member.username ? h('div', { class: 'ds-g3-pc-user' }, '@' + member.username) : null,
-                h('div', { class: 'ds-g3-pc-status' }, statusName + (member.activity ? ' · ' + member.activity : '')),
+                preview ? null : h('div', { class: 'ds-g3-pc-status' }, statusName + (member.activity ? ' · ' + member.activity : '')),
                 member.pronouns ? h('div', { class: 'ds-g3-pc-pron' }, member.pronouns) : null,
                 member.moved ? h('div', { class: 'ds-g3-pc-moved' }, 'Moved to a new key: ' + String(member.moved).slice(0, 16) + '…') : null,
                 ...(about ? [h('div', { key: 'la', class: 'ds-g3-pc-lbl' }, 'About Me'), h('div', { key: 'va', class: 'ds-g3-pc-val ds-g3-pre' }, ...renderMarkdown(about))] : []),
@@ -57,6 +57,7 @@ export function Game3ProfileBody({ member, isSelf = false, devMode = false, onMe
                 preview ? null : isSelf
                     ? h('div', { class: 'ds-g3-btnp', role: 'button', tabindex: '0', onclick: () => onSettings && onSettings() }, '\u2699\uFE0F Edit settings')
                     : h('div', { class: 'ds-g3-btnp', role: 'button', tabindex: '0', onclick: () => onMessage && onMessage(member) }, '\u{1F4AC} Message @' + name),
+                ...(preview ? [] : [h('div', { key: 'hint', class: 'ds-g3-pc-hint' }, 'start a chat from Message, or mention them in a channel with @' + name)]),
                 ...(!preview && devMode && member.identity ? [h('div', { class: 'ds-g3-btnp ds-g3-btnp-alt', role: 'button', tabindex: '0', onclick: () => navigator.clipboard && navigator.clipboard.writeText(member.identity) }, 'Copy User ID')] : []))));
 }
 

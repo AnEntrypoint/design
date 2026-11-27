@@ -13,7 +13,7 @@ export function Game3RolesPanel({ roles = [], onToggle, onDone, key } = {}) {
                 h('p', null, 'press to add or take one off. your first role colours your name for everyone.'))),
         h('div', { class: 'ds-g3-rgrid' },
             roles.map((r) => h('div', { key: r.id, class: 'ds-g3-rcard' + (r.on ? ' on' : ''), role: 'button', tabindex: '0', 'aria-pressed': r.on ? 'true' : 'false', style: '--rc:' + r.color, onclick: () => onToggle && onToggle(r.id) },
-                h('div', { class: 'ds-g3-re', style: 'color:' + r.color, 'aria-hidden': 'true' }, r.e),
+                h('div', { class: 'ds-g3-re', style: 'color:' + r.color, 'aria-hidden': 'true' }, Icon('ref-roles', { size: 24 })),
                 h('div', { class: 'ds-g3-rtxt' },
                     h('b', { style: 'color:' + r.color }, r.name),
                     h('p', null, r.d + ' · ' + (r.online || 0) + ' online')),

@@ -50,12 +50,14 @@ export function createRail(app) {
         if (A.markAllRead && s.currentServerId) out.push({ label: 'Mark As Read', hint: '✓', onClick: () => A.markAllRead() });
         out.push({ label: 'Quick Switcher', hint: 'Ctrl P', onClick: () => { st.switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } });
         if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), icon: 'ref-belloff', onClick: () => A.toggleMuteChannel() });
-        if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => out.push({ label: x.menu.label, icon: x.menu.icon, surface: x.id, onClick: () => A.openSurface(x.id) }));
-        railSections().forEach((r) => { const it = r.menuItem && s.currentServerId ? r.menuItem({ s, A }) : null; if (it) out.push({ ...it, surface: r.id }); });
         if (A.explore) out.push({ label: 'Discover Servers', icon: 'ref-compass', onClick: () => A.explore() });
         out.push({ divider: true });
         if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'ref-gear', onClick: () => A.openGamePrefs() });
-        if (!owner && A.leaveServer && s.currentServerId) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', icon: 'ref-door', onClick: () => A.leaveServer() });
+        const zellousItems = [];
+        if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => zellousItems.push({ label: x.menu.label, icon: x.menu.icon, surface: x.id, onClick: () => A.openSurface(x.id) }));
+        railSections().forEach((r) => { const it = r.menuItem && s.currentServerId ? r.menuItem({ s, A }) : null; if (it) zellousItems.push({ ...it, surface: r.id }); });
+        if (zellousItems.length) out.push({ divider: true }, ...zellousItems);
+        if (!owner && A.leaveServer && s.currentServerId && !((s.servers || []).find((x) => x.id === s.currentServerId) || {}).isPublic) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', icon: 'ref-door', onClick: () => A.leaveServer() });
         return out;
     };
     const railGroup = (label, s, list, cur, isVoice, createType) => {

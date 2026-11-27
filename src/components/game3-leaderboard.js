@@ -27,9 +27,10 @@ export function Game3LeaderboardPanel({ rows = [], emptyText = '', onClose } = {
     return h('div', { class: 'ds-g3-evm' },
         h('div', { class: 'ds-g3-evh' },
             h('b', { class: 'ds-g3-evt2' }, Icon('ref-leaderboard', { size: 18 }), 'Leaderboard'),
-            onClose ? h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close leaderboard', onclick: onClose }, Icon('x', { size: 14 })) : null),
+            onClose ? h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close leaderboard', onclick: onClose }, '✕') : null),
         h('div', { class: 'ds-g3-evl' },
             rows.length
                 ? rows.map((r, i) => LeaderboardRow({ key: String(r.id || i), row: r, rank: i }))
-                : h('div', { class: 'ds-g3-empty' }, emptyText)));
+                : h('div', { class: 'ds-g3-empty' }, emptyText)),
+        h('div', { class: 'ds-g3-lbfoot' }, 'talk to earn XP · /rank and /top work in any channel'));
 }

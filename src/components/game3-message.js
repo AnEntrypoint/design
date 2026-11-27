@@ -5,10 +5,11 @@ import { Game3InviteCard } from './game3-invite.js';
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
 import { game3AvatarBg, game3AvInitial } from './game3-hue.js';
+import { ignoreFailure } from '../best-effort.js';
 
 const h = webjsx.createElement;
 const QUICK = ['\u{1F44D}', '\u{2764}\u{FE0F}', '\u{1F602}'];
-const copyToClipboard = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')).catch(() => {}); };
+const copyToClipboard = (value) => { if (navigator.clipboard) navigator.clipboard.writeText(String(value || '')).catch(ignoreFailure); };
 
 export function isJumbo(text) {
     const x = String(text || '').trim();

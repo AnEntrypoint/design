@@ -47,7 +47,7 @@ export function Game3EventsPanel({ events = [], now = Date.now(), emptyText = 'n
     return h('div', { class: 'ds-g3-evm' },
         h('div', { class: 'ds-g3-evh' },
             h('b', { class: 'ds-g3-evt2' }, Icon('ref-events', { size: 18 }), 'Events'),
-            onClose ? h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close events', onclick: onClose }, Icon('x', { size: 14 })) : null),
+            onClose ? h('span', { class: 'ds-g3-evx', role: 'button', tabindex: '0', 'aria-label': 'close events', onclick: onClose }, '✕') : null),
         h('div', { class: 'ds-g3-evl' },
             sorted.length
                 ? sorted.map((e, i) => EventCard({ key: e.id || ('e' + i), event: e, now, onRsvp, onDelete }))

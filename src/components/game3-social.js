@@ -26,13 +26,15 @@ export function RoleList({ roles = [], emptyText = '', key } = {}) {
     )));
 }
 
+const serverInitials = (name) => String(name || '?').trim().split(/\s+/).map((w) => [...w][0]).join('').slice(0, 3).toUpperCase() || '?';
+
 export function DiscoverList({ servers = [], emptyText = '', onOpen, key } = {}) {
     if (!servers.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
     return h('div', { key, class: 'ds-g3-discover' }, ...servers.map((sv) => h('div', { key: sv.id, class: 'ds-g3-ev ds-g3-disc' },
-        h('div', { key: 'i', class: 'ds-g3-dico', style: 'background:' + (sv.color || '#5865f2'), 'aria-hidden': 'true' }, (sv.name || '?').slice(0, 1).toUpperCase()),
+        h('div', { key: 'i', class: 'ds-g3-dico', style: 'background:' + (sv.color || '#5865f2'), 'aria-hidden': 'true' }, serverInitials(sv.name)),
         h('div', { key: 't', class: 'ds-g3-discover-txt' },
             h('h3', { key: 'n' }, sv.name),
             h('p', { key: 'm' }, sv.members != null ? sv.members + ' member' + (sv.members === 1 ? '' : 's') + ' \u00b7 ' + (sv.online || 0) + ' online \u00b7 by ' + (sv.owner || 'nobody') : 'details load when you open this server'),
-            sv.channels ? h('p', { key: 'c', class: 'ds-g3-discover-ch' }, sv.channels.map((c) => '#' + c).join(' ')) : null),
+            h('p', { key: 'c', class: 'ds-g3-discover-ch' }, sv.channels ? sv.channels.map((c) => '#' + c).join(' ') : 'its channels show once you open it')),
         h('span', { key: 'b', class: 'ds-g3-evb', role: 'button', tabindex: '0', onclick: () => onOpen && onOpen(sv.id), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen && onOpen(sv.id); } } }, 'Open'))));
 }

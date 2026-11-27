@@ -92,15 +92,21 @@ export function mountCommunityApp(root, adapter = {}) {
         const same = [...root.querySelectorAll(ref.sel)].filter((e) => e.getClientRects().length);
         return same.find((e) => (e.textContent || '').trim().slice(0, 60) === ref.text) || same[ref.index] || same[0] || null;
     };
-    const refocus = (ref) => {
-        const t = ref && refind(ref);
+    const usable = (el) => el && el.isConnected && el.getClientRects().length > 0 && !el.closest('[inert]');
+    const visibleEquivalent = (ref) => {
+        const wasMember = ref.el.closest && ref.el.closest('.ds-g3-mem');
+        return root.querySelector(wasMember ? '.ds-g3-ibtn[aria-label="Member List"]' : '.ds-g3-burger');
+    };
+    const refocus = (ref, orEquivalent) => {
+        const found = ref && refind(ref);
+        const t = usable(found) ? found : (orEquivalent && ref ? visibleEquivalent(ref) : null);
         if (t && typeof t.focus === 'function' && t !== document.activeElement) t.focus({ preventScroll: true });
     };
     const restoreOpener = (ref) => setTimeout(() => {
         if (root.querySelector(OVERLAY_OPEN)) return;
         const now = document.activeElement;
         if (now && now !== document.body && root.contains(now)) return;
-        refocus(ref);
+        refocus(ref, true);
     }, 0);
 
     const renderNow = () => {
@@ -112,7 +118,13 @@ export function mountCommunityApp(root, adapter = {}) {
         webjsx.applyDiff(root, view());
         if (keepFocus && !keepFocus.el.isConnected && (document.activeElement === document.body || !document.activeElement)) refocus(keepFocus);
         const hasOverlay = !!root.querySelector(OVERLAY_OPEN);
-        if (!hadOverlay && hasOverlay) st.overlayOpener = openerBefore;
+        if (!hadOverlay && hasOverlay) {
+            st.overlayOpener = openerBefore;
+            const s = get();
+            const outsideRail = [...root.querySelectorAll(OVERLAY_OPEN)].some((o) => !o.closest('.ca-rail'));
+            if (outsideRail && s.mobileMenuOpen && A.closeMobileMenu) A.closeMobileMenu();
+            if (outsideRail && s.memberListOpen && A.toggleMembers && window.matchMedia('(max-width: 900px)').matches) A.toggleMembers();
+        }
         else if (hadOverlay && !hasOverlay && st.overlayOpener) { restoreOpener(st.overlayOpener); st.lastOverlayOpener = { ref: st.overlayOpener, at: Date.now() }; st.overlayOpener = null; }
         if (st.renaming && !st.renaming.focused) { const inp = root.querySelector('.ds-g3-rename'); if (inp) { st.renaming.focused = true; inp.focus(); inp.select(); } }
         const pop = root.querySelector('.ds-g3-statusmenu');

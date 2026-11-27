@@ -65,7 +65,7 @@ export function createChatView(app, { messages, rail }) {
         const typingText = typingUsers.length === 0 ? '' : typingUsers.length === 1 ? typingUsers[0] + ' is typing\u2026' : typingUsers.length === 2 ? typingUsers[0] + ' and ' + typingUsers[1] + ' are typing\u2026' : 'Several people are typing\u2026';
         return Chat({
             title: ch.name || 'general', sub, locked, emptySub, messages: mapMessages(s), rows: [game3NewBar(s)].filter(Boolean).concat((s.homeMode && s.activeDmPeer ? [Game3DmWelcome({ key: 'dmwelcome', name: ch.name || '', initial: initial(ch.name || ''), color: game3AvatarBg(ch.name || '') })] : s.homeMode || s.chatSearch ? [] : [Game3Welcome({ key: 'welcome', name: ch.name || 'general', glyph: channelType(ch.type).welcomeGlyph || 'hash', hint: ch.name === 'general' })]).concat(withDividers(s, game3Rows(s)))), header: null,
-            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: st.stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: () => { st.stickersOpen = !st.stickersOpen; st.emojisOpen = false; render(); }, onStickerPick: (id) => { st.stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingText,
+            composer: h('div', { class: 'cm-composer-wrap' }, Game3Composer({ nope: s.composerLockedNope ? 'You do not have permission to send messages in this channel.' : '', mentions: mentionNames(s), stickersAvailable: !!s.stickerBase && !s.composerLockedReason, stickerPop: st.stickersOpen && !!s.stickerBase, stickerBase: s.stickerBase || '', stickerTitle: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || 'Zellous'), onStickers: s.homeMode ? null : () => { st.stickersOpen = !st.stickersOpen; st.emojisOpen = false; render(); }, onStickerPick: (id) => { st.stickersOpen = false; if (A.send) A.send(stickerText(id)); render(); }, typing: typingText,
                 value: s.chatInputValue || '',
                 placeholder: s.composerLockedReason ? s.composerLockedReason : (s.homeMode ? 'Message @' + (ch.name || 'someone') : 'Message #' + (ch.name || 'general')),
                 replyTo: rt ? { username: rt.username || 'User' } : null,
@@ -74,8 +74,8 @@ export function createChatView(app, { messages, rail }) {
                 onSend: (v) => { const t = (v || '').trim(); if (t) A.send && A.send(t, rt ? { replyTo: rt } : undefined); },
                 maxLength: 190,
                 onKeyDown: (e, ta) => composerKey(e, ta, s, ch),
-                onAttach: (!s.composerLockedReason && A.attachFiles) ? stageFiles : null,
-                onPasteFiles: (!s.composerLockedReason && A.attachFiles) ? stageFiles : null,
+                onAttach: (!s.homeMode && !s.composerLockedReason && A.attachFiles) ? stageFiles : null,
+                onPasteFiles: (!s.homeMode && !s.composerLockedReason && A.attachFiles) ? stageFiles : null,
                 stage: st.stage || null,
                 onStageSend: sendStage,
                 onStageCancel: () => { dropStage(); render(); },

@@ -9,6 +9,7 @@ import { Game3NewBar } from '../components/game3-newbar.js';
 import { Game3SearchBar } from '../components/game3-search.js';
 import { EMOJI } from '../game3-data.js';
 import { openProfileFor } from './profile-open.js';
+import { ignoreFailure } from '../best-effort.js';
 
 const h = webjsx.createElement;
 
@@ -122,10 +123,10 @@ export function createMessages(app) {
             A.reactToMessage ? { key: 'react', label: 'Add Reaction', glyph: '😀', onClick: (e) => { st.moreFor = null; openPicker(e); } } : null,
             { key: 'reply', label: 'Reply', glyph: '↩', onClick: () => { close(); if (A.startReply) A.startReply({ id: m.id, username, text: m.content }); } },
             { key: 'mention', label: 'Mention @' + username, glyph: '@', onClick: () => { close(); if (A.setInput) A.setInput((s.chatInputValue || '') + '@' + username + ' '); } },
-            { key: 'copy', label: 'Copy Text', glyph: '📋', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(m.content || '').catch(() => {}); } },
+            { key: 'copy', label: 'Copy Text', glyph: '📋', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(m.content || '').catch(ignoreFailure); } },
             A.markUnread ? { key: 'unread', label: 'Mark Unread', glyph: '🔵', onClick: () => { st.moreFor = null; A.markUnread(m.id); render(); } } : null,
             A.toggleSave ? { key: 'save', label: saved ? 'Remove from Saved' : 'Save for Later', glyph: '🔖', onClick: () => { close(); A.toggleSave({ id: m.id, who: username, text: m.content || '' }); } } : null,
-            s.devMode ? { key: 'cid', label: 'Copy Message ID', glyph: '🆔', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(String(m.id)).catch(() => {}); } } : null,
+            s.devMode ? { key: 'cid', label: 'Copy Message ID', glyph: '🆔', onClick: () => { close(); if (navigator.clipboard) navigator.clipboard.writeText(String(m.id)).catch(ignoreFailure); } } : null,
         ].filter(Boolean);
         return items;
     };
