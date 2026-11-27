@@ -41,20 +41,21 @@ export function createRail(app) {
     const serverMenuItems = (s) => {
         const owner = !!s.canManage;
         const out = [];
-        const settingsTab = s.serverSettings ? 'general' : (s.discovery && s.canManage ? 'discovery' : null);
-        if (settingsTab && s.currentServerId && A.openGamePrefs) out.push({ label: 'Server Settings', icon: 'settings', onClick: () => { if (A.setGamePrefTab) A.setGamePrefTab(settingsTab); A.openGamePrefs(); } });
-        if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'plus', onClick: () => A.createChannel('text') });
+        if (s.serverSettings && A.openServerSettings) out.push({ label: 'Server Settings', icon: 'ref-gear', onClick: () => A.openServerSettings() });
+        else if (s.discovery && s.canManage && s.currentServerId && A.openGamePrefs) out.push({ label: 'Server Settings', icon: 'ref-gear', onClick: () => { if (A.setGamePrefTab) A.setGamePrefTab('discovery'); A.openGamePrefs(); } });
+        if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'ref-plus', onClick: () => A.createChannel('text') });
         if (out.length) out.push({ divider: true });
-        if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'members', color: '#949cf7', onClick: () => A.inviteToServer() });
-        if (A.openSurface && s.currentServerId) out.push({ label: 'Recap What I Missed', icon: 'ref-spark', onClick: () => A.openSurface('recap') });
-        if (A.markAllRead && s.currentServerId) out.push({ label: 'Mark As Read', icon: 'check', onClick: () => A.markAllRead() });
+        if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'ref-invite', color: '#949cf7', onClick: () => A.inviteToServer() });
+        if (A.openSurface && s.currentServerId) out.push({ label: 'Recap What I Missed', hint: '👋', onClick: () => A.openSurface('recap') });
+        if (A.markAllRead && s.currentServerId) out.push({ label: 'Mark As Read', hint: '✓', onClick: () => A.markAllRead() });
         out.push({ label: 'Quick Switcher', hint: 'Ctrl P', onClick: () => { st.switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } });
-        if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), onClick: () => A.toggleMuteChannel() });
-        if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => out.push({ label: x.menu.label, icon: x.menu.icon, onClick: () => A.openSurface(x.id) }));
-        if (A.explore) out.push({ label: 'Discover Servers', icon: 'compass', onClick: () => A.explore() });
+        if (A.toggleMuteChannel) out.push({ label: (s.mutedChannel ? 'Unmute' : 'Mute') + ' #' + (((s.currentChannel || {}).name) || 'general'), icon: 'ref-belloff', onClick: () => A.toggleMuteChannel() });
+        if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => out.push({ label: x.menu.label, icon: x.menu.icon, surface: x.id, onClick: () => A.openSurface(x.id) }));
+        railSections().forEach((r) => { const it = r.menuItem && s.currentServerId ? r.menuItem({ s, A }) : null; if (it) out.push({ ...it, surface: r.id }); });
+        if (A.explore) out.push({ label: 'Discover Servers', icon: 'ref-compass', onClick: () => A.explore() });
         out.push({ divider: true });
-        if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'settings', onClick: () => A.openGamePrefs() });
-        if (!owner && A.leaveServer && s.currentServerId) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', onClick: () => A.leaveServer() });
+        if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'ref-gear', onClick: () => A.openGamePrefs() });
+        if (!owner && A.leaveServer && s.currentServerId) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', icon: 'ref-door', onClick: () => A.leaveServer() });
         return out;
     };
     const railGroup = (label, s, list, cur, isVoice, createType) => {
@@ -108,7 +109,7 @@ export function createRail(app) {
         const inVoice = isVoice && s.voiceConnected && s.voiceChannelName === c.name;
         const ct = channelType(c.type);
         const glyph = ct.railIcon ? h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(ct.railIcon, { size: 20 }))
-            : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(channelIcon(c), { size: isVoice ? 20 : 24 }));
+            : h('span', { class: 'glyph glyph-' + (c.type || 'text'), 'aria-hidden': 'true' }, Icon(channelIcon(c), { size: 20 }));
         const canReorder = !!s.canManage && !!A.reorderChannel;
         const dropAllowed = () => !!st.railDragId && st.railDragId !== c.id;
         const muted = !!c.muted && !inVoice;

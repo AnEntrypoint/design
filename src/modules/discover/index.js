@@ -10,9 +10,14 @@ registerModule({
     id: 'surface-discover', kind: 'surface',
     surface: {
         id: 'discover', placement: 'modal',
-        body: ({ s, A }) => Game3Modal({ title: 'Discover servers', onClose: () => A.closeSurface && A.closeSurface() },
-            DiscoverListings({ listings: s.discoverListings || [], query: s.discoverQuery || '', onQuery: (q) => A.discoverSearch && A.discoverSearch(q), onJoin: (l) => { if (A.joinInvite) A.joinInvite(l.id, l.name); if (A.closeSurface) A.closeSurface(); }, onOpen: (id) => A.switchServer && A.switchServer(id) }),
-            h('h6', { key: 'mine', class: 'ds-g3-dsc-sec' }, 'Your servers'),
-            DiscoverList({ servers: s.discoverServers || [], emptyText: 'No servers joined yet.', onOpen: (id) => A.switchServer && A.switchServer(id) })),
+        body: ({ s, A }) => {
+            const listings = s.discoverListings || [];
+            const mine = (s.discoverServers || []).filter((sv) => !listings.some((l) => l.id === sv.id));
+            const open = (id) => A.switchServer && A.switchServer(id);
+            return Game3Modal({ title: 'Discover servers', onClose: () => A.closeSurface && A.closeSurface() },
+                listings.length ? DiscoverListings({ listings, query: s.discoverQuery || '', onQuery: (q) => A.discoverSearch && A.discoverSearch(q), onJoin: (l) => { if (A.joinInvite) A.joinInvite(l.id, l.name); if (A.closeSurface) A.closeSurface(); }, onOpen: open }) : null,
+                mine.length || !listings.length ? DiscoverList({ servers: mine, emptyText: 'no servers yet. make the first one.', onOpen: open }) : null,
+                A.openServerCreate ? h('div', { key: 'mk', class: 'ds-g3-evb ds-g3-evb-on ds-g3-evb-big', role: 'button', tabindex: '0', onclick: () => { if (A.closeSurface) A.closeSurface(); A.openServerCreate(); } }, '＋ Create your own') : null);
+        },
     },
 });

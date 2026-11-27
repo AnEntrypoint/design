@@ -33,9 +33,9 @@ export function SharePageDialog({ onClose, onStart }) {
 }
 
 export function ShareWebRail({ inVoice, screen, page, onPage, onScreen, onStop }) {
+    if (!inVoice && !screen && !(page && page.mine)) return [];
     return [
         h('a', { key: 'shpagerow', href: '#', class: 'ds-g3-shrow', onclick: (e) => { e.preventDefault(); if (page && page.mine) onStop(); else onPage(); } }, h('span', { class: 'ds-g3-shname' }, page && page.mine ? 'Stop sharing a page' : 'Share a page')),
         h('a', { key: 'shscreenrow', href: '#', class: 'ds-g3-shrow', onclick: (e) => { e.preventDefault(); onScreen(); } }, h('span', { class: 'ds-g3-shname' }, screen ? 'Stop sharing your screen' : 'Share a screen')),
-        inVoice ? null : h('div', { key: 'shvoicehint', class: 'rail-empty', role: 'status' }, 'join a voice room or thread to share a page or screen'),
     ].filter(Boolean);
 }

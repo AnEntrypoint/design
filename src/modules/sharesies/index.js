@@ -55,6 +55,7 @@ registerModule({
     id: 'sharesies-rail', kind: 'railSection',
     railSection: {
         id: 'sharesies-rail', order: 50,
+        menuItem: ({ A }) => (A.sharesiesShareOpen ? { label: 'Share a Terminal', icon: 'ref-plus', onClick: () => A.sharesiesShareOpen() } : null),
         mount: ({ s, A }) => SharesiesRail({ sessions: state(s).sessions, onShare: () => A.sharesiesShareOpen(), onOpen: (id) => A.sharesiesOpen(id), onLeave: (id) => A.sharesiesLeave(id) }),
     },
 });

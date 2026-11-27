@@ -89,16 +89,17 @@ export function Game3Message({ quick = QUICK, mention = false, onMention, picker
         document.querySelectorAll('.ds-g3-msg.ds-g3-tapped').forEach((x) => { if (x !== row) x.classList.remove('ds-g3-tapped'); });
         row.classList.add('ds-g3-tapped');
     };
+    const txBlock = bodyNodes || [h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...spoilerNodes(text))];
     const stamp = continuation ? h('span', { key: 'stamp', class: 'ds-g3-stamp', style: 'left:8px', title: fullTime }, time) : null;
     const body = continuation ? h('div', { key: 'body', class: 'ds-g3-tx-wrap' },
-        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
+        ...txBlock,
         ...cardNodes(text, previews, unfurls),
         ...embedNodes(text, embeds),
         reactionChips, sendLine) : h('div', { key: 'body', class: 'ds-g3-col' },
             h('div', { key: 'head', class: 'ds-g3-head' },
                 h('span', { key: 'who', class: 'ds-g3-who', title: accountName ? 'Account name: ' + accountName : null, role: 'button', tabindex: '0', title: 'click: profile \u00b7 shift-click: mention', onclick: openWho }, name),
                 h('span', { key: 'when', class: 'ds-g3-when', title: fullTime }, headTime || time)),
-        h('div', { key: 'tx', class: 'ds-g3-tx' + (jumbo ? ' ds-g3-jumbo' : '') }, ...(bodyNodes || spoilerNodes(text))),
+        ...txBlock,
         ...cardNodes(text, previews, unfurls),
         ...embedNodes(text, embeds),
         reactionChips, sendLine

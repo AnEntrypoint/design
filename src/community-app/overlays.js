@@ -6,6 +6,7 @@ import { isModalSurface } from './surfaces.js';
 import { Game3SetupPanel } from '../components/game3-usermenus.js';
 import { Game3ServerCreate } from '../components/game3-server-create.js';
 import { Game3ServerDelete } from '../components/game3-server-delete.js';
+import { Game3ServerSettings } from '../components/game3-server-settings.js';
 import { Game3SettingsPanel } from '../components/game3-settings.js';
 import { Game3Switcher } from '../components/game3-switcher.js';
 import { Game3Lightbox } from '../components/game3-lightbox.js';
@@ -67,6 +68,7 @@ export function createOverlays(app, { surfaces }) {
             ...popoverList().map((o) => o.mount({ s, A, render, h })).filter(Boolean),
             isModalSurface(s.gameSurface) ? h('div', { key: 'surface', class: 'ds-g3-scrim', role: 'presentation', onclick: (e) => { if (e.target === e.currentTarget && A.closeSurface) A.closeSurface(); } }, surfaceBody(s.gameSurface, s)) : null,
             s.gamePrefOpen ? Game3SettingsPanel({ panes: settingsPanes().filter((p) => !p.when || p.when(s)), discovery: s.discovery || null, serverSettings: s.serverSettings || null, tab: s.gamePrefTab || 'account', onTab: (t) => A.setGamePrefTab && A.setGamePrefTab(t), account: s.account, acts: A, onRender: render, devInfo: s.devInfo || null, onDevReset: () => A.resetLocalState && A.resetLocalState(), onDevFilter: (q) => A.setDevFilter && A.setDevFilter(q), onDevRefresh: () => A.refreshDev && A.refreshDev(), level: s.myLevel || 0, xp: s.myXp || 0, servers: s.gamePrefServers || 0, toggles: Object.fromEntries((s.gamePrefToggles || []).map((t) => [t.key, !!t.checked])), micOn: !s.micMuted, onMic: () => A.toggleMic && A.toggleMic(), keywords: s.gamePrefKeywords || '', mutedChannels: s.gamePrefMuted || [], onUnmute: (id) => A.toggleMuteId && A.toggleMuteId(id), compact: !!s.gamePrefCompact, theme: s.themePref || 'ink', onTheme: (t) => A.setTheme && A.setTheme(t), onCompact: (val) => A.setGamePref && A.setGamePref('compact', val), onKeywords: (val) => A.setGamePref && A.setGamePref('kw', val), onToggle: (key, val) => A.setGamePref && A.setGamePref(key, val), onReset: () => A.setGamePref && A.setGamePref('reset', true), onClose: () => A.closeGamePrefs && A.closeGamePrefs() }) : null,
+            s.serverSettingsOpen && s.serverSettings ? Game3ServerSettings({ settings: s.serverSettings, acts: A, onClose: () => A.closeServerSettings && A.closeServerSettings(), onDiscovery: s.discovery && s.canManage && A.openDiscoverySettings ? () => A.openDiscoverySettings() : null }) : null,
             s.serverDelete ? Game3ServerDelete({ name: s.serverDelete.name, onDelete: (typed) => A.deleteServerForEveryone && A.deleteServerForEveryone(typed), onClose: () => A.closeServerDelete && A.closeServerDelete() }) : null,
             s.threadPanelOpen ? ThreadPanel({ threads: s.threads || [], activeId: s.activeThreadId, onSelect: (id) => A.selectThread && A.selectThread(id), onCreate: () => A.createThread && A.createThread(), onClose: () => A.closeThreadPanel && A.closeThreadPanel(), onReply: A.replyToThread ? (text) => A.replyToThread(text) : undefined }) : null,
     ].filter(Boolean);

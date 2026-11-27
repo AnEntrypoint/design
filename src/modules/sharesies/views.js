@@ -69,13 +69,13 @@ export function SharesiesShare({ share, targets, session, acts }) {
 }
 
 export function SharesiesRail({ sessions, onShare, onOpen, onLeave }) {
+    const live = sessions.filter((x) => !x.watch);
+    if (!live.length) return [];
     return [
         h('div', { key: 'shh', class: 'group group-header' }, h('span', null, 'Shared sessions'), h('button', { type: 'button', class: 'group-add-btn', 'aria-label': 'share a terminal', title: 'Share a terminal', onclick: onShare }, '+')),
-        ...(sessions.filter((x) => !x.watch).length
-            ? sessions.filter((x) => !x.watch).map((x) => h('a', { key: 'sh' + x.id, href: '#', class: 'ds-g3-shrow', onclick: (e) => { e.preventDefault(); onOpen(x.id); } },
-                h('span', { class: 'ds-g3-shdot ' + x.state, 'aria-hidden': 'true' }),
-                h('span', { class: 'ds-g3-shname' }, 'terminal ' + x.id.slice(2, 8)),
-                h('span', { class: 'ds-g3-shleavebtn', role: 'button', tabindex: '0', title: 'Leave', 'aria-label': 'leave session', onclick: (e) => { e.preventDefault(); e.stopPropagation(); onLeave(x.id); } }, '✕')))
-            : [h('div', { key: 'sh0', class: 'rail-empty', role: 'status' }, 'no shared sessions')]),
+        ...live.map((x) => h('a', { key: 'sh' + x.id, href: '#', class: 'ds-g3-shrow', onclick: (e) => { e.preventDefault(); onOpen(x.id); } },
+            h('span', { class: 'ds-g3-shdot ' + x.state, 'aria-hidden': 'true' }),
+            h('span', { class: 'ds-g3-shname' }, 'terminal ' + x.id.slice(2, 8)),
+            h('span', { class: 'ds-g3-shleavebtn', role: 'button', tabindex: '0', title: 'Leave', 'aria-label': 'leave session', onclick: (e) => { e.preventDefault(); e.stopPropagation(); onLeave(x.id); } }, '✕'))),
     ];
 }
