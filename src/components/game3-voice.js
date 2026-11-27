@@ -1,6 +1,6 @@
 import * as webjsx from '../../vendor/webjsx/index.js';
 import { Icon } from './shell.js';
-import { game3AvatarBg } from './game3-hue.js';
+import { game3AvatarBg, game3AvInitial, game3Hue } from './game3-hue.js';
 
 const h = webjsx.createElement;
 
@@ -13,9 +13,9 @@ export function Game3VoiceView({ participants = [], micMuted = false, camera = f
             role: onOpenProfile ? 'button' : null,
             tabindex: onOpenProfile ? '0' : null,
             onclick: onOpenProfile ? () => onOpenProfile(p) : null,
-            style: '--ds-g3-tile-color:' + game3AvatarBg(p.name, p.identity),
+            style: '--ds-g3-tile-color:oklch(.38 .1 ' + game3Hue(p.name) + ')',
         },
-            p.videoKey ? h('video', { class: 'ds-g3-vvideo', 'data-video-peer': p.videoKey, autoplay: true, playsinline: true, muted: !!p.isLocal }) : h('div', { class: 'ds-g3-vav' }, initial),
+            p.videoKey ? h('video', { class: 'ds-g3-vvideo', 'data-video-peer': p.videoKey, autoplay: true, playsinline: true, muted: !!p.isLocal }) : h('div', { class: 'ds-g3-vav', style: 'background:' + game3AvatarBg(p.name, p.id) }, game3AvInitial(initial, p.id)),
             h('span', { class: 'ds-g3-vnm' }, p.name || p.id),
             p.muted ? h('span', { class: 'ds-g3-vmo', 'aria-label': 'muted' }, Icon('g3-micoff', { size: 16 })) : null);
     });

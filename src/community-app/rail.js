@@ -73,12 +73,13 @@ export function createRail(app) {
         return [head, ...(list.length ? list.flatMap(c => [railPill(c, cur, isVoice, s), ...vuRows(c)]) : [h('div', { class: 'rail-empty', role: 'status' }, 'no ' + label + ' yet')])];
     };
     const railSurfaceRows = (s) => railSurfaces().map((x) => x.rail.row({ s, A, h }));
-    const railChannelsView = (s, bottom = []) => {
-        if (s.homeMode) return dmRailView(s, bottom);
+    const railChannelsView = (s, bottom = [], top = []) => {
+        if (s.homeMode) return dmRailView(s, bottom, top);
         const channels = [...(s.channels || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
         const cur = s.currentChannel || {};
         const groupRows = railGroups().flatMap((g) => { const list = channels.filter((c) => groupOf(c) === g.id); return list.length || g.always ? railGroup(g.label, s, list, cur, g.voice, g.createType) : []; });
         return h('div', { key: 'channels', class: 'ca-rail-channels' },
+            ...top,
             railServerHead(s),
             st.serverMenuOpen ? Game3ServerMenu({ items: serverMenuItems(s), onPick: () => { st.serverMenuOpen = false; render(); const head = root.querySelector('.shead'); if (head) head.focus(); } }) : null,
             h('div', { class: 'chans' },
@@ -89,13 +90,14 @@ export function createRail(app) {
             ...bottom.filter(Boolean));
     };
 
-    const dmRailView = (s, bottom = []) => {
+    const dmRailView = (s, bottom = [], top = []) => {
         const convos = s.dmConversations || [];
         const items = convos.map((c) => h('a', {
             key: 'dm' + c.id, href: '#', class: 'ds-g3-dmrow' + (s.activeDmPeer === c.id ? ' active' : '') + (c.unread ? ' unread' : ''), 'aria-label': 'conversation with ' + c.name,
             onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(c.id); if (A.closeMobileMenu) A.closeMobileMenu(); },
         }, h('span', { class: 'ds-g3-dmav', style: '--ds-g3-av-color:' + game3AvatarBg(c.name, c.id) }, game3AvInitial(initial(c.name), c.id), h('span', { class: 'ds-g3-mdot', style: '--ds-g3-dot-color:' + ({ online: '#23a55a', idle: '#f0b232', dnd: '#f23f43', offline: '#80848e' }[c.status] || '#23a55a'), 'aria-label': c.status || 'online' })), h('span', { class: 'ds-g3-dmname' }, c.name), ...(c.unread ? [h('span', { class: 'ds-g3-badge' }, String(c.unread))] : [])));
         return h('div', { key: 'channels', class: 'ca-rail-channels' },
+            ...top,
             h('div', { class: 'shead ds-g3-findbtn', role: 'button', tabindex: '0', onclick: () => { st.switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } }, h('span', {}, 'Find or start a conversation')),
             h('div', { class: 'chans' },
                 h('a', { href: '#', class: s.activeDmPeer ? '' : 'active', onclick: (e) => { e.preventDefault(); A.selectDm && A.selectDm(null); if (A.closeMobileMenu) A.closeMobileMenu(); } }, h('span', { class: 'glyph', 'aria-hidden': 'true' }, Icon('ref-members', { size: 20 })), h('span', {}, 'People here')),
@@ -144,7 +146,7 @@ export function createRail(app) {
     const railServerPill = (sv, s) => {
         const active = sv._home ? s.homeMode : (!s.homeMode && s.currentServerId === sv.id);
         return h('a', {
-            href: '#', class: (sv._home ? 'ca-rail-home ' : '') + (active ? 'active' : ''), 'aria-label': sv._home ? 'direct messages' : (sv.name || sv.id),
+            href: '#', class: (sv._home ? 'ca-rail-home ' : '') + (sv.isPublic ? 'ca-rail-public ' : '') + (active ? 'active' : ''), 'aria-label': sv._home ? 'direct messages' : (sv.name || sv.id),
             title: sv._home ? 'Direct Messages' : (sv.name || sv.id),
             style: sv._home ? null : '--sv-color:' + (sv.iconColor || sv.color || 'var(--accent)'),
             onclick: (e) => { e.preventDefault(); sv._home ? (A.goHome && A.goHome()) : (A.switchServer && A.switchServer(sv.id)); },

@@ -83,16 +83,7 @@
 .ds-g3-discover-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .ds-g3-discover-meta, .ds-g3-discover-empty { font-size: var(--fs-xs); color: var(--fg-2); }
 
-.ds-g3-voice { display: grid; gap: var(--space-2); padding: var(--space-3); border: 1px solid var(--border); border-radius: var(--r-2); }
-.ds-g3-voice-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); }
-.ds-g3-voice-name { font-weight: 600; }
 .ds-g3-voice-count, .ds-g3-voice-flag, .ds-g3-toggle-hint, .ds-g3-field { font-size: var(--fs-xs); color: var(--fg-2); }
-.ds-g3-voice-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); }
-.ds-g3-voice-person { display: flex; align-items: center; gap: var(--space-2); }
-.ds-g3-voice-dot { inline-size: 8px; block-size: 8px; border-radius: var(--r-pill); background: var(--fg-2); }
-.ds-g3-voice-person.is-speaking .ds-g3-voice-dot { background: var(--green, var(--accent)); }
-.ds-g3-voice-person.is-self { font-weight: 600; }
-.ds-g3-voice-controls { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 .ds-g3-btn--danger { color: var(--red, inherit); }
 .ds-g3-toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding-block: var(--space-2); }
 .ds-g3-toggle-text { display: grid; min-inline-size: 0; }
@@ -115,7 +106,7 @@
 .ds-g3-segment-opt { min-block-size: 32px; padding-inline: var(--space-3); border: 0; background: transparent; color: inherit; cursor: pointer; }
 .ds-g3-segment-opt.is-on { background: var(--accent); color: var(--on-accent); }
 
-.ds-g3-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-block-end: 1px solid var(--border); min-inline-size: 0; }
+.ds-g3-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); min-inline-size: 0; }
 .ds-g3-header-channel { display: flex; align-items: baseline; gap: var(--space-1); min-inline-size: 0; overflow: hidden; }
 .ds-g3-header-brand, .ds-g3-header-server, .ds-g3-header-topic { font-size: var(--fs-xs); color: var(--fg-2); white-space: nowrap; }
 .ds-g3-header-glyph { color: var(--fg-2); }

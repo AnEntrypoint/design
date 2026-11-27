@@ -12,6 +12,13 @@ import { openProfileFor } from './profile-open.js';
 
 const h = webjsx.createElement;
 
+const replyLine = (reference, A, msgs) => {
+    const rt = reference.content ? reference : { ...reference, ...(msgs.find((x) => x.id === reference.id) || {}) };
+    const found = !!rt.content;
+    const name = found ? (rt.username || (rt.userId && A.resolveProfile && A.resolveProfile(rt.userId)) || 'someone') : 'someone';
+    return { name, userId: found ? rt.userId : null, found, id: rt.id || null, text: found ? String(rt.content).replace(/\n/g, ' ') : 'original message was deleted' };
+};
+
 export function createMessages(app) {
     const { root, get, A, initial, formatTime, st } = app;
     const render = () => app.render();
@@ -34,11 +41,6 @@ export function createMessages(app) {
     const CODE_FENCE_RE = /^```([a-zA-Z0-9_+-]*)\n([\s\S]*?)\n?```\s*$/;
     const partsFromMessage = (m) => {
         const parts = [];
-        if (m.replyTo) {
-            const who = m.replyTo.username || (m.replyTo.userId && A.resolveProfile && A.resolveProfile(m.replyTo.userId)) || 'User';
-            const quoted = m.replyTo.content ? (m.replyTo.content || '').replace(/\n/g, ' ').slice(0, 120) : '(message unavailable)';
-            parts.push({ kind: 'md', text: '> **@' + who + ':** ' + quoted });
-        }
         const content = m.content || '';
         const mediaPart = mediaPartFor(m);
         if (mediaPart) { parts.push(mediaPart); return parts; }
@@ -167,6 +169,8 @@ export function createMessages(app) {
                 ...messageProps(m, { s, A }),
                 key: m.id || ('m' + i), id: m.id ? 'm-' + m.id : null,
                 name: username, initial: game3AvInitial(initial(username), m.userId), avatarColor: game3AvatarBg(username, m.userId),
+                reply: m.replyTo ? replyLine(m.replyTo, A, msgs) : null,
+                onJumpReply: (id) => { const el = id && root.querySelector('#m-' + id); if (el) el.scrollIntoView({ block: 'center' }); },
                 headTime: m.timestamp ? headStamp(m.timestamp, s.h24) : formatTime(m.timestamp),
                 quick, mention: !isYou && mentionsMe(m.content, myName),
                 onOpenProfile: () => openProfileFor(app, s, m.userId, username),

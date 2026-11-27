@@ -50,11 +50,13 @@ export function Game3ProfileBody({ member, isSelf = false, devMode = false, onMe
                 ...(member.nip05 ? lbl('NIP-05', (member.nip05Verified ? '✓ ' : '') + member.nip05 + (member.nip05Verified ? '' : member.nip05Verified === false ? ' (not verified)' : ' (not checked)'), 'n5') : []),
                 ...(preview ? [] : lbl('Member Since', member.joinedAt || (member.stats && member.stats.firstSeen) ? new Date(member.joinedAt || member.stats.firstSeen).toLocaleDateString() : 'today', 'm')),
                 ...(preview ? [] : lbl('Level', '⭐ level ' + ((member.stats && member.stats.level) || 0) + ' · ' + ((member.stats && member.stats.xp) || 0) + ' XP', 'lv')),
-                h('div', { key: 'lr', class: 'ds-g3-pc-lbl' }, 'Roles'),
-                h('div', { key: 'rr' }, ...roles.map((r, i) => h('span', { key: 'r' + i, class: 'ds-g3-role' }, h('i', { style: 'background:' + (r.color || '#949ba4') }), r.name)), h('span', { class: 'ds-g3-role' }, h('i', { style: 'background:#949ba4' }), 'member')),
+                ...(preview ? [] : [
+                    h('div', { key: 'lr', class: 'ds-g3-pc-lbl' }, 'Roles'),
+                    h('div', { key: 'rr' }, ...roles.map((r, i) => h('span', { key: 'r' + i, class: 'ds-g3-role' }, h('i', { style: 'background:' + (r.color || '#949ba4') }), r.name)), h('span', { class: 'ds-g3-role' }, h('i', { style: 'background:#949ba4' }), 'member')),
+                ]),
                 preview ? null : isSelf
-                    ? h('div', { class: 'ds-g3-btnp', role: 'button', tabindex: '0', onclick: () => onSettings && onSettings() }, 'Edit settings')
-                    : h('div', { class: 'ds-g3-btnp', role: 'button', tabindex: '0', onclick: () => onMessage && onMessage(member) }, 'Message @' + name),
+                    ? h('div', { class: 'ds-g3-btnp', role: 'button', tabindex: '0', onclick: () => onSettings && onSettings() }, '\u2699\uFE0F Edit settings')
+                    : h('div', { class: 'ds-g3-btnp', role: 'button', tabindex: '0', onclick: () => onMessage && onMessage(member) }, '\u{1F4AC} Message @' + name),
                 ...(!preview && devMode && member.identity ? [h('div', { class: 'ds-g3-btnp ds-g3-btnp-alt', role: 'button', tabindex: '0', onclick: () => navigator.clipboard && navigator.clipboard.writeText(member.identity) }, 'Copy User ID')] : []))));
 }
 

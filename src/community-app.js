@@ -57,7 +57,7 @@ export function mountCommunityApp(root, adapter = {}) {
             h('a', { href: '#app-main', class: 'skip-link' }, 'skip to main content'),
             Banner({ tone: 'warning', message: 'Not connected to any relay. Messages won’t send or arrive.', visible: s.isConnected === false, actionLabel: A.retryConnection ? 'Retry now' : null, onAction: () => A.retryConnection && A.retryConnection() }),
             h('div', { class: 'app-body' + (s.mobileMenuOpen ? ' ca-rail-open' : '') },
-                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: st.isNarrowViewport && !s.mobileMenuOpen ? true : null }, h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s)), railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, userPanel.userPanel(s) ].filter(Boolean))),
+                h('aside', { class: 'app-side ca-rail' + (s.mobileMenuOpen ? ' open' : ''), inert: st.isNarrowViewport && !s.mobileMenuOpen ? true : null }, railServersView(s), railChannelsView(s, [ s.voiceConnected ? Game3VoiceBar({ key: 'vbar', channelName: s.voiceChannelName, serverName: (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || ''), onOpen: () => A.returnToVoice && A.returnToVoice(), onLeave: () => A.leaveVoice && A.leaveVoice() }) : null, userPanel.userPanel(s) ].filter(Boolean), [h('div', { key: 'srvstrip', class: 'ds-g3-srvstrip' }, railServersView(s))])),
                 h('div', { class: 'ca-right' },
                     header.headerView(s, ch),
                     h('div', { class: 'ca-right-body' },
@@ -66,8 +66,8 @@ export function mountCommunityApp(root, adapter = {}) {
                     bodyMain,
                             surfaces.popoverView(s),
                         ),
-                s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null) }) : null,
-                ...(s.homeMode ? [] : [Game3MemberList({
+                s.splitChannel && (!ch || s.splitChannel.id !== ch.id) ? Game3SplitColumn({ name: s.splitChannel.name, messages: s.splitMessages || [], onMain: () => A.splitMain && A.splitMain(), onClose: () => A.splitTo && A.splitTo(null), onSend: A.splitSend ? (text) => A.splitSend(text) : null }) : null,
+                ...(s.homeMode || chType.traits?.members === false ? [] : [Game3MemberList({
                     categories: (s.memberCategories || []).map((c) => ({ ...c, members: (c.members || []).map((m) => ({ ...m, accountName: (s.accountNames || {})[m.identity] || '' })) })), apps: s.memberApps || [], open: !!s.memberListOpen, userId: s.userId,
                     onSelectMember: (m) => { st.card = { open: true, member: m }; render(); },
                 })]),

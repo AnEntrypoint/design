@@ -28,12 +28,11 @@ export function RoleList({ roles = [], emptyText = '', key } = {}) {
 
 export function DiscoverList({ servers = [], emptyText = '', onOpen, key } = {}) {
     if (!servers.length) return h('p', { key, class: 'ds-g3-empty' }, emptyText);
-    return h('ul', { key, class: 'ds-g3-discover' }, ...servers.map((sv) => h('li', { key: sv.id, class: 'ds-g3-discover-row' },
-        h('span', { key: 'i', class: 'ds-g3-discover-ico', 'aria-hidden': 'true' }, (sv.name || '?').slice(0, 1).toUpperCase()),
+    return h('div', { key, class: 'ds-g3-discover' }, ...servers.map((sv) => h('div', { key: sv.id, class: 'ds-g3-ev ds-g3-disc' },
+        h('div', { key: 'i', class: 'ds-g3-dico', style: 'background:' + (sv.color || '#5865f2'), 'aria-hidden': 'true' }, (sv.name || '?').slice(0, 1).toUpperCase()),
         h('div', { key: 't', class: 'ds-g3-discover-txt' },
             h('h3', { key: 'n' }, sv.name),
-            h('p', { key: 'm' }, sv.members != null ? sv.members + ' member' + (sv.members === 1 ? '' : 's') + ' · ' + (sv.online || 0) + ' online · by ' + (sv.owner || 'nobody') : 'details load when you open this server'),
-            sv.channels ? h('p', { key: 'c' }, sv.channels.map((c) => '#' + c).join(' ')) : null),
-        h('button', { key: 'b', type: 'button', class: 'ds-g3-btn', onclick: () => onOpen && onOpen(sv.id) }, 'Open')
-    )));
+            h('p', { key: 'm' }, sv.members != null ? sv.members + ' member' + (sv.members === 1 ? '' : 's') + ' \u00b7 ' + (sv.online || 0) + ' online \u00b7 by ' + (sv.owner || 'nobody') : 'details load when you open this server'),
+            sv.channels ? h('p', { key: 'c', class: 'ds-g3-discover-ch' }, sv.channels.map((c) => '#' + c).join(' ')) : null),
+        h('span', { key: 'b', class: 'ds-g3-evb', role: 'button', tabindex: '0', onclick: () => onOpen && onOpen(sv.id), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen && onOpen(sv.id); } } }, 'Open'))));
 }

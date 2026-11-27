@@ -37,7 +37,7 @@ const KEYBINDS = [['Quick Switcher', 'Ctrl P'], ['Send message', 'Enter'], ['New
 const toggleRow = (key, checked, onToggle) => h('div', { key, class: 'ds-g3-tgl' + (checked ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': checked ? 'true' : 'false', 'aria-label': COPY[key][0], onclick: () => onToggle && onToggle(key, !checked) },
     h('div', null,
         h('div', { class: 'ds-g3-tgl-label' }, COPY[key][0]),
-        h('div', { class: 'ds-g3-hint' }, COPY[key][1])),
+        h('div', { class: 'ds-g3-tgl-sub' }, COPY[key][1])),
     h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }));
 
 const devRow = (label, value, key) => h('div', { key, class: 'ds-g3-dev-row' }, h('span', { class: 'ds-g3-dev-k' }, label), h('code', { class: 'ds-g3-dev-v' }, value));
@@ -76,7 +76,7 @@ const dndRow = (account, acts) => {
     return h('div', { key: 'dnd', class: 'ds-g3-tgl' + (on ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': on ? 'true' : 'false', 'aria-label': 'Do Not Disturb', onclick: () => acts.accountSetStatus({ status: on ? 'online' : 'dnd', text: st.text, emoji: st.emoji, durationSec: -1 }) },
         h('div', null,
             h('div', { class: 'ds-g3-tgl-label' }, 'Do Not Disturb'),
-            h('div', { class: 'ds-g3-hint' }, 'silences every ping, shows red to everyone')),
+            h('div', { class: 'ds-g3-tgl-sub' }, 'silences every ping, shows red to everyone')),
         h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }));
 };
 
@@ -111,7 +111,7 @@ const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggle
                 ? mutedChannels.map((c) => h('div', { key: 'm' + c.id, class: 'ds-g3-tgl', role: 'button', tabindex: '0', onclick: () => onUnmute && onUnmute(c.id) },
                     h('div', null,
                         h('div', { class: 'ds-g3-tgl-label' }, '#' + c.name),
-                        h('div', { class: 'ds-g3-hint' }, 'muted · press to unmute'))))
+                        h('div', { class: 'ds-g3-tgl-sub' }, 'muted · press to unmute'))))
                 : [h('div', { key: 'none', class: 'ds-g3-hint' }, 'none. the bell in a channel\'s header mutes it.')]),
         ],
         media: () => [h('h2', { key: 'h' }, 'Chat & Media'), ...group('media')],

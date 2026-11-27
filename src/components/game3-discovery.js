@@ -50,7 +50,7 @@ export function Game3DiscoveryPane({ discovery: d, acts }) {
         text('tags', 'Tags', 200, 'chess, friendly, weekly-events', 'up to 8, separated by commas or spaces'),
         pick('language', 'Language', d.languages),
         h('div', { key: 'gl', class: 'ds-g3-tgl' + (d.fields.guidelines ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': d.fields.guidelines ? 'true' : 'false', 'aria-label': 'Community guidelines acknowledged', onclick: () => edit({ guidelines: !d.fields.guidelines }), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } } },
-            h('div', null, h('div', { class: 'ds-g3-tgl-label' }, 'Community guidelines acknowledged'), h('div', { class: 'ds-g3-hint' }, 'this server follows respectful, safe community rules and has people who enforce them')),
+            h('div', null, h('div', { class: 'ds-g3-tgl-label' }, 'Community guidelines acknowledged'), h('div', { class: 'ds-g3-tgl-sub' }, 'this server follows respectful, safe community rules and has people who enforce them')),
             h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' })),
         h('div', { key: 'act', class: 'ds-g3-btnrow ds-g3-dsc-act' },
             button('save', 'Save details', () => acts.discoverySave(), 'ds-g3-dsc-save', d.busy || !d.dirty),

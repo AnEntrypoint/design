@@ -6,7 +6,7 @@ import { Game3ProfileBody } from './game3-profile.js';
 const h = webjsx.createElement;
 
 const PRESENCE = [['online', 'Online', '#23a55a'], ['idle', 'Idle', '#f0b232'], ['dnd', 'Do Not Disturb', '#f23f43'], ['invisible', 'Invisible', '#80848e']];
-const SWATCHES = ['#c4602f', '#5865f2', '#eb459e', '#9b84ee', '#1abc9c', '#f1c40f', '#57f287', '#2b2d31'];
+const SWATCHES = ['#5865f2', '#eb459e', '#57f287', '#f0b232', '#ed4245', '#1abc9c', '#c4602f', '#9b84ee', '#2b2d31'];
 const DURATIONS = [[0, "Don't clear"], [1800, '30 minutes'], [3600, '1 hour'], [14400, '4 hours'], [86400, '24 hours']];
 const DM_POLICY = [['everyone', 'Everyone', 'anyone with your key can message you'], ['known', 'People I know', 'people you have messaged, or who talk in your servers'], ['nobody', 'Nobody new', 'only people you have already messaged can reach you']];
 const BIRTHDAY = [['hidden', 'Hidden', 'only you see it'], ['day', 'Day and month', 'people see May 17 but not the year'], ['full', 'Full date', 'people see the year too']];
@@ -71,7 +71,7 @@ const radio = (key, on, label, sub, onClick) => h('div', { key, class: 'ds-g3-ra
     h('i', { 'aria-hidden': 'true' }), h('span', null, label, sub ? h('span', { class: 'ds-g3-radsub' }, ' · ' + sub) : null));
 
 const toggle = (key, on, label, sub, onToggle) => h('div', { key, class: 'ds-g3-tgl' + (on ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': on ? 'true' : 'false', 'aria-label': label, onclick: () => onToggle(!on), onkeydown: (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); onToggle(!on); } } },
-    h('div', null, h('div', { class: 'ds-g3-tgl-label' }, label), h('div', { class: 'ds-g3-hint' }, sub)),
+    h('div', null, h('div', { class: 'ds-g3-tgl-label' }, label), h('div', { class: 'ds-g3-tgl-sub' }, sub)),
     h('div', { class: 'ds-g3-sw2', 'aria-hidden': 'true' }));
 
 const bannerCss = (a) => a.bannerCss || ('oklch(.5 .13 ' + game3Hue(a.pub.name || 'you') + ')');
@@ -116,34 +116,6 @@ const accountPane = (a, acts, extra) => {
             h('div', null, h('b', null, String(extra.servers)), h('span', null, 'servers')),
             h('div', null, h('b', null, '0'), h('span', null, 'saved')),
             h('div', null, h('b', null, '0'), h('span', null, 'reminders'))),
-        h('h6', { key: 'idh' }, 'Public key'),
-        h('div', { key: 'npub', class: 'ds-g3-npub' },
-            h('code', { class: 'ds-g3-code', title: a.npub }, a.npub),
-            copyBtn('cn', a.npub, 'Copy npub'),
-            copyBtn('ch', a.pubkey, 'Copy hex')),
-        h('p', { key: 'npubh', class: 'ds-g3-hint' }, 'your npub is your identity: share it freely. Never share your secret key.'),
-        textField({ k: 'name', label: 'Display Name', value: a.pub.name, max: 32, placeholder: 'what people see', check: (t) => (t.trim() ? '' : 'Display name cannot be empty'), onSave: (t) => sv.accountSavePublic('name', { name: t }, 'Display name saved') }),
-        noteFor(a, 'name'),
-        textField({ k: 'username', label: 'Username', value: a.pub.username, max: 24, placeholder: 'letters, numbers, dot, dash, underscore', check: (t) => (t && !/^[a-z0-9_.-]{2,24}$/i.test(t) ? 'Use 2 to 24 of: letters, numbers . - _' : ''), onSave: (t) => sv.accountSavePublic('username', { username: t }, 'Username saved') }),
-        noteFor(a, 'username'),
-        h('div', { key: 'n5', class: 'ds-g3-fld' },
-            h('h6', null, 'NIP-05 Identifier'),
-            h('div', { class: 'ds-g3-row2' },
-                h('input', { class: 'ds-g3-fi', id: 'g3-nip05', maxlength: '120', placeholder: 'you@example.com', value: a.pub.nip05, onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') sv.accountVerifyNip05(e.target.value); } }),
-                btn('vf', 'Verify', () => { const el = document.getElementById('g3-nip05'); sv.accountVerifyNip05(el ? el.value : a.pub.nip05); }, 'ds-g3-evb-on')),
-            nip05Badge(a), noteFor(a, 'nip05')),
-        h('h6', { key: 'avh' }, 'Avatar'),
-        h('div', { key: 'avr', class: 'ds-g3-btnrow' },
-            fileBtn('up', 'Upload picture', 'image/png,image/jpeg,image/webp,image/gif', (f) => sv.accountUploadAvatar(f)),
-            btn('gen', 'Generate', () => sv.accountGenerateAvatar()),
-            ...(a.pub.picture ? [btn('rm', 'Remove', () => sv.accountClearAvatar(), 'ds-g3-evb-ghost')] : [])),
-        h('input', { key: 'avu', class: 'ds-g3-fi ds-g3-gap', maxlength: '1900', placeholder: 'or paste an https:// image address', value: /^https:/.test(a.pub.picture || '') ? a.pub.picture : '', onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') e.target.blur(); }, onchange: (e) => sv.accountSavePublic('avatar', { picture: e.target.value }, 'Picture saved') }),
-        h('p', { key: 'avh2', class: 'ds-g3-hint' }, 'uploads are resized in your browser to 192 px and stored inside your profile, so no third party hosts them.'),
-        noteFor(a, 'avatar'),
-        h('h6', { key: 'ach' }, 'Account Colour'),
-        colourRow(a.pub.accent, (c) => sv.accountSavePublic('accent', { accent: c }, c ? 'Colour saved' : 'Colour cleared'), true),
-        h('p', { key: 'ach2', class: 'ds-g3-hint' }, 'tints your avatar when you have no picture, and your banner when it is on automatic.'),
-        noteFor(a, 'accent'),
         h('h6', { key: 'st' }, 'Status'),
         ...PRESENCE.map(([k, n, c]) => radio('s' + k, a.status.status === k, [h('span', { key: 'd', style: 'color:' + c }, '●'), ' ' + n], '', () => sv.accountSetStatus({ status: k, text: a.status.text, emoji: a.status.emoji, durationSec: 0 }))),
         h('h6', { key: 'cs' }, 'Custom Status'),
@@ -157,6 +129,35 @@ const accountPane = (a, acts, extra) => {
                 ...(a.status.text || a.status.emoji ? [btn('csc', 'Clear', () => sv.accountSetStatus({ status: a.status.status, text: '', emoji: '', durationSec: 0 }), 'ds-g3-evb-ghost')] : []))),
         a.status.expiresAt ? h('p', { key: 'cse', class: 'ds-g3-hint' }, 'clears itself at ' + clock(a.status.expiresAt)) : null,
         noteFor(a, 'status'),
+        h('div', { key: 'zx', class: 'ds-g3-zx' },
+            h('h6', { key: 'idh' }, 'Public key'),
+            h('div', { key: 'npub', class: 'ds-g3-npub' },
+                h('code', { class: 'ds-g3-code', title: a.npub }, a.npub),
+                copyBtn('cn', a.npub, 'Copy npub'),
+                copyBtn('ch', a.pubkey, 'Copy hex')),
+            h('p', { key: 'npubh', class: 'ds-g3-hint' }, 'your npub is your identity: share it freely. Never share your secret key.'),
+            textField({ k: 'name', label: 'Display Name', value: a.pub.name, max: 32, placeholder: 'what people see', check: (t) => (t.trim() ? '' : 'Display name cannot be empty'), onSave: (t) => sv.accountSavePublic('name', { name: t }, 'Display name saved') }),
+            noteFor(a, 'name'),
+            textField({ k: 'username', label: 'Username', value: a.pub.username, max: 24, placeholder: 'letters, numbers, dot, dash, underscore', check: (t) => (t && !/^[a-z0-9_.-]{2,24}$/i.test(t) ? 'Use 2 to 24 of: letters, numbers . - _' : ''), onSave: (t) => sv.accountSavePublic('username', { username: t }, 'Username saved') }),
+            noteFor(a, 'username'),
+            h('div', { key: 'n5', class: 'ds-g3-fld' },
+                h('h6', null, 'NIP-05 Identifier'),
+                h('div', { class: 'ds-g3-row2' },
+                    h('input', { class: 'ds-g3-fi', id: 'g3-nip05', maxlength: '120', placeholder: 'you@example.com', value: a.pub.nip05, onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') sv.accountVerifyNip05(e.target.value); } }),
+                    btn('vf', 'Verify', () => { const el = document.getElementById('g3-nip05'); sv.accountVerifyNip05(el ? el.value : a.pub.nip05); }, 'ds-g3-evb-on')),
+                nip05Badge(a), noteFor(a, 'nip05')),
+            h('h6', { key: 'avh' }, 'Avatar'),
+            h('div', { key: 'avr', class: 'ds-g3-btnrow' },
+                fileBtn('up', 'Upload picture', 'image/png,image/jpeg,image/webp,image/gif', (f) => sv.accountUploadAvatar(f)),
+                btn('gen', 'Generate', () => sv.accountGenerateAvatar()),
+                ...(a.pub.picture ? [btn('rm', 'Remove', () => sv.accountClearAvatar(), 'ds-g3-evb-ghost')] : [])),
+            h('input', { key: 'avu', class: 'ds-g3-fi ds-g3-gap', maxlength: '1900', placeholder: 'or paste an https:// image address', value: /^https:/.test(a.pub.picture || '') ? a.pub.picture : '', onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') e.target.blur(); }, onchange: (e) => sv.accountSavePublic('avatar', { picture: e.target.value }, 'Picture saved') }),
+            h('p', { key: 'avh2', class: 'ds-g3-hint' }, 'uploads are resized in your browser to 192 px and stored inside your profile, so no third party hosts them.'),
+            noteFor(a, 'avatar'),
+            h('h6', { key: 'ach' }, 'Account Colour'),
+            colourRow(a.pub.accent, (c) => sv.accountSavePublic('accent', { accent: c }, c ? 'Colour saved' : 'Colour cleared'), true),
+            h('p', { key: 'ach2', class: 'ds-g3-hint' }, 'tints your avatar when you have no picture, and your banner when it is on automatic.'),
+            noteFor(a, 'accent'),),
     ].filter(Boolean);
 };
 
@@ -181,9 +182,10 @@ const bannerEditor = (a, acts) => {
     const modes = [['auto', 'Automatic'], ['colour', 'Colour'], ['gradient', 'Gradient'], ['image', 'Image']];
     const set = (nb) => acts.accountSavePublic('banner', { banner: nb }, 'Banner saved');
     const current = b.mode === 'colour' ? b.a : '';
-    return h('div', { key: 'bn', class: 'ds-g3-banner' },
+    const swatches = h('div', { key: 'bn', class: 'ds-g3-banner' },
         h('div', { class: 'ds-g3-swatches' },
-            ...['', ...SWATCHES].map((c) => h('i', { key: 'c' + c, title: c || 'automatic', class: (b.mode === 'auto' && !c) || (b.mode === 'colour' && current === c) ? 'on' : '', style: 'background:' + (c || '#80848e'), role: 'button', tabindex: '0', onclick: () => set(c ? { mode: 'colour', a: c } : { mode: 'auto' }) }))),
+            ...['', ...SWATCHES].map((c) => h('i', { key: 'c' + c, title: c || 'automatic', class: (b.mode === 'auto' && !c) || (b.mode === 'colour' && current === c) ? 'on' : '', style: 'background:' + (c || 'oklch(.5 .13 ' + game3Hue(profileMember(a).name) + ')'), role: 'button', tabindex: '0', onclick: () => set(c ? { mode: 'colour', a: c } : { mode: 'auto' }) }))));
+    const more = h('div', { key: 'bnm', class: 'ds-g3-banner' },
         h('div', { class: 'ds-g3-seg ds-g3-gap', role: 'radiogroup', 'aria-label': 'banner type' }, ...modes.map(([k, l]) => h('span', { key: k, class: b.mode === k ? 'on' : '', role: 'radio', tabindex: '0', 'aria-checked': b.mode === k ? 'true' : 'false', onclick: () => set(k === 'auto' ? { mode: 'auto' } : k === 'colour' ? { mode: 'colour', a: b.a || '#5865f2' } : k === 'gradient' ? { mode: 'gradient', a: b.a || '#5865f2', b: b.b || '#eb459e', angle: b.angle || 135 } : { mode: 'image', url: b.url || '' }) }, l))),
         b.mode === 'colour' ? h('input', { type: 'color', class: 'ds-g3-colour', value: b.a, 'aria-label': 'custom banner colour', onchange: (e) => set({ mode: 'colour', a: e.target.value }) }) : null,
         b.mode === 'gradient' ? h('div', { class: 'ds-g3-gradrow' },
@@ -193,50 +195,50 @@ const bannerEditor = (a, acts) => {
             h('span', { class: 'ds-g3-hint' }, (b.angle || 135) + '\u00B0')) : null,
         b.mode === 'image' ? h('div', { class: 'ds-g3-btnrow' }, fileBtn('bup', 'Upload banner', 'image/png,image/jpeg,image/webp,image/gif', (f) => acts.accountUploadBanner(f)), h('input', { class: 'ds-g3-fi', maxlength: '1900', placeholder: 'or an https:// image address', value: /^https:/.test(b.url || '') ? b.url : '', onkeydown: (e) => e.stopPropagation(), onchange: (e) => set({ mode: 'image', url: e.target.value }) })) : null,
         noteFor(a, 'banner'));
+    return { swatches, more };
 };
 
 const profilePane = (a, acts) => {
-    const tabs = h('div', { key: 'abt', class: 'ds-g3-seg ds-g3-seg-sm' }, h('span', { class: !ui.aboutPreview ? 'on' : '', role: 'button', tabindex: '0', onclick: () => { ui.aboutPreview = false; rr(); } }, 'Write'), h('span', { class: ui.aboutPreview ? 'on' : '', role: 'button', tabindex: '0', onclick: () => { ui.aboutPreview = true; rr(); } }, 'Preview'));
+    const banner = bannerEditor(a, acts);
     return [
         h('h2', { key: 'h' }, 'Profiles'),
         textField({ k: 'pron', label: 'Pronouns', value: a.pub.pronouns, max: 40, placeholder: 'she/her, they/them…', onSave: (t) => acts.accountSavePublic('pronouns', { pronouns: t }, 'Pronouns saved') }),
         noteFor(a, 'pronouns'),
         h('div', { key: 'about', class: 'ds-g3-fld' },
-            h('h6', null, 'About Me'), tabs,
-            ui.aboutPreview
-                ? h('div', { class: 'ds-g3-aboutprev ds-g3-pre' }, ...(a.pub.about ? renderMarkdown(a.pub.about) : [h('span', { class: 'ds-g3-hint' }, 'nothing written yet')]))
-                : h('textarea', { class: 'ds-g3-fi', rows: '3', maxlength: '190', placeholder: 'tell people about yourself. markdown works.', value: a.pub.about, onkeydown: (e) => e.stopPropagation(), oninput: (e) => { const c = e.target.parentNode.querySelector('.ds-g3-count'); if (c) c.textContent = e.target.value.length + ' / 190'; }, onchange: (e) => acts.accountSavePublic('about', { about: e.target.value }, 'About me saved') }),
-            h('div', { class: 'ds-g3-count' }, (a.pub.about || '').length + ' / 190'),
-            h('p', { class: 'ds-g3-hint' }, '**bold**, *italic*, `code`, links and lists render on your card for everyone')),
+            h('h6', null, 'About Me'),
+            h('textarea', { class: 'ds-g3-fi', rows: '3', maxlength: '190', placeholder: 'tell people about yourself. markdown works.', value: a.pub.about, onkeydown: (e) => e.stopPropagation(), onchange: (e) => acts.accountSavePublic('about', { about: e.target.value }, 'About me saved') }),
+            h('p', { class: 'ds-g3-hint' }, 'shows on your profile card for everyone')),
         noteFor(a, 'about'),
-        h('h6', { key: 'lh' }, 'Website and Links'),
-        textField({ k: 'web', label: '', value: a.pub.website, max: 200, placeholder: 'https://your.site', check: (t) => { if (!t) return ''; try { const u = new URL(t); return u.protocol === 'https:' || u.protocol === 'http:' ? '' : 'Must start with https://'; } catch { return 'Use a full address like https://example.com'; } }, onSave: (t) => acts.accountSavePublic('website', { website: t }, 'Website saved') }),
-        linkRows(a, acts),
-        h('p', { key: 'lh2', class: 'ds-g3-hint' }, 'up to 5 links, shown on your card'),
-        noteFor(a, 'links'), noteFor(a, 'website'),
-        textField({ k: 'loc', label: 'Location', value: a.pub.location, max: 60, placeholder: 'city, country, or anywhere', onSave: (t) => acts.accountSavePublic('location', { location: t }, 'Location saved') }),
-        noteFor(a, 'location'),
-        h('h6', { key: 'bdh' }, 'Birthday'),
-        h('div', { key: 'bd', class: 'ds-g3-row2' },
-            h('input', { type: 'date', class: 'ds-g3-fi', value: a.birthday.date, min: '1900-01-01', max: new Date().toISOString().slice(0, 10), 'aria-label': 'birthday', onchange: (e) => acts.accountSetBirthday({ date: e.target.value }) }),
-            h('select', { class: 'ds-g3-langsel', 'aria-label': 'who sees your birthday', onchange: (e) => acts.accountSetBirthday({ visibility: e.target.value }) }, ...BIRTHDAY.map(([k, l]) => h('option', { key: k, value: k, selected: a.birthday.visibility === k }, l)))),
-        h('p', { key: 'bdp', class: 'ds-g3-hint' }, (BIRTHDAY.find((b) => b[0] === a.birthday.visibility) || BIRTHDAY[0])[2] + '. Your date is kept in your private synced settings either way.'),
-        noteFor(a, 'birthday'),
         h('h6', { key: 'bh' }, 'Banner Colour'),
-        bannerEditor(a, acts),
-        ...(a.server ? [
-            h('h6', { key: 'sh' }, 'In ' + (a.server.name || 'this server')),
-            h('div', { key: 'sv', class: 'ds-g3-fld' },
-                h('div', { class: 'ds-g3-row2' },
-                    h('input', { class: 'ds-g3-fi', maxlength: '32', placeholder: 'nickname for this server', value: a.server.nick || '', 'aria-label': 'server nickname', onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') e.target.blur(); }, oninput: (e) => { const hits = acts.accountCheckNick(e.target.value); const el = e.target.closest('.ds-g3-fld').querySelector('.ds-g3-nickwarn'); if (el) el.textContent = hits.length ? 'Careful: ' + (hits[0].kind === 'exact' ? 'the same as ' : 'looks a lot like ') + hits[0].name + (hits.length > 1 ? ' and ' + (hits.length - 1) + ' more' : '') + ' in this server.' : ''; }, onchange: (e) => acts.accountSetServerProfile({ nick: e.target.value, avatar: a.server.avatar || '' }) }),
-                    fileBtn('sup', 'Server picture', 'image/png,image/jpeg,image/webp,image/gif', (f) => acts.accountUploadServerAvatar(f)),
-                    ...(a.server.avatar ? [btn('srm', 'Remove', () => acts.accountSetServerProfile({ nick: a.server.nick || '', avatar: '' }), 'ds-g3-evb-ghost')] : [])),
-                h('div', { class: 'ds-g3-nickwarn ds-g3-warn', 'aria-live': 'polite' }),
-                h('p', { class: 'ds-g3-hint' }, 'only people in this server see this name and picture. Others still see your normal profile, and anyone can hover your name here to see your real account name.'),
-                noteFor(a, 'server'))] : [h('p', { key: 'sh0', class: 'ds-g3-hint' }, 'open a server to set a nickname and picture just for it.')]),
+        banner.swatches,
         h('h6', { key: 'ph' }, 'Preview'),
-        h('p', { key: 'ph2', class: 'ds-g3-hint' }, 'this is your profile card exactly as people in ' + (a.server && a.server.name ? a.server.name : 'a server') + ' see it.'),
         Game3ProfileBody({ key: 'prev', member: profileMember(a), preview: true, isSelf: true }),
+        h('div', { key: 'zx', class: 'ds-g3-zx' },
+            h('h6', { key: 'lh' }, 'Website and Links'),
+            textField({ k: 'web', label: '', value: a.pub.website, max: 200, placeholder: 'https://your.site', check: (t) => { if (!t) return ''; try { const u = new URL(t); return u.protocol === 'https:' || u.protocol === 'http:' ? '' : 'Must start with https://'; } catch { return 'Use a full address like https://example.com'; } }, onSave: (t) => acts.accountSavePublic('website', { website: t }, 'Website saved') }),
+            linkRows(a, acts),
+            h('p', { key: 'lh2', class: 'ds-g3-hint' }, 'up to 5 links, shown on your card'),
+            noteFor(a, 'links'), noteFor(a, 'website'),
+            textField({ k: 'loc', label: 'Location', value: a.pub.location, max: 60, placeholder: 'city, country, or anywhere', onSave: (t) => acts.accountSavePublic('location', { location: t }, 'Location saved') }),
+            noteFor(a, 'location'),
+            h('h6', { key: 'bdh' }, 'Birthday'),
+            h('div', { key: 'bd', class: 'ds-g3-row2' },
+                h('input', { type: 'date', class: 'ds-g3-fi', value: a.birthday.date, min: '1900-01-01', max: new Date().toISOString().slice(0, 10), 'aria-label': 'birthday', onchange: (e) => acts.accountSetBirthday({ date: e.target.value }) }),
+                h('select', { class: 'ds-g3-langsel', 'aria-label': 'who sees your birthday', onchange: (e) => acts.accountSetBirthday({ visibility: e.target.value }) }, ...BIRTHDAY.map(([k, l]) => h('option', { key: k, value: k, selected: a.birthday.visibility === k }, l)))),
+            h('p', { key: 'bdp', class: 'ds-g3-hint' }, (BIRTHDAY.find((b) => b[0] === a.birthday.visibility) || BIRTHDAY[0])[2] + '. Your date is kept in your private synced settings either way.'),
+            noteFor(a, 'birthday'),
+            banner.more,
+            ...(a.server ? [
+                h('h6', { key: 'sh' }, 'In ' + (a.server.name || 'this server')),
+                h('div', { key: 'sv', class: 'ds-g3-fld' },
+                    h('div', { class: 'ds-g3-row2' },
+                        h('input', { class: 'ds-g3-fi', maxlength: '32', placeholder: 'nickname for this server', value: a.server.nick || '', 'aria-label': 'server nickname', onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') e.target.blur(); }, oninput: (e) => { const hits = acts.accountCheckNick(e.target.value); const el = e.target.closest('.ds-g3-fld').querySelector('.ds-g3-nickwarn'); if (el) el.textContent = hits.length ? 'Careful: ' + (hits[0].kind === 'exact' ? 'the same as ' : 'looks a lot like ') + hits[0].name + (hits.length > 1 ? ' and ' + (hits.length - 1) + ' more' : '') + ' in this server.' : ''; }, onchange: (e) => acts.accountSetServerProfile({ nick: e.target.value, avatar: a.server.avatar || '' }) }),
+                        fileBtn('sup', 'Server picture', 'image/png,image/jpeg,image/webp,image/gif', (f) => acts.accountUploadServerAvatar(f)),
+                        ...(a.server.avatar ? [btn('srm', 'Remove', () => acts.accountSetServerProfile({ nick: a.server.nick || '', avatar: '' }), 'ds-g3-evb-ghost')] : [])),
+                    h('div', { class: 'ds-g3-nickwarn ds-g3-warn', 'aria-live': 'polite' }),
+                    h('p', { class: 'ds-g3-hint' }, 'only people in this server see this name and picture. Others still see your normal profile, and anyone can hover your name here to see your real account name.'),
+                    noteFor(a, 'server'))] : [h('p', { key: 'sh0', class: 'ds-g3-hint' }, 'open a server to set a nickname and picture just for it.')]),
+            h('p', { key: 'ph2', class: 'ds-g3-hint' }, 'the card above is exactly how people in ' + (a.server && a.server.name ? a.server.name : 'a server') + ' see you.')),
     ].filter(Boolean);
 };
 
@@ -294,7 +296,7 @@ const securityPane = (a, acts) => {
                 : h('p', { key: 'rx', class: 'ds-g3-hint' }, 'rotate the key inside your extension; this page cannot.'),
         noteFor(a, 'key'),
         h('h6', { key: 'k5' }, 'Sign-in methods'),
-        h('div', { key: 'ext', class: 'ds-g3-method' }, h('div', null, h('div', { class: 'ds-g3-tgl-label' }, 'Browser extension'), h('div', { class: 'ds-g3-hint' }, a.extensionAvailable ? 'a Nostr extension (NIP-07) was found. Sign in with it and the key never touches this page.' : 'no Nostr extension (NIP-07) detected in this browser.')), a.extensionAvailable ? btn('el', a.signsWithExtension ? 'Signed in with it' : 'Use extension', () => !a.signsWithExtension && acts.accountExtensionLogin(), a.signsWithExtension ? 'ds-g3-evb-ghost' : 'ds-g3-evb-on') : null),
+        h('div', { key: 'ext', class: 'ds-g3-method' }, h('div', null, h('div', { class: 'ds-g3-tgl-label' }, 'Browser extension'), h('div', { class: 'ds-g3-tgl-sub' }, a.extensionAvailable ? 'a Nostr extension (NIP-07) was found. Sign in with it and the key never touches this page.' : 'no Nostr extension (NIP-07) detected in this browser.')), a.extensionAvailable ? btn('el', a.signsWithExtension ? 'Signed in with it' : 'Use extension', () => !a.signsWithExtension && acts.accountExtensionLogin(), a.signsWithExtension ? 'ds-g3-evb-ghost' : 'ds-g3-evb-on') : null),
         ...signerBlock(a, acts),
         h('h6', { key: 'k6' }, 'Connected devices'),
         h('p', { key: 'dev', class: 'ds-g3-hint' }, 'there is no server-side session list: every browser that holds your key is a device, and the key cannot be revoked from here. To cut off a lost device, rotate your key. Your synced settings follow the key to any device that signs in with it.'),

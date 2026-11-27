@@ -3,6 +3,7 @@ import { Icon } from '../components/shell.js';
 import { GameHeader } from '../components/game3-header.js';
 import { channelIcon } from './rail.js';
 import { Game3SplitSelect } from '../components/game3-split.js';
+import { channelType } from '../modules/index.js';
 
 const h = webjsx.createElement;
 
@@ -16,6 +17,7 @@ export function createHeader(app) {
         }
         return GameHeader({
             dm: !!(s.homeMode && s.activeDmPeer),
+            bare: !!channelType(ch.type).traits?.bareHeader,
             onBurger: () => (s.mobileMenuOpen ? A.closeMobileMenu && A.closeMobileMenu() : A.openMobileMenu && A.openMobileMenu()),
             channelName: ch.name || 'general',
             channelIcon: channelIcon(ch),
