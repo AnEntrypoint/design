@@ -49,7 +49,7 @@ export const statusPresetSeconds = (key) => {
 
 export function Game3StatusMenu({ status = 'online', custom = '', emoji = '', preset = 'never', expiresLabel = '', onStatus, onCustom, onPreset } = {}) {
     const save = (menu) => { const t = menu.querySelector('input[aria-label="custom status"]'); const em = menu.querySelector('.ds-g3-cemo'); if (onCustom) onCustom(t.value, em.value, preset); };
-    return h('div', { key: 'smenu', class: 'ds-g3-statusmenu', role: 'menu', onkeydown: menuKeys },
+    return h('div', { key: 'smenu', class: 'ds-g3-statusmenu' + (custom || emoji ? ' ds-g3-has-custom' : ''), role: 'menu', onkeydown: menuKeys },
         h('div', { key: 'csrow', class: 'ds-g3-csrow' },
             h('input', { class: 'ds-g3-cst ds-g3-cemo', maxlength: '8', placeholder: '😀', value: statusDraft.emoji !== null ? statusDraft.emoji : emoji, 'aria-label': 'status emoji', oninput: (e) => { statusDraft.emoji = e.target.value; }, onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') save(e.currentTarget.closest('.ds-g3-statusmenu')); } }),
             h('input', { key: 'cst', class: 'ds-g3-cst', maxlength: '60', placeholder: 'Set a custom status, Enter saves', value: statusDraft.text !== null ? statusDraft.text : custom, 'aria-label': 'custom status', oninput: (e) => { statusDraft.text = e.target.value; }, onkeydown: (e) => { e.stopPropagation(); if (e.key === 'Enter') save(e.currentTarget.closest('.ds-g3-statusmenu')); } })),

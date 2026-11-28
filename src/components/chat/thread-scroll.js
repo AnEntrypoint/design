@@ -31,15 +31,17 @@ export function makeThreadAutoScroll(getCount, onUpdate) {
             else if (count > state.last && !state.stick) state.pending += count - state.last;
             state.last = count;
             notify();
-            if (!state.stick || hasSelectionInside(el)) return;
+            if (!state.stick || hasSelectionInside(el) || el.querySelector('[data-ds-float]')) return;
             toBottom();
         };
         el.addEventListener('scroll', onScroll, { passive: true });
         el.addEventListener('load', onMutate, true);
         el.addEventListener('loadedmetadata', onMutate, true);
+        const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(() => { if (state.stick && !el.querySelector('[data-ds-float]')) toBottom(); }) : null;
+        if (ro) ro.observe(el);
         const mo = new MutationObserver(onMutate);
         mo.observe(el, { childList: true, subtree: true });
         toBottom();
-        return () => { mo.disconnect(); el.removeEventListener('scroll', onScroll); el.removeEventListener('load', onMutate, true); el.removeEventListener('loadedmetadata', onMutate, true); el._dsAutoScroll = null; };
+        return () => { mo.disconnect(); if (ro) ro.disconnect(); el.removeEventListener('scroll', onScroll); el.removeEventListener('load', onMutate, true); el.removeEventListener('loadedmetadata', onMutate, true); el._dsAutoScroll = null; };
     };
 }

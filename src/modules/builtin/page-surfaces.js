@@ -1,15 +1,18 @@
+import * as webjsx from '../../../vendor/webjsx/index.js';
 import { registerModule } from '../registry.js';
 import { ForumView, PageView } from '../../components/community.js';
 import { Game3RolesPanel } from '../../components/game3-roles.js';
 import { Game3RulesPanel } from '../../components/game3-rules.js';
 
+const h = webjsx.createElement;
+const pageCol = (child) => h('div', { class: 'ds-g3-pagecol' }, child);
 const serverName = (s) => (((s.servers || []).find((sv) => sv.id === s.currentServerId) || {}).name || '');
 
 registerModule({
     id: 'surface-rules', kind: 'surface',
     surface: {
         id: 'rules', channelName: 'rules', channelType: 'page', icon: 'ref-rules',
-        body: ({ s, A }) => Game3RulesPanel({ serverName: serverName(s), online: (s.rulesStats || {}).online || 0, members: (s.rulesStats || {}).members || 0, onDone: () => A.goToGeneral && A.goToGeneral() }),
+        body: ({ s, A }) => pageCol(Game3RulesPanel({ serverName: serverName(s), online: (s.rulesStats || {}).online || 0, members: (s.rulesStats || {}).members || 0, onDone: () => A.goToGeneral && A.goToGeneral() })),
     },
 });
 
@@ -17,7 +20,7 @@ registerModule({
     id: 'surface-pick-roles', kind: 'surface',
     surface: {
         id: 'pick-roles', channelName: 'pick-roles', channelType: 'page', icon: 'ref-roles',
-        body: ({ s, A }) => Game3RolesPanel({ roles: s.selfRoles || [], onToggle: (id) => A.toggleSelfRole && A.toggleSelfRole(id), onDone: () => A.goToGeneral && A.goToGeneral() }),
+        body: ({ s, A }) => pageCol(Game3RolesPanel({ roles: s.selfRoles || [], onToggle: (id) => A.toggleSelfRole && A.toggleSelfRole(id), onDone: () => A.goToGeneral && A.goToGeneral() })),
     },
 });
 

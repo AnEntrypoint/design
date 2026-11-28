@@ -22,6 +22,7 @@ export function Game3ProfileBody({ member, isSelf = false, devMode = false, onMe
     const status = member.status || 'online';
     const [statusName, dot] = STATUS[status] || STATUS.online;
     const roles = (member.roles || []).map((r) => (typeof r === 'string' ? { name: r, color: '#949ba4' } : r));
+    if (member.suffix === 'owner' && !roles.some((r) => String(r.name).toLowerCase() === 'owner')) roles.unshift({ name: 'Owner', color: '#f0b232' });
     const lbl = (text, value, k) => [h('div', { key: 'l' + k, class: 'ds-g3-pc-lbl' }, text), h('div', { key: 'v' + k, class: 'ds-g3-pc-val' }, value)];
     const about = member.about || member.bio || '';
     const links = (member.links || []).map((l) => ({ label: l.label, href: safeHref(l.url) })).filter((l) => l.href);

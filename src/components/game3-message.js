@@ -74,11 +74,11 @@ export function Game3Message({ onJumpReply, quick = QUICK, mention = false, onMe
         onJump ? h('span', { key: 'jump', role: 'button', tabindex: '0', title: 'Jump', onclick: () => onJump() }, '↪') : null,
         onMore ? h('span', { key: 'more', role: 'button', tabindex: '0', title: 'More', onclick: () => onMore() }, '⋯') : null
     );
-    const menu = moreOpen ? h('div', { key: 'mm', class: 'ds-g3-mmenu', role: 'menu' },
+    const menu = moreOpen ? h('div', { key: 'mm', class: 'ds-g3-mmenu', role: 'menu', 'data-ds-float': '1' },
         moreItems.map((it) => h('div', { key: it.key, role: 'menuitem', tabindex: '0', onclick: (e) => it.onClick(e) }, it.label, h('span', {}, it.glyph))),
         remind.length ? h('div', { key: 'sep', class: 'ds-g3-msep' }, 'Remind me about this') : null,
         remind.length ? h('div', { key: 'rm', class: 'ds-g3-rmrow' }, remind.map(([mn, lab]) => h('b', { key: 'r' + mn, role: 'button', tabindex: '0', onclick: () => onRemind && onRemind(mn) }, lab))) : null) : null;
-    const picker = pickerOpen ? h('div', { key: 'rxpick', class: 'ds-g3-epick ds-g3-rxpick' }, EMOJI.map((e) => h('span', { key: e, role: 'button', tabindex: '0', onclick: () => onPick && onPick(e) }, e))) : null;
+    const picker = pickerOpen ? h('div', { key: 'rxpick', class: 'ds-g3-epick ds-g3-rxpick', 'data-ds-float': '1' }, EMOJI.map((e) => h('span', { key: e, role: 'button', tabindex: '0', onclick: () => onPick && onPick(e) }, e))) : null;
     const onDouble = onReply ? (e) => {
         if (e.target.closest && e.target.closest('a,button,.ds-g3-rx,.ds-g3-bar,.ds-g3-pollo,.ds-g3-who,img')) return;
         const sel = window.getSelection && window.getSelection();

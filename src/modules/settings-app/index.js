@@ -34,7 +34,9 @@ const GROUPS = {
 
 const KEYBINDS = [['Quick Switcher', 'Ctrl P'], ['Send message', 'Enter'], ['New line', 'Shift Enter'], ['Mark channel read, close menus', 'Esc'], ['Previous / next channel', 'Alt ↑ ↓'], ['Bring back your last message', '↑'], ['Jump to newest', 'End'], ['Scroll a page', 'Page Up / Down'], ['Mention someone', 'Shift click name'], ['Reply to a message', 'Double-click it'], ['Emoji by name', ':fire'], ['Upload a picture', 'Ctrl V or drop it'], ['Pick a suggestion', 'Enter']];
 
-const toggleRow = (key, checked, onToggle) => h('div', { key, class: 'ds-g3-tgl' + (checked ? ' on' : ''), role: 'switch', tabindex: '0', 'aria-checked': checked ? 'true' : 'false', 'aria-label': COPY[key][0], onclick: () => onToggle && onToggle(key, !checked) },
+const ZELLOUS_ONLY = new Set(['devevents', 'devinspect', 'devtraffic']);
+
+const toggleRow = (key, checked, onToggle) => h('div', { key, class: 'ds-g3-tgl' + (checked ? ' on' : '') + (ZELLOUS_ONLY.has(key) ? ' ds-g3-zx' : ''), role: 'switch', tabindex: '0', 'aria-checked': checked ? 'true' : 'false', 'aria-label': COPY[key][0], onclick: () => onToggle && onToggle(key, !checked) },
     h('div', null,
         h('div', { class: 'ds-g3-tgl-label' }, COPY[key][0]),
         h('div', { class: 'ds-g3-tgl-sub' }, COPY[key][1])),
@@ -81,7 +83,7 @@ const dndRow = (account, acts) => {
 };
 
 const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggles = {}, micOn = true, onMic, keywords = '', mutedChannels = [], onUnmute, compact = false, onCompact, onKeywords, theme = 'ink', onTheme, onToggle, onReset, account = null, acts = {} }) => {
-    const group = (g) => GROUPS[g].map((k) => toggleRow(k, !!toggles[k], onToggle));
+    const group = (g, zellousOnly) => GROUPS[g].filter((k) => zellousOnly === undefined || ZELLOUS_ONLY.has(k) === zellousOnly).map((k) => toggleRow(k, !!toggles[k], onToggle));
     return {
         appearance: () => [
             h('h2', { key: 'h' }, 'Appearance'),
@@ -119,10 +121,11 @@ const paneSet = ({ devInfo = null, onDevReset, onDevFilter, onDevRefresh, toggle
         keys: () => [h('h2', { key: 'h' }, 'Keybinds'), ...KEYBINDS.map(([a, k]) => h('div', { key: a, class: 'ds-g3-kb' }, h('span', null, a), h('kbd', null, k)))],
         adv: () => [
             h('h2', { key: 'h' }, 'Advanced'),
-            ...group('adv'),
+            ...group('adv', false),
             ...(devInfo && toggles.devmode ? devRows(devInfo, onDevReset, onDevFilter, toggles, onDevRefresh) : []),
             h('h6', { key: 'r' }, 'Reset'),
             h('div', { key: 'rb', class: 'ds-g3-evb ds-g3-evb-ghost', role: 'button', tabindex: '0', onclick: (e) => { const b = e.currentTarget; if (b.dataset.sure) { onReset && onReset(); b.dataset.sure = ''; b.textContent = 'Reset all settings'; } else { b.dataset.sure = '1'; b.textContent = 'press again to reset every setting'; } } }, 'Reset all settings'),
+            ...group('adv', true)
         ],
     };
 };

@@ -4,7 +4,7 @@ const h = webjsx.createElement;
 
 const commit = (e, act) => { if (e.key === 'Enter') e.target.blur(); e.stopPropagation(); return act; };
 
-const channelRow = (c, kind, acts) => h('div', { key: kind + c.id, class: 'ds-g3-srow' },
+const channelRow = (c, kind, acts) => h('div', { key: kind + c.id, class: c.extra ? 'ds-g3-srow ds-g3-zx' : 'ds-g3-srow' },
     h('span', null, kind === 'c' ? '#' : '🔊'),
     h('input', { value: c.name, maxlength: '24', 'aria-label': 'rename ' + c.name, onkeydown: (e) => commit(e), onchange: (e) => { const v = e.target.value.trim(); if (v && v !== c.name && acts.renameServerChannel) acts.renameServerChannel(c.id, v); else e.target.value = c.name; } }),
     kind === 'c' ? h('input', { class: 'ds-g3-tpc', value: c.topic || '', maxlength: '60', placeholder: 'topic', 'aria-label': 'topic of ' + c.name, onkeydown: (e) => commit(e), onchange: (e) => acts.topicServerChannel && acts.topicServerChannel(c.id, e.target.value.trim()) }) : null,
@@ -40,8 +40,8 @@ export function Game3ServerSettings({ settings, acts = {}, onClose, onDiscovery 
                 addRow('v', acts),
                 h('div', { class: 'ds-g3-lbl' }, 'Members · ' + d.members.length),
                 h('p', { class: 'ds-g3-sub' }, d.members.join(', ')),
-                onDiscovery ? h('div', { key: 'disc', class: 'ds-g3-lbl' }, 'Discovery') : null,
-                onDiscovery ? h('div', { key: 'discb', class: 'ds-g3-evb ds-g3-evb-on ds-g3-srv-more', role: 'button', tabindex: '0', onclick: onDiscovery }, 'Discovery and promotion') : null,
                 h('div', { class: 'ds-g3-lbl' }, 'Danger Zone'),
-                h('div', { class: 'ds-g3-evb ds-g3-evb-ghost ds-g3-srv-del', role: 'button', tabindex: '0', onclick: () => acts.openServerDelete && acts.openServerDelete(), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); acts.openServerDelete && acts.openServerDelete(); } } }, 'Delete Server'))));
+                h('div', { class: 'ds-g3-evb ds-g3-evb-ghost ds-g3-srv-del', role: 'button', tabindex: '0', onclick: () => acts.openServerDelete && acts.openServerDelete(), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); acts.openServerDelete && acts.openServerDelete(); } } }, 'Delete Server'),
+                onDiscovery ? h('div', { key: 'disc', class: 'ds-g3-lbl ds-g3-zx' }, 'Discovery') : null,
+                onDiscovery ? h('div', { key: 'discb', class: 'ds-g3-evb ds-g3-evb-on ds-g3-srv-more ds-g3-zx', role: 'button', tabindex: '0', onclick: onDiscovery }, 'Discovery and promotion') : null)));
 }

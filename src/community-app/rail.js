@@ -45,7 +45,9 @@ export function createRail(app) {
         else if (s.discovery && s.canManage && s.currentServerId && A.openGamePrefs) out.push({ label: 'Server Settings', icon: 'ref-gear', onClick: () => { if (A.setGamePrefTab) A.setGamePrefTab('discovery'); A.openGamePrefs(); } });
         if (owner && A.createChannel) out.push({ label: 'Create Channel', icon: 'ref-plus', onClick: () => A.createChannel('text') });
         if (out.length) out.push({ divider: true });
-        if (A.inviteToServer && s.currentServerId) out.push({ label: 'Invite People', icon: 'ref-invite', color: '#949cf7', onClick: () => A.inviteToServer() });
+        const curServer = (s.servers || []).find((x) => x.id === s.currentServerId) || {};
+        const inviteItem = A.inviteToServer && s.currentServerId ? { label: 'Invite People', icon: 'ref-invite', color: '#949cf7', onClick: () => A.inviteToServer() } : null;
+        if (inviteItem && !curServer.isPublic) out.push(inviteItem);
         if (A.openSurface && s.currentServerId) out.push({ label: 'Recap What I Missed', hint: '👋', onClick: () => A.openSurface('recap') });
         if (A.markAllRead && s.currentServerId) out.push({ label: 'Mark As Read', hint: '✓', onClick: () => A.markAllRead() });
         out.push({ label: 'Quick Switcher', hint: 'Ctrl P', onClick: () => { st.switcher = { open: true, q: '' }; render(); setTimeout(() => { const i = root.querySelector('.ds-g3-swin'); if (i) i.focus(); }, 0); } });
@@ -54,10 +56,11 @@ export function createRail(app) {
         out.push({ divider: true });
         if (A.openGamePrefs) out.push({ label: 'User Settings', icon: 'ref-gear', onClick: () => A.openGamePrefs() });
         const zellousItems = [];
+        if (inviteItem && curServer.isPublic) zellousItems.push({ ...inviteItem, surface: 'invite' });
         if (A.openSurface && s.currentServerId) menuSurfaces().forEach((x) => zellousItems.push({ label: x.menu.label, icon: x.menu.icon, surface: x.id, onClick: () => A.openSurface(x.id) }));
         railSections().forEach((r) => { const it = r.menuItem && s.currentServerId ? r.menuItem({ s, A }) : null; if (it) zellousItems.push({ ...it, surface: r.id }); });
-        if (zellousItems.length) out.push({ divider: true }, ...zellousItems);
-        if (!owner && A.leaveServer && s.currentServerId && !((s.servers || []).find((x) => x.id === s.currentServerId) || {}).isPublic) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', icon: 'ref-door', onClick: () => A.leaveServer() });
+        if (zellousItems.length) out.push(...zellousItems);
+        if (!owner && A.leaveServer && s.currentServerId && !curServer.isPublic) out.push({ divider: true }, { label: 'Leave Server', color: '#f23f43', icon: 'ref-door', onClick: () => A.leaveServer() });
         return out;
     };
     const railGroup = (label, s, list, cur, isVoice, createType) => {
